@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/splash.unity
+    guid: ae22caabdb76f0d4c983af1196d13ba3
+  - enabled: 0
+    path: Assets/Scenes/splash xbox.unity
+    guid: cb3abffe0364c55408bf4b61b0202cf8
+  - enabled: 1
+    path: Assets/Scenes/game.unity
+    guid: 61e4a59195fd2c147985ff1089301130
+  - enabled: 1
+    path: Assets/Scenes/Testing/empty.unity
+    guid: 4c3c11757a77ae54da455c347b1bc700
+  - enabled: 1
+    path: Assets/Scenes/Environments/highlands.unity
+    guid: f461d7ef9530f614f936a56f3eee4025
+  - enabled: 0
+    path: Assets/Scenes/Environments/highlands_xbox.unity
+    guid: e8e3bdc260a1bb741a0ba6eea1d79b0d
+  - enabled: 1
+    path: Assets/Scenes/Environments/forest.unity
+    guid: 8387a74601f9f604196cb9b1acc61299
+  - enabled: 0
+    path: Assets/Scenes/Environments/forest_xbox.unity
+    guid: bb56103f39beb0d45a57d1d191b2b39d
+  - enabled: 1
+    path: Assets/Scenes/Environments/canyon.unity
+    guid: 05540e75eed431848a6095293fd17382
+  - enabled: 0
+    path: Assets/Scenes/Environments/canyon_xbox.unity
+    guid: d76e05ed8d1d4ee48b4dcf7ded996658
+  - enabled: 1
+    path: Assets/Scenes/Environments/peaks.unity
+    guid: 664c3647d5896c9419c4bc5f186a74ca
+  - enabled: 0
+    path: Assets/Scenes/Environments/peaks_xbox.unity
+    guid: 00f98c078a6218242bdb3717785f510d
+  - enabled: 1
+    path: Assets/Scenes/Environments/hell.unity
+    guid: 7639f2969cbf55b448028f23c6221c7c
+  - enabled: 1
+    path: Assets/Scenes/Environments/Bonus/construction_site.unity
+    guid: e89e8b4937168b641b230865e89cadf7
+  - enabled: 1
+    path: Assets/Scenes/Environments/Bonus/moon.unity
+    guid: a1bc69f37f847444085934f72619c184
+  - enabled: 1
+    path: Assets/Scenes/Environments/Bonus/megaramp.unity
+    guid: 00bed58424fcdcf46a6980661debb8d6
+  - enabled: 1
+    path: Assets/Scenes/Environments/Bonus/kids_room_imaginate.unity
+    guid: 6045f6130fef846479457368a8f8dd58
+  - enabled: 1
+    path: Assets/Scenes/Environments/Bonus/ranch.unity
+    guid: effb46c9a1f092a4caf01e5e73f5f84e
+  - enabled: 1
+    path: Assets/Scenes/Environments/dutch_plains.unity
+    guid: b29b71808edaaf645b1a18911e98f7a9
+  - enabled: 1
+    path: Assets/Scenes/Environments/favela.unity
+    guid: af7ed75a82e81ce4fb7ec72b1119d1e9
+  - enabled: 1
+    path: Assets/Scenes/Environments/desert.unity
+    guid: 24a289191002b804fa9ef851d881b3a8
+  - enabled: 1
+    path: Assets/Scenes/Environments/glaciers.unity
+    guid: 2fb160951500c944c95f64339bd73360
+  - enabled: 1
+    path: Assets/Scenes/Environments/jungle.unity
+    guid: df494af907915554c9fb1086dfd2aa38
+  - enabled: 1
+    path: Assets/Scenes/Environments/mt_palumbo.unity
+    guid: 50870e5869246ad479dcdea301d9b876
+  - enabled: 1
+    path: Assets/Scenes/Environments/tutorial.unity
+    guid: a8e89bf7d4a2d6c4d9acdba1c7a0a522
+  - enabled: 1
+    path: Assets/Scenes/Testing/modscene.unity
+    guid: 314c16546e937fc4b8e98e07889820b2
