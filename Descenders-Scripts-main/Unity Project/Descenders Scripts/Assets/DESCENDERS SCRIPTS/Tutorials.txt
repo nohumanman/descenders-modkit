@@ -1,0 +1,10 @@
+How to add a location:
+Create a location with a "Teleport Point" script, this will appear in the teleport menu, if you want it to be dependent on a landmark, add a dependant landmark.
+
+How to add a landmark:
+Copy an existing landmark, change the title, desc, picture, new animator, audio source, price, teleport locked, and that's that.
+
+How to add a quest:
+Copy existing quest, change name, descritpion, type, location, reward, and iscomplete.
+
+
