@@ -1,0 +1,129 @@
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+        <title>nohumanman</title>
+        <link rel="stylesheet" href="/static/CSS/main_style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="icon" type="image/png" href="/static/Images/nohumanman_favicon.ico">
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <meta name="Description" content="Just a guy and a computer. Take a look at some of my projects!">
+        <img src="/static/Gifs/x_glitch.gif" style="display: none;">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    </head>
+    <body style="padding:0; margin:0;">
+        <div id="app">
+            <v-app>
+                <v-main>
+                    <v-tabs>
+                        <v-tab>Players</v-tab>
+                        <v-tab>Leaderboards</v-tab>
+                        <v-tab-item>
+                            <v-list>
+                                <v-checkbox label="Only Competitors" v-model="only_competitors"></v-checkbox>
+                                <p>Click on a player to begin monitoring their times.</p>
+                                <v-list-item v-for="player in players" v-if="competitors.indexOf(player.name) != -1 || !only_competitors">
+                                    <v-container v-if="competitors.indexOf(player.id) != -1 || !only_competitors">
+                                        <h1>
+                                            <v-btn style="font-size: 30px;" @click="monitor_player(player.id);">[[player.name]]</v-btn>
+                                            <v-icon v-if="competitors.indexOf(player.id) != -1" color="blue">mdi-check-decagram</v-icon>
+                                        </h1>
+                                    </v-container>
+                                </v-list-item>
+                            </v-list>
+                        </v-tab-item>
+                        <v-tab-item>
+                            <br>
+                            <v-select
+                                :items="trails"
+                                label="Trail"
+                                outlined
+                            ></v-select>
+                            <v-data-table
+                                :headers="trail_data_headers"
+                                :items="trail_data"
+                                :items-per-page="5"
+                                class="elevation-1"
+                        ></v-data-table>
+                        </v-tab-item>
+                    </v-tabs>
+                </v-main>
+            </v-app>
+        </div>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>        
+        var app = new Vue({
+            el: '#app',
+            delimiters: ['[[', ']]'],
+            vuetify : new Vuetify({
+                theme: {
+                    dark : {
+                        primary: '#00b140',
+                        secondary: '#424242',
+                        accent: '#82B1FF',
+                        error: '#FF5252',
+                        info: '#2196F3',
+                        success: '#4CAF50',
+                        warning: '#FFC107',
+                    }
+            },
+            }),
+            data : {
+                players: ["ee"],
+                competitors: [],
+                only_competitors: false,
+                trails: ["123", "12"],
+                trail_data_headers: [
+                {
+                    text: 'Trail',
+                    align: 'start',
+                    sortable: false,
+                    value: 'name',
+                },
+                { text: 'Calories', value: 'calories' },
+                { text: 'Fat (g)', value: 'fat' },
+                { text: 'Carbs (g)', value: 'carbs' },
+                { text: 'Protein (g)', value: 'protein' },
+                { text: 'Iron (%)', value: 'iron' },
+                ],
+                trail_data: [
+                    {
+                        name: 'Don\'t look at me.',
+                        calories: 159,
+                        fat: 6.0,
+                        carbs: 24,
+                        protein: 4.0,
+                        iron: '1%',
+                    },
+                ],
+            },
+            methods: {
+                monitor_player(player_name){
+                    $.get("/API/MONITOR/" + player_name)
+                },
+                update_players(){
+                    $.get("/API/GET-PLAYERS", function(data){
+                        app.players = data["players"];
+                    })
+                },
+                get_competitors(){
+                    $.get("/API/GET-COMPETITORS-NAMES", function(data){
+                        app.competitors = data["competitors"]
+                    })
+                }
+            }
+        }
+        )
+        setInterval(function(){
+            app.update_players();
+        }, 100);
+        setInterval(function(){
+            app.get_competitors();
+        }, 100);
+    </script>
+</html>

@@ -1,0 +1,107 @@
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+        <title>nohumanman</title>
+        <link rel="stylesheet" href="/static/CSS/main_style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="icon" type="image/png" href="/static/Images/nohumanman_favicon.ico">
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <meta name="Description" content="Just a guy and a computer. Take a look at some of my projects!">
+        <img src="/static/Gifs/x_glitch.gif" style="display: none;">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+    </head>
+    <body style="padding:0; margin:0;">
+        <div id="app">
+            <v-app style="background: #0047bb;">
+                <v-main>
+
+                    <v-expand-x-transition>
+                        <v-alert style="text-align: center; font-size:100px" max-width="800" justify="text-center">
+                            [[name]]<br>[[time]]
+                        </v-alert>
+                    </v-expand-x-transition>
+
+                    <v-expand-x-transition>
+                        <v-alert dense style="text-align: center; font-size:100px" max-width="800" :color="split_time_colour((5-2))" v-show="entered_checkpoint">
+                            [[get_split_time_difference((5-5))]]
+                        </v-alert>
+                    </v-expand-x-transition>
+                </v-main>
+            </v-app>
+        </div>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script>        
+        var app = new Vue({
+            el: '#app',
+            delimiters: ['[[', ']]'],
+            vuetify : new Vuetify({
+                theme: {
+                    dark : {
+                        primary: '#00b140',
+                        secondary: '#424242',
+                        accent: '#82B1FF',
+                        error: '#FF5252',
+                        info: '#2196F3',
+                        success: '#4CAF50',
+                        warning: '#FFC107',
+                    }
+            },
+            }),
+            data : {
+                time : "01:23:234",
+                name: "none",
+                time_start: 0,
+                split_times: [],
+                fastest_split_times: [],
+                entered_checkpoint: true,
+            },
+            methods: {
+                split_time_colour(val){
+                    if (val <= 0){
+                        return "green"
+                    }
+                    else if (val > 0){
+                        return "red"
+                    }
+                },
+                get_split_time_difference(val){
+                    val = (Math.round(val/1000)*1000)
+                    if (val > 0){
+                        return "+" + val.toString();
+                    }
+                    else{
+                        return val.toString();
+                    }
+                },
+                updateData(){
+                    $.get("/API/GET-DATA", function(data){
+                        app.time_start = data["time_start"]
+                        app.name = data["name"]
+                        app.split_times = data["split_times"]
+                        app.fastest_split_times = data["fastest_split_times"]
+                        app.entered_checkpoint = data["entered_checkpoint"]
+                    })
+                },
+                updateTime(){
+                    console.log("Time started:" + app.time_start.toString())
+                    console.log("Time now:" + new Date().getTime().toString())
+                    app.time = ((((new Date()).getTime())) - app.time_start*1000) / 1000;
+                    console.log(app.time);
+                },
+            }
+        }
+        )
+        setInterval(function(){
+            app.updateData();
+        }, 100)
+        setInterval(function(){
+            app.updateTime()
+        }, 1)
+    </script>
+</html>
