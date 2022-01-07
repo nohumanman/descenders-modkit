@@ -23,32 +23,18 @@
                         <v-tab>Leaderboards</v-tab>
                         <v-tab-item>
                             <v-list>
-                                <v-checkbox label="Only Competitors" v-model="only_competitors"></v-checkbox>
-                                <p>Click on a player to begin monitoring their times.</p>
-                                <v-list-item v-for="player in players" v-if="competitors.indexOf(player.name) != -1 || !only_competitors">
-                                    <v-container v-if="competitors.indexOf(player.id) != -1 || !only_competitors">
-                                        <h1>
-                                            <v-btn style="font-size: 30px;" @click="monitor_player(player.id);">[[player.name]]</v-btn>
-                                            <v-icon v-if="competitors.indexOf(player.id) != -1" color="blue">mdi-check-decagram</v-icon>
-                                        </h1>
-                                    </v-container>
-                                </v-list-item>
+                                <v-card v-for="player in players">
+                                    <v-card-title>[[player.steam_name]]</v-card-title>
+                                    <v-card-text>
+                                        Steam ID: [[player.steam_id]]<br>
+                                        Current World: [[player.current_world]]<br>
+                                        Trail Start Time: [[player.trail_start_time]]<br>
+                                        Split Times: [[player.split_times]]<br>
+                                    </v-card-text>
+                                </v-card>
                             </v-list>
                         </v-tab-item>
-                        <v-tab-item>
-                            <br>
-                            <v-select
-                                :items="trails"
-                                label="Trail"
-                                outlined
-                            ></v-select>
-                            <v-data-table
-                                :headers="trail_data_headers"
-                                :items="trail_data"
-                                :items-per-page="5"
-                                class="elevation-1"
-                        ></v-data-table>
-                        </v-tab-item>
+
                     </v-tabs>
                 </v-main>
             </v-app>
@@ -74,56 +60,20 @@
             },
             }),
             data : {
-                players: ["ee"],
-                competitors: [],
-                only_competitors: false,
-                trails: ["123", "12"],
-                trail_data_headers: [
-                {
-                    text: 'Trail',
-                    align: 'start',
-                    sortable: false,
-                    value: 'name',
-                },
-                { text: 'Calories', value: 'calories' },
-                { text: 'Fat (g)', value: 'fat' },
-                { text: 'Carbs (g)', value: 'carbs' },
-                { text: 'Protein (g)', value: 'protein' },
-                { text: 'Iron (%)', value: 'iron' },
-                ],
-                trail_data: [
-                    {
-                        name: 'Don\'t look at me.',
-                        calories: 159,
-                        fat: 6.0,
-                        carbs: 24,
-                        protein: 4.0,
-                        iron: '1%',
-                    },
-                ],
+                players: [],
             },
             methods: {
-                monitor_player(player_name){
-                    $.get("/API/MONITOR/" + player_name)
-                },
                 update_players(){
-                    $.get("/API/GET-PLAYERS", function(data){
+                    console.log("Updating Players")
+                    $.get("/API/DASHBOARD/GET-PLAYERS", function(data){
                         app.players = data["players"];
                     })
                 },
-                get_competitors(){
-                    $.get("/API/GET-COMPETITORS-NAMES", function(data){
-                        app.competitors = data["competitors"]
-                    })
-                }
             }
         }
         )
         setInterval(function(){
             app.update_players();
-        }, 100);
-        setInterval(function(){
-            app.get_competitors();
         }, 100);
     </script>
 </html>

@@ -7,90 +7,44 @@ app = Flask(__name__)
 
 timer = Timer()
 
-@app.route("/full-test")
-def test_with_full_run():
-    new_player_joined = Player("nohumanman", "123423918283")
-    timer.players[new_player_joined.id] = new_player_joined
-    timer.players[new_player_joined.id].started_trail(time.time(), "Lactate", 8)
-    time.sleep(12)
-    timer.players[new_player_joined.id].entered_checkpoint(time.time(), "Lactate")
-    time.sleep(12)
-    timer.players[new_player_joined.id].entered_checkpoint(time.time(), "Lactate")
-    time.sleep(12)
-    timer.players[new_player_joined.id].entered_checkpoint(time.time(), "Lactate")
-    time.sleep(12)
-    timer.players[new_player_joined.id].entered_checkpoint(time.time(), "Lactate")
-    time.sleep(12)
-    timer.players[new_player_joined.id].entered_checkpoint(time.time(), "Lactate")
-    time.sleep(12)
-    timer.players[new_player_joined.id].entered_checkpoint(time.time(), "Lactate")
-    time.sleep(12)
-    timer.players[new_player_joined.id].entered_checkpoint(time.time(), "Lactate")
-    time.sleep(12)
-    timer.players[new_player_joined.id].finished_trail(time.time(), "Lactate")
+# Player enters map
+@app.route("/API/TIMER/LOADED")
+def api_timer_loaded():
+    world_name = request.args.get("world_name")
+    steam_name = request.args.get("steam_name")
+    steam_id = request.args.get("steam_id")
+    if steam_id in timer.players:
+        timer.players[steam_id].current_world = world_name
+        timer.players[steam_id].steam_name = steam_name
+    else:
+        timer.players[steam_id] = Player(steam_name, steam_id, world_name)
+    return "200"
 
-
+# Player begins trail
 @app.route("/API/TIMER/ENTER-CHECKPOINT/<checkpoint_num>")
 def api_timer_enter_checkpoint(checkpoint_num):
     trail_name = request.args.get("trail_name")
-    timestamp = request.args.get("timestamp")
-    player_name = request.args.get("player_name")
-    player_id = request.args.get("steam_id")
-    timer.players[player_id].entered_checkpoint(timestamp, trail_name)
-    timer.players[player_id].name = player_name
-    return checkpoint_num
+    steam_name = request.args.get("steam_name")
+    steam_id = request.args.get("steam_id")
+    total_checkpoints = int(request.args.get("total_checkpoints"))
+    timer.players[steam_id].entered_checkpoint(int(checkpoint_num), total_checkpoints, time.time(), trail_name)
+    return "200"
 
-
-@app.route("/API/TIMER/LOADED")
-def api_timer_loaded():
-    player_name = request.args.get("player_name")
-    player_id = request.args.get("steam_id")
-    timer.players[player_id] = Player(player_name, player_id)
-    return "E"
-
-
-@app.route("/API/GET-DATA")
-def api_get_data():
-    if timer.monitored_player is not None:
-        return {
-            "time_start": timer.monitored_player.time_started,
-            "name": timer.monitored_player.name,
-            "split_times": timer.monitored_player.checkpoint_times,
-            "fastest_split_times": [12, 13, 11, 5],
-            "entered_checkpoint": timer.monitored_player.has_entered_checkpoint,
-        }
-    else:
-        return {
-            "time_start": 0,
-            "name": "None",
-            "current_split_time": "None",
-            "fastest_split_time_secs": [12, 13, 11, 5],
-            "entered_checkpoint": True,
-            "is_racing": True,
-        }
-
-
-@app.route("/API/MONITOR/<player_id>")
-def monitor_player(player_id):
-    print(player_id)
-    timer.monitored_player = timer.players[player_id]
-    return player_id
-
-
-@app.route("/API/GET-PLAYERS")
-def get_player():
-    return jsonify({"players": [{"name" : timer.players[player].name, "id" : timer.players[player].id} for player in timer.players]})
-
-
-@app.route("/API/GET-COMPETITORS-NAMES")
-def competitors_names():
-    return jsonify({"competitors": ["BBB171", "nohumanman"]})
-
-
-@app.route("/UI")
-def ui():
-    return render_template("UI.html")
-
+@app.route("/API/DASHBOARD/GET-PLAYERS")
+def api_get_players():
+    return {
+        "players":
+            [
+                {
+                    "steam_name": timer.players[player].steam_name,
+                    "steam_id": timer.players[player].steam_id,
+                    "current_world": timer.players[player].current_world,
+                    "trail_start_time": timer.players[player].trail_start_time,
+                    "split_times": str(timer.players[player].split_times)
+                }
+                for player in timer.players
+            ]
+    }
 
 @app.route("/")
 def dashboard():
