@@ -65,8 +65,7 @@ namespace BanHandlerSystem{
 		}
 
 		string GetSteamID(){
-			Identification id = new SteamIntegration().getNameOfPlayer();
-			return id.steamID;
+			return new SteamIntegration().getName();
 		}
 
 		public void Ban(string message){

@@ -20,7 +20,7 @@ def api_timer_loaded():
         timer.players[steam_id] = Player(steam_name, steam_id, world_name)
     return "200"
 
-# Player begins trail
+# Player enters checkpoint on trail
 @app.route("/API/TIMER/ENTER-CHECKPOINT/<checkpoint_num>")
 def api_timer_enter_checkpoint(checkpoint_num):
     trail_name = request.args.get("trail_name")

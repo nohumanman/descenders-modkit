@@ -1,0 +1,50 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using PlayerIdentification;
+using ModTool.Interface;
+
+namespace SplitTimer{
+	public class TrailTimer : ModBehaviour {
+		int current_checkpoint_num;
+		public string trail_name;
+		[Tooltip("Make sure to include the start and finish as well!")]
+		public GameObject checkpoints_objs;
+		[System.NonSerialized]
+		public List<Checkpoint> checkpoints;
+		void Start(){
+			foreach (Checkpoint checkpoint_obj in checkpoints_objs.GetComponentsInChildren<Checkpoint>()){
+				checkpoints.Add(checkpoint_obj);
+			}
+		}
+		public void EnteredCheckpoint(Checkpoint checkpoint){
+			if (checkpoint.checkpointType == CheckpointType.start){
+				Debug.Log("TrailTimer - Entered startline!");
+				current_checkpoint_num = 0;
+			}
+			else if (checkpoint.checkpointType == CheckpointType.intermediate){
+				Debug.Log("TrailTimer - Entered checkpoint intermediate!");
+				current_checkpoint_num++;
+			}
+			else if (checkpoint.checkpointType ==  CheckpointType.pause){
+				Debug.LogWarning("TrailTimer - Entered pause!");
+			}
+			else if (checkpoint.checkpointType == CheckpointType.stop){
+				Debug.Log("TrailTimer - Entered Finish Line!");
+				current_checkpoint_num++;
+			}
+			SplitTimer splitTimer = SplitTimer.Instance;
+			splitTimer.api.EnterCheckpoint(
+				trail_name,
+				new SteamIntegration().getName(),
+				new SteamIntegration().getSteamId(),
+				current_checkpoint_num.ToString(),
+				checkpoints.Count.ToString()
+				);
+		}
+		public void TimeInvalidated(){
+			current_checkpoint_num = 0;
+			Debug.Log("TrailTimer - Time Invalidated!");
+		}
+	}
+}

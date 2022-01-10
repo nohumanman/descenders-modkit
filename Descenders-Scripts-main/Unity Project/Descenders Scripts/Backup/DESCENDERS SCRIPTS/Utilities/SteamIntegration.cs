@@ -12,14 +12,15 @@ namespace PlayerIdentification{
 	public class SteamIntegration : ModBehaviour {
 		public Identification id;
 
-        void Start()
-        {
-            id = getNameOfPlayer();
-            Debug.Log(id.playerName);
-            Debug.Log(id.steamID);
+        public string getName(){
+            return getPlayerId().playerName;
         }
 
-        public Identification getNameOfPlayer()
+        public string getSteamId(){
+            return getPlayerId().steamID;
+        }
+
+        Identification getPlayerId()
         {
 			// If in editor, don't make errors, just return a skewed value.
 			if (Application.isEditor){

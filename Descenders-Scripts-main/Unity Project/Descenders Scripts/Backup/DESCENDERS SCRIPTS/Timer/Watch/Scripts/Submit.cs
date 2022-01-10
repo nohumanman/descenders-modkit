@@ -21,8 +21,8 @@ namespace CustomTimer
             Debug.Log("Submitting Time");
             string submitTime = formattedTimeCount;
             Debug.Log(submitTime);
-            string steamID = steamIntegration.getNameOfPlayer().steamID;
-            string name = steamIntegration.getNameOfPlayer().playerName;
+            string steamID = steamIntegration.getSteamId();
+            string name = steamIntegration.getName();
             Debug.Log(url + "?Request-Type=submitData&map=" + mapName + "&time=" + submitTime + "&name=" + name + "&steamID=" + steamID);
             StartCoroutine(getRequest(url + "?Request-Type=submitData&map=" + mapName + "&time=" + submitTime + "&name=" + name + "&steamID=" + steamID));
         }

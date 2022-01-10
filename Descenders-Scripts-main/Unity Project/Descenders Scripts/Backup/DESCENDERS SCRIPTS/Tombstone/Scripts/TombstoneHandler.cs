@@ -77,9 +77,8 @@ namespace TombstoneSystem{
 		public IEnumerator SendDeathInfo(Vector3 location){
 			Debug.Log("Sending death info");
 			Debug.Log("Location of death: " + " " + location.x.ToString() + " " + location.y.ToString() + " " + location.z.ToString());
-			Identification id = new SteamIntegration().getNameOfPlayer();
-			string name = id.playerName;
-			string steamId = id.steamID;
+			string name = new SteamIntegration().getName();
+			string steamId = new SteamIntegration().getSteamId();
 			string xPos = location.x.ToString();
 			string yPos = location.y.ToString();
 			string zPos = location.z.ToString();
@@ -110,8 +109,7 @@ namespace TombstoneSystem{
 				yield return webRequest.SendWebRequest();
 				additionalmessage = webRequest.downloadHandler.text;
 			}
-			Identification id = new SteamIntegration().getNameOfPlayer();
-			string steamId = id.steamID;
+			string steamId = new SteamIntegration().getSteamId();
 			using (UnityWebRequest webRequest = UnityWebRequest.Get(url + "/get_tombstone_data?map=" + mapName + "&just_today=" + justToday.ToString() + "&just_me=" + justMe.ToString() + "&just_recent_deaths=" + justRecentDeaths.ToString() + "&steamId=" + steamId.ToString()))
         	{
 				// Request and wait for the desired page.
@@ -139,8 +137,7 @@ namespace TombstoneSystem{
 					Debug.Log("Player Died, sending information to server!");
 					StartCoroutine(SendDeathInfo(playerPos));
 					justDied = true;
-					Identification id = new SteamIntegration().getNameOfPlayer();
-					string name = id.playerName;
+					string name = new SteamIntegration().getName();
 					GameObject instantiatedTombstone = Instantiate(tombstone);
 					instantiatedTombstone.GetComponent<Tombstone>().text.text =
 						"Here lies " + name + "\n\n" + messsageOnJustDie;
