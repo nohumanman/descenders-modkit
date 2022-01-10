@@ -8,9 +8,7 @@ namespace SplitTimer{
 		public TrailTimer trailTimer;
 		public CheckpointType checkpointType;
 		public void OnTriggerEnter(){
-			trailTimer.EnteredCheckpoint(
-				this
-			);
+			trailTimer.EnteredCheckpoint(this);
 		}
 	}
 	public enum CheckpointType{
