@@ -27,7 +27,11 @@ def api_timer_enter_checkpoint(checkpoint_num):
     steam_name = request.args.get("steam_name")
     steam_id = request.args.get("steam_id")
     total_checkpoints = int(request.args.get("total_checkpoints"))
-    timer.players[steam_id].entered_checkpoint(int(checkpoint_num), total_checkpoints, time.time(), trail_name)
+    try:
+        timer.players[steam_id].entered_checkpoint(int(checkpoint_num), total_checkpoints, time.time(), trail_name)
+    except KeyError:
+        timer.players[steam_id] = Player(steam_name, steam_id, "null")
+        timer.players[steam_id].entered_checkpoint(int(checkpoint_num), total_checkpoints, time.time(), trail_name)
     return "200"
 
 @app.route("/API/DASHBOARD/GET-PLAYERS")

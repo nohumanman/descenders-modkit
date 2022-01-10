@@ -7,8 +7,11 @@ namespace SplitTimer{
 	public class Checkpoint : ModBehaviour {
 		public TrailTimer trailTimer;
 		public CheckpointType checkpointType;
-		public void OnTriggerEnter(){
-			trailTimer.EnteredCheckpoint(this);
+		public void OnTriggerEnter(Collider other){
+            if (other.transform.name == "Bike")
+            {
+				trailTimer.EnteredCheckpoint(this);
+			}
 		}
 	}
 	public enum CheckpointType{

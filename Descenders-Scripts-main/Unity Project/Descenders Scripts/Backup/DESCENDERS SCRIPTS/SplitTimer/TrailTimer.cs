@@ -6,12 +6,13 @@ using ModTool.Interface;
 
 namespace SplitTimer{
 	public class TrailTimer : ModBehaviour {
-		int current_checkpoint_num;
+		int current_checkpoint_num = 0;
 		public string trail_name;
 		[Tooltip("Make sure to include the start and finish as well!")]
 		public GameObject checkpoints_objs;
 		[System.NonSerialized]
-		public List<Checkpoint> checkpoints;
+		public List<Checkpoint> checkpoints = new List<Checkpoint>();
+		private SteamIntegration steamIntegration = new SteamIntegration();
 		void Start(){
 			foreach (Checkpoint checkpoint_obj in checkpoints_objs.GetComponentsInChildren<Checkpoint>()){
 				checkpoints.Add(checkpoint_obj);
@@ -33,11 +34,11 @@ namespace SplitTimer{
 				Debug.Log("TrailTimer - Entered Finish Line!");
 				current_checkpoint_num++;
 			}
-			SplitTimer splitTimer = SplitTimer.Instance;
+			SplitTimer splitTimer = SplitTimer.Instance.gameObject.GetComponent<SplitTimer>();
 			splitTimer.api.EnterCheckpoint(
 				trail_name,
-				new SteamIntegration().getName(),
-				new SteamIntegration().getSteamId(),
+				steamIntegration.getName(),
+				steamIntegration.getSteamId(),
 				current_checkpoint_num.ToString(),
 				checkpoints.Count.ToString()
 				);

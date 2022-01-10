@@ -41,8 +41,8 @@ class Player():
         time_hash = hash(str(split_times[len(split_times)-1])+str(self.steam_id)+str(time.time()))
         con.execute(
             f'''
-            INSERT INTO Times (steam_id, time_id, total_time, timestamp)
-            VALUES ("{self.steam_id}", "{time_hash}", "{split_times[len(split_times)-1]}", {time.time()})
+            INSERT INTO Times (steam_id, time_id, total_time, timestamp, trail_name)
+            VALUES ("{self.steam_id}", "{time_hash}", "{split_times[len(split_times)-1]}", {time.time()}, "{trail_name}")
             ''')
         for n, split_time in enumerate(self.split_times):
             con.execute(
