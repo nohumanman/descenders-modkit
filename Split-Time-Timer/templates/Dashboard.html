@@ -1,7 +1,7 @@
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-        <title>nohumanman</title>
+        <title>Descenders Split Timer</title>
         <link rel="stylesheet" href="/static/CSS/main_style.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link rel="icon" type="image/png" href="/static/Images/nohumanman_favicon.ico">
@@ -23,15 +23,23 @@
                         <v-tab>Leaderboards</v-tab>
                         <v-tab-item>
                             <v-list>
-                                <v-card v-for="player in players">
-                                    <v-card-title>[[player.steam_name]]</v-card-title>
-                                    <v-card-text>
-                                        Steam ID: [[player.steam_id]]<br>
-                                        Current World: [[player.current_world]]<br>
-                                        Trail Start Time: [[player.trail_start_time]]<br>
-                                        Split Times: [[player.split_times]]<br>
-                                    </v-card-text>
-                                </v-card>
+                                <v-container v-for="player in players">
+                                    <v-card x-large :color="player.colour">
+                                        <v-card-title style="font-size: 40px; text-decoration: underline;">[[player.steam_name]]</v-card-title>
+                                        <v-card-text style="font-size: 20px;">
+                                            Steam ID - [[player.steam_id]]<br>
+                                            Current World - [[player.current_world]]<br>
+                                            Trail Start Time - [[player.trail_start_time]]<br>
+                                            Split Times - [[player.split_times]]<br>
+                                        </v-card-text>
+                                        <v-card-actions>
+                                            <v-checkbox v-model="player.is_competitor" label="Competitor"></v-checkbox>
+                                            <v-spacer></v-spacer>
+                                            <v-btn :colour="getColFromMonitoring(player.being_monitored)"/><v-icon>mdi-cctv</v-icon></v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                    <br><br>
+                                </v-container>
                             </v-list>
                         </v-tab-item>
 
@@ -60,7 +68,9 @@
             },
             }),
             data : {
-                players: [],
+                players: [{
+                    "steam_name" : "stid"
+                }],
             },
             methods: {
                 update_players(){
@@ -69,6 +79,14 @@
                         app.players = data["players"];
                     })
                 },
+                getColFromMonitoring(being_monitored){
+                    if (being_monitored){
+                        return "green"
+                    }
+                    else{
+                        return "black"
+                    }
+                }
             }
         }
         )

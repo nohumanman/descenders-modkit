@@ -1,30 +1,33 @@
 from posixpath import split
 import time
 from threading import Thread
-import sqlite3
+from PlayerDB import PlayerDB
 
 
 class Player():
-    def __init__(self, steam_name, steam_id, world_name):
+    def __init__(self, steam_name, steam_id, world_name, is_competitor):
         self.steam_name = steam_name
         self.steam_id = steam_id
         self.current_world = world_name
+        self.online = False
+        self.is_competitor = is_competitor
         self.trail_start_time = 0
         self.split_times = []
-        con = sqlite3.connect("TimeStats.db")
-        con.execute(
-            f'''
-            REPLACE INTO Players (steam_id, steam_name, times_logged_on)
-            VALUES ("{steam_id}", "{steam_name}", 404)
-            '''
-        )
-        con.commit()
+        self.time_started = None
+        self.time_ended = None
+        PlayerDB.add_player(steam_id, steam_name, is_competitor)
+
+    def loaded(self):
+        self.time_started = time.time()
+
+    def unloaded(self):
+        self.time_started = time.time()
+        PlayerDB.end_session(self.steam_id, self.time_started)
+        self.time_started = None
+        self.time_ended = None
 
     def entered_checkpoint(self, checkpoint_num, total_checkpoints, checkpoint_time, trail_name):
-        print(checkpoint_num)
-        print(type(checkpoint_num))
-        print(total_checkpoints)
-        print(type(total_checkpoints))
+        self.online = True
         if checkpoint_num == 0:
             self.split_times = []
             self.trail_start_time = time.time()
@@ -36,29 +39,9 @@ class Player():
         Thread(target=self.disable_entered_checkpoint, args=(5,)).start()
 
     def submit_time(self, split_times, trail_name):
+        self.online = True
         print("SUBMITTING TIME - TRAIL COMPLETE!!")
-        con = sqlite3.connect("TimeStats.db")
-        time_hash = hash(str(split_times[len(split_times)-1])+str(self.steam_id)+str(time.time()))
-        con.execute(
-            f'''
-            INSERT INTO Times (steam_id, time_id, total_time, timestamp, trail_name)
-            VALUES ("{self.steam_id}", "{time_hash}", "{split_times[len(split_times)-1]}", {time.time()}, "{trail_name}")
-            ''')
-        for n, split_time in enumerate(self.split_times):
-            con.execute(
-            f'''
-            INSERT INTO "Split Times" (
-                time_id,
-                checkpoint_num,
-                checkpoint_time
-                )
-            VALUES (
-                "{time_hash}",
-                "{n}",
-                {split_time}
-                )
-            ''')
-        con.commit()
+        PlayerDB.submit_time(split_times, trail_name)
         self.split_times = []
         self.trail_start_time = time.time()
 

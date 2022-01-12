@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using ModTool.Interface;
+using PlayerIdentification;
 
 namespace SplitTimer{
 	public class SplitTimerAPI : ModBehaviour {
@@ -14,6 +15,14 @@ namespace SplitTimer{
 			Debug.Log("SplitTimerAPI - Loaded into " + world_name + " with steam name " + steam_name + " and steam id " + steam_id);
 			Debug.Log(contact);
 			StartCoroutine(CoroLoadIntoMap(world_name, steam_name, steam_id));
+		}
+		void OnDestroy()
+		{
+			SteamIntegration steamIntegration = new SteamIntegration();
+			ExitMap(steamIntegration.getName(), steamIntegration.getSteamId());
+		}
+		public void ExitMap(string steam_name, string steam_id){
+			StartCoroutine(CoroExitMap(steam_name, steam_id));
 		}
 		public void EnterCheckpoint(string trail_name, string steam_name, string steam_id, string checkpoint_num, string total_checkpoints){
 			Debug.Log("SplitTimerAPI - Checkpoint entered on trail " + trail_name + ". Steam name is " + steam_name + " steam id is " + steam_id + ". Checkpoint " + checkpoint_num + " out of " + total_checkpoints);
@@ -34,6 +43,21 @@ namespace SplitTimer{
 					+ "/API/TIMER/LOADED?world_name="
 					+ world_name
 					+ "&steam_name="
+					+ steam_name
+					+ "&steam_id="
+					+ steam_id
+					)
+			)
+			{
+				yield return webRequest.SendWebRequest();
+			}
+		}
+		IEnumerator CoroExitMap(string steam_name, string steam_id){
+			using (
+				UnityWebRequest webRequest =
+				UnityWebRequest.Get(
+					contact
+					+ "/API/TIMER/UNLOADED?steam_name="
 					+ steam_name
 					+ "&steam_id="
 					+ steam_id
