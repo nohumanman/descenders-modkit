@@ -25,3 +25,4 @@ class Timer():
             else:
                 self.players[steam_id] = Player(steam_name, steam_id, "none", False)
             print("Ended first player.")
+        print("tiemr self players", self.players)

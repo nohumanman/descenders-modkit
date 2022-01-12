@@ -15,8 +15,40 @@ class PlayerDB():
         con.commit()
 
     @staticmethod
-    def become_competitor(steam_id):
+    def become_competitor(steam_id, is_competitor):
+        con = sqlite3.connect("TimeStats.db")
+        if is_competitor:
+            con.execute(
+                f'''
+                REPLACE INTO Players (is_competitor)
+                VALUES ("true") WHERE steam_id = "{steam_id}"
+                '''
+            )
+        else:
+            con.execute(
+                f'''
+                REPLACE INTO Players (is_competitor)
+                VALUES ("false") WHERE steam_id = "{steam_id}"
+                '''
+            )
         print("Function not complete - become_competitor")
+
+    @staticmethod
+    def get_fastest_split_times(trail_name, competitors_only=False):
+        con = sqlite3.connect("TimeStats.db")
+        temp = -5555490718959231365
+        print("Getting fastest split times...")
+        times = con.execute(
+            f'''
+            SELECT * FROM "Split Times"
+            WHERE time_id = "{temp}" ORDER BY checkpoint_num
+            '''
+        ).fetchall()
+        print(times)
+        split_times = [time[2] for time in times]
+        print(times)
+        con.close()
+        return split_times
 
     @staticmethod
     def submit_time(steam_id, split_times, trail_name):
@@ -24,8 +56,8 @@ class PlayerDB():
         time_hash = hash(str(split_times[len(split_times)-1])+str(steam_id)+str(time.time()))
         con.execute(
             f'''
-            INSERT INTO Times (steam_id, time_id, total_time, timestamp, trail_name)
-            VALUES ("{steam_id}", "{time_hash}", "{split_times[len(split_times)-1]}", {time.time()}, "{trail_name}")
+            INSERT INTO Times (steam_id, time_id, timestamp, trail_name)
+            VALUES ("{steam_id}", "{time_hash}", {time.time()}, "{trail_name}")
             ''')
         for n, split_time in enumerate(split_times):
             con.execute(

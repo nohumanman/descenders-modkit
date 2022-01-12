@@ -16,8 +16,8 @@
     </head>
     <body style="padding:0; margin:0;">
         <div id="app">
-            <v-app style="background: #0047bb;">
-                <v-main>
+            <v-app style="font-family: MontHeavy; background: #0047bb;">
+                <v-main v-if="go">
 
                     <v-expand-x-transition>
                         <v-alert style="text-align: center; font-size:100px" max-width="800" justify="text-center">
@@ -26,8 +26,8 @@
                     </v-expand-x-transition>
 
                     <v-expand-x-transition>
-                        <v-alert dense style="text-align: center; font-size:100px" max-width="800" :color="split_time_colour((5-2))" v-show="entered_checkpoint">
-                            [[get_split_time_difference((5-5))]]
+                        <v-alert dense style="text-align: center; font-size:100px" max-width="800" :color="split_time_colour((split_times[split_times.length-1]-fastest_split_times[split_times.length-1]))" v-show="entered_checkpoint">
+                            [[get_split_time_difference((split_times[split_times.length-1]-fastest_split_times[split_times.length-1]))]]
                         </v-alert>
                     </v-expand-x-transition>
                 </v-main>
@@ -36,6 +36,12 @@
     </body>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <style>
+        @font-face {
+            font-family: MontHeavy;
+            src: url("/static/monofonto.otf");
+        }
+    </style>
     <script>        
         var app = new Vue({
             el: '#app',
@@ -54,12 +60,13 @@
             },
             }),
             data : {
-                time : "01:23:234",
+                time : 0,
                 name: "none",
                 time_start: 0,
                 split_times: [],
                 fastest_split_times: [],
                 entered_checkpoint: true,
+                go : false,
             },
             methods: {
                 split_time_colour(val){
@@ -71,7 +78,7 @@
                     }
                 },
                 get_split_time_difference(val){
-                    val = (Math.round(val/1000)*1000)
+                    val = (Math.round(val*1000)/1000)
                     if (val > 0){
                         return "+" + val.toString();
                     }
@@ -81,18 +88,33 @@
                 },
                 updateData(){
                     $.get("/API/GET-DATA", function(data){
-                        app.time_start = data["time_start"]
-                        app.name = data["name"]
-                        app.split_times = data["split_times"]
-                        app.fastest_split_times = data["fastest_split_times"]
-                        app.entered_checkpoint = data["entered_checkpoint"]
+                        if (data["monitoring"]){
+                            app.time_start = data["time_start"]
+                            app.name = data["name"]
+                            app.split_times = data["split_times"]
+                            app.fastest_split_times = data["fastest_split_times"]
+                            // if is first checkpoint, don't display checkpoint ui.
+                            if (isNaN(app.split_times[app.split_times.length-1]-app.fastest_split_times[app.split_times.length-1])){
+                                app.entered_checkpoint = false;
+                            }
+                            else{
+                                app.entered_checkpoint = data["entered_checkpoint"]
+                            }
+                            app.go = true;
+                        }
+                        else{
+                            console.log("Not Monitoring any players.")
+                            app.go = false;
+                        }
                     })
                 },
                 updateTime(){
-                    console.log("Time started:" + app.time_start.toString())
-                    console.log("Time now:" + new Date().getTime().toString())
-                    app.time = ((((new Date()).getTime())) - app.time_start*1000) / 1000;
-                    console.log(app.time);
+                    if (app.go){
+                        //console.log("Time started:" + app.time_start.toString())
+                        //console.log("Time now:" + new Date().getTime().toString())
+                        app.time = Math.round((((((new Date()).getTime())) - app.time_start*1000) / 1000) * 1000) / 1000;
+                        //console.log(app.time);
+                    }
                 },
             }
         }

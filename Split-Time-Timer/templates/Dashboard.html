@@ -14,9 +14,9 @@
         <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
     </head>
-    <body style="padding:0; margin:0;">
+    <body style="padding:0; margin:0;" style="font-family: MontHeavy;">
         <div id="app">
-            <v-app>
+            <v-app style="font-family: MontHeavy;">
                 <v-main>
                     <v-tabs>
                         <v-tab>Players</v-tab>
@@ -31,11 +31,12 @@
                                             Current World - [[player.current_world]]<br>
                                             Trail Start Time - [[player.trail_start_time]]<br>
                                             Split Times - [[player.split_times]]<br>
+                                            Current Trail - [[player.current_trail]]
                                         </v-card-text>
                                         <v-card-actions>
-                                            <v-checkbox v-model="player.is_competitor" label="Competitor"></v-checkbox>
+                                            <v-checkbox v-model="player.is_competitor" @click="toggle_competitor(player.steam_id)" label="Competitor"></v-checkbox>
                                             <v-spacer></v-spacer>
-                                            <v-btn :colour="getColFromMonitoring(player.being_monitored)"/><v-icon>mdi-cctv</v-icon></v-btn>
+                                            <v-btn @click="monitor_player(player.steam_id)" :color="getColFromMonitoring(player.being_monitored)"/><v-icon>mdi-cctv</v-icon></v-btn>
                                         </v-card-actions>
                                     </v-card>
                                     <br><br>
@@ -50,6 +51,12 @@
     </body>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <style>
+        @font-face {
+            font-family: MontHeavy;
+            src: url("/static/monofonto.otf");
+        }
+    </style>
     <script>        
         var app = new Vue({
             el: '#app',
@@ -86,6 +93,13 @@
                     else{
                         return "black"
                     }
+                },
+                monitor_player(steam_id){
+                    console.log("Monitoring player " + steam_id)
+                    $.get('/API/MONITOR/' + steam_id);
+                },
+                toggle_competitor(steam_id){
+                    $.get("/API/BECOME-COMPETITOR/" + steam_id)
                 }
             }
         }
