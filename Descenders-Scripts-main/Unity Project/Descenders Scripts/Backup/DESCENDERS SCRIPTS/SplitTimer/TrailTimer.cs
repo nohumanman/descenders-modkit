@@ -12,6 +12,7 @@ namespace SplitTimer{
 		public GameObject checkpoints_objs;
 		[System.NonSerialized]
 		public List<Checkpoint> checkpoints = new List<Checkpoint>();
+		public CheckpointUI checkpointUI;
 		private SteamIntegration steamIntegration = new SteamIntegration();
 		void Start(){
 			foreach (Checkpoint checkpoint_obj in checkpoints_objs.GetComponentsInChildren<Checkpoint>()){
@@ -21,6 +22,7 @@ namespace SplitTimer{
 		public void EnteredCheckpoint(Checkpoint checkpoint){
 			if (checkpoint.checkpointType == CheckpointType.start){
 				Debug.Log("TrailTimer - Entered startline!");
+				checkpointUI.RestartTimer();
 				current_checkpoint_num = 0;
 			}
 			else if (checkpoint.checkpointType == CheckpointType.intermediate){
@@ -32,6 +34,7 @@ namespace SplitTimer{
 			}
 			else if (checkpoint.checkpointType == CheckpointType.stop){
 				Debug.Log("TrailTimer - Entered Finish Line!");
+				checkpointUI.StopTimer();
 				current_checkpoint_num++;
 			}
 			SplitTimer splitTimer = SplitTimer.Instance.gameObject.GetComponent<SplitTimer>();
@@ -42,6 +45,7 @@ namespace SplitTimer{
 				current_checkpoint_num.ToString(),
 				checkpoints.Count.ToString()
 				);
+			checkpointUI.EnterCheckpoint();
 		}
 		public void TimeInvalidated(){
 			current_checkpoint_num = 0;
