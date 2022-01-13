@@ -60,9 +60,11 @@ def app_monitor_steam_id(steam_id):
 @app.route("/API/BECOME-COMPETITOR/<steam_id>")
 def api_become_competitor_toggle(steam_id):
     if timer.players[steam_id].is_competitor:
+        PlayerDB.become_competitor(steam_id, False, timer.players[steam_id].steam_name)
         timer.players[steam_id].is_competitor = False
     else:
-         timer.players[steam_id].is_competitor = True
+        PlayerDB.become_competitor(steam_id, True, timer.players[steam_id].steam_name)
+        timer.players[steam_id].is_competitor = True
     return "Monitoring"
 
 @app.route("/API/DASHBOARD/GET-PLAYERS")

@@ -15,38 +15,60 @@ class PlayerDB():
         con.commit()
 
     @staticmethod
-    def become_competitor(steam_id, is_competitor):
+    def become_competitor(steam_id, is_competitor, steam_name):
         con = sqlite3.connect("TimeStats.db")
         if is_competitor:
             con.execute(
                 f'''
-                REPLACE INTO Players (is_competitor)
-                VALUES ("true") WHERE steam_id = "{steam_id}"
+                REPLACE INTO Players (steam_id, steam_name, is_competitor)
+                VALUES ("{steam_id}", "{steam_name}", "true")
                 '''
             )
         else:
             con.execute(
                 f'''
-                REPLACE INTO Players (is_competitor)
-                VALUES ("false") WHERE steam_id = "{steam_id}"
+                REPLACE INTO Players (steam_id, steam_name, is_competitor)
+                VALUES ("{steam_id}", "{steam_name}", "false")
                 '''
             )
+        con.commit()
         print("Function not complete - become_competitor")
 
     @staticmethod
-    def get_fastest_split_times(trail_name, competitors_only=False):
+    def get_fastest_split_times(trail_name, competitors_only=False, min_timestamp=None):
         con = sqlite3.connect("TimeStats.db")
-        temp = -5555490718959231365
-        print("Getting fastest split times...")
+        statement = '''
+                SELECT "Split Times".time_id, "Split Times".checkpoint_num, "Split Times".checkpoint_time, Times.trail_name, Players.is_competitor, Players.steam_name, Times.timestamp from 
+                "Split Times"
+                INNER JOIN Times ON "Split Times".time_id = Times.time_id
+                INNER JOIN Players ON Times.steam_id = Players.steam_id\n
+            '''
+        statement += f'''WHERE trail_name = "{trail_name}"'''''
+        if min_timestamp is not None:
+            statement += f''' AND timestamp>{min_timestamp}'''
+        elif competitors_only:
+            statement += ''' AND is_competitor != "false"'''
+        statement += '''
+            order by checkpoint_num DESC, checkpoint_time asc
+            limit 1;
+            '''
+        #print(statement)
+        time_id = con.execute(statement).fetchall()
+        try:
+            fastest_time_on_trail_id = time_id[0][0]
+        except IndexError:
+            print("No trail specified")
+            return []
+
         times = con.execute(
             f'''
             SELECT * FROM "Split Times"
-            WHERE time_id = "{temp}" ORDER BY checkpoint_num
+            WHERE time_id = "{fastest_time_on_trail_id}" ORDER BY checkpoint_num
             '''
         ).fetchall()
-        print(times)
+        #print(times)
         split_times = [time[2] for time in times]
-        print(times)
+        #print(times)
         con.close()
         return split_times
 

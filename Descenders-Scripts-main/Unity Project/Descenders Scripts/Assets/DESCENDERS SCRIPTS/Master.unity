@@ -6653,7 +6653,7 @@ GameObject:
   - component: {fileID: 940464575}
   - component: {fileID: 940464574}
   m_Layer: 0
-  m_Name: Lapidation
+  m_Name: Trail1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6670,7 +6670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d1e8e10ddceca042bc5eee83d894717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trail_name: Lapidation
+  trail_name: Trail1
   checkpoints_objs: {fileID: 446272911}
 --- !u!4 &940464575
 Transform:
