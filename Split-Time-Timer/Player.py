@@ -39,6 +39,7 @@ class Player():
         self.online = True
         if checkpoint_num == 0:
             self.split_times = []
+            self.current_trail = "none" 
             self.trail_start_time = time.time()
         elif checkpoint_num == total_checkpoints-1:
             self.split_times.append(checkpoint_time - self.trail_start_time)
@@ -51,9 +52,6 @@ class Player():
         self.online = True
         print("SUBMITTING TIME - TRAIL COMPLETE!!")
         PlayerDB.submit_time(self.steam_id, split_times, trail_name)
-        self.split_times = []
-        self.trail_start_time = time.time()
-        self.current_trail = "none"
 
     def disable_entered_checkpoint(self, delay):
         time.sleep(delay)

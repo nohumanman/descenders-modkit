@@ -112,7 +112,20 @@
                     if (app.go){
                         //console.log("Time started:" + app.time_start.toString())
                         //console.log("Time now:" + new Date().getTime().toString())
-                        app.time = Math.round((((((new Date()).getTime())) - app.time_start*1000) / 1000) * 1000) / 1000;
+                        console.log(app.split_times.length)
+                        console.log(app.fastest_split_times.length)
+                        if (app.split_times.length == app.fastest_split_times.length && app.fastest_split_times.length != 0){
+                            app.time = Math.round(((app.split_times[app.split_times.length-1]*1000) / 1000) * 1000) / 1000;
+                            if (app.time > 164200000){
+                                app.time = "Not Started"
+                            }
+                        }
+                        else{
+                            app.time = Math.round((((((new Date()).getTime())) - app.time_start*1000) / 1000) * 1000) / 1000;
+                            if (app.time > 164200000){
+                                app.time = "Not Started"
+                            }
+                        }
                         //console.log(app.time);
                     }
                 },
