@@ -35,7 +35,7 @@ class PlayerDB():
         print("Function not complete - become_competitor")
 
     @staticmethod
-    def get_fastest_split_times(trail_name, competitors_only=False, min_timestamp=None):
+    def get_fastest_split_times(trail_name, competitors_only=False, min_timestamp=None, monitored_only=False):
         con = sqlite3.connect("TimeStats.db")
         statement = '''
                 SELECT "Split Times".time_id, "Split Times".checkpoint_num, "Split Times".checkpoint_time, Times.trail_name, Players.is_competitor, Players.steam_name, Times.timestamp from 
@@ -48,6 +48,8 @@ class PlayerDB():
             statement += f''' AND timestamp>{min_timestamp}'''
         elif competitors_only:
             statement += ''' AND is_competitor != "false"'''
+        elif monitored_only:
+            statement += ''' AND was_monitored != "True"'''
         statement += '''
             order by checkpoint_num DESC, checkpoint_time asc
             limit 1;
@@ -73,13 +75,40 @@ class PlayerDB():
         return split_times
 
     @staticmethod
-    def submit_time(steam_id, split_times, trail_name):
+    def get_leaderboard_data():
+        con = sqlite3.connect("TimeStats.db")
+        times_req = con.execute(
+            f'''
+                SELECT * FROM Players
+                LEFT JOIN Times ON Players.steam_id=Times.steam_id
+                LEFT JOIN "Split Times" ON Times.time_id = "Split Times".time_id
+                ORDER BY checkpoint_num
+            '''
+        ).fetchall()
+        times = [
+            {
+                "steam_id" : time[0],
+                "steam_name" : time[1],
+                "is_competitor" : time[2],
+                #"steam_id" : time[3],
+                "time_id" : time[4],
+                "timestamp" : time[5],
+                "trail_name" : time[6],
+                "was_monitored" : time[7],
+                "checkpoint_num" : time[9],
+                "checkpoint_time" : time[10]
+            }
+            for time in times_req]
+        return times
+
+    @staticmethod
+    def submit_time(steam_id, split_times, trail_name, being_monitored):
         con = sqlite3.connect("TimeStats.db")
         time_hash = hash(str(split_times[len(split_times)-1])+str(steam_id)+str(time.time()))
         con.execute(
             f'''
-            INSERT INTO Times (steam_id, time_id, timestamp, trail_name)
-            VALUES ("{steam_id}", "{time_hash}", {time.time()}, "{trail_name}")
+            INSERT INTO Times (steam_id, time_id, timestamp, trail_name, was_monitored)
+            VALUES ("{steam_id}", "{time_hash}", {time.time()}, "{trail_name}", "{str(being_monitored)}")
             ''')
         for n, split_time in enumerate(split_times):
             con.execute(

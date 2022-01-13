@@ -22,6 +22,7 @@
                         <v-tab>Players</v-tab>
                         <v-tab>Leaderboards</v-tab>
                         <v-tab-item>
+                            <v-checkbox v-model="competitor_only" @click="fastest_is_competitor_only(true);" label="Competitor Only"></v-checkbox>
                             <v-list>
                                 <v-container v-for="player in players">
                                     <v-card x-large :color="player.colour">
@@ -43,7 +44,14 @@
                                 </v-container>
                             </v-list>
                         </v-tab-item>
+                        <v-tab-item>
+                            leaderboard_info
+                            <v-data-table
+                                :headers="leaderboard_headers"
+                                :items="leaderboard_info">
 
+                            </v-data-table>
+                        </v-tab-item>
                     </v-tabs>
                 </v-main>
             </v-app>
@@ -78,6 +86,24 @@
                 players: [{
                     "steam_name" : "stid"
                 }],
+                "competitor_only" : false,
+                leaderboard_info : [
+                    {"yote" : "65"},
+                    {"yote" : "23"},
+                    {"yote" : "23"},
+                    {"yote" : "23"}
+                ],
+                leaderboard_headers : [
+                    {text: "steam_id", value: "steam_id"},
+                    {text: "steam_name", value:"steam_name"},
+                    {text:"is_competitor", value:"is_competitor"},
+                    {text:"time_id", value:"time_id"},
+                    {text:"timestamp", value:"timestamp"},
+                    {text:"trail_name", value:"trail_name"},
+                    {text:"was_monitored", value:"was_monitored"},
+                    {text:"checkpoint_num", value:"checkpoint_num"},
+                    {text:"checkpoint_time", value: "checkpoint_time"}
+                ]
             },
             methods: {
                 update_players(){
@@ -100,12 +126,24 @@
                 },
                 toggle_competitor(steam_id){
                     $.get("/API/BECOME-COMPETITOR/" + steam_id)
+                },
+                fastest_is_competitor_only(is_enabled){
+                    app.fastest_is_competitor_only = is_enabled;
+
+                },
+                update_leaderboard(){
+                    $.get("/API/DASHBOARD/LEADERBOARD", function(data){
+                        app.leaderboard_info = data["data"]
+                    })
                 }
             }
         }
         )
         setInterval(function(){
             app.update_players();
-        }, 100);
+        }, 500);
+        setInterval(function(){
+            app.update_leaderboard();
+        }, 500);
     </script>
 </html>

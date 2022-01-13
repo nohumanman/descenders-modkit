@@ -52,9 +52,14 @@ def api_timer_enter_checkpoint(checkpoint_num):
 @app.route("/API/MONITOR/<steam_id>")
 def app_monitor_steam_id(steam_id):
     if timer.monitored_player == timer.players[steam_id]:
+        if timer.monitored_player is not None:
+            timer.monitored_player.being_monitored = False
         timer.monitored_player = None
     else:
+        if timer.monitored_player is not None:
+            timer.monitored_player.being_monitored = False
         timer.monitored_player = timer.players[steam_id]
+        timer.monitored_player.being_monitored = True
     return "Monitoring"
 
 @app.route("/API/BECOME-COMPETITOR/<steam_id>")
@@ -66,6 +71,10 @@ def api_become_competitor_toggle(steam_id):
         PlayerDB.become_competitor(steam_id, True, timer.players[steam_id].steam_name)
         timer.players[steam_id].is_competitor = True
     return "Monitoring"
+
+@app.route("/API/DASHBOARD/LEADERBOARD")
+def api_dashboard_leaderboard():
+    return jsonify({"data" : PlayerDB.get_leaderboard_data()})
 
 @app.route("/API/DASHBOARD/GET-PLAYERS")
 def api_get_players():
@@ -90,12 +99,24 @@ def api_get_players():
 
 @app.route("/API/GET-DATA")
 def api_get_data():
+    comp_only = request.args.get("competitor_only")
+    timestamp = request.args.get("min_timestamp")
+    monitored_only = request.args.get("monitored_only")
+    if comp_only == "True":
+        comp_only = True
+    else:
+        comp_only = False
+    if monitored_only == "True":
+        monitored_only = True
+    else:
+        monitored_only = False
+    
     try:
         return jsonify({
             "time_start" : timer.monitored_player.trail_start_time,
             "name" : timer.monitored_player.steam_name,
             "split_times" : timer.monitored_player.split_times,
-            "fastest_split_times" : PlayerDB.get_fastest_split_times(timer.monitored_player.current_trail),
+            "fastest_split_times" : PlayerDB.get_fastest_split_times(timer.monitored_player.current_trail, competitors_only=comp_only, min_timestamp=timestamp, monitored_only=monitored_only),
             "entered_checkpoint" : timer.monitored_player.has_entered_checkpoint,
             "monitoring" : True
         })

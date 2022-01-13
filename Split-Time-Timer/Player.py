@@ -15,6 +15,7 @@ class Player():
         self.is_competitor = is_competitor
         self.trail_start_time = 0
         self.split_times = []
+        self.being_monitored = False
         self.time_started = None
         self.time_ended = None
         self.has_entered_checkpoint = False
@@ -51,7 +52,7 @@ class Player():
     def submit_time(self, split_times, trail_name):
         self.online = True
         print("SUBMITTING TIME - TRAIL COMPLETE!!")
-        PlayerDB.submit_time(self.steam_id, split_times, trail_name)
+        PlayerDB.submit_time(self.steam_id, split_times, trail_name, self.being_monitored)
 
     def disable_entered_checkpoint(self, delay):
         time.sleep(delay)
