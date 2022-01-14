@@ -2616,7 +2616,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3.6499732, y: 453.84995}
+  m_AnchoredPosition: {x: 3.6499732, y: 453.2}
   m_SizeDelta: {x: 671.32, y: 172.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &395244897
@@ -2638,7 +2638,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: 480397ca0b756b94489829db3081be8d, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -9521,8 +9521,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.5, y: 452.8}
-  m_SizeDelta: {x: 6.76, y: 825.32}
+  m_AnchoredPosition: {x: 0.8, y: 453.1}
+  m_SizeDelta: {x: 6.76, y: 850.87}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1245921000
 MonoBehaviour:
@@ -9958,8 +9958,8 @@ CanvasGroup:
   m_GameObject: {fileID: 1279246125}
   m_Enabled: 1
   m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &1285563023
 GameObject:
@@ -10863,8 +10863,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -151.3, y: 414.1}
-  m_SizeDelta: {x: 423.4, y: 107.2}
+  m_AnchoredPosition: {x: -148.70007, y: 417.7}
+  m_SizeDelta: {x: 389.87, y: 73.16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1401067743
 MonoBehaviour:
@@ -12242,8 +12242,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000005722, y: 495.39996}
-  m_SizeDelta: {x: 1352, y: 181.3}
+  m_AnchoredPosition: {x: -0.50002, y: 495.09}
+  m_SizeDelta: {x: 1352, y: 180.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1567856097
 MonoBehaviour:
@@ -12296,7 +12296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_EffectColor: {r: 1, g: 1, b: 1, a: 0.5}
-  m_EffectDistance: {x: 7, y: 7}
+  m_EffectDistance: {x: 3, y: 3}
   m_UseGraphicAlpha: 1
 --- !u!1 &1579146077
 GameObject:
@@ -13055,8 +13055,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 165.1, y: 414.1}
-  m_SizeDelta: {x: 462.8, y: 107.2}
+  m_AnchoredPosition: {x: 144.93, y: 417.7}
+  m_SizeDelta: {x: 389.87, y: 73.16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1641782281
 MonoBehaviour:

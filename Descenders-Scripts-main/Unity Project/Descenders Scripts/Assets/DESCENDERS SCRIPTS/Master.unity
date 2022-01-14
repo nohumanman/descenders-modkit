@@ -2616,7 +2616,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3.6499732, y: 453.84995}
+  m_AnchoredPosition: {x: 3.6499732, y: 453.2}
   m_SizeDelta: {x: 671.32, y: 172.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &395244897
@@ -2638,7 +2638,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 2800000, guid: 480397ca0b756b94489829db3081be8d, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -9958,8 +9958,8 @@ CanvasGroup:
   m_GameObject: {fileID: 1279246125}
   m_Enabled: 1
   m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &1285563023
 GameObject:

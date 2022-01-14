@@ -8,7 +8,7 @@ namespace SplitTimer{
 		public TrailTimer trailTimer;
 		public CheckpointType checkpointType;
 		public void OnTriggerEnter(Collider other){
-            if (other.transform.name == "Bike")
+            if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
 				trailTimer.EnteredCheckpoint(this);
 			}
