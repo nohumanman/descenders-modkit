@@ -24,6 +24,7 @@ namespace SplitTimer{
 		void Start(){
 			checkpointUi.alpha = 0;
 			GetFastestTimes();
+			StartCoroutine(KeepFastestTimesUpdated());
 		}
 		void Update () {
 			if (shouldIncrement){
