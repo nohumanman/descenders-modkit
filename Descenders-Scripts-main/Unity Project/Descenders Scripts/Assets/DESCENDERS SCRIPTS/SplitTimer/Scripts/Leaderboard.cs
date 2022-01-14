@@ -27,6 +27,7 @@ namespace SplitTimer{
 			// make get request to refresh leaderboard.
 			Debug.Log("Updating Leaderboard");
 			StartCoroutine(CoroUpdateLeaderboard(10));
+			StartCoroutine(KeepUpdatingLeaderboard(10));
 			
 		}
 		IEnumerator KeepUpdatingLeaderboard(int num){

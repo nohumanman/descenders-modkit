@@ -14,6 +14,8 @@ namespace SplitTimer{
 		public Text checkpointTimer;
 		public Text checkpointComparisonTimer;
 		public CanvasGroup checkpointUi;
+		public CanvasGroup greenFlash;
+		public RawImage green;
 		bool shouldIncrement;
 		private float timeCount;
 		public bool isCheckpointUIEnabled = true;
@@ -24,6 +26,7 @@ namespace SplitTimer{
 		void Start(){
 			checkpointUi.alpha = 0;
 			GetFastestTimes();
+			StartCoroutine(KeepFastestTimesUpdated());
 		}
 		void Update () {
 			if (shouldIncrement){
@@ -52,6 +55,26 @@ namespace SplitTimer{
 			checkpointTimer.text = "Yours: " + primaryTimer.text;
 			if (trailTimer.current_checkpoint_num != 0){
 				checkpointComparisonTimer.text = "Fastest: " + FormatTime(fastest_split_times.fastest_split_times[trailTimer.current_checkpoint_num-1]).ToString();
+				float fast_split_time = fastest_split_times.fastest_split_times[trailTimer.current_checkpoint_num-1];
+				float our_split_time = timeCount;
+				if (fast_split_time-our_split_time < 0){
+					// don't bother
+					green.color = Color.red;
+					greenFlash.alpha = 1;
+					StartCoroutine(FadeOutGreen());
+				}
+				else if (fast_split_time-our_split_time > 0){
+					green.color = Color.green;
+					greenFlash.alpha = 1;
+					StartCoroutine(FadeOutGreen());
+					// FadeOutGreen
+				}
+				else if (fast_split_time-our_split_time == 0){
+					green.color = Color.white;
+					greenFlash.alpha = 1;
+					StartCoroutine(FadeOutGreen());
+					// FadeOutGreen
+				}
 			}
 			else{
 				checkpointComparisonTimer.text = "Fastest: 00:00:00";
@@ -61,6 +84,12 @@ namespace SplitTimer{
 			}
 			StartCoroutine(DisableText(checkpointTimer.gameObject));
 			StartCoroutine(DisableText(checkpointComparisonTimer.gameObject));
+		}
+		IEnumerator FadeOutGreen(){
+			while (greenFlash.alpha != 0){
+				greenFlash.alpha -= 0.01f;
+				yield return new WaitForSeconds(0.01f);
+			}
 		}
 		public void RestartTimer(){
 			timeCount = 0;
