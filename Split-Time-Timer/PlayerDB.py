@@ -45,7 +45,7 @@ class PlayerDB():
             '''
         statement += f'''WHERE trail_name = "{trail_name}"'''''
         if min_timestamp is not None:
-            statement += f''' AND timestamp>{min_timestamp}'''
+            statement += f''' AND timestamp>{float(min_timestamp)}'''
         elif competitors_only:
             statement += ''' AND is_competitor != "false"'''
         elif monitored_only:
@@ -73,6 +73,9 @@ class PlayerDB():
         #print(times)
         con.close()
         return split_times
+
+    @staticmethod
+    def 
 
     @staticmethod
     def get_leaderboard_data():
