@@ -42,7 +42,6 @@ namespace SplitTimer{
 			{
 				yield return webRequest.SendWebRequest();
 				string data = webRequest.downloadHandler.text;
-				Debug.Log(data);
 				LeaderboardData leaderboardData = JsonUtility.FromJson<LeaderboardData>(data);
 				UpdateText(leaderboardData);
 			}

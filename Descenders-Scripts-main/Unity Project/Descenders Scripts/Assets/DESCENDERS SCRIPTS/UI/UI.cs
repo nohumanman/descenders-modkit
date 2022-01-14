@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ModTool.Interface;
-using Quests;
+
 namespace CustomUi {
 	public class UI : ModBehaviour {
 		public GameObject map;
@@ -12,9 +12,22 @@ namespace CustomUi {
 		public GameObject BikeSwitcher;
 		public Section currentSection;
 		public Animator blackTint;
+		private static UI _instance;
+    	public static UI Instance { get { return _instance; } }
+		private void Awake()
+		{
+			if (_instance != null && _instance != this)
+			{
+				Destroy(this.gameObject);
+			}
+			else {
+				_instance = this;
+			}
+		}
 		public enum Section{
 			Map, Quests, Landmarks, Help, BikeSwitcher, Tombstones
 		}
+		
 		public bool isShowing;
 		void Start(){
 			if (map.activeInHierarchy || menu.activeInHierarchy || help.activeInHierarchy){
@@ -47,7 +60,7 @@ namespace CustomUi {
 		}
 
 		void Update () {
-			if (Input.GetKeyDown(KeyCode.M)){
+			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.M)){
 				if (!isShowing){
 					if (currentSection == Section.Map){
 						GoMap();

@@ -4,6 +4,7 @@ using UnityEngine;
 using ModTool.Interface;
 using UnityEngine.UI;
 using UnityEngine.Networking;
+using CustomUi;
 
 namespace SplitTimer{
 	public class CheckpointUI : ModBehaviour {
@@ -19,6 +20,7 @@ namespace SplitTimer{
 		bool shouldIncrement;
 		private float timeCount;
 		public bool isCheckpointUIEnabled = true;
+		public UI ui = UI.Instance;
 		public FastestSplitTimes fastest_split_times;
 		public struct FastestSplitTimes{
 			public float[] fastest_split_times;
@@ -27,13 +29,14 @@ namespace SplitTimer{
 			checkpointUi.alpha = 0;
 			GetFastestTimes();
 			StartCoroutine(KeepFastestTimesUpdated());
+			ui = UI.Instance;
 		}
 		void Update () {
 			if (shouldIncrement){
 				timeCount += Time.deltaTime;
 			}
 			primaryTimer.text = FormatTime(timeCount);
-			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha1)){
+			if ((Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha1))){
 				isCheckpointUIEnabled = !isCheckpointUIEnabled;
 				if (checkpointUi.alpha == 0){
 					checkpointUi.alpha = 1;
@@ -41,6 +44,9 @@ namespace SplitTimer{
 				else{
 					checkpointUi.alpha = 0;
 				}
+			}
+			if (ui.isShowing){
+				checkpointUi.alpha = 0;
 			}
 		}
 		IEnumerator KeepFastestTimesUpdated(){
@@ -114,7 +120,7 @@ namespace SplitTimer{
 			{
 				yield return webRequest.SendWebRequest();
 				string data = webRequest.downloadHandler.text;
-				Debug.Log(data);
+				//Debug.Log(data);
 				fastest_split_times = JsonUtility.FromJson<FastestSplitTimes>(data);
 			}
 		}
