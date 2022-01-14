@@ -75,7 +75,44 @@ class PlayerDB():
         return split_times
 
     @staticmethod
-    def 
+    def execute_sql(statement : str, write=False):
+        with sqlite3.connect("TimeStats.db") as con:
+            execution = con.execute(statement)
+            if write:
+                con.commit()
+            return execution.fetchall()      
+
+    @staticmethod
+    def get_leaderboard_descenders(trail_name, num=10):
+        # to get the top 10 fastest times from Times.
+        # this requires finding the highest checkpoint
+        # number with the lowest checkpoint time, 10 times.
+        # WHERE trail_name = "xyz"
+        statement = f'''
+            SELECT *, MIN(checkpoint_time) FROM Times
+            INNER JOIN "Split Times" ON "Split Times".time_id=Times.time_id 
+            INNER JOIN (SELECT max(checkpoint_num) AS max_checkpoint FROM "Split Times")  ON "Split Times".time_id=Times.time_id
+            INNER JOIN Players ON Players.steam_id=Times.steam_id
+            WHERE trail_name = "{trail_name}" AND checkpoint_num = max_checkpoint
+            GROUP BY Players.steam_id
+            ORDER BY checkpoint_time ASC
+            LIMIT {num};
+        '''
+        result = PlayerDB.execute_sql(statement)
+        print(result)
+        return [
+            {
+                "steam_id" : time[0],
+                "time_id" : time[1],
+                "timestamp" : time[2],
+                "trail_name": time[3],
+                "was_monitored" : time[4],
+                "total_time" : time[7],
+                "steam_name": time[10],
+                "is_competitor" : time[11]
+            }
+            for time in result
+        ]
 
     @staticmethod
     def get_leaderboard_data():

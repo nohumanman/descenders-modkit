@@ -6,7 +6,7 @@ using ModTool.Interface;
 
 namespace SplitTimer{
 	public class TrailTimer : ModBehaviour {
-		int current_checkpoint_num = 0;
+		public int current_checkpoint_num = 0;
 		public string trail_name;
 		[Tooltip("Make sure to include the start and finish as well!")]
 		public GameObject checkpoints_objs;

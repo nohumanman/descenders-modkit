@@ -9,7 +9,8 @@ namespace SplitTimer{
 	public class SplitTimerAPI : ModBehaviour {
 		public string server = "descenders-api.nohumanman.com";
 		public string port = "8080";
-		string contact = "";
+		[System.NonSerialized]
+		public string contact = "";
 		public void LoadIntoMap(string world_name, string steam_name, string steam_id){
 			contact = server.ToString() + ":" + port.ToString();
 			Debug.Log("SplitTimerAPI - Loaded into " + world_name + " with steam name " + steam_name + " and steam id " + steam_id);

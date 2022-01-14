@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ModTool.Interface;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
 namespace SplitTimer{
 	public class CheckpointUI : ModBehaviour {
@@ -11,11 +12,17 @@ namespace SplitTimer{
 		public TrailTimer trailTimer;
 		public Text primaryTimer;
 		public Text checkpointTimer;
+		public Text checkpointComparisonTimer;
 		public CanvasGroup checkpointUi;
 		bool shouldIncrement;
 		private float timeCount;
 		public bool isCheckpointUIEnabled = true;
+		public FastestSplitTimes fastest_split_times;
+		public struct FastestSplitTimes{
+			public float[] fastest_split_times;
+		}
 		void Start(){
+			checkpointUi.alpha = 0;
 			GetFastestTimes();
 		}
 		void Update () {
@@ -33,10 +40,27 @@ namespace SplitTimer{
 				}
 			}
 		}
+		IEnumerator KeepFastestTimesUpdated(){
+			while (true){
+				yield return new WaitForSeconds(10f);
+				GetFastestTimes();
+			}
+		}
 		public void EnterCheckpoint(){
 			checkpointTimer.gameObject.SetActive(true);
-			checkpointTimer.text = primaryTimer.text;
+			checkpointComparisonTimer.gameObject.SetActive(true);
+			checkpointTimer.text = "Yours: " + primaryTimer.text;
+			if (trailTimer.current_checkpoint_num != 0){
+				checkpointComparisonTimer.text = "Fastest: " + FormatTime(fastest_split_times.fastest_split_times[trailTimer.current_checkpoint_num-1]).ToString();
+			}
+			else{
+				checkpointComparisonTimer.text = "Fastest: 00:00:00";
+			}
+			if (isCheckpointUIEnabled){
+				checkpointUi.alpha = 1;
+			}
 			StartCoroutine(DisableText(checkpointTimer.gameObject));
+			StartCoroutine(DisableText(checkpointComparisonTimer.gameObject));
 		}
 		public void RestartTimer(){
 			timeCount = 0;
@@ -47,8 +71,7 @@ namespace SplitTimer{
 		}
 		public void StopTimer(){
 			shouldIncrement = false;
-			StartCoroutine(DisableText(primaryTimer.gameObject));
-			StartCoroutine(DisableText(checkpointTimer.gameObject));
+			StartCoroutine(DisableTimer());
 		}
 		IEnumerator DisableText(GameObject toDisable){
 			yield return new WaitForSeconds(5f);
@@ -58,7 +81,18 @@ namespace SplitTimer{
 			StartCoroutine(CoroGetFastestTimes(trailTimer.trail_name));
 		}
 		IEnumerator CoroGetFastestTimes(string trail_name){
-			yield return null;
+			using (UnityWebRequest webRequest = UnityWebRequest.Get(SplitTimer.Instance.api.contact + "/API/DESCENDERS-GET-FASTEST-TIME?trail_name=" + trailTimer.trail_name))
+			{
+				yield return webRequest.SendWebRequest();
+				string data = webRequest.downloadHandler.text;
+				Debug.Log(data);
+				fastest_split_times = JsonUtility.FromJson<FastestSplitTimes>(data);
+			}
+		}
+		IEnumerator DisableTimer(){
+			yield return new WaitForSeconds(15f);
+			checkpointUi.alpha = 0;
+
 		}
 		private string FormatTime(float time)
         {

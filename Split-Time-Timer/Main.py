@@ -97,6 +97,39 @@ def api_get_players():
             ]
     }
 
+@app.route("/API/DESCENDERS-LEADERBOARD")
+def api_descenders_leaderboard():
+    try:
+        num = int(request.args.get("num"))
+    except:
+        num = 10
+    trail_name = request.args.get("trail_name")
+    leaderboard_data = PlayerDB.get_leaderboard_descenders(trail_name, num=num)
+    is_competitors = [data["is_competitor"] for data in leaderboard_data]
+    steam_ids = [data["steam_id"] for data in leaderboard_data]
+    steam_names = [data["steam_name"] for data in leaderboard_data]
+    time_ids = [data["time_id"] for data in leaderboard_data]
+    timestamps = [data["timestamp"] for data in leaderboard_data]
+    total_times = [data["total_time"] for data in leaderboard_data]
+    trail_names = [data["trail_name"] for data in leaderboard_data]
+    was_monitoreds = [data["was_monitored"] for data in leaderboard_data]
+
+    return jsonify({
+        "is_competitors" : is_competitors,
+        "steam_ids" : steam_ids,
+        "steam_names": steam_names,
+        "time_ids": time_ids,
+        "timestamps" : timestamps,
+        "total_times": total_times,
+        "trail_names": trail_names,
+        "was_monitoreds": was_monitoreds
+    })
+
+@app.route("/API/DESCENDERS-GET-FASTEST-TIME")
+def api_descenders_get_fastest_split_times():
+    trail_name = request.args.get("trail_name")
+    return {"fastest_split_times" : PlayerDB.get_fastest_split_times(trail_name)}
+
 @app.route("/API/GET-DATA")
 def api_get_data():
     comp_only = request.args.get("competitor_only")
