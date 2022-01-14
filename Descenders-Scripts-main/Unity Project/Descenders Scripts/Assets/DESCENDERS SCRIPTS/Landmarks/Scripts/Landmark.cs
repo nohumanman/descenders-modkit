@@ -25,7 +25,6 @@ namespace Landmarks {
 		public void UnlockCheckmark(){
 			if (currencySystem.TakeFromBal(priceOfLandmark) == true){
 				uI.DisableUI();
-				uI.tracker.SetActive(false);
 				landmarkLocked = false;
 				landmarkSystem.FormDescription();
 				cam.enabled = true;

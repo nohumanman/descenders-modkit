@@ -20,20 +20,10 @@ public class TeleportUi : ModBehaviour {
 		}
 		teleportPoints = GameObject.FindObjectsOfType<TeleportPoint>();
 		foreach(TeleportPoint teleportPoint in teleportPoints){
-			if (teleportPoint.dependantLandmark == null || !teleportPoint.dependantLandmark.landmarkLocked){
-				// spawn unlocked teleporter
-				GameObject el = (GameObject)Instantiate(uiElement);
-				el.transform.SetParent(ContentObj.transform);
-				el.GetComponent<Button>().onClick.AddListener(delegate(){teleporter.SpawnAtPoint(teleportPoint.gameObject); uI.DisableUI();});
-				el.GetComponentInChildren<Text>().text = teleportPoint.teleporterName;
-			}
-			else if (teleportPoint.dependantLandmark.landmarkLocked){
-				// spawn locked teleporter
-				GameObject el = (GameObject)Instantiate(uiElement);
-				el.transform.SetParent(ContentObj.transform);
-				el.GetComponentInChildren<Text>().text = "";
-				el.GetComponentInChildren<RawImage>().texture = lockedTexture;
-			}
+			GameObject el = (GameObject)Instantiate(uiElement);
+			el.transform.SetParent(ContentObj.transform);
+			el.GetComponent<Button>().onClick.AddListener(delegate(){teleporter.SpawnAtPoint(teleportPoint.gameObject); uI.DisableUI();});
+			el.GetComponentInChildren<Text>().text = teleportPoint.teleporterName;
 		}
 	}
 	void Start () {

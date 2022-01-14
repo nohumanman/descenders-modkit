@@ -7,21 +7,17 @@ namespace CustomUi {
 	public class UI : ModBehaviour {
 		public GameObject map;
 		public GameObject menu;
-		public GameObject quests;
-		public GameObject landmarks;
 		public GameObject help;
 		public CanvasGroup tombstoneCanvs;
 		public GameObject BikeSwitcher;
 		public Section currentSection;
 		public Animator blackTint;
-		public GameObject tracker;
-		public QuestSystem questSystem;
 		public enum Section{
 			Map, Quests, Landmarks, Help, BikeSwitcher, Tombstones
 		}
 		public bool isShowing;
 		void Start(){
-			if (map.activeInHierarchy || menu.activeInHierarchy || quests.activeInHierarchy || landmarks.activeInHierarchy || help.activeInHierarchy){
+			if (map.activeInHierarchy || menu.activeInHierarchy || help.activeInHierarchy){
 				isShowing = true;
 			}
 			else{
@@ -56,12 +52,6 @@ namespace CustomUi {
 					if (currentSection == Section.Map){
 						GoMap();
 					}
-					else if (currentSection == Section.Quests){
-						GoQuests();
-					}
-					else if (currentSection == Section.Landmarks){
-						GoLandmarks();
-					}
 					else if (currentSection == Section.Help){
 						GoHelp();
 					}
@@ -87,13 +77,8 @@ namespace CustomUi {
 		public void DisableUI(){
 			cameraViewingTerrain.gameObject.SetActive(false);
 			map.SetActive(false);
-			if (questSystem.currentlyTracking != null){
-				tracker.SetActive(true);
-			}
 			menu.SetActive(false);
 			tombstoneCanvs.alpha = 0;
-			quests.SetActive(false);
-			landmarks.SetActive(false);
 			help.SetActive(false);
 			BikeSwitcher.SetActive(false);
 			Cursor.visible = false;
@@ -103,7 +88,6 @@ namespace CustomUi {
 
 		public void EnableUI(){
 			isShowing = true;
-			tracker.SetActive(false);
 			Cursor.visible = true;
 		}
 
@@ -121,20 +105,6 @@ namespace CustomUi {
 			DisableUI();
 			currentSection = Section.Tombstones;
 			tombstoneCanvs.alpha = 1;
-			menu.SetActive(true);
-			EnableUI();
-		}
-		public void GoQuests(){
-			DisableUI();
-			currentSection = Section.Quests;
-			quests.SetActive(true);
-			menu.SetActive(true);
-			EnableUI();
-		}
-		public void GoLandmarks(){
-			DisableUI();
-			currentSection = Section.Landmarks;
-			landmarks.SetActive(true);
 			menu.SetActive(true);
 			EnableUI();
 		}
