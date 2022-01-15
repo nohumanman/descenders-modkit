@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, make_response, redirect
 from Player import Player
 from Timer import Timer
 import time
@@ -167,9 +167,26 @@ def api_get_data():
     except AttributeError as e:
         return jsonify({"monitoring" : False})
 
+
+@app.route("/login-api", methods=["POST"])
+def login():
+    if request.method == "POST":
+        user = request.form['password']
+        if user == "Big Badonkas123":
+            resp = make_response("200")
+            resp.set_cookie('id', "4565421332145321234565tr5")
+            return resp
+        else:
+            return "nope"
+
+
 @app.route("/")
 def dashboard():
-    return render_template("Dashboard.html")
+    name = request.cookies.get('id')
+    if name != "4565421332145321234565tr5":
+        return render_template("Login.html")
+    else:
+        return render_template("Dashboard.html")
 
 @app.route("/MONITOR")
 def ui_monitor():

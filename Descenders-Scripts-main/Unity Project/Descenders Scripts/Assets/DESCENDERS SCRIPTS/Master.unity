@@ -273,7 +273,7 @@ GameObject:
   m_Component:
   - component: {fileID: 47510679}
   m_Layer: 0
-  m_Name: gateforbmxthing (1)
+  m_Name: Gate 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3200,6 +3200,7 @@ Transform:
   - {fileID: 47510679}
   - {fileID: 1334124877}
   - {fileID: 1116986616}
+  - {fileID: 2076085956}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5838,7 +5839,7 @@ MonoBehaviour:
   greenFlash: {fileID: 1279246127}
   green: {fileID: 395244897}
   isCheckpointUIEnabled: 1
-  ui: {fileID: 0}
+  ui: {fileID: 1249328675}
 --- !u!1 &970135691
 GameObject:
   m_ObjectHideFlags: 0
@@ -7920,7 +7921,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.745
+  m_Volume: 0.579
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -8799,7 +8800,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1334124877}
   m_Layer: 0
-  m_Name: gateforbmxthing (2)
+  m_Name: Gate 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13078,12 +13079,12 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2076085952}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1596.42, y: 0.98, z: -336.99}
-  m_LocalScale: {x: 13.633558, y: 13.633557, z: 13.633557}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2551.1406, y: -539.02106, z: -336.99}
+  m_LocalScale: {x: 9.407156, y: 9.407156, z: 9.407156}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_Father: {fileID: 566422493}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2076766321
 GameObject:
