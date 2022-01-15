@@ -788,39 +788,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 91497356}
---- !u!1 &128064066
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1020753924533312, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 128064067}
-  m_Layer: 0
-  m_Name: TombstoneSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &128064067
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4858949305435830, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 128064066}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 28.254883, y: 43.785934, z: -123.13867}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 844600766}
-  - {fileID: 1134605283}
-  - {fileID: 2056024691}
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &132335570
 GameObject:
   m_ObjectHideFlags: 0
@@ -1659,6 +1626,7 @@ GameObject:
   - component: {fileID: 353784490}
   - component: {fileID: 353784489}
   - component: {fileID: 353784488}
+  - component: {fileID: 353784492}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -1734,6 +1702,18 @@ Transform:
   m_Father: {fileID: 1927164929}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -90, y: -90, z: 270}
+--- !u!114 &353784492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 353784487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00dedceddba88e44f8d0c801db33ac66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumbotronCamera: {fileID: 1069256399}
 --- !u!1 &356466674
 GameObject:
   m_ObjectHideFlags: 0
@@ -2692,7 +2672,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 844600765}
+      - m_Target: {fileID: 0}
         m_MethodName: ToggleJustToday
         m_Mode: 1
         m_Arguments:
@@ -3202,7 +3182,7 @@ Transform:
   - {fileID: 1116986616}
   - {fileID: 2076085956}
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &566422494
 MonoBehaviour:
@@ -4355,7 +4335,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 844600765}
+      - m_Target: {fileID: 0}
         m_MethodName: ToggleJustMe
         m_Mode: 1
         m_Arguments:
@@ -4867,58 +4847,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 747c8e97b51ad9041ab6014381eb0489, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &844600764
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1998440776648726, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 844600766}
-  - component: {fileID: 844600765}
-  m_Layer: 0
-  m_Name: TombstoneHandler
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &844600765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114507021690045060, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 844600764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d3fc4d8a92f72c4aac87c58ee3ba26d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mapName: test
-  justMe: 0
-  justToday: 1
-  justRecentDeaths: 1
-  justMeToggle: {fileID: 737201021}
-  justTodayToggle: {fileID: 483442140}
-  justRecentDeathsToggle: {fileID: 1590526051}
-  url: http://descenders-api.nohumanman.com:8080/tombstones/
-  tombstone: {fileID: 1686254072766380, guid: b5f7244a4c564884f9410c582bc55bb7, type: 2}
---- !u!4 &844600766
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4404442574759086, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 844600764}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -14.514632, y: -38.83737, z: 139.44197}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 128064067}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &847150087
 GameObject:
   m_ObjectHideFlags: 0
@@ -6795,7 +6723,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -6804,7 +6732,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 22.5
+  field of view: 13.5
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -6846,7 +6774,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8a72a6dd733f8e4b903104342875275, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumbotron: {fileID: 1927164930}
+  jumbotron: {fileID: 353784492}
 --- !u!1 &1086541199
 GameObject:
   m_ObjectHideFlags: 0
@@ -7529,104 +7457,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &1134605282
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1067643069416722, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1134605283}
-  - component: {fileID: 1134605286}
-  - component: {fileID: 1134605285}
-  - component: {fileID: 1134605284}
-  m_Layer: 5
-  m_Name: Canvas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1134605283
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 224654922564440730, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1134605282}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 128064067}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
---- !u!114 &1134605284
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114815450457699906, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1134605282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 0
---- !u!114 &1134605285
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114899119820247106, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1134605282}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 1
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1920, y: 1080}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
---- !u!223 &1134605286
-Canvas:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 223958858768918274, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1134605282}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!1 &1144730110
 GameObject:
   m_ObjectHideFlags: 0
@@ -8168,7 +7998,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 844600765}
+      - m_Target: {fileID: 0}
         m_MethodName: InitiateSpawnTombstones
         m_Mode: 1
         m_Arguments:
@@ -9552,7 +9382,7 @@ Transform:
   m_Children:
   - {fileID: 940464575}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1460879175
 GameObject:
@@ -10583,7 +10413,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 844600765}
+      - m_Target: {fileID: 0}
         m_MethodName: ToggleJustRecentDeaths
         m_Mode: 1
         m_Arguments:
@@ -12257,7 +12087,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1927164929}
-  - component: {fileID: 1927164930}
   m_Layer: 0
   m_Name: Jumbotron
   m_TagString: Untagged
@@ -12278,20 +12107,8 @@ Transform:
   - {fileID: 1069256398}
   - {fileID: 353784491}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1927164930
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1927164928}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00dedceddba88e44f8d0c801db33ac66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jumbotronCamera: {fileID: 1069256399}
 --- !u!1 &1953009119
 GameObject:
   m_ObjectHideFlags: 0
@@ -12409,7 +12226,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 844600765}
+      - m_Target: {fileID: 0}
         m_MethodName: DestroyAllTombstones
         m_Mode: 1
         m_Arguments:
@@ -12814,72 +12631,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2037396975}
---- !u!1 &2056024690
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 1379975546461064, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 2056024691}
-  - component: {fileID: 2056024693}
-  - component: {fileID: 2056024692}
-  m_Layer: 0
-  m_Name: EventSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2056024691
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 4516798394430572, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2056024690}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -28.2549, y: -43.78594, z: 123.13867}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 128064067}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2056024692
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114060406010578752, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2056024690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
---- !u!114 &2056024693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114803828740779492, guid: b843e22bae8082e43b2c6c1a567ee6a1,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2056024690}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 0}
-  m_sendNavigationEvents: 1
-  m_DragThreshold: 5
 --- !u!1 &2071472129
 GameObject:
   m_ObjectHideFlags: 0

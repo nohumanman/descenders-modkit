@@ -9,14 +9,16 @@ namespace Jumbotron{
 		
 		// used to prevent texture rendering when not in sight.
 		void ActivateJumbotron(bool is_active = true){
-			jumbotronCamera.enabled = false;
-			jumbotronCamera.jumbotronCamera.enabled = false;
+			jumbotronCamera.enabled = is_active;
+			jumbotronCamera.jumbotronCamera.enabled = is_active;
 		}
 		void OnBecameInvisible(){
-			ActivateJumbotron(true);
+			Debug.Log("Invisible!");
+			ActivateJumbotron(false);
 		}
 		void OnBecameVisible(){
-			ActivateJumbotron(false);
+			Debug.Log("visible!");
+			ActivateJumbotron(true);
 		}
 	}
 }

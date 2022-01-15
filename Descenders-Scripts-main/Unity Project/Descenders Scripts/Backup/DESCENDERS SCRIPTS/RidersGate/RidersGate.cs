@@ -54,7 +54,6 @@ namespace RidersGate{
 			public float random_delay;
 		}
 		IEnumerator DetectIfShouldStartGate(){
-			Debug.Log("Detecting if gate should start!");
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
