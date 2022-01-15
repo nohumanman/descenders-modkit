@@ -7,6 +7,8 @@ TagManager:
   - Checkpoint
   - Startline
   - Finishline
+  - Deathzone
+  - Nobailzone
   layers:
   - Default
   - TransparentFX

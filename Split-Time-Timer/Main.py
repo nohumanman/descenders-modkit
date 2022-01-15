@@ -3,11 +3,13 @@ from Player import Player
 from Timer import Timer
 import time
 from PlayerDB import PlayerDB
+from RidersGate import RidersGate
 
 
 app = Flask(__name__)
 
 timer = Timer()
+riders_gate = RidersGate()
 
 # Player enters map
 @app.route("/API/TIMER/LOADED")
@@ -129,6 +131,15 @@ def api_descenders_leaderboard():
 def api_descenders_get_fastest_split_times():
     trail_name = request.args.get("trail_name")
     return {"fastest_split_times" : PlayerDB.get_fastest_split_times(trail_name)}
+
+@app.route("/API/TOGGLE-RIDERS-GATE-START")
+def api_toggle_riders_gate_start():
+    riders_gate.refresh_random_delay()
+    return "Done"
+
+@app.route("/API/GET-RIDERS-GATE")
+def api_get_riders_gate():
+    return {"random_delay" : riders_gate.random_delay}
 
 @app.route("/API/GET-DATA")
 def api_get_data():
