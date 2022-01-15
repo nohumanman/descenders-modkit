@@ -40,6 +40,7 @@ def api_timer_unloaded():
 # Player enters checkpoint on trail
 @app.route("/API/TIMER/ENTER-CHECKPOINT/<checkpoint_num>")
 def api_timer_enter_checkpoint(checkpoint_num):
+    #time_entered_checkpoint = request.args.get("time_entered_checkpoint")
     trail_name = request.args.get("trail_name")
     steam_name = request.args.get("steam_name")
     steam_id = request.args.get("steam_id")
@@ -192,4 +193,4 @@ def dashboard():
 def ui_monitor():
     return render_template("UI.html")
 
-app.run(host="0.0.0.0", port="8080")
+app.run(host="0.0.0.0", port="8443", ssl_context="adhoc")

@@ -60,7 +60,7 @@ namespace CustomUi {
 		}
 
 		void Update () {
-			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.M)){
+			if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.M)){
 				if (!isShowing){
 					if (currentSection == Section.Map){
 						GoMap();
@@ -78,6 +78,9 @@ namespace CustomUi {
 				else{
 					DisableUI();
 				}
+			}
+			if (Input.GetKeyDown(KeyCode.Escape)){
+				DisableUI();
 			}
 			if (Input.GetKeyDown(KeyCode.Tab)){
 				GoSwitcher();

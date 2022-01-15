@@ -15,7 +15,7 @@ namespace RidersGate{
 		public Animator[] animators;
 		bool hasChecked = false;
 		float old_time;
-		public string contact = "http://descenders-api.nohumanman.com:8080";
+		public string contact = "https://descenders-api.nohumanman.com:8443";
 		public void StartGate(float random_time){
 			StartCoroutine(CoroStartGate(random_time));
 		}

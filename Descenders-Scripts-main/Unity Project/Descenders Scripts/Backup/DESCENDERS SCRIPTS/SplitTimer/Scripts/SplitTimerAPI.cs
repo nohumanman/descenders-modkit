@@ -7,8 +7,8 @@ using PlayerIdentification;
 
 namespace SplitTimer{
 	public class SplitTimerAPI : ModBehaviour {
-		public string server = "descenders-api.nohumanman.com";
-		public string port = "8080";
+		public string server = "https://descenders-api.nohumanman.com";
+		public string port = "8443";
 		[System.NonSerialized]
 		public string contact = "";
 		public void LoadIntoMap(string world_name, string steam_name, string steam_id){
