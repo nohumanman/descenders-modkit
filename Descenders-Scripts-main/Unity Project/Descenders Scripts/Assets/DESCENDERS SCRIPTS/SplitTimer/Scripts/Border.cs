@@ -12,7 +12,7 @@ namespace SplitTimer{
 		{
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-				Debug.LogWarning("Exited Border!!!");
+				Debug.LogWarning("SplitTimer.Border - Exited Border! Invalidating Time.");
 				trailTimer.InvalidateTime("INVALID TIME; Out of bounds.");
 			}
 		}

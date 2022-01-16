@@ -13,11 +13,11 @@ namespace Jumbotron{
 			jumbotronCamera.jumbotronCamera.enabled = is_active;
 		}
 		void OnBecameInvisible(){
-			Debug.Log("Invisible!");
+			Debug.Log("Jumbotron - Invisible! Deactivating jumbotronCamera");
 			ActivateJumbotron(false);
 		}
 		void OnBecameVisible(){
-			Debug.Log("visible!");
+			Debug.Log("Jumbotron - Visible! Activating jumbotronCamera!");
 			ActivateJumbotron(true);
 		}
 	}

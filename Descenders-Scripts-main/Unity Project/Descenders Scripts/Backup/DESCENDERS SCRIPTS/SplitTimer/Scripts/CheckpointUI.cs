@@ -38,7 +38,7 @@ namespace SplitTimer{
 			ui = UI.Instance;
 		}
 		void OnPlayerDeath(){
-			Debug.Log("death detected!");
+			Debug.Log("SplitTimer.CheckpointUI - Death Detected!");
 			if (shouldIncrement){
 				StopTimer();
 				primaryTimer.text = "INVALID; PLAYER RESPAWNED";
