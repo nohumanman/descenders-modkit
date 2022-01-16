@@ -9,7 +9,7 @@ namespace PlayerIdentification{
         public string playerName;
         public string steamID;
     }
-	public class SteamIntegration : ModBehaviour {
+	public class SteamIntegration {
 		public Identification id;
 
         public string getName(){

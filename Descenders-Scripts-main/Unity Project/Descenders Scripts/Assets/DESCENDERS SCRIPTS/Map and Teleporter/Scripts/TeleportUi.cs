@@ -13,7 +13,6 @@ public class TeleportUi : ModBehaviour {
 	public Texture2D lockedTexture;
 	public UI uI;
 	public Teleporter teleporter;
-	// Use this for initialization
 	public void SpawnTeleportUiElements(){
 		foreach (Transform tr in ContentObj.transform){
 			Destroy(tr.gameObject);
@@ -21,7 +20,7 @@ public class TeleportUi : ModBehaviour {
 		teleportPoints = GameObject.FindObjectsOfType<TeleportPoint>();
 		foreach(TeleportPoint teleportPoint in teleportPoints){
 			GameObject el = (GameObject)Instantiate(uiElement);
-			el.transform.SetParent(ContentObj.transform);
+			el.transform.SetParent(ContentObj.transform, false);
 			el.GetComponent<Button>().onClick.AddListener(delegate(){teleporter.SpawnAtPoint(teleportPoint.gameObject); uI.DisableUI();});
 			el.GetComponentInChildren<Text>().text = teleportPoint.teleporterName;
 		}

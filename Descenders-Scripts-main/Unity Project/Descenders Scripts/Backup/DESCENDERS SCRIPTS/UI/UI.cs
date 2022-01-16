@@ -8,7 +8,6 @@ namespace CustomUi {
 		public GameObject map;
 		public GameObject menu;
 		public GameObject help;
-		public CanvasGroup tombstoneCanvs;
 		public GameObject BikeSwitcher;
 		public Section currentSection;
 		public Animator blackTint;
@@ -25,7 +24,7 @@ namespace CustomUi {
 			}
 		}
 		public enum Section{
-			Map, Quests, Landmarks, Help, BikeSwitcher, Tombstones
+			Map, Quests, Landmarks, Help, BikeSwitcher
 		}
 		
 		public bool isShowing;
@@ -68,9 +67,6 @@ namespace CustomUi {
 					else if (currentSection == Section.Help){
 						GoHelp();
 					}
-					else if (currentSection == Section.Tombstones){
-						GoTombstone();
-					}
 					else{
 						GoMap();
 					}
@@ -94,7 +90,6 @@ namespace CustomUi {
 			cameraViewingTerrain.gameObject.SetActive(false);
 			map.SetActive(false);
 			menu.SetActive(false);
-			tombstoneCanvs.alpha = 0;
 			help.SetActive(false);
 			BikeSwitcher.SetActive(false);
 			Cursor.visible = false;
@@ -115,13 +110,6 @@ namespace CustomUi {
 			menu.SetActive(true);
 			cameraViewingTerrain.gameObject.SetActive(false);
 			cameraViewingTerrain.gameObject.SetActive(true);
-			EnableUI();
-		}
-		public void GoTombstone(){
-			DisableUI();
-			currentSection = Section.Tombstones;
-			tombstoneCanvs.alpha = 1;
-			menu.SetActive(true);
 			EnableUI();
 		}
 		public void GoHelp(){

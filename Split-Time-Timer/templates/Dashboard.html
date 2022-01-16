@@ -24,6 +24,8 @@
                         <v-tab-item>
                             <br><br>
                             <v-btn onclick="$.get('/API/TOGGLE-RIDERS-GATE-START')">Open Start Gates (global)</v-btn>
+                            <v-btn onclick="$.get('/API/TOGGLE-FASTEST-SPLIT-TIMES')">Make UI only use fastest split times from competitors</v-btn>
+                            <v-text-field></v-text-field>
                             <v-checkbox v-model="competitor_only" @click="fastest_is_competitor_only(true);" label="Competitor Only"></v-checkbox>
                             <v-list>
                                 <v-container v-for="player in players">

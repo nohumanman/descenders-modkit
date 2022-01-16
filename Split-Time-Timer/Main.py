@@ -11,6 +11,10 @@ app = Flask(__name__)
 timer = Timer()
 riders_gate = RidersGate()
 
+competitors_only = False
+monitored_only = False
+timestamp = None
+
 # Player enters map
 @app.route("/API/TIMER/LOADED")
 def api_timer_loaded():
@@ -128,10 +132,25 @@ def api_descenders_leaderboard():
         "was_monitoreds": was_monitoreds
     })
 
+@app.route("/API/TOGGLE-FASTEST-SPLIT-TIMES")
+def api_toggle_fastest_split_times():
+    global competitors_only
+    competitors_only = True
+
+@app.route("/API/TOGGLE-TIMESTAMP")
+def api_toggle_timestamp():
+    global timestamp
+    timestamp = float(request.args.get("min_timestamp"))
+
+@app.route("/API/TOGGLE-ONLY-MONITORED")
+def toggle_only_monitored():
+    global monitored_only
+    monitored_only = not monitored_only
+
 @app.route("/API/DESCENDERS-GET-FASTEST-TIME")
 def api_descenders_get_fastest_split_times():
     trail_name = request.args.get("trail_name")
-    return {"fastest_split_times" : PlayerDB.get_fastest_split_times(trail_name)}
+    return {"fastest_split_times" : PlayerDB.get_fastest_split_times(trail_name, competitors_only=competitors_only, min_timestamp=timestamp, monitored_only=monitored_only)}
 
 @app.route("/API/TOGGLE-RIDERS-GATE-START")
 def api_toggle_riders_gate_start():
