@@ -7,13 +7,17 @@ namespace SplitTimer{
 	public class Border : ModBehaviour {
 		public TrailTimer trailTimer;
 		bool borderShown = false;
-
 		void OnTriggerExit(Collider other)
 		{
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-				Debug.LogWarning("SplitTimer.Border - Exited Border! Invalidating Time.");
-				trailTimer.InvalidateTime("INVALID TIME; Out of bounds.");
+				trailTimer.ExitedBorder();
+			}
+		}
+		void OnTriggerEnter(Collider other){
+            if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
+            {
+				trailTimer.EnteredBorder();
 			}
 		}
 		public void Update(){

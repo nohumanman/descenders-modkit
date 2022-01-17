@@ -33,6 +33,25 @@ namespace SplitTimer{
 			checkpointUI.primaryTimer.text = message;
 			timeInvalid = true;
 		}
+		public SplitTimerAPI GetSplitTimerAPI(){
+			return SplitTimer.Instance.gameObject.GetComponent<SplitTimer>().api;
+		}
+		public void EnteredBorder(){
+			GetSplitTimerAPI().EnterBorder(
+				GetComponent<TrailTimer>(),
+				trail_name,
+				steamIntegration.getName(),
+				steamIntegration.getSteamId()
+			);
+		}
+		public void ExitedBorder(){
+			GetSplitTimerAPI().ExitBorder(
+				GetComponent<TrailTimer>(),
+				trail_name,
+				steamIntegration.getName(),
+				steamIntegration.getSteamId()
+			);
+		}
 		public void EnteredCheckpoint(Checkpoint checkpoint){
 			if (checkpoint.checkpointType == CheckpointType.start){
 				Debug.Log("TrailTimer - Entered startline!");
@@ -56,8 +75,8 @@ namespace SplitTimer{
 				}
 			}
 			if (!timeInvalid){
-				SplitTimer splitTimer = SplitTimer.Instance.gameObject.GetComponent<SplitTimer>();
-				splitTimer.api.EnterCheckpoint(
+				GetSplitTimerAPI().EnterCheckpoint(
+					GetComponent<TrailTimer>(),
 					trail_name,
 					steamIntegration.getName(),
 					steamIntegration.getSteamId(),
@@ -66,10 +85,6 @@ namespace SplitTimer{
 					);
 				checkpointUI.EnterCheckpoint();
 			}
-		}
-		public void TimeInvalidated(){
-			current_checkpoint_num = 0;
-			Debug.Log("TrailTimer - Time Invalidated!");
 		}
 	}
 }

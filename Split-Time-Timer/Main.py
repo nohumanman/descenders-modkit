@@ -161,6 +161,8 @@ def api_toggle_riders_gate_start():
 def api_get_riders_gate():
     return {"random_delay" : riders_gate.random_delay}
 
+@app.roue("/API/")
+
 @app.route("/API/GET-DATA")
 def api_get_data():
     comp_only = request.args.get("competitor_only")

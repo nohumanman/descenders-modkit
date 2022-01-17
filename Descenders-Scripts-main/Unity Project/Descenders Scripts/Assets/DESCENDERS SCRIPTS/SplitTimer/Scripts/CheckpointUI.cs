@@ -5,6 +5,7 @@ using ModTool.Interface;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using CustomUi;
+using PlayerIdentification;
 
 namespace SplitTimer{
 	public class CheckpointUI : ModBehaviour {
@@ -155,7 +156,12 @@ namespace SplitTimer{
 			StartCoroutine(CoroGetFastestTimes(trailTimer.trail_name));
 		}
 		IEnumerator CoroGetFastestTimes(string trail_name){
-			using (UnityWebRequest webRequest = UnityWebRequest.Get(SplitTimer.Instance.api.contact + "/API/DESCENDERS-GET-FASTEST-TIME?trail_name=" + trailTimer.trail_name))
+			using (UnityWebRequest webRequest = UnityWebRequest.Get(
+				SplitTimer.Instance.api.contact
+				+ "/API/DESCENDERS-GET-FASTEST-TIME?trail_name="
+				+ trailTimer.trail_name
+				+ "&steam_id=" + new SteamIntegration().getSteamId()
+				+ "&steam_name=" + new SteamIntegration().getName()))
 			{
 				yield return webRequest.SendWebRequest();
 				string data = webRequest.downloadHandler.text;

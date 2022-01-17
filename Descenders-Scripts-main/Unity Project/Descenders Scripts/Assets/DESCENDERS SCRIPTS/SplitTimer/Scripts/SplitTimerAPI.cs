@@ -25,10 +25,11 @@ namespace SplitTimer{
 		public void ExitMap(string steam_name, string steam_id){
 			StartCoroutine(CoroExitMap(steam_name, steam_id));
 		}
-		public void EnterCheckpoint(string trail_name, string steam_name, string steam_id, string checkpoint_num, string total_checkpoints){
+		public void EnterCheckpoint(TrailTimer trailTimer, string trail_name, string steam_name, string steam_id, string checkpoint_num, string total_checkpoints){
 			Debug.Log("SplitTimerAPI - Checkpoint entered on trail " + trail_name + ". Steam name is " + steam_name + " steam id is " + steam_id + ". Checkpoint " + checkpoint_num + " out of " + total_checkpoints);
 			StartCoroutine(
 				CoroEnterCheckpoint(
+					trailTimer,
 					trail_name,
 					steam_name,
 					steam_id,
@@ -68,7 +69,55 @@ namespace SplitTimer{
 				yield return webRequest.SendWebRequest();
 			}
 		}
-		IEnumerator CoroEnterCheckpoint(string trail_name, string steam_name, string steam_id, string checkpoint_num, string total_checkpoints){
+		public void EnterBorder(TrailTimer trailTimer, string trail_name, string steam_name, string steam_id){
+			StartCoroutine(CoroEnterBorder(trailTimer, trail_name, steam_name, steam_id));
+		}
+		public void ExitBorder(TrailTimer trailTimer, string trail_name, string steam_name, string steam_id){
+			StartCoroutine(CoroExitBorder(trailTimer, trail_name, steam_name, steam_id));
+		}
+		IEnumerator CoroEnterBorder(TrailTimer trailTimer, string trail_name, string steam_name, string steam_id){
+			using (
+				UnityWebRequest webRequest =
+				UnityWebRequest.Get(
+					contact
+					+ "/API/TIMER/ENTER-BORDER"
+					+ "?trail_name="
+					+ trail_name
+					+ "&steam_name="
+					+ steam_name
+					+ "&steam_id="
+					+ steam_id
+					)
+			)
+			{
+				yield return webRequest.SendWebRequest();
+				if (webRequest.downloadHandler.text != "Valid"){
+					trailTimer.InvalidateTime(webRequest.downloadHandler.text);
+				}
+			}
+		}
+		IEnumerator CoroExitBorder(TrailTimer trailTimer, string trail_name, string steam_name, string steam_id){
+			using (
+				UnityWebRequest webRequest =
+				UnityWebRequest.Get(
+					contact
+					+ "/API/TIMER/EXIT-BORDER"
+					+ "?trail_name="
+					+ trail_name
+					+ "&steam_name="
+					+ steam_name
+					+ "&steam_id="
+					+ steam_id
+					)
+			)
+			{
+				yield return webRequest.SendWebRequest();
+				if (webRequest.downloadHandler.text != "Valid"){
+					trailTimer.InvalidateTime(webRequest.downloadHandler.text);
+				}
+			}
+		}
+		IEnumerator CoroEnterCheckpoint(TrailTimer trailTimer, string trail_name, string steam_name, string steam_id, string checkpoint_num, string total_checkpoints){
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
@@ -87,6 +136,9 @@ namespace SplitTimer{
 			)
 			{
 				yield return webRequest.SendWebRequest();
+				if (webRequest.downloadHandler.text != "Valid"){
+					trailTimer.InvalidateTime(webRequest.downloadHandler.text);
+				}
 			}
 		}
 	}
