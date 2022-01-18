@@ -19,13 +19,11 @@ class Player():
         self.time_started = None
         self.time_ended = None
         self.has_entered_checkpoint = False
+        self.current_bike = "unknown"
         PlayerDB.add_player(steam_id, steam_name, is_competitor)
 
     def get_ban_status(self):
         return PlayerDB.get_ban_status(self.steam_id)
-
-    def get_time_on_world(self):
-        return 404
 
     def loaded(self, world_name):
         self.time_started = time.time()

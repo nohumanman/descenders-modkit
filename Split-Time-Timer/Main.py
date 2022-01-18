@@ -143,6 +143,25 @@ def on_map_exit():
     timer.players[steam_id].unloaded()
     return "valid"
 
+@app.route("/API/DESCENDERS/ON-BIKE-SWITCH")
+def api_descenders_on_bike_switch():
+    print("SWITCHED BIKE\n\n")
+    steam_id = request.args.get("steam_id")
+    steam_name = request.args.get("steam_name")
+    world_name = request.args.get("world_name")
+    new_bike = request.args.get("new_bike")
+    print(f'''New bike: {new_bike}''')
+    if timer.players[steam_id] is None:
+        timer.players[steam_id] = Player(
+            steam_name,
+            steam_id,
+            world_name,
+            False
+        )
+    player = timer.players[steam_id]
+    player.current_bike = new_bike
+    return "valid"
+
 @app.route("/API/DESCENDERS/GET-RIDERS-GATE")
 def api_get_riders_gate():
     steam_id = request.args.get("steam_id")
@@ -214,6 +233,8 @@ def api_get_players():
                     "being_monitored" : (lambda player : True if (timer.players[player] == timer.monitored_player) else False)(player),
                     "current_trail" : timer.players[player].current_trail,
                     "ban_state" : timer.players[player].get_ban_status(),
+                    "current_bike" : timer.players[player].current_bike,
+                    "total_time" : PlayerDB.get_time_on_world(player, world=timer.players[player].current_world)
                 }
                 for player in timer.players
             ]

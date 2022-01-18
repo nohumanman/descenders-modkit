@@ -19,6 +19,35 @@ namespace SplitTimer{
 			);
 			splitTimer.StartCoroutine(CoroOnMapEnter());
 		}
+		public void OnBikeSwitch(string new_bike){
+			Debug.Log("OnBikeSwitch()");
+			SplitTimer.Instance.StartCoroutine(CoroOnBikeSwitch(new_bike));
+		}
+		IEnumerator CoroOnBikeSwitch(string new_bike){
+			using (
+				UnityWebRequest webRequest =
+				UnityWebRequest.Get(
+					server
+					+ "/API/DESCENDERS/ON-BIKE-SWITCH"
+					+ "?world_name="
+					+ SplitTimer.Instance.world_name
+					+ "&steam_name="
+					+ steamIntegration.getName()
+					+ "&steam_id="
+					+ steamIntegration.getSteamId()
+					+ "&new_bike="
+					+ new_bike
+					)
+			)
+			{
+				yield return webRequest.SendWebRequest();
+				if (webRequest.downloadHandler.text != "valid"){
+					foreach (TrailTimer trailTimer in TrailTimer.trailTimerInstances){
+						trailTimer.InvalidateTime(webRequest.downloadHandler.text);
+					}
+				}
+			}
+		}
 		public void OnMapExit(){
 			Debug.Log("SplitTimer.SplitTimerAPI - OnMapExit()!");
 			IEnumerator e = CoroOnMapExit();
