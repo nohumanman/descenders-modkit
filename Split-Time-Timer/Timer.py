@@ -6,6 +6,9 @@ class Timer():
     def __init__(self):
         self.players = {}  # in form {123123123: Player()}
         self.monitored_player = None
+        self.competitors_only = False
+        self.timestamp = 0
+        self.monitored_only = False
         self.get_players()
 
     def get_players(self):

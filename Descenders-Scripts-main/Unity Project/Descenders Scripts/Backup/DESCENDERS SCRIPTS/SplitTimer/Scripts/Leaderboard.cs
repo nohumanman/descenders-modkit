@@ -28,7 +28,6 @@ namespace SplitTimer{
 			Debug.Log("Updating Leaderboard");
 			StartCoroutine(CoroUpdateLeaderboard(10));
 			StartCoroutine(KeepUpdatingLeaderboard(10));
-			
 		}
 		IEnumerator KeepUpdatingLeaderboard(int num){
 			while (true){
@@ -38,7 +37,14 @@ namespace SplitTimer{
 		}
 		IEnumerator CoroUpdateLeaderboard(int num){
 			// make get request to refresh leaderboard.
-			using (UnityWebRequest webRequest = UnityWebRequest.Get(SplitTimer.Instance.api.contact + "/API/DESCENDERS-LEADERBOARD?num=" + num.ToString() + "&trail_name=" + trailTimer.trail_name))
+			using (
+				UnityWebRequest webRequest
+				= UnityWebRequest.Get(
+					SplitTimer.Instance.splitTimerApi.server
+					+ "/API/DESCENDERS-LEADERBOARD?num="
+					+ num.ToString()
+					+ "&trail_name="
+					+ trailTimer.trail_name))
 			{
 				yield return webRequest.SendWebRequest();
 				string data = webRequest.downloadHandler.text;

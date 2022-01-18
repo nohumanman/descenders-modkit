@@ -11,7 +11,7 @@ namespace SplitTimer{
 		public void OnTriggerEnter(Collider other){
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-				trailTimer.EnteredCheckpoint(this);
+				trailTimer.OnCheckpointEnter(this);
 			}
 		}
 		public void Update(){

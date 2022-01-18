@@ -1,0 +1,16 @@
+/API/DESCENDERS/ON-BOUNDRY-ENTER
+[args: trail_name, checkpoint_type]
+/API/DESCENDERS/ON-BOUNDRY-EXIT
+[args: trail_name]
+/API/DESCENDERS/ON-CHECKPOINT-ENTER/<checkpoint_num>
+[args: trail_name, total_checkpoints]
+/API/DESCENDERS/ON-DEATH
+[args: ]
+/API/DESCENDERS/ON-MAP-ENTER
+[args: ]
+/API/DESCENDERS/ON-MAP-EXIT
+[args: ]
+/API/DESCENDERS/GET-RIDERS-GATE
+[args: ]
+
+all routes pass steam_id, steam_name and world_name.

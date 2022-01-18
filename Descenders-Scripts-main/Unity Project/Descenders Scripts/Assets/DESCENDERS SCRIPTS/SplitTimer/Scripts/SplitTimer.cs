@@ -9,7 +9,7 @@ namespace SplitTimer{
 		SteamIntegration steamIntegration = new SteamIntegration();
 		public string world_name;
 		[System.NonSerialized]
-		public SplitTimerAPI api;
+		public SplitTimerAPI splitTimerApi = new SplitTimerAPI();
 		private void Awake()
 		{
 			if (_instance != null && _instance != this)
@@ -21,11 +21,16 @@ namespace SplitTimer{
 			}
 		}
 		void Start () {
-			api = gameObject.GetComponent<SplitTimerAPI>();
-			Debug.Log("SplitTimer - Started! Using server " + api.server + " on port " + api.port + ". In world" + world_name);
-			string steam_name = steamIntegration.getName();
-			string steam_id = steamIntegration.getSteamId();
-			api.LoadIntoMap(world_name, steam_name, steam_id);
+			Debug.Log("SplitTimer - Started! Using server '" + splitTimerApi.server + "'. In world '" + world_name + "'");
+			splitTimerApi.OnMapEnter(this);
+		}
+		void OnDisable(){
+			Debug.Log("SplitTimer.SplitTimer - OnDisable()");
+			splitTimerApi.OnMapExit();
+		}
+		public void OnPlayerBanned(){
+			Debug.Log("SplitTimer.SplitTimer - OnPlayerBanned()");
+			Destroy(GameObject.Find("Player_Human"));
 		}
 	}
 }

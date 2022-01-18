@@ -5,6 +5,7 @@ using ModTool.Interface;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 using CustomUi;
+using PlayerIdentification;
 
 namespace SplitTimer{
 	public class CheckpointUI : ModBehaviour {
@@ -18,6 +19,7 @@ namespace SplitTimer{
 		public CanvasGroup greenFlash;
 		public RawImage green;
 		bool shouldIncrement;
+		bool paused = false;
 		private float timeCount;
 		public bool isCheckpointUIEnabled = true;
 		public UI ui = UI.Instance;
@@ -37,21 +39,13 @@ namespace SplitTimer{
 			StartCoroutine(KeepFastestTimesUpdated());
 			ui = UI.Instance;
 		}
-		void OnPlayerDeath(){
-			Debug.Log("SplitTimer.CheckpointUI - Death Detected!");
-			if (shouldIncrement){
-				StopTimer();
-				primaryTimer.text = "INVALID; PLAYER RESPAWNED";
-			}
-		}
-
 		void Update () {
 			if (player_human == null){
 				player_human = GameObject.Find("Player_Human");
 			}
 			else{
 				if (Vector3.Distance(player_human.transform.position, previous_position) > 6){
-					OnPlayerDeath();
+					trailTimer.OnDeath();
 				}
 				previous_position = player_human.transform.position;
 			}
@@ -79,7 +73,7 @@ namespace SplitTimer{
 			}
 		}
 
-		public void EnterCheckpoint(){
+		public void EnterCheckpoint(Checkpoint checkpoint){
 			if (checkpointTimerDisable != null){
 				StopCoroutine(checkpointTimerDisable);
 			}
@@ -88,7 +82,12 @@ namespace SplitTimer{
 			}
 			checkpointTimer.gameObject.SetActive(true);
 			checkpointComparisonTimer.gameObject.SetActive(true);
-			checkpointTimer.text = "Yours: " + primaryTimer.text;
+			if (checkpoint.checkpointType == CheckpointType.start){
+				checkpointTimer.text = "Yours: 00:00:000";
+			}
+			else{
+				checkpointTimer.text = "Yours: " + primaryTimer.text;
+			}
 			if (trailTimer.current_checkpoint_num != 0){
 				try{
 					checkpointComparisonTimer.text = "Fastest: " + FormatTime(fastest_split_times.fastest_split_times[trailTimer.current_checkpoint_num-1]).ToString();
@@ -147,6 +146,12 @@ namespace SplitTimer{
 			shouldIncrement = false;
 			disableTimerCoroutine = StartCoroutine(DisableTimer());
 		}
+		public void PauseTimer(){
+			paused = true;
+		}
+		public void ResumeTimer(){
+			paused = false;
+		}
 		IEnumerator DisableText(GameObject toDisable){
 			yield return new WaitForSeconds(5f);
 			toDisable.SetActive(false);
@@ -155,7 +160,13 @@ namespace SplitTimer{
 			StartCoroutine(CoroGetFastestTimes(trailTimer.trail_name));
 		}
 		IEnumerator CoroGetFastestTimes(string trail_name){
-			using (UnityWebRequest webRequest = UnityWebRequest.Get(SplitTimer.Instance.api.contact + "/API/DESCENDERS-GET-FASTEST-TIME?trail_name=" + trailTimer.trail_name))
+			using (UnityWebRequest webRequest = UnityWebRequest.Get(
+				SplitTimer.Instance.splitTimerApi.server
+				+ "/API/DESCENDERS-GET-FASTEST-TIME"
+				+ "?trail_name="
+				+ trailTimer.trail_name
+				+ "&steam_id=" + new SteamIntegration().getSteamId()
+				+ "&steam_name=" + new SteamIntegration().getName()))
 			{
 				yield return webRequest.SendWebRequest();
 				string data = webRequest.downloadHandler.text;

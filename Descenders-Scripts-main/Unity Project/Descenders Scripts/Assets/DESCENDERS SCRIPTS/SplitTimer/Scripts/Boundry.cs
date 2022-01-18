@@ -4,20 +4,20 @@ using UnityEngine;
 using ModTool.Interface;
 
 namespace SplitTimer{
-	public class Border : ModBehaviour {
+	public class Boundry : ModBehaviour {
 		public TrailTimer trailTimer;
 		bool borderShown = false;
 		void OnTriggerExit(Collider other)
 		{
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-				trailTimer.ExitedBorder();
+				trailTimer.OnBoundryExit();
 			}
 		}
 		void OnTriggerEnter(Collider other){
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-				trailTimer.EnteredBorder();
+				trailTimer.OnBoundryEnter();
 			}
 		}
 		public void Update(){

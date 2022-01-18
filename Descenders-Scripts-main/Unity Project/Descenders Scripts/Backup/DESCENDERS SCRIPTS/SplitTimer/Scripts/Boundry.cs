@@ -4,16 +4,20 @@ using UnityEngine;
 using ModTool.Interface;
 
 namespace SplitTimer{
-	public class Border : ModBehaviour {
+	public class Boundry : ModBehaviour {
 		public TrailTimer trailTimer;
 		bool borderShown = false;
-
 		void OnTriggerExit(Collider other)
 		{
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-				Debug.LogWarning("SplitTimer.Border - Exited Border! Invalidating Time.");
-				trailTimer.InvalidateTime("INVALID TIME; Out of bounds.");
+				trailTimer.OnBoundryExit();
+			}
+		}
+		void OnTriggerEnter(Collider other){
+            if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
+            {
+				trailTimer.OnBoundryEnter();
 			}
 		}
 		public void Update(){

@@ -11,50 +11,148 @@ app = Flask(__name__)
 timer = Timer()
 riders_gate = RidersGate()
 
-competitors_only = False
-monitored_only = False
-timestamp = None
+''' IN-Descenders API calls '''
 
-# Player enters map
-@app.route("/API/TIMER/LOADED")
-def api_timer_loaded():
+@app.route("/API/DESCENDERS/ON-BOUNDRY-ENTER")
+def on_boundry_enter():
+    steam_id = request.args.get("steam_id")
+    steam_name = request.args.get("steam_name")
     world_name = request.args.get("world_name")
-    steam_name = request.args.get("steam_name")
-    steam_id = request.args.get("steam_id")
-    if steam_id in timer.players:
-        timer.players[steam_id].current_world = world_name
-        timer.players[steam_id].steam_name = steam_name
-        timer.players[steam_id].online = True
-    else:
-        timer.players[steam_id] = Player(steam_name, steam_id, world_name, False)
-        timer.players[steam_id].online = True
-    timer.players[steam_id].loaded()
-    return "200"
-
-# Player enters map
-@app.route("/API/TIMER/UNLOADED")
-def api_timer_unloaded():
-    steam_name = request.args.get("steam_name")
-    steam_id = request.args.get("steam_id")
-    if steam_id in timer.players:
-        timer.players[steam_id].online = False
-        timer.players[steam_id].unloaded()
-    return "200"
-
-# Player enters checkpoint on trail
-@app.route("/API/TIMER/ENTER-CHECKPOINT/<checkpoint_num>")
-def api_timer_enter_checkpoint(checkpoint_num):
-    #time_entered_checkpoint = request.args.get("time_entered_checkpoint")
     trail_name = request.args.get("trail_name")
-    steam_name = request.args.get("steam_name")
+    if timer.players[steam_id] is None:
+        timer.players[steam_id] = Player(
+            steam_name,
+            steam_id,
+            world_name,
+            False
+        )
+    player = timer.players[steam_id]
+    #if player.is_competitor is timer.monitored_player:
+    return "valid"
+
+
+@app.route("/API/DESCENDERS/ON-BOUNDRY-EXIT")
+def on_boundry_exit():
     steam_id = request.args.get("steam_id")
-    total_checkpoints = int(request.args.get("total_checkpoints"))
-    try:
-        timer.players[steam_id].entered_checkpoint(int(checkpoint_num), total_checkpoints, time.time(), trail_name)
-    except KeyError:
-        timer.players[steam_id] = Player(steam_name, steam_id, "none", False)
-        timer.players[steam_id].entered_checkpoint(int(checkpoint_num), total_checkpoints, time.time(), trail_name)
-    return "200"
+    steam_name = request.args.get("steam_name")
+    world_name = request.args.get("world_name")
+    trail_name = request.args.get("trail_name")
+    if timer.players[steam_id] is None:
+        timer.players[steam_id] = Player(
+            steam_name,
+            steam_id,
+            world_name,
+            False
+        )
+    player = timer.players[steam_id]
+    if player.is_competitor == timer.monitored_player:
+        return "valid"
+    else:
+        return "INVALID; OUT OF BOUNDS"
+
+@app.route("/API/DESCENDERS/ON-CHECKPOINT-ENTER/<checkpoint_num>")
+def on_checkpoint_enter(checkpoint_num):
+    steam_id = request.args.get("steam_id")
+    steam_name = request.args.get("steam_name")
+    world_name = request.args.get("world_name")
+    trail_name = request.args.get("trail_name")
+    total_checkpoints = request.args.get("total_checkpoints")
+    checkpoint_type = request.args.get("checkpoint_type")
+    if timer.players[steam_id] is None:
+        timer.players[steam_id] = Player(
+            steam_name,
+            steam_id,
+            world_name,
+            False
+        )
+    print(
+        "Checkpoint number"
+        + str(checkpoint_num)
+        + " and total checkpoints "
+        + str(total_checkpoints)
+        + " checkpoint_type of "
+        + str(checkpoint_type)
+    )
+    player = timer.players[steam_id]
+    if checkpoint_type == "start" and checkpoint_num != 0:
+        player.cancel_time()
+    elif checkpoint_type == "intermediate" and player.trail_start_time == 0:
+        return "INVALID; Didn't go through start!"
+    elif checkpoint_type == "stop":
+        if int(checkpoint_num) > int(total_checkpoints)-1:
+            return "INVALID; SKIPPED CHECKPOINTS!"     
+    player.entered_checkpoint(
+        int(checkpoint_num),
+        int(total_checkpoints),
+        time.time(),
+        trail_name
+    )
+    return "valid"
+
+@app.route("/API/DESCENDERS/ON-DEATH")
+def on_death():
+    steam_id = request.args.get("steam_id")
+    steam_name = request.args.get("steam_name")
+    world_name = request.args.get("world_name")
+    if timer.players[steam_id] is None:
+        timer.players[steam_id] = Player(
+            steam_name,
+            steam_id,
+            world_name,
+            False
+        )
+    player = timer.players[steam_id]
+    return "valid"
+
+@app.route("/API/DESCENDERS/ON-MAP-ENTER")
+def on_map_enter():
+    print("ENTERED MAP ENTERED MAP\n\n")
+    steam_id = request.args.get("steam_id")
+    steam_name = request.args.get("steam_name")
+    world_name = request.args.get("world_name")
+    if timer.players[steam_id] is None:
+        timer.players[steam_id] = Player(
+            steam_name,
+            steam_id,
+            world_name,
+            False
+        )
+    player = timer.players[steam_id]
+    player.online = True
+    player.current_world = world_name
+    return "valid"
+
+@app.route("/API/DESCENDERS/ON-MAP-EXIT")
+def on_map_exit():
+    print("EXITED MAP EXITED MAP\n\n")
+    steam_id = request.args.get("steam_id")
+    steam_name = request.args.get("steam_name")
+    world_name = request.args.get("world_name")
+    if timer.players[steam_id] is None:
+        timer.players[steam_id] = Player(
+            steam_name,
+            steam_id,
+            world_name,
+            False
+        )
+    player = timer.players[steam_id]
+    player.online = False
+    return "valid"
+
+@app.route("/API/DESCENDERS/GET-RIDERS-GATE")
+def api_get_riders_gate():
+    steam_id = request.args.get("steam_id")
+    steam_name = request.args.get("steam_name")
+    world_name = request.args.get("world_name")
+    if timer.players[steam_id] is None:
+        timer.players[steam_id] = Player(
+            steam_name,
+            steam_id,
+            world_name,
+            False
+        )
+    player = timer.players[steam_id]
+    return {"random_delay" : riders_gate.random_delay}
 
 @app.route("/API/MONITOR/<steam_id>")
 def app_monitor_steam_id(steam_id):
@@ -68,6 +166,14 @@ def app_monitor_steam_id(steam_id):
         timer.monitored_player = timer.players[steam_id]
         timer.monitored_player.being_monitored = True
     return "Monitoring"
+
+@app.route("/API/MONITOR/UPDATE-CONFIG")
+def update_config():
+    competitor_only = request.args.get("competitor_only")
+
+
+
+
 
 @app.route("/API/BECOME-COMPETITOR/<steam_id>")
 def api_become_competitor_toggle(steam_id):
@@ -132,36 +238,19 @@ def api_descenders_leaderboard():
         "was_monitoreds": was_monitoreds
     })
 
-@app.route("/API/TOGGLE-FASTEST-SPLIT-TIMES")
-def api_toggle_fastest_split_times():
-    global competitors_only
-    competitors_only = True
-
-@app.route("/API/TOGGLE-TIMESTAMP")
-def api_toggle_timestamp():
-    global timestamp
-    timestamp = float(request.args.get("min_timestamp"))
-
-@app.route("/API/TOGGLE-ONLY-MONITORED")
-def toggle_only_monitored():
-    global monitored_only
-    monitored_only = not monitored_only
-
 @app.route("/API/DESCENDERS-GET-FASTEST-TIME")
 def api_descenders_get_fastest_split_times():
     trail_name = request.args.get("trail_name")
-    return {"fastest_split_times" : PlayerDB.get_fastest_split_times(trail_name, competitors_only=competitors_only, min_timestamp=timestamp, monitored_only=monitored_only)}
+    steam_id = request.args.get("steam_id")
+    steam_name = request.args.get("steam_name")
+    return {"fastest_split_times" : PlayerDB.get_fastest_split_times(trail_name, competitors_only=timer.competitors_only, min_timestamp=timer.timestamp, monitored_only=timer.monitored_only)}
+
 
 @app.route("/API/TOGGLE-RIDERS-GATE-START")
 def api_toggle_riders_gate_start():
     riders_gate.refresh_random_delay()
     return "Done"
 
-@app.route("/API/GET-RIDERS-GATE")
-def api_get_riders_gate():
-    return {"random_delay" : riders_gate.random_delay}
-
-@app.roue("/API/")
 
 @app.route("/API/GET-DATA")
 def api_get_data():

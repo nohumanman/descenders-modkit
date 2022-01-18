@@ -19,6 +19,7 @@ namespace SplitTimer{
 		public CanvasGroup greenFlash;
 		public RawImage green;
 		bool shouldIncrement;
+		bool paused = false;
 		private float timeCount;
 		public bool isCheckpointUIEnabled = true;
 		public UI ui = UI.Instance;
@@ -38,25 +39,17 @@ namespace SplitTimer{
 			StartCoroutine(KeepFastestTimesUpdated());
 			ui = UI.Instance;
 		}
-		void OnPlayerDeath(){
-			Debug.Log("SplitTimer.CheckpointUI - Death Detected!");
-			if (shouldIncrement){
-				StopTimer();
-				primaryTimer.text = "INVALID; PLAYER RESPAWNED";
-			}
-		}
-
 		void Update () {
 			if (player_human == null){
 				player_human = GameObject.Find("Player_Human");
 			}
 			else{
 				if (Vector3.Distance(player_human.transform.position, previous_position) > 6){
-					OnPlayerDeath();
+					trailTimer.OnDeath();
 				}
 				previous_position = player_human.transform.position;
 			}
-			if (shouldIncrement){
+			if (shouldIncrement && !paused){
 				timeCount += Time.deltaTime;
 				primaryTimer.text = FormatTime(timeCount);
 			}
@@ -79,86 +72,100 @@ namespace SplitTimer{
 				GetFastestTimes();
 			}
 		}
-
-		public void EnterCheckpoint(){
+		public void StopCheckpointElementsTimeout(){
 			if (checkpointTimerDisable != null){
 				StopCoroutine(checkpointTimerDisable);
 			}
 			if (checkpointComparisonTimerDisable != null){
 				StopCoroutine(checkpointComparisonTimerDisable);
 			}
-			checkpointTimer.gameObject.SetActive(true);
-			checkpointComparisonTimer.gameObject.SetActive(true);
-			checkpointTimer.text = "Yours: " + primaryTimer.text;
-			if (trailTimer.current_checkpoint_num != 0){
+			if (disableTimerCoroutine != null){
+				StopCoroutine(disableTimerCoroutine);
+			}
+		}
+        private void EnableCheckpointElements()
+        {
+            checkpointTimer.gameObject.SetActive(true);
+            checkpointComparisonTimer.gameObject.SetActive(true);
+			checkpointUi.alpha = 1;
+        }
+		
+		public void OnStartCheckpoint(){
+            StopCheckpointElementsTimeout();
+            EnableCheckpointElements();
+			checkpointTimer.text = "Yours: 00:00:000";
+			checkpointComparisonTimer.text = "Fastest: 00:00:000";
+			shouldIncrement = true;
+			timeCount = 0;
+			primaryTimer.text = FormatTime(timeCount);
+		}
+		public void OnIntermediateCheckpoint(){
+			Debug.Log("SplitTimer.CheckpointUI - OnIntermediateCheckpoint()");
+			paused = false;
+			if (shouldIncrement){
+				StopCheckpointElementsTimeout();
+				EnableCheckpointElements();
+				checkpointTimer.text = "Yours: " + primaryTimer.text;
 				try{
-					checkpointComparisonTimer.text = "Fastest: " + FormatTime(fastest_split_times.fastest_split_times[trailTimer.current_checkpoint_num-1]).ToString();
-					float fast_split_time = fastest_split_times.fastest_split_times[trailTimer.current_checkpoint_num-1];
-					float our_split_time = timeCount;
-					if (fast_split_time-our_split_time < 0){
-						// don't bother
-						green.color = Color.red;
-						greenFlash.alpha = 1;
-						StartCoroutine(FadeOutGreen());
-					}
-					else if (fast_split_time-our_split_time > 0){
-						green.color = Color.green;
-						greenFlash.alpha = 1;
-						StartCoroutine(FadeOutGreen());
-						// FadeOutGreen
-					}
-					else if (fast_split_time-our_split_time == 0){
-						green.color = Color.white;
-						greenFlash.alpha = 1;
-						StartCoroutine(FadeOutGreen());
-						// FadeOutGreen
-					}
+					Debug.Log(fastest_split_times);
+					float fastSplitTime = fastest_split_times.fastest_split_times[trailTimer.current_checkpoint_num];
+					checkpointComparisonTimer.text = "Fastest: " + FormatTime(fastSplitTime).ToString();
+					FlashOnTimeDifference(fastSplitTime, timeCount);
 				}
 				catch (System.IndexOutOfRangeException){
-					Debug.Log("Checkpoint Is not on server!");
-					checkpointComparisonTimer.text = "Fastest: 00:00:00";
+					Debug.Log("SplitTimer.CheckpointUI - OnIntermediateCheckpoint() - Checkpoint is not on server!");
+					checkpointComparisonTimer.text = "Fastest: NONE";
 				}
+				checkpointTimerDisable = StartCoroutine(DisableText(checkpointTimer.gameObject));
+				checkpointComparisonTimerDisable = StartCoroutine(DisableText(checkpointComparisonTimer.gameObject));
 			}
-			else{
-				checkpointComparisonTimer.text = "Fastest: 00:00:00";
-			}
-			if (isCheckpointUIEnabled){
-				checkpointUi.alpha = 1;
-			}
-			checkpointTimerDisable = StartCoroutine(DisableText(checkpointTimer.gameObject));
-			checkpointComparisonTimerDisable = StartCoroutine(DisableText(checkpointComparisonTimer.gameObject));
 		}
-		IEnumerator FadeOutGreen(){
+		public void OnPauseCheckpoint(){
+			PauseTimer();
+		}
+		public void OnFinishCheckpoint(){
+			StopTimer();
+		}
+		void FlashOnTimeDifference(float fastSplitTime, float ourSplitTime){
+			if (fastSplitTime - ourSplitTime < 0) // is slower
+			{
+				green.color = Color.red;
+			}
+			else if (fastSplitTime - ourSplitTime > 0) // is faster
+			{
+				green.color = Color.green;
+			}
+			greenFlash.alpha = 1;
+			StartCoroutine(FadeOutFlasher());
+		}
+        IEnumerator FadeOutFlasher(){
 			while (greenFlash.alpha != 0){
 				greenFlash.alpha -= 0.01f;
 				yield return new WaitForSeconds(0.01f);
 			}
 		}
-		public void RestartTimer(){
-			timeCount = 0;
-			primaryTimer.text = FormatTime(timeCount);
-			primaryTimer.gameObject.SetActive(true);
-			checkpointTimer.gameObject.SetActive(true);
-			if (disableTimerCoroutine != null){
-				StopCoroutine(disableTimerCoroutine);
-			}
-			shouldIncrement = true;
-		}
 		public void StopTimer(){
 			shouldIncrement = false;
 			disableTimerCoroutine = StartCoroutine(DisableTimer());
+		}
+		public void PauseTimer(){
+			paused = true;
+		}
+		public void ResumeTimer(){
+			paused = false;
 		}
 		IEnumerator DisableText(GameObject toDisable){
 			yield return new WaitForSeconds(5f);
 			toDisable.SetActive(false);
 		}
-		public void GetFastestTimes(){
+		void GetFastestTimes(){
 			StartCoroutine(CoroGetFastestTimes(trailTimer.trail_name));
 		}
 		IEnumerator CoroGetFastestTimes(string trail_name){
 			using (UnityWebRequest webRequest = UnityWebRequest.Get(
-				SplitTimer.Instance.api.contact
-				+ "/API/DESCENDERS-GET-FASTEST-TIME?trail_name="
+				SplitTimer.Instance.splitTimerApi.server
+				+ "/API/DESCENDERS-GET-FASTEST-TIME"
+				+ "?trail_name="
 				+ trailTimer.trail_name
 				+ "&steam_id=" + new SteamIntegration().getSteamId()
 				+ "&steam_name=" + new SteamIntegration().getName()))

@@ -4,6 +4,8 @@ using UnityEngine;
 using ModTool.Interface;
 using UnityEngine.Networking;
 using System;
+using PlayerIdentification;
+using SplitTimer;
 
 
 namespace RidersGate{
@@ -15,7 +17,6 @@ namespace RidersGate{
 		public Animator[] animators;
 		bool hasChecked = false;
 		float old_time;
-		public string contact = "https://descenders-api.nohumanman.com:8443";
 		public void StartGate(float random_time){
 			StartCoroutine(CoroStartGate(random_time));
 		}
@@ -57,7 +58,11 @@ namespace RidersGate{
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
-					contact + "/API/GET-RIDERS-GATE"
+					SplitTimer.SplitTimer.Instance.splitTimerApi.server
+					+ "/API/DESCENDERS/GET-RIDERS-GATE"
+					+ "?steam_name=" + new SteamIntegration().getName()
+					+ "&steam_id=" + new SteamIntegration().getSteamId()
+					+ "&world_name=" + SplitTimer.SplitTimer.Instance.world_name
 				)
 			)
 			{

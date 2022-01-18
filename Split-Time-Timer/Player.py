@@ -34,11 +34,12 @@ class Player():
         self.is_competitor = is_competitor
         PlayerDB.become_competitor(self.steam_id, False)
 
-    def entered_checkpoint(self, checkpoint_num, total_checkpoints, checkpoint_time, trail_name):
+    def entered_checkpoint(self, checkpoint_num : int, total_checkpoints : int, checkpoint_time : float, trail_name : str):
         self.has_entered_checkpoint = True
         self.current_trail = trail_name
         self.online = True
         if checkpoint_num == 0:
+            print("entered checkpoint at start - setting trail start time...")
             self.split_times = []
             self.current_trail = "none" 
             self.trail_start_time = time.time()
@@ -53,6 +54,12 @@ class Player():
         self.online = True
         print("SUBMITTING TIME - TRAIL COMPLETE!!")
         PlayerDB.submit_time(self.steam_id, split_times, trail_name, self.being_monitored)
+
+    def cancel_time(self):
+        self.has_entered_checkpoint = False
+        self.split_times = []
+        self.trail_start_time = 0
+        self.check
 
     def disable_entered_checkpoint(self, delay):
         time.sleep(delay)
