@@ -10,6 +10,7 @@ namespace SplitTimer{
 		public string trail_name;
 		[Tooltip("Make sure to include the start and finish as well!")]
 		public GameObject checkpoints_objs;
+		public static List<TrailTimer> trailTimerInstances = new List<TrailTimer>();
 		public GameObject boundrys_objs;
 		public SplitTimerAPI splitTimerAPI;
 		[System.NonSerialized]
@@ -19,6 +20,9 @@ namespace SplitTimer{
 		public CheckpointUI checkpointUI;
 		private SteamIntegration steamIntegration = new SteamIntegration();
 		public BikeType forcedBikeType;
+		void Awake(){
+			trailTimerInstances.Add(this);
+		}
 		void Start(){
 			foreach (Checkpoint checkpoint_obj in checkpoints_objs.GetComponentsInChildren<Checkpoint>()){
 				checkpoints.Add(checkpoint_obj);

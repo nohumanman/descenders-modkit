@@ -2,21 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ModTool.Interface;
+using SplitTimer;
 
 public class BikeSwitcherHandler : ModBehaviour {      
 	public void ToEnduro()
 	{
-		GameObject.Find("loaderRockLeagu").SendMessage("ToEnduro");
+		SplitTimer.SplitTimer.Instance.splitTimerApi.OnBikeSwitch("enduro");
 		Debug.Log("BikeSwitcherHandler - Switching to Enduro!");
+		try{
+			GameObject.Find("loaderRockLeagu").SendMessage("ToEnduro");
+		}
+		catch (System.NullReferenceException){
+			Debug.Log("Bike Switcher DLL not present.");
+		}
 	}
 	public void ToDowhill()
 	{
-		GameObject.Find("loaderRockLeagu").SendMessage("ToDowhill");
+		SplitTimer.SplitTimer.Instance.splitTimerApi.OnBikeSwitch("downhill");
 		Debug.Log("BikeSwitcherHandler - Switching to Downhill!");
+		try{
+			GameObject.Find("loaderRockLeagu").SendMessage("ToDowhill");
+		}
+		catch (System.NullReferenceException){
+			Debug.Log("Bike Switcher DLL not present.");
+		}
 	}
 	public void ToHardtail()
 	{
-		GameObject.Find("loaderRockLeagu").SendMessage("ToHardtail");
+		SplitTimer.SplitTimer.Instance.splitTimerApi.OnBikeSwitch("hardtail");
 		Debug.Log("BikeSwitcherHandler - Switching to Hardtail!");
+		try{
+			GameObject.Find("loaderRockLeagu").SendMessage("ToHardtail");
+		}
+		catch (System.NullReferenceException){
+			Debug.Log("Bike Switcher DLL not present.");
+		}
 	}
 }
