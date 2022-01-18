@@ -103,7 +103,8 @@ def on_death():
             False
         )
     player = timer.players[steam_id]
-    return "valid"
+    return "TIME INVALID; RESPAWNED"
+    #return "valid"
 
 @app.route("/API/DESCENDERS/ON-MAP-ENTER")
 def on_map_enter():

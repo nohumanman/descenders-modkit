@@ -36,29 +36,10 @@ namespace SplitTimer{
 			SplitTimer.Instance.splitTimerApi.OnBoundryExit(this);
 		}
 		public void OnCheckpointEnter(Checkpoint checkpoint){
-			current_checkpoint_num++;
 			if (checkpoint.checkpointType == CheckpointType.start){
-						current_checkpoint_num = 0;
-						checkpointUI.RestartTimer();
-			}
-			else if (checkpoint.checkpointType == CheckpointType.intermediate){
-				checkpointUI.ResumeTimer();
-			}
-			else if (checkpoint.checkpointType == CheckpointType.pause){
-				checkpointUI.PauseTimer();
-			}
-			else if (checkpoint.checkpointType == CheckpointType.stop){
-				checkpointUI.StopTimer();
+				current_checkpoint_num = 0;
 			}
 			SplitTimer.Instance.splitTimerApi.OnCheckpointEnter(this, checkpoint);
-		}
-		public void OnTimeComplete(){
-			Debug.Log("TrailTimer - OnTimeComplete()!");
-			checkpointUI.StopTimer();
-		}
-		public void OnTimeRestart(){
-			checkpointUI.RestartTimer();
-			current_checkpoint_num = 0;
 		}
 		public void InvalidateTime(string message){
 			Debug.LogWarning(message);

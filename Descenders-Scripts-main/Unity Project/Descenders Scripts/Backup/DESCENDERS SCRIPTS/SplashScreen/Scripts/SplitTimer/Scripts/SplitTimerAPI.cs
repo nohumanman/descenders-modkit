@@ -60,8 +60,8 @@ namespace SplitTimer{
 			)
 			{
 				yield return webRequest.SendWebRequest();
-				if (webRequest.downloadHandler.text == "INVALID"){
-					SplitTimer.Instance.OnPlayerBanned();
+				if (webRequest.downloadHandler.text != "valid"){
+					SplitTimer.Instance.OnPlayerBanned(webRequest.downloadHandler.text);
 				}
 			}
 		}
@@ -188,7 +188,19 @@ namespace SplitTimer{
 					trailTimer.InvalidateTime(webRequest.downloadHandler.text);
 				}
 				else{
-					trailTimer.checkpointUI.EnterCheckpoint(checkpoint);
+					if (checkpoint.checkpointType == CheckpointType.start){
+						trailTimer.checkpointUI.OnStartCheckpoint();
+					}
+					else if (checkpoint.checkpointType == CheckpointType.intermediate){
+						trailTimer.checkpointUI.OnIntermediateCheckpoint();
+					}
+					else if (checkpoint.checkpointType == CheckpointType.pause){
+						trailTimer.checkpointUI.OnPauseCheckpoint();
+					}
+					else if (checkpoint.checkpointType == CheckpointType.stop){
+						trailTimer.checkpointUI.OnFinishCheckpoint();
+					}
+					trailTimer.current_checkpoint_num++;
 				}
 				yield return null;
 			}

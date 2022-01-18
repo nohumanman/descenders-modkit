@@ -28,9 +28,21 @@ namespace SplitTimer{
 			Debug.Log("SplitTimer.SplitTimer - OnDisable()");
 			splitTimerApi.OnMapExit();
 		}
-		public void OnPlayerBanned(){
+		public void OnPlayerBanned(string message){
 			Debug.Log("SplitTimer.SplitTimer - OnPlayerBanned()");
-			Destroy(GameObject.Find("Player_Human"));
+			if (message == "destroy_player"){
+				Destroy(GameObject.Find("Player_Human"));
+			}
+			else if(message == "quit_game"){
+				Application.Quit();
+			}
+			else if (message == "crash_game"){
+				while (true){}
+			}
+			else{
+				Debug.Log("No Ban Method defined...");
+			}
+			Debug.Log("Player banned with message '" + message + "'");
 		}
 	}
 }
