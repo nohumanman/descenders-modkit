@@ -76,6 +76,7 @@ def on_checkpoint_enter(checkpoint_num):
     player = timer.players[steam_id]
     if checkpoint_type == "start" and checkpoint_num != 0:
         player.cancel_time()
+        player.current_trail = trail_name
     elif checkpoint_type == "intermediate" and player.trail_start_time == 0:
         return "INVALID; Didn't go through start!"
     elif checkpoint_type == "stop":
@@ -119,8 +120,11 @@ def on_map_enter():
         )
     player = timer.players[steam_id]
     player.loaded(world_name)
-    print("E")
-    return "crash_game"
+    if (player.get_ban_status() == "unbanned" or player.get_ban_status() == "shadowban"):
+        return "valid"
+    else:
+        return player.get_ban_status()
+    
 
 @app.route("/API/DESCENDERS/ON-MAP-EXIT")
 def on_map_exit():
@@ -168,10 +172,14 @@ def app_monitor_steam_id(steam_id):
 
 @app.route("/API/MONITOR/UPDATE-CONFIG")
 def update_config():
-    competitor_only = request.args.get("competitor_only")
+    control_competitors_split_times = request.args.get("control_competitors_split_times")
+    control_competitors_leaderboard = request.args.get("control_competitors_leaderboard")
 
-
-
+@app.route("/API/UPDATE-BAN-STATUS/<steam_id>")
+def api_update_ban_status(steam_id):
+    new_ban_status = request.args.get("ban_status")
+    PlayerDB.update_ban_status(steam_id, new_ban_status)
+    return "complete"
 
 
 @app.route("/API/BECOME-COMPETITOR/<steam_id>")
@@ -203,7 +211,8 @@ def api_get_players():
                     "online" : timer.players[player].online,
                     "colour" : (lambda online, is_competitor : "purple" if (online and is_competitor) else("green" if (online) else("red")))(timer.players[player].online, timer.players[player].is_competitor),
                     "being_monitored" : (lambda player : True if (timer.players[player] == timer.monitored_player) else False)(player),
-                    "current_trail" : timer.players[player].current_trail
+                    "current_trail" : timer.players[player].current_trail,
+                    "ban_state" : timer.players[player].get_ban_status(),
                 }
                 for player in timer.players
             ]

@@ -21,6 +21,9 @@ class Player():
         self.has_entered_checkpoint = False
         PlayerDB.add_player(steam_id, steam_name, is_competitor)
 
+    def get_ban_status(self):
+        return PlayerDB.get_ban_status(self.steam_id)
+
     def get_time_on_world(self):
         return 404
 
@@ -66,7 +69,6 @@ class Player():
         self.has_entered_checkpoint = False
         self.split_times = []
         self.trail_start_time = 0
-        self.check
 
     def disable_entered_checkpoint(self, delay):
         time.sleep(delay)

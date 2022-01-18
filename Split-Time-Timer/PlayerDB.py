@@ -8,8 +8,8 @@ class PlayerDB():
         con = sqlite3.connect("TimeStats.db")
         con.execute(
             f'''
-            REPLACE INTO Players (steam_id, steam_name, is_competitor)
-            VALUES ("{steam_id}", "{steam_name}", "{is_competitor}")
+            REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status)
+            VALUES ("{steam_id}", "{steam_name}", "{is_competitor}", "unbanned")
             '''
         )
         con.commit()
@@ -75,6 +75,11 @@ class PlayerDB():
         return split_times
 
     @staticmethod
+    def get_ban_status(steam_id):
+        resp = PlayerDB.execute_sql(f'''SELECT ban_status FROM Players WHERE steam_id="{steam_id}"''')
+        return resp[0][0]
+
+    @staticmethod
     def execute_sql(statement : str, write=False):
         with sqlite3.connect("TimeStats.db") as con:
             execution = con.execute(statement)
@@ -113,6 +118,17 @@ class PlayerDB():
             }
             for time in result
         ]
+
+    @staticmethod
+    def update_ban_status(steam_id, new_ban_status):
+        PlayerDB.execute_sql(
+            f'''
+            UPDATE Players
+            SET ban_status = "{new_ban_status}"
+            WHERE steam_id="{steam_id}"
+            ''',
+            write=True
+        )
 
     @staticmethod
     def get_leaderboard_data():

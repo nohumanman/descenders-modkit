@@ -21,14 +21,12 @@
                     <v-tabs>
                         <v-tab>Players</v-tab>
                         <v-tab>Leaderboards</v-tab>
+                        <v-tab>Config</v-tab>
                         <v-tab-item>
-                            <br><br>
-                            <v-btn onclick="$.get('/API/TOGGLE-RIDERS-GATE-START')">Open Start Gates (global)</v-btn>
-                            <v-btn onclick="$.get('/API/TOGGLE-FASTEST-SPLIT-TIMES')">Make UI only use fastest split times from competitors</v-btn>
-                            <v-text-field></v-text-field>
-                            <v-checkbox v-model="competitor_only" @click="fastest_is_competitor_only(true);" label="Competitor Only"></v-checkbox>
+                            <br>
+                            <v-btn dense small onclick="$.get('/API/TOGGLE-RIDERS-GATE-START')">Open Start Gates (for controlled players)</v-btn>
                             <v-list>
-                                <v-container v-for="player in players">
+                                <v-container v-for="player in players" v-if="(player.is_competitor || !show_competitors_only) && (!show_online_only || player.online)">
                                     <v-card x-large :color="player.colour">
                                         <v-card-title style="font-size: 40px; text-decoration: underline;">[[player.steam_name]]</v-card-title>
                                         <v-card-text style="font-size: 20px;">
@@ -37,9 +35,10 @@
                                             Trail Start Time - [[player.trail_start_time]]<br>
                                             Split Times - [[player.split_times]]<br>
                                             Current Trail - [[player.current_trail]]
-                                        </v-card-text>
                                         <v-card-actions>
                                             <v-checkbox v-model="player.is_competitor" @click="toggle_competitor(player.steam_id)" label="Competitor"></v-checkbox>
+                                            <v-spacer></v-spacer>
+                                            <v-select item-text="text" :items="ban_options" v-on:input="update_ban_status(player.steam_id, player.ban_state)" v-model="player.ban_state"></v-select>
                                             <v-spacer></v-spacer>
                                             <v-btn @click="monitor_player(player.steam_id)" :color="getColFromMonitoring(player.being_monitored)"/><v-icon>mdi-cctv</v-icon></v-btn>
                                         </v-card-actions>
@@ -53,8 +52,15 @@
                             <v-data-table
                                 :headers="leaderboard_headers"
                                 :items="leaderboard_info">
-
                             </v-data-table>
+                        </v-tab-item>
+                        <v-tab-item>
+                            <v-col>
+                                <v-checkbox dense onclick="$.get('/API/TOGGLE-FASTEST-SPLIT-TIMES')" label="Control split times for competitors."></v-checkbox>
+                                <v-checkbox dense onclick="$.get('/API/TOGGLE-FASTEST-SPLIT-TIMES')" label="Control leaderboard for competitors."></v-checkbox>
+                                <v-checkbox dense v-model="show_competitors_only" label="Show Competitors Only"></v-checkbox>
+                                <v-checkbox dense v-model="show_online_only" label="Show Online Only"></v-checkbox>
+                            </v-col>
                         </v-tab-item>
                     </v-tabs>
                 </v-main>
@@ -97,6 +103,9 @@
                     {"yote" : "23"},
                     {"yote" : "23"}
                 ],
+                show_online_only : false,
+                ban_options: ["unbanned", "shadowban", "destroy_player", "quit_game", "crash_game"
+            ],
                 leaderboard_headers : [
                     {text: "steam_id", value: "steam_id"},
                     {text: "steam_name", value:"steam_name"},
@@ -107,7 +116,8 @@
                     {text:"was_monitored", value:"was_monitored"},
                     {text:"checkpoint_num", value:"checkpoint_num"},
                     {text:"checkpoint_time", value: "checkpoint_time"}
-                ]
+                ],
+                show_competitors_only : false
             },
             methods: {
                 update_players(){
@@ -123,6 +133,9 @@
                     else{
                         return "black"
                     }
+                },
+                update_ban_status(steam_id, ban_status){
+                    $.get("/API/UPDATE-BAN-STATUS/" + steam_id + "?ban_status=" + ban_status);
                 },
                 monitor_player(steam_id){
                     console.log("Monitoring player " + steam_id)
@@ -145,9 +158,9 @@
         )
         setInterval(function(){
             app.update_players();
-        }, 500);
+        }, 1000);
         setInterval(function(){
             app.update_leaderboard();
-        }, 500);
+        }, 1000);
     </script>
 </html>
