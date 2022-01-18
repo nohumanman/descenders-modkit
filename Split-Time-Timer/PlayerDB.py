@@ -174,3 +174,4 @@ class PlayerDB():
             INSERT INTO Session (steam_id, time_started, time_ended)
             VALUES ("{steam_id}", "{time_started}", "{time_ended}")
             ''')
+        con.commit()

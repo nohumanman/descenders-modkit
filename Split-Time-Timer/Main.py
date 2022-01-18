@@ -118,9 +118,9 @@ def on_map_enter():
             False
         )
     player = timer.players[steam_id]
-    player.online = True
-    player.current_world = world_name
-    return "valid"
+    player.loaded(world_name)
+    print("E")
+    return "crash_game"
 
 @app.route("/API/DESCENDERS/ON-MAP-EXIT")
 def on_map_exit():
@@ -135,8 +135,7 @@ def on_map_exit():
             world_name,
             False
         )
-    player = timer.players[steam_id]
-    player.online = False
+    timer.players[steam_id].unloaded()
     return "valid"
 
 @app.route("/API/DESCENDERS/GET-RIDERS-GATE")

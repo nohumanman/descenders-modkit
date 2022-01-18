@@ -60,8 +60,8 @@ namespace SplitTimer{
 			)
 			{
 				yield return webRequest.SendWebRequest();
-				if (webRequest.downloadHandler.text == "INVALID"){
-					SplitTimer.Instance.OnPlayerBanned();
+				if (webRequest.downloadHandler.text != "valid"){
+					SplitTimer.Instance.OnPlayerBanned(webRequest.downloadHandler.text);
 				}
 			}
 		}

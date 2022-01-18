@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ModTool.Interface;
 using UnityEngine.Networking;
+using PlayerIdentification;
 
 namespace SplitTimer{
 	public struct LeaderboardData{
@@ -20,14 +21,15 @@ namespace SplitTimer{
 	public class Leaderboard : ModBehaviour {
 		public TextMesh textMesh;
 		public TrailTimer trailTimer;
+		public int amountOfValue = 10;
 		public void Start(){
 			UpdateLeaderboard();
 		}
 		public void UpdateLeaderboard(){
 			// make get request to refresh leaderboard.
 			Debug.Log("Updating Leaderboard");
-			StartCoroutine(CoroUpdateLeaderboard(10));
-			StartCoroutine(KeepUpdatingLeaderboard(10));
+			StartCoroutine(CoroUpdateLeaderboard(amountOfValue));
+			StartCoroutine(KeepUpdatingLeaderboard(amountOfValue));
 		}
 		IEnumerator KeepUpdatingLeaderboard(int num){
 			while (true){
@@ -44,7 +46,11 @@ namespace SplitTimer{
 					+ "/API/DESCENDERS-LEADERBOARD?num="
 					+ num.ToString()
 					+ "&trail_name="
-					+ trailTimer.trail_name))
+					+ trailTimer.trail_name
+					+ "&steam_name="
+					+ new SteamIntegration().getName()
+					+ "&steam_id="
+					+ new SteamIntegration().getSteamId()))
 			{
 				yield return webRequest.SendWebRequest();
 				string data = webRequest.downloadHandler.text;

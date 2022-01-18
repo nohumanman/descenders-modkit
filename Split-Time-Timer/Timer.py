@@ -24,8 +24,12 @@ class Timer():
             is_competitor = player[2]
             print(steam_id, steam_name, is_competitor)
             if is_competitor == "true":
-                self.players[steam_id] = Player(steam_name, steam_id, "none", True)
+                player = Player(steam_name, steam_id, "none", True)
             else:
-                self.players[steam_id] = Player(steam_name, steam_id, "none", False)
+                player = Player(steam_name, steam_id, "none", False)
+            self.add_player(player, steam_id)
             print("Ended first player.")
         print("tiemr self players", self.players)
+    
+    def add_player(self, player : Player, steam_id: str):
+        self.players[steam_id] = player

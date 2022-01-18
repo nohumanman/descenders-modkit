@@ -2029,6 +2029,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textMesh: {fileID: 918291435}
   trailTimer: {fileID: 263586995}
+  amountOfValue: 10
 --- !u!1 &1556842085
 GameObject:
   m_ObjectHideFlags: 0

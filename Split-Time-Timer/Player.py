@@ -21,14 +21,21 @@ class Player():
         self.has_entered_checkpoint = False
         PlayerDB.add_player(steam_id, steam_name, is_competitor)
 
-    def loaded(self):
+    def get_time_on_world(self):
+        return 404
+
+    def loaded(self, world_name):
         self.time_started = time.time()
+        self.online = True
+        self.current_world = world_name
 
     def unloaded(self):
-        self.time_started = time.time()
-        PlayerDB.end_session(self.steam_id, self.time_started)
+        self.time_ended = time.time()
+        PlayerDB.end_session(self.steam_id, self.time_started, self.time_ended)
         self.time_started = None
         self.time_ended = None
+        self.online = False
+        self.current_world = "None"
 
     def set_competitor(self, is_competitor):
         self.is_competitor = is_competitor
