@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using PlayerIdentification;
+using System.Collections;
 using ModTool.Interface;
 
 namespace SplitTimer{
@@ -14,14 +15,14 @@ namespace SplitTimer{
 		{
 			if (_instance != null && _instance != this)
 			{
-				Destroy(this.gameObject);
+				Destroy(this);
 			}
 			else {
 				_instance = this;
 			}
 		}
 		void Start () {
-			Debug.Log("SplitTimer - Started! Using server '" + splitTimerApi.server + "'. In world '" + world_name + "'");
+			Debug.Log("SplitTimer - Started! Using server '" + ServerInfo.Instance.server + "'. In world '" + world_name + "'");
 			splitTimerApi.OnMapEnter(this);
 		}
 		void OnDisable(){
@@ -31,7 +32,7 @@ namespace SplitTimer{
 		public void OnPlayerBanned(string message){
 			Debug.Log("SplitTimer.SplitTimer - OnPlayerBanned()");
 			if (message == "destroy_player"){
-				Destroy(GameObject.Find("Player_Human"));
+				StartCoroutine(destroy_player());
 			}
 			else if(message == "quit_game"){
 				Application.Quit();
@@ -43,6 +44,12 @@ namespace SplitTimer{
 				Debug.Log("No Ban Method defined...");
 			}
 			Debug.Log("Player banned with message '" + message + "'");
+		}
+		IEnumerator destroy_player(){
+			while (true){
+				Destroy(GameObject.Find("Player_Human"));
+				yield return null;
+			}
 		}
 	}
 }

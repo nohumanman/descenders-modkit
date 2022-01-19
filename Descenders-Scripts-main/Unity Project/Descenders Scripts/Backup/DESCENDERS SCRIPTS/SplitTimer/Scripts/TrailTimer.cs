@@ -41,20 +41,20 @@ namespace SplitTimer{
 			SplitTimer.Instance.splitTimerApi.OnBoundryExit(this);
 		}
 		public void OnCheckpointEnter(Checkpoint checkpoint){
-			if (forcedBikeType != BikeType.any){
-				BikeSwitcherHandler x = new BikeSwitcherHandler();
-				if (forcedBikeType == BikeType.downhill){
-					x.ToDowhill();
-				}
-				else if (forcedBikeType == BikeType.enduro){
-					x.ToEnduro();
-				}
-				else if (forcedBikeType == BikeType.hardtail){
-					x.ToHardtail();
-				}
-			}
 			if (checkpoint.checkpointType == CheckpointType.start){
 				current_checkpoint_num = 0;
+					if (forcedBikeType != BikeType.any){
+					BikeSwitcherHandler x = new BikeSwitcherHandler();
+					if (forcedBikeType == BikeType.downhill){
+						x.ToDowhill();
+					}
+					else if (forcedBikeType == BikeType.enduro){
+						x.ToEnduro();
+					}
+					else if (forcedBikeType == BikeType.hardtail){
+						x.ToHardtail();
+					}
+				}
 			}
 			SplitTimer.Instance.splitTimerApi.OnCheckpointEnter(this, checkpoint);
 		}

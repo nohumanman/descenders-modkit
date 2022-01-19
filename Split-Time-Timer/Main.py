@@ -3,6 +3,7 @@ from Player import Player
 from Timer import Timer
 import time
 from PlayerDB import PlayerDB
+from Tokens import webhook
 from RidersGate import RidersGate
 
 
@@ -10,6 +11,16 @@ app = Flask(__name__)
 
 timer = Timer()
 riders_gate = RidersGate()
+
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+logging.basicConfig(
+    filename="log.txt",
+    filemode="a",
+    level=logging.INFO,
+    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+    datefmt='%H:%M:%S')
 
 ''' IN-Descenders API calls '''
 
@@ -19,6 +30,7 @@ def on_boundry_enter():
     steam_name = request.args.get("steam_name")
     world_name = request.args.get("world_name")
     trail_name = request.args.get("trail_name")
+    logging.info(f'''Player {steam_name} (id {steam_id}) on {world_name} has entered boundry on trail "{trail_name}"''')
     if timer.players[steam_id] is None:
         timer.players[steam_id] = Player(
             steam_name,
@@ -37,6 +49,7 @@ def on_boundry_exit():
     steam_name = request.args.get("steam_name")
     world_name = request.args.get("world_name")
     trail_name = request.args.get("trail_name")
+    logging.info(f'''Player {steam_name} (id {steam_id}) on {world_name} has exited the boundry on trail "{trail_name}"''')
     if timer.players[steam_id] is None:
         timer.players[steam_id] = Player(
             steam_name,
@@ -58,6 +71,7 @@ def on_checkpoint_enter(checkpoint_num):
     trail_name = request.args.get("trail_name")
     total_checkpoints = request.args.get("total_checkpoints")
     checkpoint_type = request.args.get("checkpoint_type")
+    logging.info(f'''Player {steam_name} (id {steam_id}) on {world_name} has entered a checkpoint on {trail_name} (Checkpoint {checkpoint_num}/{total_checkpoints} and type '{checkpoint_type}')''')
     if timer.players[steam_id] is None:
         timer.players[steam_id] = Player(
             steam_name,
@@ -65,29 +79,35 @@ def on_checkpoint_enter(checkpoint_num):
             world_name,
             False
         )
-    print(
-        "Checkpoint number"
-        + str(checkpoint_num)
-        + " and total checkpoints "
-        + str(total_checkpoints)
-        + " checkpoint_type of "
-        + str(checkpoint_type)
-    )
     player = timer.players[steam_id]
     if checkpoint_type == "start" and checkpoint_num != 0:
         player.cancel_time()
         player.current_trail = trail_name
+        player.entered_checkpoint(
+            int(checkpoint_num),
+            int(total_checkpoints),
+            time.time(),
+            trail_name
+        )
     elif checkpoint_type == "intermediate" and player.trail_start_time == 0:
         return "INVALID; Didn't go through start!"
     elif checkpoint_type == "stop":
         if int(checkpoint_num) > int(total_checkpoints)-1:
-            return "INVALID; SKIPPED CHECKPOINTS!"     
-    player.entered_checkpoint(
-        int(checkpoint_num),
-        int(total_checkpoints),
-        time.time(),
-        trail_name
-    )
+            return "INVALID; SKIPPED CHECKPOINTS!"
+        else:     
+            player.entered_checkpoint(
+                int(checkpoint_num),
+                int(total_checkpoints),
+                time.time(),
+                trail_name
+            )
+    else:
+        player.entered_checkpoint(
+            int(checkpoint_num),
+            int(total_checkpoints),
+            time.time(),
+            trail_name
+        )
     return "valid"
 
 @app.route("/API/DESCENDERS/ON-DEATH")
@@ -95,6 +115,7 @@ def on_death():
     steam_id = request.args.get("steam_id")
     steam_name = request.args.get("steam_name")
     world_name = request.args.get("world_name")
+    logging.info(f'''Player {steam_name} (id {steam_id}) on {world_name} has died.''')
     if timer.players[steam_id] is None:
         timer.players[steam_id] = Player(
             steam_name,
@@ -108,10 +129,10 @@ def on_death():
 
 @app.route("/API/DESCENDERS/ON-MAP-ENTER")
 def on_map_enter():
-    print("ENTERED MAP ENTERED MAP\n\n")
     steam_id = request.args.get("steam_id")
     steam_name = request.args.get("steam_name")
     world_name = request.args.get("world_name")
+    logging.info(f'''Player {steam_name} (id {steam_id}) on {world_name} has entered the map.''')
     if timer.players[steam_id] is None:
         timer.players[steam_id] = Player(
             steam_name,
@@ -129,10 +150,10 @@ def on_map_enter():
 
 @app.route("/API/DESCENDERS/ON-MAP-EXIT")
 def on_map_exit():
-    print("EXITED MAP EXITED MAP\n\n")
     steam_id = request.args.get("steam_id")
     steam_name = request.args.get("steam_name")
     world_name = request.args.get("world_name")
+    logging.info(f'''Player {steam_name} (id {steam_id}) on {world_name} has exited the world.''')
     if timer.players[steam_id] is None:
         timer.players[steam_id] = Player(
             steam_name,
@@ -145,12 +166,11 @@ def on_map_exit():
 
 @app.route("/API/DESCENDERS/ON-BIKE-SWITCH")
 def api_descenders_on_bike_switch():
-    print("SWITCHED BIKE\n\n")
     steam_id = request.args.get("steam_id")
     steam_name = request.args.get("steam_name")
     world_name = request.args.get("world_name")
     new_bike = request.args.get("new_bike")
-    print(f'''New bike: {new_bike}''')
+    logging.info(f'''Player {steam_name} (id {steam_id}) on {world_name} has switched to bike {new_bike}''')
     if timer.players[steam_id] is None:
         timer.players[steam_id] = Player(
             steam_name,
@@ -167,6 +187,7 @@ def api_get_riders_gate():
     steam_id = request.args.get("steam_id")
     steam_name = request.args.get("steam_name")
     world_name = request.args.get("world_name")
+    logging.info(f'''Player {steam_name} (id {steam_id}) on {world_name} has requested the gate status.''')
     if timer.players[steam_id] is None:
         timer.players[steam_id] = Player(
             steam_name,
@@ -179,6 +200,7 @@ def api_get_riders_gate():
 
 @app.route("/API/MONITOR/<steam_id>")
 def app_monitor_steam_id(steam_id):
+    logging.info(f'''Monitoring player with id {steam_id}''')
     if timer.monitored_player == timer.players[steam_id]:
         if timer.monitored_player is not None:
             timer.monitored_player.being_monitored = False
@@ -189,11 +211,6 @@ def app_monitor_steam_id(steam_id):
         timer.monitored_player = timer.players[steam_id]
         timer.monitored_player.being_monitored = True
     return "Monitoring"
-
-@app.route("/API/MONITOR/UPDATE-CONFIG")
-def update_config():
-    control_competitors_split_times = request.args.get("control_competitors_split_times")
-    control_competitors_leaderboard = request.args.get("control_competitors_leaderboard")
 
 @app.route("/API/UPDATE-BAN-STATUS/<steam_id>")
 def api_update_ban_status(steam_id):
@@ -247,6 +264,10 @@ def api_descenders_leaderboard():
     except:
         num = 10
     trail_name = request.args.get("trail_name")
+    steam_name = request.args.get("steam_name")
+    steam_id = request.args.get("steam_id")
+    world_name = request.args.get("world_name")
+    logging.info(f'''Player {steam_name} (id {steam_id}) on {world_name} has requested leaderboard info.''')
     leaderboard_data = PlayerDB.get_leaderboard_descenders(trail_name, num=num)
     is_competitors = [data["is_competitor"] for data in leaderboard_data]
     steam_ids = [data["steam_id"] for data in leaderboard_data]
@@ -256,7 +277,7 @@ def api_descenders_leaderboard():
     total_times = [data["total_time"] for data in leaderboard_data]
     trail_names = [data["trail_name"] for data in leaderboard_data]
     was_monitoreds = [data["was_monitored"] for data in leaderboard_data]
-
+    print("leaderboard fetch returned:" + str(leaderboard_data))
     return jsonify({
         "is_competitors" : is_competitors,
         "steam_ids" : steam_ids,
@@ -273,6 +294,8 @@ def api_descenders_get_fastest_split_times():
     trail_name = request.args.get("trail_name")
     steam_id = request.args.get("steam_id")
     steam_name = request.args.get("steam_name")
+    world_name = request.args.get("world_name")
+    logging.info(f'''Player {steam_name} (id {steam_id}) on {world_name} has requested split times of trail {trail_name}''')
     return {"fastest_split_times" : PlayerDB.get_fastest_split_times(trail_name, competitors_only=timer.competitors_only, min_timestamp=timer.timestamp, monitored_only=timer.monitored_only)}
 
 
@@ -329,8 +352,20 @@ def dashboard():
     else:
         return render_template("Dashboard.html")
 
+@app.route("/GET-LOG-AS-LIST")
+def get_log_as_string():
+    with open("log.txt", "rt") as file:
+        log_as_list = [x for x in file.read().split("\n")]
+        log_as_list.reverse()
+        return jsonify({"data" : log_as_list})
+
 @app.route("/MONITOR")
 def ui_monitor():
     return render_template("UI.html")
 
-app.run(host="0.0.0.0", port="8443", ssl_context="adhoc")
+@app.route("/LOG")
+def log_html():
+    return render_template("Log.html")
+
+
+app.run(host="0.0.0.0", port="8443", ssl_context="adhoc", debug=False)

@@ -28,13 +28,17 @@ namespace SplitTimer{
 		public void UpdateLeaderboard(){
 			// make get request to refresh leaderboard.
 			Debug.Log("Updating Leaderboard");
-			StartCoroutine(CoroUpdateLeaderboard(amountOfValue));
+			if (ServerInfo.Instance.isOnline){
+				StartCoroutine(CoroUpdateLeaderboard(amountOfValue));
+			}
 			StartCoroutine(KeepUpdatingLeaderboard(amountOfValue));
 		}
 		IEnumerator KeepUpdatingLeaderboard(int num){
 			while (true){
 				yield return new WaitForSeconds(5f);
-				StartCoroutine(CoroUpdateLeaderboard(num));
+				if (ServerInfo.Instance.isOnline){
+					StartCoroutine(CoroUpdateLeaderboard(num));
+				}
 			}
 		}
 		IEnumerator CoroUpdateLeaderboard(int num){
@@ -42,7 +46,7 @@ namespace SplitTimer{
 			using (
 				UnityWebRequest webRequest
 				= UnityWebRequest.Get(
-					SplitTimer.Instance.splitTimerApi.server
+					ServerInfo.Instance.server
 					+ "/API/DESCENDERS-LEADERBOARD?num="
 					+ num.ToString()
 					+ "&trail_name="
@@ -50,7 +54,9 @@ namespace SplitTimer{
 					+ "&steam_name="
 					+ new SteamIntegration().getName()
 					+ "&steam_id="
-					+ new SteamIntegration().getSteamId()))
+					+ new SteamIntegration().getSteamId()
+					+ "&world_name="
+					+ SplitTimer.Instance.world_name))
 			{
 				yield return webRequest.SendWebRequest();
 				string data = webRequest.downloadHandler.text;

@@ -8,26 +8,21 @@ using PlayerIdentification;
 namespace SplitTimer{
 	public class SplitTimerAPI {
 		public SteamIntegration steamIntegration = new SteamIntegration();
-		public string server = "https://descenders-api.nohumanman.com:8443";
 		public void OnMapEnter(SplitTimer splitTimer){
-			Debug.Log(
-				"SplitTimer.SplitTimerAPI - OnMapEnter(). Steam Name '"
-				+ steamIntegration.getName()
-				+ "' and id '"
-				+ steamIntegration.getSteamId()
-				+ "'"
-			);
-			splitTimer.StartCoroutine(CoroOnMapEnter());
+			if (ServerInfo.Instance.isOnline){
+				splitTimer.StartCoroutine(CoroOnMapEnter());
+			}
 		}
 		public void OnBikeSwitch(string new_bike){
-			Debug.Log("OnBikeSwitch()");
-			SplitTimer.Instance.StartCoroutine(CoroOnBikeSwitch(new_bike));
+			if (ServerInfo.Instance.isOnline){
+				SplitTimer.Instance.StartCoroutine(CoroOnBikeSwitch(new_bike));
+			}
 		}
 		IEnumerator CoroOnBikeSwitch(string new_bike){
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
-					server
+					ServerInfo.Instance.server
 					+ "/API/DESCENDERS/ON-BIKE-SWITCH"
 					+ "?world_name="
 					+ SplitTimer.Instance.world_name
@@ -50,34 +45,44 @@ namespace SplitTimer{
 		}
 		public void OnMapExit(){
 			Debug.Log("SplitTimer.SplitTimerAPI - OnMapExit()!");
-			IEnumerator e = CoroOnMapExit();
-			if (e != null){
-				if (!e.MoveNext()){
-					e = null;
+			if (ServerInfo.Instance.isOnline){
+				IEnumerator e = CoroOnMapExit();
+				if (e != null){
+					if (!e.MoveNext()){
+						e = null;
+					}
 				}
 			}
 		}
 		public void OnCheckpointEnter(TrailTimer trailTimer, Checkpoint checkpoint){
 			Debug.Log("SplitTimer.SplitTimerAPI - OnCheckpointEnter()");
-			trailTimer.StartCoroutine(CoroOnCheckpointEnter(trailTimer, checkpoint));
+			if (ServerInfo.Instance.isOnline){
+				trailTimer.StartCoroutine(CoroOnCheckpointEnter(trailTimer, checkpoint));
+			}
 		}
 		public void OnDeath(TrailTimer trailTimer){
 			Debug.Log("SplitTimer.SplitTimerAPI - OnDeath()");
-			trailTimer.StartCoroutine(CoroOnDeath(trailTimer));
+			if (ServerInfo.Instance.isOnline){
+				trailTimer.StartCoroutine(CoroOnDeath(trailTimer));
+			}
 		}
 		public void OnBoundryEnter(TrailTimer trailTimer){
 			Debug.Log("SplitTimer.SplitTimerAPI - OnBoundryEnter()");
-			trailTimer.StartCoroutine(CoroOnBoundryEnter(trailTimer));
+			if (ServerInfo.Instance.isOnline){
+				trailTimer.StartCoroutine(CoroOnBoundryEnter(trailTimer));
+			}
 		}
 		public void OnBoundryExit(TrailTimer trailTimer){
 			Debug.Log("SplitTimer.SplitTimerAPI - OnBoundryEnter()");
-			trailTimer.StartCoroutine(CoroOnBoundryExit(trailTimer));
+			if (ServerInfo.Instance.isOnline){
+				trailTimer.StartCoroutine(CoroOnBoundryExit(trailTimer));
+			}
 		}
 		IEnumerator CoroOnMapEnter(){
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
-					server
+					ServerInfo.Instance.server
 					+ "/API/DESCENDERS/ON-MAP-ENTER"
 					+ "?world_name="
 					+ SplitTimer.Instance.world_name
@@ -99,7 +104,7 @@ namespace SplitTimer{
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
-					server
+					ServerInfo.Instance.server
 					+ "/API/DESCENDERS/ON-DEATH"
 					+ "?steam_name="
 					+ steamIntegration.getName()
@@ -122,7 +127,7 @@ namespace SplitTimer{
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
-					server
+					ServerInfo.Instance.server
 					+ "/API/DESCENDERS/ON-MAP-EXIT"
 					+ "?steam_name="
 					+ steamIntegration.getName()
@@ -141,7 +146,7 @@ namespace SplitTimer{
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
-					server
+					ServerInfo.Instance.server
 					+ "/API/DESCENDERS/ON-BOUNDRY-ENTER"
 					+ "?trail_name="
 					+ trailTimer.trail_name
@@ -164,7 +169,7 @@ namespace SplitTimer{
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
-					server
+					ServerInfo.Instance.server
 					+ "/API/DESCENDERS/ON-BOUNDRY-EXIT"
 					+ "?trail_name="
 					+ trailTimer.trail_name
@@ -192,7 +197,7 @@ namespace SplitTimer{
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
-					server
+					ServerInfo.Instance.server
 					+ "/API/DESCENDERS/ON-CHECKPOINT-ENTER/"
 					+ checkpoint_num.ToString()
 					+ "?trail_name="
@@ -211,8 +216,6 @@ namespace SplitTimer{
 			)
 			{
 				yield return webRequest.SendWebRequest();
-				Debug.Log("Here!");
-				Debug.Log(webRequest.downloadHandler.text);
 				if (webRequest.downloadHandler.text != "valid"){
 					trailTimer.InvalidateTime(webRequest.downloadHandler.text);
 				}

@@ -104,7 +104,6 @@ class PlayerDB():
             LIMIT {num};
         '''
         result = PlayerDB.execute_sql(statement)
-        print(result)
         return [
             {
                 "steam_id" : time[0],

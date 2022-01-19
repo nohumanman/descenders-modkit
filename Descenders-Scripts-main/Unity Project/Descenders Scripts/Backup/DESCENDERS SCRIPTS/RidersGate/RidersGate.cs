@@ -40,15 +40,17 @@ namespace RidersGate{
 		}
 
 		void Update () {
-			float current_time = DateTime.Now.Second;
-			if (old_time == current_time && !hasChecked){
-				StartCoroutine(DetectIfShouldStartGate());
-				hasChecked = true;
-				old_time = current_time;
-			}
-			else if (!(current_time == old_time)) {
-				hasChecked = false;
-				old_time = current_time;
+			if (ServerInfo.Instance.isOnline){
+				float current_time = DateTime.Now.Second;
+				if (old_time == current_time && !hasChecked){
+					StartCoroutine(DetectIfShouldStartGate());
+					hasChecked = true;
+					old_time = current_time;
+				}
+				else if (!(current_time == old_time)) {
+					hasChecked = false;
+					old_time = current_time;
+				}
 			}
 		}
 		public struct GateRequest{
@@ -58,7 +60,7 @@ namespace RidersGate{
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
-					SplitTimer.SplitTimer.Instance.splitTimerApi.server
+					ServerInfo.Instance.server
 					+ "/API/DESCENDERS/GET-RIDERS-GATE"
 					+ "?steam_name=" + new SteamIntegration().getName()
 					+ "&steam_id=" + new SteamIntegration().getSteamId()

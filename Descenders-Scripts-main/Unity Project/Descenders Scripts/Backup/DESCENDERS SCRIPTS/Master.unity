@@ -1271,7 +1271,6 @@ GameObject:
   m_Component:
   - component: {fileID: 263586994}
   - component: {fileID: 263586995}
-  - component: {fileID: 263586997}
   - component: {fileID: 263586996}
   m_Layer: 0
   m_Name: Trail1
@@ -1337,19 +1336,6 @@ MonoBehaviour:
   green: {fileID: 1122179662}
   isCheckpointUIEnabled: 1
   ui: {fileID: 1123065384}
---- !u!114 &263586997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114503363423426880, guid: 30230539a2d97154b9ba340b5119fa99,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 263586993}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81279b25891bf5b498c4007663c44198, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  world_name: Descenders Scripts
 --- !u!1 &265180035
 GameObject:
   m_ObjectHideFlags: 0
@@ -2060,6 +2046,47 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teleporterName: Location 1
+--- !u!1 &308243759
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 308243761}
+  - component: {fileID: 308243760}
+  m_Layer: 0
+  m_Name: SplitTimerSingleton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &308243760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 308243759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81279b25891bf5b498c4007663c44198, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  world_name: Descenders Scripts
+--- !u!4 &308243761
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 308243759}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1650.4535, y: 11.642895, z: -277.37317}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &311876983
 GameObject:
   m_ObjectHideFlags: 0
@@ -7358,7 +7385,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1114745768
 Transform:
   m_ObjectHideFlags: 0
@@ -8144,7 +8171,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1240644224
 Transform:
   m_ObjectHideFlags: 0
@@ -12215,6 +12242,47 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2028482153}
   m_Mesh: {fileID: 4300002, guid: b6b9c16b9e9296a42aa7f8579037eac9, type: 3}
+--- !u!1 &2077574918
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 2077574919}
+  - component: {fileID: 2077574920}
+  m_Layer: 0
+  m_Name: ServerInfoSingleton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2077574919
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2077574918}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1594.7507, y: 73.413635, z: -151.32085}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2077574920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2077574918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a131091aa5287ef4e8879eac0abbf59b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  server: https://descenders-api.nohumanman.com:8443
 --- !u!1 &2101388663
 GameObject:
   m_ObjectHideFlags: 0

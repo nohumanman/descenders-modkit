@@ -1,7 +1,9 @@
 from posixpath import split
 import time
 from threading import Thread
+import requests
 from PlayerDB import PlayerDB
+from Tokens import webhook
 
 
 class Player():
@@ -61,6 +63,21 @@ class Player():
     def submit_time(self, split_times, trail_name):
         self.online = True
         print("SUBMITTING TIME - TRAIL COMPLETE!!")
+        # webhook
+        try:
+            print(PlayerDB.get_fastest_split_times(trail_name))
+            fastest_times = PlayerDB.get_fastest_split_times(trail_name)
+            fastest_time = fastest_times[len(fastest_times)-1]
+            if split_times[len(split_times)-1] < fastest_time:
+                print("New Fastest Time!")
+                faster_amount = round(fastest_time - split_times[len(split_times)-1], 4)
+                data = {
+                    "content" : f"Congratulations {self.steam_name} for the new fastest time on {trail_name}!! It's {faster_amount} seconds faster :pog:",
+                    "username" : "Descenders Competitive"
+                }
+                result = requests.post(webhook, json = data)
+        except Exception as e:
+            print(e)
         PlayerDB.submit_time(self.steam_id, split_times, trail_name, self.being_monitored)
 
     def cancel_time(self):

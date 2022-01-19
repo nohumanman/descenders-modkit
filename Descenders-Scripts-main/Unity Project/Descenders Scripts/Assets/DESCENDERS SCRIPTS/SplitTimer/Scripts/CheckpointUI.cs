@@ -129,7 +129,6 @@ namespace SplitTimer{
             StopCheckpointElementsTimeout();
             EnableCheckpointElements();
 			try{
-				Debug.Log(fastest_split_times);
 				float fastSplitTime = fastest_split_times.fastest_split_times[trailTimer.current_checkpoint_num-1];
 				checkpointComparisonTimer.text = "Fastest: " + FormatTime(fastSplitTime).ToString();
 				FlashOnTimeDifference(fastSplitTime, timeCount);
@@ -174,16 +173,19 @@ namespace SplitTimer{
 			toDisable.SetActive(false);
 		}
 		void GetFastestTimes(){
-			StartCoroutine(CoroGetFastestTimes(trailTimer.trail_name));
+			if (ServerInfo.Instance.isOnline){
+				StartCoroutine(CoroGetFastestTimes(trailTimer.trail_name));
+			}
 		}
 		IEnumerator CoroGetFastestTimes(string trail_name){
 			using (UnityWebRequest webRequest = UnityWebRequest.Get(
-				SplitTimer.Instance.splitTimerApi.server
+				ServerInfo.Instance.server
 				+ "/API/DESCENDERS-GET-FASTEST-TIME"
 				+ "?trail_name="
 				+ trailTimer.trail_name
 				+ "&steam_id=" + new SteamIntegration().getSteamId()
-				+ "&steam_name=" + new SteamIntegration().getName()))
+				+ "&steam_name=" + new SteamIntegration().getName()
+				+ "&world_name=" + SplitTimer.Instance.world_name))
 			{
 				yield return webRequest.SendWebRequest();
 				string data = webRequest.downloadHandler.text;
