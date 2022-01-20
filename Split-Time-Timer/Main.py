@@ -12,6 +12,26 @@ app = Flask(__name__)
 timer = Timer()
 riders_gate = RidersGate()
 
+from Tokens import bot_token
+
+import discord
+
+client = discord.Client()
+
+@client.event
+async def on_ready():
+    print(f'We have logged in as {client.user}')
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+
+    if message.content.startswith('$hello'):
+        await message.channel.send('Hello!')
+import threading
+threading.Thread(target=client.run, args=(bot_token,)).start()
+
 import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
@@ -39,8 +59,12 @@ def on_boundry_enter():
             False
         )
     player = timer.players[steam_id]
+    player.amount_of_boundaries_inside += 1
     #if player.is_competitor is timer.monitored_player:
-    return "valid"
+    if player.amount_of_boundaries_inside:
+        return "valid"
+    else:
+        return "INVALID; INTERNAL SERVER ERROR"
 
 
 @app.route("/API/DESCENDERS/ON-BOUNDRY-EXIT")
@@ -58,10 +82,17 @@ def on_boundry_exit():
             False
         )
     player = timer.players[steam_id]
-    if player.is_competitor == timer.monitored_player:
-        return "valid"
+    if player.amount_of_boundaries_inside > 0:
+        player.amount_of_boundaries_inside -= 1
+    if player.amount_of_boundaries_inside <= 0:
+        print(f"You are in {player.amount_of_boundaries_inside}")
+        if player.is_competitor == timer.monitored_player:
+            return "valid"
+        else:
+            player.split_times = []
+            return "INVALID; OUT OF BOUNDS"
     else:
-        return "INVALID; OUT OF BOUNDS"
+        return "valid"
 
 @app.route("/API/DESCENDERS/ON-CHECKPOINT-ENTER/<checkpoint_num>")
 def on_checkpoint_enter(checkpoint_num):
@@ -80,6 +111,7 @@ def on_checkpoint_enter(checkpoint_num):
             False
         )
     player = timer.players[steam_id]
+    player.loaded(world_name)
     if checkpoint_type == "start" and checkpoint_num != 0:
         player.cancel_time()
         player.current_trail = trail_name
@@ -161,7 +193,8 @@ def on_map_exit():
             world_name,
             False
         )
-    timer.players[steam_id].unloaded()
+    if timer.players[steam_id].time_started != None:
+        timer.players[steam_id].unloaded()
     return "valid"
 
 @app.route("/API/DESCENDERS/ON-BIKE-SWITCH")
@@ -368,4 +401,4 @@ def log_html():
     return render_template("Log.html")
 
 
-app.run(host="0.0.0.0", port="8443", ssl_context="adhoc", debug=False)
+app.run(host="0.0.0.0", port="8443", ssl_context="adhoc", debug=True)

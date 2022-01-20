@@ -17,6 +17,7 @@ class Player():
         self.is_competitor = is_competitor
         self.trail_start_time = 0
         self.split_times = []
+        self.amount_of_boundaries_inside = 0
         self.being_monitored = False
         self.time_started = None
         self.time_ended = None
@@ -55,7 +56,7 @@ class Player():
             self.trail_start_time = time.time()
         elif checkpoint_num == total_checkpoints-1:
             self.split_times.append(checkpoint_time - self.trail_start_time)
-            self.submit_time(self.split_times, trail_name)
+            self.submit_time(self.split_times, trail_name, discord_client)
         else:
             self.split_times.append(checkpoint_time - self.trail_start_time)
         Thread(target=self.disable_entered_checkpoint, args=(5,)).start()
@@ -72,10 +73,11 @@ class Player():
                 print("New Fastest Time!")
                 faster_amount = round(fastest_time - split_times[len(split_times)-1], 4)
                 data = {
-                    "content" : f"Congratulations {self.steam_name} for the new fastest time on {trail_name}!! It's {faster_amount} seconds faster :pog:",
-                    "username" : "Descenders Competitive"
+                    "content": f"Congratulations {self.steam_name} for the new fastest time on {trail_name}!! It's {faster_amount} seconds faster :pog:",
+                    "username": "Descenders Competitive"
                 }
                 result = requests.post(webhook, json = data)
+                
         except Exception as e:
             print(e)
         PlayerDB.submit_time(self.steam_id, split_times, trail_name, self.being_monitored)

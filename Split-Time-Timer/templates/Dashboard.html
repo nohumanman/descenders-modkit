@@ -25,6 +25,7 @@
                         <v-tab-item>
                             <br>
                             <v-btn dense small onclick="$.get('/API/TOGGLE-RIDERS-GATE-START')">Open Start Gates (for controlled players)</v-btn>
+                            <div>Red is Offline, Green is Online, Purple is online & Competitor.</div>
                             <v-list>
                                 <v-container v-for="player in players" v-if="(player.is_competitor || !show_competitors_only) && (!show_online_only || player.online)">
                                     <v-card x-large :color="player.colour">
@@ -40,7 +41,7 @@
                                         <v-card-actions>
                                             <v-checkbox v-model="player.is_competitor" @click="toggle_competitor(player.steam_id)" label="Competitor"></v-checkbox>
                                             <v-spacer></v-spacer>
-                                            <v-select item-text="text" :items="ban_options" v-on:input="update_ban_status(player.steam_id, player.ban_state)" v-model="player.ban_state"></v-select>
+                                            <v-select v-if="player.steam_id != '1234567890'" item-text="text" :items="ban_options" v-on:input="update_ban_status(player.steam_id, player.ban_state)" v-model="player.ban_state"></v-select>
                                             <v-spacer></v-spacer>
                                             <v-btn @click="monitor_player(player.steam_id)" :color="getColFromMonitoring(player.being_monitored)"/><v-icon>mdi-cctv</v-icon></v-btn>
                                         </v-card-actions>
