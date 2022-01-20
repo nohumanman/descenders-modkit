@@ -20,15 +20,15 @@ class PlayerDB():
         if is_competitor:
             con.execute(
                 f'''
-                REPLACE INTO Players (steam_id, steam_name, is_competitor)
-                VALUES ("{steam_id}", "{steam_name}", "true")
+                REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status)
+                VALUES ("{steam_id}", "{steam_name}", "true", "unbanned")
                 '''
             )
         else:
             con.execute(
                 f'''
-                REPLACE INTO Players (steam_id, steam_name, is_competitor)
-                VALUES ("{steam_id}", "{steam_name}", "false")
+                REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status)
+                VALUES ("{steam_id}", "{steam_name}", "false", "unbanned")
                 '''
             )
         con.commit()
@@ -201,11 +201,11 @@ class PlayerDB():
         con.commit()
 
     @staticmethod
-    def end_session(steam_id, time_started, time_ended):
+    def end_session(steam_id, time_started, time_ended, world_name):
         con = sqlite3.connect("TimeStats.db")
         con.execute(
             f'''
-            INSERT INTO Session (steam_id, time_started, time_ended)
-            VALUES ("{steam_id}", "{time_started}", "{time_ended}")
+            INSERT INTO Session (steam_id, time_started, time_ended, world_name)
+            VALUES ("{steam_id}", "{time_started}", "{time_ended}", "{world_name}")
             ''')
         con.commit()

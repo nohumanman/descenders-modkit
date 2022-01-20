@@ -31,13 +31,40 @@
                                     <v-card x-large :color="player.colour">
                                         <v-card-title style="font-size: 40px; text-decoration: underline;">[[player.steam_name]]</v-card-title>
                                         <v-card-text style="font-size: 20px;">
-                                            Steam ID - [[player.steam_id]]<br>
-                                            Current World - [[player.current_world]]<br>
-                                            Trail Start Time - [[player.trail_start_time]]<br>
-                                            Split Times - [[player.split_times]]<br>
-                                            Current Trail - [[player.current_trail]]<br>
-                                            Current bike - [[player.current_bike]]<br>
-                                            Total Time on world - [[player.total_time]] seconds.
+                                            <table style="color: white;">
+                                                <tr v-if="debug">
+                                                    <td>Steam ID</td>
+                                                    <td>[[player.steam_id]]</td>
+                                                </tr>
+                                                <tr>
+                                                  <td>Current World</td>
+                                                  <td>[[player.current_world]]</td>
+                                                </tr>
+                                                <tr v-if="debug">
+                                                    <td>Trail Start Time</td>
+                                                    <td>[[player.trail_start_time]]</td>
+                                                </tr>
+                                                <tr v-if="debug">
+                                                    <td>Split Times</td>
+                                                    <td>[[player.split_times]]</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Current Trail</td>
+                                                    <td>[[player.current_trail]]</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Current bike</td>
+                                                    <td>[[player.current_bike]]</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Total Time on [[player.current_world]] -</td>
+                                                    <td>[[secondsToHms(player.total_time_on_world)]]</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Total time anywhere</td>
+                                                    <td>[[secondsToHms(player.total_time)]]</td>
+                                                </tr>
+                                              </table>
                                         <v-card-actions>
                                             <v-checkbox v-model="player.is_competitor" @click="toggle_competitor(player.steam_id)" label="Competitor"></v-checkbox>
                                             <v-spacer></v-spacer>
@@ -63,6 +90,7 @@
                                 <v-checkbox dense onclick="$.get('/API/TOGGLE-FASTEST-SPLIT-TIMES')" label="Control leaderboard for competitors."></v-checkbox>
                                 <v-checkbox dense v-model="show_competitors_only" label="Show Competitors Only"></v-checkbox>
                                 <v-checkbox dense v-model="show_online_only" label="Show Online Only"></v-checkbox>
+                                <v-checkbox dense v-model="debug" label="Debug Mode"></v-checkbox>
                             </v-col>
                         </v-tab-item>
                     </v-tabs>
@@ -97,7 +125,20 @@
             }),
             data : {
                 players: [{
-                    "steam_name" : "stid"
+                    "steam_name": "STEAM NAME HERE",
+                    "steam_id": "STEAM ID HERE",
+                    "current_world": "CURRENT WORLD HERE",
+                    "trail_start_time": "TRAIL START TIME HERE",
+                    "split_times": "SPLIT TIMERS HERE",
+                    "is_competitor" : "IS COMPETITOR HERE",
+                    "online" : "IS ONLINE HERE",
+                    "colour" : "COLOUR HERE",
+                    "being_monitored" : "BEING MONITORED HERE",
+                    "current_trail" : "YEE",
+                    "ban_state" : "timer.players[player].get_ban_status()",
+                    "current_bike" : "timer.players[player].current_bike",
+                    "total_time_on_world" : "10801",
+                    "total_time" : "PlayerDB.get_time_on_world(player)"
                 }],
                 "competitor_only" : false,
                 leaderboard_info : [
@@ -120,7 +161,8 @@
                     {text:"checkpoint_num", value:"checkpoint_num"},
                     {text:"checkpoint_time", value: "checkpoint_time"}
                 ],
-                show_competitors_only : false
+                show_competitors_only : false,
+                debug: false,
             },
             methods: {
                 update_players(){
@@ -155,6 +197,17 @@
                     $.get("/API/DASHBOARD/LEADERBOARD", function(data){
                         app.leaderboard_info = data["data"]
                     })
+                },
+                secondsToHms(d) {
+                    d = Number(d);
+                    var h = Math.floor(d / 3600);
+                    var m = Math.floor(d % 3600 / 60);
+                    var s = Math.floor(d % 3600 % 60);
+
+                    var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+                    var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+                    var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+                    return hDisplay + mDisplay + sDisplay; 
                 }
             }
         }
@@ -166,4 +219,14 @@
             app.update_leaderboard();
         }, 1000);
     </script>
+    <style>
+        table {
+          border-collapse: collapse;
+        }
+        td {
+          border:solid;
+          border-width: 1px 1px;
+          width:500px;
+        }
+    </style>
 </html>

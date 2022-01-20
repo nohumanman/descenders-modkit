@@ -3,6 +3,7 @@ import time
 from threading import Thread
 import requests
 from PlayerDB import PlayerDB
+import random
 from Tokens import webhook
 
 
@@ -35,7 +36,7 @@ class Player():
 
     def unloaded(self):
         self.time_ended = time.time()
-        PlayerDB.end_session(self.steam_id, self.time_started, self.time_ended)
+        PlayerDB.end_session(self.steam_id, self.time_started, self.time_ended, self.current_world)
         self.time_started = None
         self.time_ended = None
         self.online = False
@@ -45,7 +46,7 @@ class Player():
         self.is_competitor = is_competitor
         PlayerDB.become_competitor(self.steam_id, False)
 
-    def entered_checkpoint(self, checkpoint_num : int, total_checkpoints : int, checkpoint_time : float, trail_name : str):
+    async def entered_checkpoint(self, checkpoint_num : int, total_checkpoints : int, checkpoint_time : float, trail_name : str):
         self.has_entered_checkpoint = True
         self.current_trail = trail_name
         self.online = True
@@ -56,7 +57,7 @@ class Player():
             self.trail_start_time = time.time()
         elif checkpoint_num == total_checkpoints-1:
             self.split_times.append(checkpoint_time - self.trail_start_time)
-            self.submit_time(self.split_times, trail_name, discord_client)
+            self.submit_time(self.split_times, trail_name)
         else:
             self.split_times.append(checkpoint_time - self.trail_start_time)
         Thread(target=self.disable_entered_checkpoint, args=(5,)).start()
@@ -72,8 +73,18 @@ class Player():
             if split_times[len(split_times)-1] < fastest_time:
                 print("New Fastest Time!")
                 faster_amount = round(fastest_time - split_times[len(split_times)-1], 4)
+                emojis = ["🎉"]
+                content = ""
+                content += random.choice(emojis) * 3
+                content += "\n"
+                congrats = ["Congratulations to", "Congrats to", "GG", "Well raced", "Good job", "Well done"]
+                content += random.choice(congrats)
+                content += f" **{self.steam_name}** "
+                quickestest = ["fastest"]
+                content += f"for the new " + random.choice(quickestest) + f" time on {trail_name} in {self.current_world}!"
+                content += f"\nIt's {round(faster_amount, 5)} seconds faster than the previous best 🔥"
                 data = {
-                    "content": f"Congratulations {self.steam_name} for the new fastest time on {trail_name}!! It's {faster_amount} seconds faster :pog:",
+                    "content": content,
                     "username": "Descenders Competitive"
                 }
                 result = requests.post(webhook, json = data)
@@ -81,6 +92,12 @@ class Player():
         except Exception as e:
             print(e)
         PlayerDB.submit_time(self.steam_id, split_times, trail_name, self.being_monitored)
+
+    def seconds_to_string(self, millis):
+        seconds=(millis/1000)%60
+        minutes=(millis/(1000*60))%60
+        hours=(millis/(1000*60*60))%24
+        return str(round(minutes)) + ":" + str(round(seconds)) + ":" + str(int((millis)%1000))
 
     def cancel_time(self):
         self.has_entered_checkpoint = False

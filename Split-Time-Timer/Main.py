@@ -3,34 +3,14 @@ from Player import Player
 from Timer import Timer
 import time
 from PlayerDB import PlayerDB
-from Tokens import webhook
+from Tokens import webhook, bot_token
 from RidersGate import RidersGate
-
+import asyncio
 
 app = Flask(__name__)
 
 timer = Timer()
 riders_gate = RidersGate()
-
-from Tokens import bot_token
-
-import discord
-
-client = discord.Client()
-
-@client.event
-async def on_ready():
-    print(f'We have logged in as {client.user}')
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
-
-    if message.content.startswith('$hello'):
-        await message.channel.send('Hello!')
-import threading
-threading.Thread(target=client.run, args=(bot_token,)).start()
 
 import logging
 log = logging.getLogger('werkzeug')
@@ -95,7 +75,7 @@ def on_boundry_exit():
         return "valid"
 
 @app.route("/API/DESCENDERS/ON-CHECKPOINT-ENTER/<checkpoint_num>")
-def on_checkpoint_enter(checkpoint_num):
+async def on_checkpoint_enter(checkpoint_num):
     steam_id = request.args.get("steam_id")
     steam_name = request.args.get("steam_name")
     world_name = request.args.get("world_name")
@@ -115,11 +95,12 @@ def on_checkpoint_enter(checkpoint_num):
     if checkpoint_type == "start" and checkpoint_num != 0:
         player.cancel_time()
         player.current_trail = trail_name
-        player.entered_checkpoint(
+        await player.entered_checkpoint(
             int(checkpoint_num),
             int(total_checkpoints),
             time.time(),
             trail_name
+            
         )
     elif checkpoint_type == "intermediate" and player.trail_start_time == 0:
         return "INVALID; Didn't go through start!"
@@ -127,18 +108,20 @@ def on_checkpoint_enter(checkpoint_num):
         if int(checkpoint_num) > int(total_checkpoints)-1:
             return "INVALID; SKIPPED CHECKPOINTS!"
         else:     
-            player.entered_checkpoint(
+            await player.entered_checkpoint(
                 int(checkpoint_num),
                 int(total_checkpoints),
                 time.time(),
                 trail_name
+                
             )
     else:
-        player.entered_checkpoint(
+        await player.entered_checkpoint(
             int(checkpoint_num),
             int(total_checkpoints),
             time.time(),
             trail_name
+            
         )
     return "valid"
 
@@ -165,6 +148,10 @@ def on_map_enter():
     steam_name = request.args.get("steam_name")
     world_name = request.args.get("world_name")
     logging.info(f'''Player {steam_name} (id {steam_id}) on {world_name} has entered the map.''')
+    try:
+        timer.players[steam_id]
+    except:
+        timer.players[steam_id] = None
     if timer.players[steam_id] is None:
         timer.players[steam_id] = Player(
             steam_name,
@@ -284,7 +271,8 @@ def api_get_players():
                     "current_trail" : timer.players[player].current_trail,
                     "ban_state" : timer.players[player].get_ban_status(),
                     "current_bike" : timer.players[player].current_bike,
-                    "total_time" : PlayerDB.get_time_on_world(player, world=timer.players[player].current_world)
+                    "total_time_on_world" : (lambda: PlayerDB.get_time_on_world(player, world=timer.players[player].current_world) if (timer.players[player].current_world != "none")  else "0")(),
+                    "total_time" : PlayerDB.get_time_on_world(player)
                 }
                 for player in timer.players
             ]

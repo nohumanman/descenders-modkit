@@ -405,7 +405,7 @@ GameObject:
   - component: {fileID: 31919466}
   - component: {fileID: 31919465}
   m_Layer: 0
-  m_Name: Location 6
+  m_Name: Yeet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -450,7 +450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleporterName: Location 6
+  teleporterName: Yeet
 --- !u!1 &40051030
 GameObject:
   m_ObjectHideFlags: 0
@@ -1150,7 +1150,7 @@ GameObject:
   - component: {fileID: 147489800}
   - component: {fileID: 147489799}
   m_Layer: 0
-  m_Name: Location 5
+  m_Name: Yeet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1195,7 +1195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleporterName: Location 5
+  teleporterName: Yeet
 --- !u!1 &167202735
 GameObject:
   m_ObjectHideFlags: 0
@@ -1267,6 +1267,64 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 167202735}
+--- !u!1 &197873567
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 197873568}
+  - component: {fileID: 197873570}
+  - component: {fileID: 197873569}
+  m_Layer: 0
+  m_Name: Big America
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &197873568
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 197873567}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &197873569
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 197873567}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &197873570
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 197873567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &226130086
 GameObject:
   m_ObjectHideFlags: 0
@@ -1394,7 +1452,7 @@ GameObject:
   - component: {fileID: 231480860}
   - component: {fileID: 231480859}
   m_Layer: 0
-  m_Name: Location 2
+  m_Name: Dual Slalom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1439,7 +1497,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleporterName: Location 2
+  teleporterName: Dual Slalom
 --- !u!1 &258927825
 GameObject:
   m_ObjectHideFlags: 0
@@ -2065,6 +2123,122 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &317768006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 317768007}
+  - component: {fileID: 317768009}
+  - component: {fileID: 317768008}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &317768007
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 317768006}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 20
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &317768008
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 317768006}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &317768009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 317768006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
+--- !u!1 &332396404
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 332396405}
+  - component: {fileID: 332396407}
+  - component: {fileID: 332396406}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &332396405
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 332396404}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 22
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &332396406
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 332396404}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &332396407
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 332396404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &334133873
 GameObject:
   m_ObjectHideFlags: 0
@@ -4128,6 +4302,22 @@ Transform:
   - {fileID: 147489798}
   - {fileID: 31919464}
   - {fileID: 1430406536}
+  - {fileID: 197873568}
+  - {fileID: 2109037352}
+  - {fileID: 988953982}
+  - {fileID: 1784651970}
+  - {fileID: 1372908430}
+  - {fileID: 969918950}
+  - {fileID: 1561443739}
+  - {fileID: 1576847752}
+  - {fileID: 1393000088}
+  - {fileID: 1880265993}
+  - {fileID: 1694269985}
+  - {fileID: 775165993}
+  - {fileID: 1118581599}
+  - {fileID: 317768007}
+  - {fileID: 707532228}
+  - {fileID: 332396405}
   m_Father: {fileID: 1832354282}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4211,6 +4401,64 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 33a86c474942cf149b7a28dc07e8f0b8, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &707532227
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 707532228}
+  - component: {fileID: 707532230}
+  - component: {fileID: 707532229}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &707532228
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 707532227}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 21
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &707532229
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 707532227}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &707532230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 707532227}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &721084592
 GameObject:
   m_ObjectHideFlags: 0
@@ -4559,6 +4807,64 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!1 &775165992
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 775165993}
+  - component: {fileID: 775165995}
+  - component: {fileID: 775165994}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &775165993
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 775165992}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 18
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &775165994
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 775165992}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &775165995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 775165992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &779125245
 GameObject:
   m_ObjectHideFlags: 0
@@ -5280,7 +5586,7 @@ GameObject:
   - component: {fileID: 888775127}
   - component: {fileID: 888775126}
   m_Layer: 0
-  m_Name: Location 3
+  m_Name: DH track or something
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5325,7 +5631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleporterName: Location 3
+  teleporterName: DH track or something
 --- !u!1 &898362131
 GameObject:
   m_ObjectHideFlags: 0
@@ -5552,6 +5858,64 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1c5dbec8b1f164a4eb369915429815f2, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &969918949
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 969918950}
+  - component: {fileID: 969918952}
+  - component: {fileID: 969918951}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &969918950
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 969918949}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &969918951
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 969918949}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &969918952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 969918949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &970135691
 GameObject:
   m_ObjectHideFlags: 0
@@ -5803,6 +6167,64 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 974596893}
   m_Mesh: {fileID: 4300008, guid: b6b9c16b9e9296a42aa7f8579037eac9, type: 3}
+--- !u!1 &988953981
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 988953982}
+  - component: {fileID: 988953984}
+  - component: {fileID: 988953983}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &988953982
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 988953981}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &988953983
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 988953981}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &988953984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 988953981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &991536626
 GameObject:
   m_ObjectHideFlags: 0
@@ -6368,6 +6790,64 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1118581598
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1118581599}
+  - component: {fileID: 1118581601}
+  - component: {fileID: 1118581600}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1118581599
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1118581598}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1118581600
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1118581598}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1118581601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1118581598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &1132713708
 GameObject:
   m_ObjectHideFlags: 0
@@ -7384,7 +7864,7 @@ GameObject:
   - component: {fileID: 1366968588}
   - component: {fileID: 1366968587}
   m_Layer: 0
-  m_Name: Location 1
+  m_Name: Speed & Style
   m_TagString: Checkpoint
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7429,7 +7909,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleporterName: Location 1
+  teleporterName: Speed & Style
 --- !u!1 &1367245929
 GameObject:
   m_ObjectHideFlags: 0
@@ -7567,6 +8047,64 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1367245929}
+--- !u!1 &1372908429
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1372908430}
+  - component: {fileID: 1372908432}
+  - component: {fileID: 1372908431}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1372908430
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1372908429}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1372908431
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1372908429}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1372908432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1372908429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &1373086403
 GameObject:
   m_ObjectHideFlags: 0
@@ -7760,6 +8298,64 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!1 &1393000087
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1393000088}
+  - component: {fileID: 1393000090}
+  - component: {fileID: 1393000089}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1393000088
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1393000087}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1393000089
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1393000087}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1393000090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1393000087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &1400946599
 GameObject:
   m_ObjectHideFlags: 0
@@ -8183,7 +8779,7 @@ GameObject:
   - component: {fileID: 1430406538}
   - component: {fileID: 1430406537}
   m_Layer: 0
-  m_Name: Location 7
+  m_Name: Yeet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8228,7 +8824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleporterName: Location 7
+  teleporterName: Yeet
 --- !u!1 &1451289660
 GameObject:
   m_ObjectHideFlags: 0
@@ -9033,6 +9629,64 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1558592662}
+--- !u!1 &1561443738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1561443739}
+  - component: {fileID: 1561443741}
+  - component: {fileID: 1561443740}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1561443739
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1561443738}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1561443740
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1561443738}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1561443741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1561443738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &1570277311
 GameObject:
   m_ObjectHideFlags: 0
@@ -9194,6 +9848,64 @@ VideoPlayer:
   m_Looping: 1
   m_WaitForFirstFrame: 1
   m_FrameReadyEventEnabled: 0
+--- !u!1 &1576847751
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1576847752}
+  - component: {fileID: 1576847754}
+  - component: {fileID: 1576847753}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1576847752
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1576847751}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1576847753
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1576847751}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1576847754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1576847751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &1580208092
 GameObject:
   m_ObjectHideFlags: 0
@@ -9855,6 +10567,64 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1686582622}
   m_Mesh: {fileID: 4300002, guid: b6b9c16b9e9296a42aa7f8579037eac9, type: 3}
+--- !u!1 &1694269984
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1694269985}
+  - component: {fileID: 1694269987}
+  - component: {fileID: 1694269986}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1694269985
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1694269984}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1694269986
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1694269984}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1694269987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1694269984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &1695162238
 GameObject:
   m_ObjectHideFlags: 0
@@ -10507,6 +11277,64 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1782194882}
+--- !u!1 &1784651969
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1784651970}
+  - component: {fileID: 1784651972}
+  - component: {fileID: 1784651971}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1784651970
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1784651969}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1784651971
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1784651969}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1784651972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1784651969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &1819362601
 GameObject:
   m_ObjectHideFlags: 0
@@ -11102,6 +11930,64 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1878238543}
+--- !u!1 &1880265992
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1880265993}
+  - component: {fileID: 1880265995}
+  - component: {fileID: 1880265994}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1880265993
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1880265992}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1880265994
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1880265992}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1880265995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1880265992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &1885364244
 GameObject:
   m_ObjectHideFlags: 0
@@ -11430,7 +12316,7 @@ GameObject:
   - component: {fileID: 1934666823}
   - component: {fileID: 1934666822}
   m_Layer: 0
-  m_Name: Location 4
+  m_Name: Yeet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11475,7 +12361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teleporterName: Location 4
+  teleporterName: Yeet
 --- !u!1 &1948153581
 GameObject:
   m_ObjectHideFlags: 0
@@ -12311,6 +13197,64 @@ MeshFilter:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2101741192}
   m_Mesh: {fileID: 4300010, guid: b6b9c16b9e9296a42aa7f8579037eac9, type: 3}
+--- !u!1 &2109037351
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 1426840556912396, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 2109037352}
+  - component: {fileID: 2109037354}
+  - component: {fileID: 2109037353}
+  m_Layer: 0
+  m_Name: Yeet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2109037352
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 4798523296300540, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2109037351}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1835.6951, y: -8.551971, z: -626.0657}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 658435567}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &2109037353
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 65874471674920916, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2109037351}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2109037354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 114050338536417138, guid: e794deb321e102b459fe3e3e2a854c15,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2109037351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab04be0386b7140a3e93900096350d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleporterName: Yeet
 --- !u!1 &2136484774
 GameObject:
   m_ObjectHideFlags: 0
