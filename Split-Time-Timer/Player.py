@@ -32,7 +32,7 @@ class Player():
         self.time_ended = None
         self.has_entered_checkpoint = False
         self.current_bike = "unknown"
-        PlayerDB.add_player(steam_id, steam_name, is_competitor, avatar_src)
+        PlayerDB.add_player(steam_id, steam_name, is_competitor, self.avatar_src)
 
     def get_ban_status(self):
         return PlayerDB.get_ban_status(self.steam_id)
