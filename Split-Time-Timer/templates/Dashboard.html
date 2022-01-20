@@ -20,12 +20,11 @@
                 <v-main>
                     <v-tabs>
                         <v-tab>Players</v-tab>
+                        <v-tab>Controls</v-tab>
                         <v-tab>Leaderboards</v-tab>
                         <v-tab>Config</v-tab>
                         <v-tab-item>
                             <br>
-                            <v-btn dense small onclick="$.get('/API/TOGGLE-RIDERS-GATE-START')">Open Start Gates (for controlled players)</v-btn>
-                            <div>Red is Offline, Green is Online, Purple is online & Competitor.</div>
                             <v-list>
                                 <v-container v-for="player in players" v-if="(player.is_competitor || !show_competitors_only) && (!show_online_only || player.online)">
                                     
@@ -84,7 +83,10 @@
                             </v-list>
                         </v-tab-item>
                         <v-tab-item>
-                            leaderboard_info
+                            <br>
+                            Riders Gate: <v-btn dense small onclick="$.get('/API/TOGGLE-RIDERS-GATE-START')"><v-icon>mdi-restart</v-icon></v-btn>
+                        </v-tab-item>
+                        <v-tab-item>
                             <v-data-table
                                 :headers="leaderboard_headers"
                                 :items="leaderboard_info">
