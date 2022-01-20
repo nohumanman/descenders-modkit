@@ -28,44 +28,50 @@
                             <div>Red is Offline, Green is Online, Purple is online & Competitor.</div>
                             <v-list>
                                 <v-container v-for="player in players" v-if="(player.is_competitor || !show_competitors_only) && (!show_online_only || player.online)">
-                                    <v-card x-large :color="player.colour">
+                                    
+                                    <v-card x-large color="blue">
                                         <v-card-title style="font-size: 40px; text-decoration: underline;">[[player.steam_name]]</v-card-title>
                                         <v-card-text style="font-size: 20px;">
-                                            <table style="color: white;">
-                                                <tr v-if="debug">
-                                                    <td>Steam ID</td>
-                                                    <td>[[player.steam_id]]</td>
-                                                </tr>
-                                                <tr>
-                                                  <td>Current World</td>
-                                                  <td>[[player.current_world]]</td>
-                                                </tr>
-                                                <tr v-if="debug">
-                                                    <td>Trail Start Time</td>
-                                                    <td>[[player.trail_start_time]]</td>
-                                                </tr>
-                                                <tr v-if="debug">
-                                                    <td>Split Times</td>
-                                                    <td>[[player.split_times]]</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Current Trail</td>
-                                                    <td>[[player.current_trail]]</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Current bike</td>
-                                                    <td>[[player.current_bike]]</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Total Time on [[player.current_world]] -</td>
-                                                    <td>[[secondsToHms(player.total_time_on_world)]]</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Total time anywhere</td>
-                                                    <td>[[secondsToHms(player.total_time)]]</td>
-                                                </tr>
-                                              </table>
+                                            <br>
+                                            <v-row v-if="debug">
+                                                <v-col>Steam ID</v-col>
+                                                <v-col>[[player.steam_id]]</v-col>
+                                            </v-row>
+                                            <v-row>
+                                                <v-col>Current World</v-col>
+                                                <v-col>[[player.current_world]]</v-col>
+                                            </v-row>
+                                            <v-row v-if="debug">
+                                                <v-col>Trail Start Time</v-col>
+                                                <v-col>[[player.trail_start_time]]</v-col>
+                                            </v-row>
+                                            <v-row v-if="debug">
+                                                <v-col>Split Times</v-col>
+                                                <v-col>[[player.split_times]]</v-col>
+                                            </v-row>
+                                            <v-row>
+                                                <v-col>Current Trail</v-col>
+                                                <v-col>[[player.current_trail]]</v-col>
+                                            </v-row>
+                                            <v-row>
+                                                <v-col>Current Bike</v-col>
+                                                <v-col>[[player.current_bike]]</v-col>
+                                            </v-row>
+                                            <v-row>
+                                                <v-col>Total Time on [[player.current_world]]</v-col>
+                                                <v-col>[[secondsToHms(player.total_time_on_world)]]</v-col>
+                                            </v-row>
+                                            <v-row>
+                                                <v-col>Total time online</v-col>
+                                                <v-col>[[secondsToHms(player.total_time)]]</v-col>
+                                            </v-row>
                                         <v-card-actions>
+                                            <v-badge offset-x="30" offset-y="20" overlap :color="player.colour">
+                                                <v-avatar class="mr-3" size="80">
+                                                    <v-img size="80" clas="elevation-6" :src="player.avatar_src">
+                                                </v-avatar>
+                                            </v-badge>
+                                            <v-spacer></v-spacer>
                                             <v-checkbox v-model="player.is_competitor" @click="toggle_competitor(player.steam_id)" label="Competitor"></v-checkbox>
                                             <v-spacer></v-spacer>
                                             <v-select v-if="player.steam_id != '1234567890'" item-text="text" :items="ban_options" v-on:input="update_ban_status(player.steam_id, player.ban_state)" v-model="player.ban_state"></v-select>
@@ -214,10 +220,10 @@
         )
         setInterval(function(){
             app.update_players();
-        }, 1000);
+        }, 200);
         setInterval(function(){
             app.update_leaderboard();
-        }, 1000);
+        }, 200);
     </script>
     <style>
         table {

@@ -22,6 +22,7 @@ class Timer():
             steam_id = player[0]
             steam_name = player[1]
             is_competitor = player[2]
+            avatar_src = player[4]
             print(steam_id, steam_name, is_competitor)
             if is_competitor == "true":
                 player = Player(steam_name, steam_id, "none", True)

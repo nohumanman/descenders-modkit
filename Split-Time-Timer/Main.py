@@ -266,13 +266,14 @@ def api_get_players():
                     "split_times": str(timer.players[player].split_times),
                     "is_competitor" : timer.players[player].is_competitor,
                     "online" : timer.players[player].online,
-                    "colour" : (lambda online, is_competitor : "purple" if (online and is_competitor) else("green" if (online) else("red")))(timer.players[player].online, timer.players[player].is_competitor),
+                    "colour" : (lambda online, is_competitor : "deep-purple accent-3" if (online and is_competitor) else("green accent-4" if (online) else("red accent-4")))(timer.players[player].online, timer.players[player].is_competitor),
                     "being_monitored" : (lambda player : True if (timer.players[player] == timer.monitored_player) else False)(player),
                     "current_trail" : timer.players[player].current_trail,
                     "ban_state" : timer.players[player].get_ban_status(),
                     "current_bike" : timer.players[player].current_bike,
                     "total_time_on_world" : (lambda: PlayerDB.get_time_on_world(player, world=timer.players[player].current_world) if (timer.players[player].current_world != "none")  else "0")(),
-                    "total_time" : PlayerDB.get_time_on_world(player)
+                    "total_time" : PlayerDB.get_time_on_world(player),
+                    "avatar_src": timer.players[player].avatar_src,
                 }
                 for player in timer.players
             ]

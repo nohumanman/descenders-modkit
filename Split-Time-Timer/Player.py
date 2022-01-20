@@ -4,7 +4,7 @@ from threading import Thread
 import requests
 from PlayerDB import PlayerDB
 import random
-from Tokens import webhook
+from Tokens import webhook, steam_api_key
 
 
 class Player():
@@ -12,6 +12,14 @@ class Player():
         print("Player created with steam id", steam_id)
         self.steam_name = steam_name
         self.steam_id = steam_id
+        avatar_src_req = requests.get(
+            f"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={steam_api_key}&steamids={steam_id}"
+        )
+        try:
+            avatar_src = avatar_src_req.json()["response"]["players"][0]["avatarfull"]
+            self.avatar_src = avatar_src
+        except:
+            self.avatar_src = ""
         self.current_world = world_name
         self.current_trail = "none"
         self.online = False
@@ -24,7 +32,7 @@ class Player():
         self.time_ended = None
         self.has_entered_checkpoint = False
         self.current_bike = "unknown"
-        PlayerDB.add_player(steam_id, steam_name, is_competitor)
+        PlayerDB.add_player(steam_id, steam_name, is_competitor, avatar_src)
 
     def get_ban_status(self):
         return PlayerDB.get_ban_status(self.steam_id)

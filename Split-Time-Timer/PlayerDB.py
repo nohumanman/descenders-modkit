@@ -3,13 +3,13 @@ import time
 
 class PlayerDB():
     @staticmethod
-    def add_player(steam_id, steam_name, is_competitor):
+    def add_player(steam_id, steam_name, is_competitor, avatar_src):
         print("Submitting player to database - steam id", steam_id, "steam name:", steam_name)
         con = sqlite3.connect("TimeStats.db")
         con.execute(
             f'''
-            REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status)
-            VALUES ("{steam_id}", "{steam_name}", "{is_competitor}", "unbanned")
+            REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status, avatar_src)
+            VALUES ("{steam_id}", "{steam_name}", "{is_competitor}", "unbanned", "{avatar_src}")
             '''
         )
         con.commit()
@@ -20,15 +20,15 @@ class PlayerDB():
         if is_competitor:
             con.execute(
                 f'''
-                REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status)
-                VALUES ("{steam_id}", "{steam_name}", "true", "unbanned")
+                REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status, avatar_src)
+                VALUES ("{steam_id}", "{steam_name}", "true", "unbanned", "")
                 '''
             )
         else:
             con.execute(
                 f'''
-                REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status)
-                VALUES ("{steam_id}", "{steam_name}", "false", "unbanned")
+                REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status, avatar_src)
+                VALUES ("{steam_id}", "{steam_name}", "false", "unbanned", "")
                 '''
             )
         con.commit()
