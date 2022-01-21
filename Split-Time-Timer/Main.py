@@ -115,6 +115,9 @@ async def on_checkpoint_enter(checkpoint_num):
                 trail_name
                 
             )
+    elif int(checkpoint_num) > int(total_checkpoints)-1:
+        player.split_times = []
+        return "INVALID; Didn't go through start!"
     else:
         await player.entered_checkpoint(
             int(checkpoint_num),
@@ -200,6 +203,8 @@ def api_descenders_on_bike_switch():
         )
     player = timer.players[steam_id]
     player.current_bike = new_bike
+    if new_bike == "roadbike":
+        player.online = False
     return "valid"
 
 @app.route("/API/DESCENDERS/GET-RIDERS-GATE")
@@ -249,9 +254,9 @@ def api_become_competitor_toggle(steam_id):
         timer.players[steam_id].is_competitor = True
     return "Monitoring"
 
-@app.route("/API/DASHBOARD/LEADERBOARD")
-def api_dashboard_leaderboard():
-    return jsonify({"data" : PlayerDB.get_leaderboard_data()})
+@app.route("/API/DASHBOARD/TRAILS")
+def api_dashboard_trails():
+    return jsonify({"data" : PlayerDB.get_trail_data()})
 
 @app.route("/API/DASHBOARD/GET-PLAYERS")
 def api_get_players():
@@ -373,6 +378,10 @@ def dashboard():
         return render_template("Login.html")
     else:
         return render_template("Dashboard.html")
+
+@app.route("/Mobile")
+def mobile():
+    return render_template("Mobile.html")
 
 @app.route("/GET-LOG-AS-LIST")
 def get_log_as_string():

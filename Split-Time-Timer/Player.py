@@ -99,7 +99,7 @@ class Player():
                 
         except Exception as e:
             print(e)
-        PlayerDB.submit_time(self.steam_id, split_times, trail_name, self.being_monitored)
+        PlayerDB.submit_time(self.steam_id, split_times, trail_name, self.being_monitored, self.current_world)
 
     def seconds_to_string(self, millis):
         seconds=(millis/1000)%60

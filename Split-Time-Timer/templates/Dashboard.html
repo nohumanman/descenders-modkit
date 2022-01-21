@@ -20,14 +20,14 @@
                 <v-main>
                     <v-tabs>
                         <v-tab>Players</v-tab>
+                        <v-tab>Trails</v-tab>
                         <v-tab>Controls</v-tab>
-                        <v-tab>Leaderboards</v-tab>
                         <v-tab>Config</v-tab>
-                        <v-tab-item>
+                        <v-tab-item style="height: 100%;">
                             <br>
                             <v-list>
-                                <v-container v-for="player in players" v-if="(player.is_competitor || !show_competitors_only) && (!show_online_only || player.online)">
-                                    
+                                <v-autocomplete v-model="searched_name" :items="player_names" label="Search for player"></v-autocomplete>
+                                <v-container v-for="player in players" v-if="(player.steam_name.indexOf(searched_name) != -1  || searched_name == '' || searched_name == null) && (player.is_competitor || !show_competitors_only) && (!show_online_only || player.online)">
                                     <v-card x-large color="blue">
                                         <v-card-title style="font-size: 40px; text-decoration: underline;">[[player.steam_name]]</v-card-title>
                                         <v-card-text style="font-size: 20px;">
@@ -82,15 +82,16 @@
                                 </v-container>
                             </v-list>
                         </v-tab-item>
-                        <v-tab-item>
-                            <br>
-                            Riders Gate: <v-btn dense small onclick="$.get('/API/TOGGLE-RIDERS-GATE-START')"><v-icon>mdi-restart</v-icon></v-btn>
+                        <v-tab-item style="height: 100%;">
+                            <v-data-table dense
+                                :headers="trail_headers"
+                                :items="trails"
+                                :items-per-page="5"
+                                class="elevation-1"
+                            ></v-data-table>
                         </v-tab-item>
-                        <v-tab-item>
-                            <v-data-table
-                                :headers="leaderboard_headers"
-                                :items="leaderboard_info">
-                            </v-data-table>
+                        <v-tab-item style="height: 100%;">
+                            <v-btn style="width:300px; height:100px;" dense small onclick="$.get('/API/TOGGLE-RIDERS-GATE-START')">Riders Gate<v-icon>mdi-restart</v-icon></v-btn>
                         </v-tab-item>
                         <v-tab-item>
                             <v-col>
@@ -132,51 +133,53 @@
             },
             }),
             data : {
-                players: [{
-                    "steam_name": "STEAM NAME HERE",
-                    "steam_id": "STEAM ID HERE",
-                    "current_world": "CURRENT WORLD HERE",
-                    "trail_start_time": "TRAIL START TIME HERE",
-                    "split_times": "SPLIT TIMERS HERE",
-                    "is_competitor" : "IS COMPETITOR HERE",
-                    "online" : "IS ONLINE HERE",
-                    "colour" : "COLOUR HERE",
-                    "being_monitored" : "BEING MONITORED HERE",
-                    "current_trail" : "YEE",
-                    "ban_state" : "timer.players[player].get_ban_status()",
-                    "current_bike" : "timer.players[player].current_bike",
-                    "total_time_on_world" : "10801",
-                    "total_time" : "PlayerDB.get_time_on_world(player)"
-                }],
+                searched_name : "",
+                players: [],
+                player_names: [],
                 "competitor_only" : false,
-                leaderboard_info : [
-                    {"yote" : "65"},
-                    {"yote" : "23"},
-                    {"yote" : "23"},
-                    {"yote" : "23"}
-                ],
                 show_online_only : false,
-                ban_options: ["unbanned", "shadowban", "destroy_player", "quit_game", "crash_game"
-            ],
-                leaderboard_headers : [
-                    {text: "steam_id", value: "steam_id"},
-                    {text: "steam_name", value:"steam_name"},
-                    {text:"is_competitor", value:"is_competitor"},
-                    {text:"time_id", value:"time_id"},
-                    {text:"timestamp", value:"timestamp"},
-                    {text:"trail_name", value:"trail_name"},
-                    {text:"was_monitored", value:"was_monitored"},
-                    {text:"checkpoint_num", value:"checkpoint_num"},
-                    {text:"checkpoint_time", value: "checkpoint_time"}
-                ],
+                ban_options: ["unbanned", "shadowban", "destroy_player", "quit_game", "crash_game"],
                 show_competitors_only : false,
                 debug: false,
+                trail_headers : [
+                    {text:"trail_name", value:"trail_name"},
+                    {text:"total_checkpoints", value: "total_checkpoints"},
+                    {text:"times_raced", value: "times_raced"},
+                    {text:"world_name", value: "world_name"},
+                    {text:"downhill", value: "downhill"},
+                    {text:"enduro", value: "enduro"},
+                    {text:"hardtail", value: "hardtail"},
+                ],
+                trails : [
+                    {
+                        "trail_name" : "Speed & Style",
+                        "total_checkpoints" : "",
+                        "times_raced" : "5",
+                        "world_name" : "Snowbird Island",
+                        "downhill" : true,
+                        "enduro" : true,
+                        "hardtail" : true,
+                    },
+                ],
             },
             methods: {
                 update_players(){
                     console.log("Updating Players")
                     $.get("/API/DASHBOARD/GET-PLAYERS", function(data){
                         app.players = data["players"];
+                    })
+                },
+                updatePlayerNames(){
+                    app.player_names = []
+                    for (let i = 0; i < app.players.length; i++){
+                        steam_name = app.players[i].steam_name;
+                        app.player_names.push(steam_name)
+                    }
+                },
+                update_trails(){
+                    console.log("Updating Players")
+                    $.get("/API/DASHBOARD/TRAILS", function(data){
+                        app.trails = data["data"];
                     })
                 },
                 getColFromMonitoring(being_monitored){
@@ -201,11 +204,6 @@
                     app.fastest_is_competitor_only = is_enabled;
 
                 },
-                update_leaderboard(){
-                    $.get("/API/DASHBOARD/LEADERBOARD", function(data){
-                        app.leaderboard_info = data["data"]
-                    })
-                },
                 secondsToHms(d) {
                     d = Number(d);
                     var h = Math.floor(d / 3600);
@@ -224,7 +222,10 @@
             app.update_players();
         }, 200);
         setInterval(function(){
-            app.update_leaderboard();
+            app.updatePlayerNames();
+        }, 200)
+        setInterval(function(){
+            app.update_trails();
         }, 200);
     </script>
     <style>

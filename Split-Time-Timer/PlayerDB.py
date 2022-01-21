@@ -15,6 +15,14 @@ class PlayerDB():
         con.commit()
 
     @staticmethod
+    def update_trail(trail_name, world_name):
+        PlayerDB.execute_sql(
+            f'''
+            INSERT OR REPLACE INTO Trail (trail_name, world_name) VALUES ("{trail_name}", "{world_name}")
+            ''', write=True
+        )
+
+    @staticmethod
     def become_competitor(steam_id, is_competitor, steam_name):
         con = sqlite3.connect("TimeStats.db")
         if is_competitor:
@@ -149,34 +157,29 @@ class PlayerDB():
             return 0
         return result[0][0]
     @staticmethod
-    def get_leaderboard_data():
+    def get_trail_data():
         con = sqlite3.connect("TimeStats.db")
         times_req = con.execute(
             f'''
-                SELECT * FROM Players
-                LEFT JOIN Times ON Players.steam_id=Times.steam_id
-                LEFT JOIN "Split Times" ON Times.time_id = "Split Times".time_id
-                ORDER BY checkpoint_num
+                SELECT * FROM trail_info
             '''
         ).fetchall()
         times = [
             {
-                "steam_id" : time[0],
-                "steam_name" : time[1],
-                "is_competitor" : time[2],
-                #"steam_id" : time[3],
-                "time_id" : time[4],
-                "timestamp" : time[5],
-                "trail_name" : time[6],
-                "was_monitored" : time[7],
-                "checkpoint_num" : time[9],
-                "checkpoint_time" : time[10]
+                "trail_name" : time[0],
+                "total_checkpoints" : time[1],
+                "times_raced" : time[2],
+                "world_name" : time[3],
+                "downhill" : time[4],
+                "enduro" : time[5],
+                "hardtail" : time[6],
             }
             for time in times_req]
         return times
 
     @staticmethod
-    def submit_time(steam_id, split_times, trail_name, being_monitored):
+    def submit_time(steam_id, split_times, trail_name, being_monitored, current_world):
+        PlayerDB.update_trail(trail_name, current_world)
         con = sqlite3.connect("TimeStats.db")
         time_hash = hash(str(split_times[len(split_times)-1])+str(steam_id)+str(time.time()))
         con.execute(
