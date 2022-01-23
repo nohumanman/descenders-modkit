@@ -139,23 +139,26 @@ class PlayerDB():
 
     @staticmethod
     def get_time_on_world(steam_id, world="none"):
-        print("Getting time on world!")
-        print(steam_id)
-        print(world)
         statement = f'''
             SELECT sum(time_ended - time_started) AS total_time FROM Session
             WHERE steam_id = "{steam_id}"
         '''
         if world is not "none":
-            print("world is not none!")
             statement += f'''AND world_name = "{world}"'''
-        else:
-            print("world is none!")
         result = PlayerDB.execute_sql(statement)
-        print(result)
         if result[0][0] is None:
             return 0
         return result[0][0]
+
+    @staticmethod
+    def get_times_trail_ridden(trail_name):
+        statement = f'''
+            SELECT timestamp FROM Times
+            WHERE trail_name = "{trail_name}"
+        '''
+        timestamps = PlayerDB.execute_sql(statement)
+        return [stamp[0] for stamp in timestamps]
+
     @staticmethod
     def get_trail_data():
         con = sqlite3.connect("TimeStats.db")
@@ -173,6 +176,8 @@ class PlayerDB():
                 "downhill" : time[4],
                 "enduro" : time[5],
                 "hardtail" : time[6],
+                "timestamps" : PlayerDB.get_times_trail_ridden(time[0]),
+                "src" : time[7]
             }
             for time in times_req]
         return times

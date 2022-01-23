@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" style="background-color: rgba(30,30,30,255);">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
         <title>Descenders Split Timer</title>
@@ -16,9 +16,13 @@
     </head>
     <body style="padding:0; margin:0;" style="font-family: MontHeavy;">
         <div id="app">
-            <v-app style="font-family: MontHeavy;">
+            <v-app style="font-family: MontHeavy; background-color: rgba(30,30,30,255);">
                 <v-main>
-                    <v-tabs>
+                    <v-banner color="warning">
+                        <v-icon slot="icon" size="36" color="white">mdi-alert</v-icon>
+                        This site is in construction - some features may be unavailable.
+                    </v-banner>
+                    <v-tabs style="height: 100%;">
                         <v-tab>Players</v-tab>
                         <v-tab>Trails</v-tab>
                         <v-tab>Controls</v-tab>
@@ -83,12 +87,30 @@
                             </v-list>
                         </v-tab-item>
                         <v-tab-item style="height: 100%;">
-                            <v-data-table dense
-                                :headers="trail_headers"
-                                :items="trails"
-                                :items-per-page="5"
-                                class="elevation-1"
-                            ></v-data-table>
+                            <br><br><br>
+                            <v-row no-gutters>
+                                <v-col v-for="trail in trails" cols="12" sm="4">
+                                    <v-card width="700" elevation="5">
+                                        <v-img :src="trail.src"></v-img>
+                                        <v-card-title>[[trail.trail_name]]</v-card-title>
+                                        <v-card-text>
+                                            Total Checkpoints: [[trail.total_checkpoints]]<br>
+                                            Times Raced: [[trail.times_raced]]<br>
+                                            World Name: [[trail.world_name]]
+                                        </v-card-text>
+                                        <v-sparkline
+                                            :fill="fill"
+                                            :gradient="selectedGradient"
+                                            :line-width="width"
+                                            :padding="padding"
+                                            :smooth="radius "
+                                            :value="trail.timestamps"
+                                        >
+                                        </v-sparkline>
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                            <br><br>
                         </v-tab-item>
                         <v-tab-item style="height: 100%;">
                             <v-btn style="width:300px; height:100px;" dense small onclick="$.get('/API/TOGGLE-RIDERS-GATE-START')">Riders Gate<v-icon>mdi-restart</v-icon></v-btn>
@@ -133,6 +155,14 @@
             },
             }),
             data : {
+
+                fill: true,
+                selectedGradient: ['#00c6ff', '#F0F', '#FF0'],
+                padding: 8,
+                radius: 10,
+                value: [0, 2, 5, 9, 5, 10, 3, 5, 0, 0, 1, 8, 2, 9, 0],
+                width: 2,
+
                 searched_name : "",
                 players: [],
                 player_names: [],
@@ -151,6 +181,51 @@
                     {text:"hardtail", value: "hardtail"},
                 ],
                 trails : [
+                    {
+                        "trail_name" : "Speed & Style",
+                        "total_checkpoints" : "",
+                        "times_raced" : "5",
+                        "world_name" : "Snowbird Island",
+                        "downhill" : true,
+                        "enduro" : true,
+                        "hardtail" : true,
+                    },
+                    {
+                        "trail_name" : "Speed & Style",
+                        "total_checkpoints" : "",
+                        "times_raced" : "5",
+                        "world_name" : "Snowbird Island",
+                        "downhill" : true,
+                        "enduro" : true,
+                        "hardtail" : true,
+                    },
+                    {
+                        "trail_name" : "Speed & Style",
+                        "total_checkpoints" : "",
+                        "times_raced" : "5",
+                        "world_name" : "Snowbird Island",
+                        "downhill" : true,
+                        "enduro" : true,
+                        "hardtail" : true,
+                    },
+                    {
+                        "trail_name" : "Speed & Style",
+                        "total_checkpoints" : "",
+                        "times_raced" : "5",
+                        "world_name" : "Snowbird Island",
+                        "downhill" : true,
+                        "enduro" : true,
+                        "hardtail" : true,
+                    },
+                    {
+                        "trail_name" : "Speed & Style",
+                        "total_checkpoints" : "",
+                        "times_raced" : "5",
+                        "world_name" : "Snowbird Island",
+                        "downhill" : true,
+                        "enduro" : true,
+                        "hardtail" : true,
+                    },
                     {
                         "trail_name" : "Speed & Style",
                         "total_checkpoints" : "",

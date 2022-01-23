@@ -258,6 +258,10 @@ def api_become_competitor_toggle(steam_id):
 def api_dashboard_trails():
     return jsonify({"data" : PlayerDB.get_trail_data()})
 
+@app.route("/API/DASHBOARD/TRAIL-TIMESTAMPS/<trail_name>")
+def api_dashboard_trail_timestamps(trail_name):
+    return jsonify({"data": PlayerDB.get_times_trail_ridden(trail_name)})
+
 @app.route("/API/DASHBOARD/GET-PLAYERS")
 def api_get_players():
     return {
