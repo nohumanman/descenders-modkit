@@ -225,33 +225,39 @@ def api_get_riders_gate():
 
 @app.route("/API/MONITOR/<steam_id>")
 def app_monitor_steam_id(steam_id):
-    logging.info(f'''Monitoring player with id {steam_id}''')
-    if timer.monitored_player == timer.players[steam_id]:
-        if timer.monitored_player is not None:
-            timer.monitored_player.being_monitored = False
-        timer.monitored_player = None
-    else:
-        if timer.monitored_player is not None:
-            timer.monitored_player.being_monitored = False
-        timer.monitored_player = timer.players[steam_id]
-        timer.monitored_player.being_monitored = True
+    name = request.cookies.get('id')
+    if name == "4565421332145321234565tr5":
+        logging.info(f'''Monitoring player with id {steam_id}''')
+        if timer.monitored_player == timer.players[steam_id]:
+            if timer.monitored_player is not None:
+                timer.monitored_player.being_monitored = False
+            timer.monitored_player = None
+        else:
+            if timer.monitored_player is not None:
+                timer.monitored_player.being_monitored = False
+            timer.monitored_player = timer.players[steam_id]
+            timer.monitored_player.being_monitored = True
     return "Monitoring"
 
 @app.route("/API/UPDATE-BAN-STATUS/<steam_id>")
 def api_update_ban_status(steam_id):
-    new_ban_status = request.args.get("ban_status")
-    PlayerDB.update_ban_status(steam_id, new_ban_status)
+    name = request.cookies.get('id')
+    if name == "4565421332145321234565tr5":
+        new_ban_status = request.args.get("ban_status")
+        PlayerDB.update_ban_status(steam_id, new_ban_status)
     return "complete"
 
 
 @app.route("/API/BECOME-COMPETITOR/<steam_id>")
 def api_become_competitor_toggle(steam_id):
-    if timer.players[steam_id].is_competitor:
-        PlayerDB.become_competitor(steam_id, False, timer.players[steam_id].steam_name)
-        timer.players[steam_id].is_competitor = False
-    else:
-        PlayerDB.become_competitor(steam_id, True, timer.players[steam_id].steam_name)
-        timer.players[steam_id].is_competitor = True
+    name = request.cookies.get('id')
+    if name == "4565421332145321234565tr5":
+        if timer.players[steam_id].is_competitor:
+            PlayerDB.become_competitor(steam_id, False, timer.players[steam_id].steam_name)
+            timer.players[steam_id].is_competitor = False
+        else:
+            PlayerDB.become_competitor(steam_id, True, timer.players[steam_id].steam_name)
+            timer.players[steam_id].is_competitor = True
     return "Monitoring"
 
 @app.route("/API/DASHBOARD/TRAILS")
@@ -332,7 +338,9 @@ def api_descenders_get_fastest_split_times():
 
 @app.route("/API/TOGGLE-RIDERS-GATE-START")
 def api_toggle_riders_gate_start():
-    riders_gate.refresh_random_delay()
+    name = request.cookies.get('id')
+    if name == "4565421332145321234565tr5":
+        riders_gate.refresh_random_delay()
     return "Done"
 
 
@@ -371,6 +379,10 @@ def login():
             resp = make_response("200")
             resp.set_cookie('id', "4565421332145321234565tr5")
             return resp
+        elif request.args.get("as_guest") == "true":
+            resp = make_response("200")
+            resp.set_cookie('isGuest', "true")
+            return resp
         else:
             return "nope"
 
@@ -378,10 +390,11 @@ def login():
 @app.route("/")
 def dashboard():
     name = request.cookies.get('id')
-    if name != "4565421332145321234565tr5":
-        return render_template("Login.html")
-    else:
+    guest = request.cookies.get("isGuest")
+    if name == "4565421332145321234565tr5" or guest == "true":
         return render_template("Dashboard.html")
+    else:
+        return render_template("Login.html")
 
 @app.route("/Mobile")
 def mobile():
