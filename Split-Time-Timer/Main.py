@@ -415,5 +415,5 @@ def ui_monitor():
 def log_html():
     return render_template("Log.html")
 
-
-app.run(host="0.0.0.0", port="8443", ssl_context="adhoc", debug=True)
+if __name__ == "__main__":
+	app.run(host="0.0.0.0", port="8443", ssl_context="adhoc", debug=True)
