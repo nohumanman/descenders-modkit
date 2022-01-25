@@ -82,6 +82,22 @@ class Player():
                 print("New Fastest Time!")
                 faster_amount = round(fastest_time - split_times[len(split_times)-1], 4)
                 emojis = ["🎉"]
+                data = {
+                    "content" : f"There's a new Time on {self.current_trail}!",
+                    "username" : "Descenders Gear Hub"
+                }
+                data["embeds"] = [
+                    {
+                        "description" : f"🎉🎉 00:00:000 on {self.current_trail}!",
+                        "title" : f"[Descenders Split Timer](https://gear-hub.nohumanman.com)",
+                        "author" : {
+                            "name": f"{self.steam_name}",
+                            "url": "",
+                            "icon_url": f"{self.avatar_src}"
+                        },
+                    }
+                ]
+                        
                 content = ""
                 content += random.choice(emojis) * 3
                 content += "\n"
