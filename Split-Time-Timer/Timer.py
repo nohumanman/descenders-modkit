@@ -1,6 +1,8 @@
 from Player import Player
 import sqlite3
+import os
 
+script_path = os.path.dirname(os.path.realpath(__file__))
 
 class Timer():
     def __init__(self):
@@ -12,7 +14,7 @@ class Timer():
         self.get_players()
 
     def get_players(self):
-        con = sqlite3.connect("TimeStats.db")
+        con = sqlite3.connect(script_path + "/TimeStats.db")
         cur = con.cursor()
         players = cur.execute("SELECT * FROM Players").fetchall()
         cur.close()

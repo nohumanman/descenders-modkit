@@ -1,11 +1,15 @@
 import sqlite3
 import time
+import os
+
+
+script_path = os.path.dirname(os.path.realpath(__file__))
 
 class PlayerDB():
     @staticmethod
     def add_player(steam_id, steam_name, is_competitor, avatar_src):
         print("Submitting player to database - steam id", steam_id, "steam name:", steam_name)
-        con = sqlite3.connect("TimeStats.db")
+        con = sqlite3.connect(script_path + "/TimeStats.db")
         con.execute(
             f'''
             REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status, avatar_src)
@@ -24,7 +28,7 @@ class PlayerDB():
 
     @staticmethod
     def become_competitor(steam_id, is_competitor, steam_name):
-        con = sqlite3.connect("TimeStats.db")
+        con = sqlite3.connect(script_path + "/TimeStats.db")
         if is_competitor:
             con.execute(
                 f'''
@@ -44,7 +48,7 @@ class PlayerDB():
 
     @staticmethod
     def get_fastest_split_times(trail_name, competitors_only=False, min_timestamp=None, monitored_only=False):
-        con = sqlite3.connect("TimeStats.db")
+        con = sqlite3.connect(script_path + "/TimeStats.db")
         statement = '''
                 SELECT "Split Times".time_id, "Split Times".checkpoint_num, "Split Times".checkpoint_time, Times.trail_name, Players.is_competitor, Players.steam_name, Times.timestamp from 
                 "Split Times"
@@ -89,7 +93,7 @@ class PlayerDB():
 
     @staticmethod
     def execute_sql(statement : str, write=False):
-        with sqlite3.connect("TimeStats.db") as con:
+        with sqlite3.connect(script_path + "/TimeStats.db") as con:
             execution = con.execute(statement)
             if write:
                 con.commit()
@@ -161,7 +165,7 @@ class PlayerDB():
 
     @staticmethod
     def get_trail_data():
-        con = sqlite3.connect("TimeStats.db")
+        con = sqlite3.connect(script_path + "/TimeStats.db")
         times_req = con.execute(
             f'''
                 SELECT * FROM trail_info
@@ -185,7 +189,7 @@ class PlayerDB():
     @staticmethod
     def submit_time(steam_id, split_times, trail_name, being_monitored, current_world):
         PlayerDB.update_trail(trail_name, current_world)
-        con = sqlite3.connect("TimeStats.db")
+        con = sqlite3.connect(script_path + "/TimeStats.db")
         time_hash = hash(str(split_times[len(split_times)-1])+str(steam_id)+str(time.time()))
         con.execute(
             f'''
