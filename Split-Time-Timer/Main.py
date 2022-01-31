@@ -207,12 +207,15 @@ def api_descenders_on_bike_switch():
         player.online = False
     return "valid"
 
+
+
 @app.route("/API/DESCENDERS/GET-RIDERS-GATE")
 def api_get_riders_gate():
     steam_id = request.args.get("steam_id")
     steam_name = request.args.get("steam_name")
     world_name = request.args.get("world_name")
     logging.info(f'''Player {steam_name} (id {steam_id}) on {world_name} has requested the gate status.''')
+    
     if timer.players[steam_id] is None:
         timer.players[steam_id] = Player(
             steam_name,
@@ -336,6 +339,7 @@ def api_descenders_get_fastest_split_times():
     return {"fastest_split_times" : PlayerDB.get_fastest_split_times(trail_name, competitors_only=timer.competitors_only, min_timestamp=timer.timestamp, monitored_only=timer.monitored_only)}
 
 
+
 @app.route("/API/TOGGLE-RIDERS-GATE-START")
 def api_toggle_riders_gate_start():
     name = request.cookies.get('id')
@@ -343,6 +347,13 @@ def api_toggle_riders_gate_start():
         riders_gate.refresh_random_delay()
     return "Done"
 
+def auto_gate():
+    while True:
+        riders_gate.refresh_random_delay()
+        time.sleep(15)
+
+import threading
+threading.Thread(target=auto_gate).start()
 
 @app.route("/API/GET-DATA")
 def api_get_data():
