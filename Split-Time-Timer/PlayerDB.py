@@ -22,7 +22,14 @@ class PlayerDB():
     def update_trail(trail_name, world_name):
         PlayerDB.execute_sql(
             f'''
-            INSERT OR REPLACE INTO Trail (trail_name, world_name) VALUES ("{trail_name}", "{world_name}")
+            REPLACE INTO Trail
+            (trail_name, bikes_permitted_id, world_name, trail_src)
+            VALUES (
+                "{trail_name}",
+                (select bikes_permitted_id from Trail where trail_name = "{trail_name}"),
+                "{world_name}",
+                (select trail_src from Trail where trail_name = "{trail_name}")
+            )
             ''', write=True
         )
 
@@ -214,10 +221,11 @@ class PlayerDB():
 
     @staticmethod
     def end_session(steam_id, time_started, time_ended, world_name):
-        con = sqlite3.connect("TimeStats.db")
+        con = sqlite3.connect(script_path + "/TimeStats.db")
         con.execute(
             f'''
             INSERT INTO Session (steam_id, time_started, time_ended, world_name)
             VALUES ("{steam_id}", "{time_started}", "{time_ended}", "{world_name}")
             ''')
         con.commit()
+        con.close()
