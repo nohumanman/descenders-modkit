@@ -15,7 +15,7 @@ using Object = UnityEngine.Object;
 using TMPro;
 using InControl;
 
-namespace RocketLeagueMod
+namespace DescendersSplitTimer
 {
     public class Utilities : MonoBehaviour
     {

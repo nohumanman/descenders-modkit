@@ -11,6 +11,41 @@ namespace SplitTimer{
 		public void OnMapEnter(SplitTimer splitTimer){
 			if (ServerInfo.Instance.isOnline){
 				splitTimer.StartCoroutine(CoroOnMapEnter());
+				splitTimer.StartCoroutine(PeriodicallyCheckBanStatus(splitTimer));
+			}
+		}
+		IEnumerator PeriodicallyCheckBanStatus(SplitTimer splitTimer){
+			while (true){
+				yield return new WaitForSeconds(10f);
+				CheckBanStatus(splitTimer);
+			}
+		}
+		public void CheckBanStatus(SplitTimer splitTimer){
+			splitTimer.StartCoroutine(CoroCheckBanStatus(splitTimer));
+		}
+		IEnumerator CoroCheckBanStatus(SplitTimer splitTimer){
+			if (ServerInfo.Instance.isOnline){
+				using (
+					UnityWebRequest webRequest =
+					UnityWebRequest.Get(
+						ServerInfo.Instance.server
+						+ "/API/DESCENDERS/GET-BAN-STATUS"
+						+ "?world_name="
+						+ SplitTimer.Instance.world_name
+						+ "&steam_name="
+						+ steamIntegration.getName()
+						+ "&steam_id="
+						+ steamIntegration.getSteamId()
+						)
+				)
+				{
+					yield return webRequest.SendWebRequest();
+					if (webRequest.downloadHandler.text != "valid"){
+						foreach (TrailTimer trailTimer in TrailTimer.trailTimerInstances){
+							SplitTimer.Instance.OnPlayerBanned(webRequest.downloadHandler.text);
+						}
+					}
+				}
 			}
 		}
 		public void OnBikeSwitch(string new_bike){
@@ -54,10 +89,10 @@ namespace SplitTimer{
 				}
 			}
 		}
-		public void OnCheckpointEnter(TrailTimer trailTimer, Checkpoint checkpoint){
+		public void OnCheckpointEnter(TrailTimer trailTimer, Checkpoint checkpoint, float time){
 			Debug.Log("SplitTimer.SplitTimerAPI - OnCheckpointEnter()");
 			if (ServerInfo.Instance.isOnline){
-				trailTimer.StartCoroutine(CoroOnCheckpointEnter(trailTimer, checkpoint));
+				trailTimer.StartCoroutine(CoroOnCheckpointEnter(trailTimer, checkpoint, time));
 			}
 		}
 		public void OnDeath(TrailTimer trailTimer){
@@ -66,16 +101,16 @@ namespace SplitTimer{
 				trailTimer.StartCoroutine(CoroOnDeath(trailTimer));
 			}
 		}
-		public void OnBoundryEnter(TrailTimer trailTimer){
+		public void OnBoundryEnter(TrailTimer trailTimer, GameObject boundry, float timeCount){
 			Debug.Log("SplitTimer.SplitTimerAPI - OnBoundryEnter()");
 			if (ServerInfo.Instance.isOnline){
-				trailTimer.StartCoroutine(CoroOnBoundryEnter(trailTimer));
+				trailTimer.StartCoroutine(CoroOnBoundryEnter(trailTimer, boundry, timeCount));
 			}
 		}
-		public void OnBoundryExit(TrailTimer trailTimer){
+		public void OnBoundryExit(TrailTimer trailTimer, GameObject boundry, float timeCount){
 			Debug.Log("SplitTimer.SplitTimerAPI - OnBoundryEnter()");
 			if (ServerInfo.Instance.isOnline){
-				trailTimer.StartCoroutine(CoroOnBoundryExit(trailTimer));
+				trailTimer.StartCoroutine(CoroOnBoundryExit(trailTimer, boundry, timeCount));
 			}
 		}
 		IEnumerator CoroOnMapEnter(){
@@ -142,12 +177,12 @@ namespace SplitTimer{
 			}
 		}
 
-		IEnumerator CoroOnBoundryEnter(TrailTimer trailTimer){
+		IEnumerator CoroOnBoundryEnter(TrailTimer trailTimer, GameObject boundry, float timeCount){
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
 					ServerInfo.Instance.server
-					+ "/API/DESCENDERS/ON-BOUNDRY-ENTER"
+					+ "/API/DESCENDERS/ON-BOUNDRY-ENTER/" + boundry.GetInstanceID().ToString()
 					+ "?trail_name="
 					+ trailTimer.trail_name
 					+ "&steam_name="
@@ -156,6 +191,8 @@ namespace SplitTimer{
 					+ steamIntegration.getSteamId()
 					+ "&world_name="
 					+ SplitTimer.Instance.world_name
+					+ "&client_time="
+					+ timeCount.ToString()
 					)
 			)
 			{
@@ -165,12 +202,12 @@ namespace SplitTimer{
 				}
 			}
 		}
-		IEnumerator CoroOnBoundryExit(TrailTimer trailTimer){
+		IEnumerator CoroOnBoundryExit(TrailTimer trailTimer, GameObject boundry, float timeCount){
 			using (
 				UnityWebRequest webRequest =
 				UnityWebRequest.Get(
 					ServerInfo.Instance.server
-					+ "/API/DESCENDERS/ON-BOUNDRY-EXIT"
+					+ "/API/DESCENDERS/ON-BOUNDRY-EXIT/" + boundry.GetInstanceID().ToString()
 					+ "?trail_name="
 					+ trailTimer.trail_name
 					+ "&steam_name="
@@ -179,6 +216,8 @@ namespace SplitTimer{
 					+ steamIntegration.getSteamId()
 					+ "&world_name="
 					+ SplitTimer.Instance.world_name
+					+ "&client_time="
+					+ timeCount.ToString()
 					)
 			)
 			{
@@ -188,11 +227,12 @@ namespace SplitTimer{
 				}
 			}
 		}
-		IEnumerator CoroOnCheckpointEnter(TrailTimer trailTimer, Checkpoint checkpoint){
+		IEnumerator CoroOnCheckpointEnter(TrailTimer trailTimer, Checkpoint checkpoint, float time){
 			string trail_name = trailTimer.trail_name;
 			string checkpoint_num = trailTimer.current_checkpoint_num.ToString();
 			string total_checkpoints = trailTimer.checkpoints.Count.ToString();
 			string checkpoint_type = checkpoint.checkpointType.ToString();
+			string time_string = time.ToString();
 			
 			using (
 				UnityWebRequest webRequest =
@@ -212,7 +252,9 @@ namespace SplitTimer{
 					+ SplitTimer.Instance.world_name
 					+ "&checkpoint_type="
 					+ checkpoint_type
-					)
+					+ "&client_time="
+					+ time_string
+				)
 			)
 			{
 				yield return webRequest.SendWebRequest();
@@ -224,13 +266,13 @@ namespace SplitTimer{
 						trailTimer.checkpointUI.OnStartCheckpoint();
 					}
 					else if (checkpoint.checkpointType == CheckpointType.intermediate){
-						trailTimer.checkpointUI.OnIntermediateCheckpoint();
+						trailTimer.checkpointUI.OnIntermediateCheckpoint(time);
 					}
 					else if (checkpoint.checkpointType == CheckpointType.pause){
 						trailTimer.checkpointUI.OnPauseCheckpoint();
 					}
 					else if (checkpoint.checkpointType == CheckpointType.stop){
-						trailTimer.checkpointUI.OnFinishCheckpoint();
+						trailTimer.checkpointUI.OnFinishCheckpoint(time);
 					}
 					trailTimer.current_checkpoint_num++;
 				}

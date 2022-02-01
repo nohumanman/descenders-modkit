@@ -76,7 +76,7 @@ namespace CustomUi {
 				}
 			}
 			if (Input.GetKeyDown(KeyCode.Escape)){
-				DisableUI(!Cursor.visible);				
+				DisableUI(!Cursor.visible, !Cursor.visible);			
 			}
 			if (Input.GetKeyDown(KeyCode.Tab)){
 				GoSwitcher();
@@ -86,7 +86,7 @@ namespace CustomUi {
 			}
 		}
 
-		public void DisableUI(bool disableCursor = true){
+		public void DisableUI(bool disableCursor = true, bool wasOpen = true){
 			cameraViewingTerrain.gameObject.SetActive(false);
 			map.SetActive(false);
 			menu.SetActive(false);
@@ -94,7 +94,9 @@ namespace CustomUi {
 			BikeSwitcher.SetActive(false);
 			Cursor.visible = !disableCursor;
 			isShowing = false;
-			blackTint.Play("CloseMenu");
+			if (wasOpen){
+				blackTint.Play("CloseMenu");
+			}
 		}
 
 		public void EnableUI(){

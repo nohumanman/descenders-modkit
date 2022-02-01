@@ -1,6 +1,7 @@
 from Player import Player
 import sqlite3
 import os
+from PlayerDB import PlayerDB
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -13,21 +14,29 @@ class Timer():
         self.monitored_only = False
         self.get_players()
 
+    def get_player(self, steam_id, steam_name : str, world_name) -> Player:
+        if self.players[steam_id] is None:
+            self.players[steam_id] = Player(
+                steam_name,
+                steam_id,
+                world_name,
+                False,
+                "unbanned"
+            )
+        return self.players[steam_id]
+
     def get_players(self):
-        con = sqlite3.connect(script_path + "/TimeStats.db")
-        cur = con.cursor()
-        players = cur.execute("SELECT * FROM Players").fetchall()
-        cur.close()
-        con.close()
+        players = PlayerDB.get_all_players()
         for player in players:
             steam_id = player[0]
             steam_name = player[1]
             is_competitor = player[2]
+            ban_status = player[3]
             avatar_src = player[4]
             if is_competitor == "true":
-                player = Player(steam_name, steam_id, "none", True)
+                player = Player(steam_name, steam_id, "none", True, ban_status)
             else:
-                player = Player(steam_name, steam_id, "none", False)
+                player = Player(steam_name, steam_id, "none", False, ban_status)
             self.add_player(player, steam_id)
     
     def add_player(self, player : Player, steam_id: str):

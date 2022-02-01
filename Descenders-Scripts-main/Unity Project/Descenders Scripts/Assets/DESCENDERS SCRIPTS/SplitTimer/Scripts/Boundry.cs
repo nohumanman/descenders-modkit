@@ -11,13 +11,13 @@ namespace SplitTimer{
 		{
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-				trailTimer.OnBoundryExit();
+				trailTimer.OnBoundryExit(this.gameObject);
 			}
 		}
 		void OnTriggerEnter(Collider other){
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-				trailTimer.OnBoundryEnter();
+				trailTimer.OnBoundryEnter(this.gameObject);
 			}
 		}
 		public void Update(){

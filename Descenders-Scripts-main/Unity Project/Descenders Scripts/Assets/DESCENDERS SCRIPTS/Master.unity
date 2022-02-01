@@ -12286,6 +12286,7 @@ MonoBehaviour:
   trail_name: Trail1
   checkpoints_objs: {fileID: 1695162238}
   boundrys_objs: {fileID: 400519212}
+  timeCount: 0
   checkpointUI: {fileID: 1932105234}
   forcedBikeType: 0
 --- !u!114 &1932105234

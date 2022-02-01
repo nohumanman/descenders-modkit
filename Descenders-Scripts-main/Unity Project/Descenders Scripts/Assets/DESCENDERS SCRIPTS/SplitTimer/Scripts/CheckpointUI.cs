@@ -18,9 +18,8 @@ namespace SplitTimer{
 		public CanvasGroup checkpointUi;
 		public CanvasGroup greenFlash;
 		public RawImage green;
-		bool shouldIncrement;
+		public bool shouldIncrement;
 		bool paused = false;
-		private float timeCount;
 		public bool isCheckpointUIEnabled = true;
 		public UI ui = UI.Instance;
 		public FastestSplitTimes fastest_split_times;
@@ -49,10 +48,6 @@ namespace SplitTimer{
 				}
 				previous_position = player_human.transform.position;
 			}
-			if (shouldIncrement && !paused){
-				timeCount += Time.deltaTime;
-				primaryTimer.text = FormatTime(timeCount);
-			}
 			if ((Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Alpha1))){
 				isCheckpointUIEnabled = !isCheckpointUIEnabled;
 				if (checkpointUi.alpha == 0){
@@ -64,6 +59,9 @@ namespace SplitTimer{
 			}
 			if (ui.isShowing){
 				checkpointUi.alpha = 0;
+			}
+			if (shouldIncrement){
+				primaryTimer.text = FormatTime(trailTimer.timeCount).ToString();
 			}
 		}
 		IEnumerator KeepFastestTimesUpdated(){
@@ -96,23 +94,22 @@ namespace SplitTimer{
 			checkpointTimer.text = "Yours: 00:00:000";
 			checkpointComparisonTimer.text = "Fastest: 00:00:000";
 			shouldIncrement = true;
-			timeCount = 0;
-			primaryTimer.text = FormatTime(timeCount);
+			primaryTimer.text = FormatTime(trailTimer.timeCount);
 			checkpointTimerDisable = StartCoroutine(DisableText(checkpointTimer.gameObject));
 			checkpointComparisonTimerDisable = StartCoroutine(DisableText(checkpointComparisonTimer.gameObject));
 		}
-		public void OnIntermediateCheckpoint(){
+		public void OnIntermediateCheckpoint(float time){
 			Debug.Log("SplitTimer.CheckpointUI - OnIntermediateCheckpoint()");
 			paused = false;
 			if (shouldIncrement){
 				StopCheckpointElementsTimeout();
 				EnableCheckpointElements();
-				checkpointTimer.text = "Yours: " + primaryTimer.text;
+				checkpointTimer.text = "Yours: " + FormatTime(time);
 				try{
 					Debug.Log(fastest_split_times);
 					float fastSplitTime = fastest_split_times.fastest_split_times[trailTimer.current_checkpoint_num-1];
 					checkpointComparisonTimer.text = "Fastest: " + FormatTime(fastSplitTime).ToString();
-					FlashOnTimeDifference(fastSplitTime, timeCount);
+					FlashOnTimeDifference(fastSplitTime, time);
 				}
 				catch (System.IndexOutOfRangeException){
 					Debug.Log("SplitTimer.CheckpointUI - OnIntermediateCheckpoint() - Checkpoint is not on server!");
@@ -125,13 +122,15 @@ namespace SplitTimer{
 		public void OnPauseCheckpoint(){
 			PauseTimer();
 		}
-		public void OnFinishCheckpoint(){
+		public void OnFinishCheckpoint(float time){
             StopCheckpointElementsTimeout();
             EnableCheckpointElements();
+			primaryTimer.text = FormatTime(time);
+			checkpointTimer.text = "Yours: " + FormatTime(time);
 			try{
 				float fastSplitTime = fastest_split_times.fastest_split_times[trailTimer.current_checkpoint_num-1];
 				checkpointComparisonTimer.text = "Fastest: " + FormatTime(fastSplitTime).ToString();
-				FlashOnTimeDifference(fastSplitTime, timeCount);
+				FlashOnTimeDifference(fastSplitTime, time);
 			}
 			catch (System.IndexOutOfRangeException){
 				Debug.Log("SplitTimer.CheckpointUI - OnFinishCheckpoint() - Checkpoint is not on server!");
@@ -158,8 +157,8 @@ namespace SplitTimer{
 			}
 		}
 		public void StopTimer(){
-			StopCheckpointElementsTimeout();
 			shouldIncrement = false;
+			StopCheckpointElementsTimeout();
 			disableTimerCoroutine = StartCoroutine(DisableTimer());
 		}
 		public void PauseTimer(){

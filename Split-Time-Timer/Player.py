@@ -1,17 +1,27 @@
 from posixpath import split
 import time
 from threading import Thread
+import logging
 import requests
 from PlayerDB import PlayerDB
+import threading
 import random
 from Tokens import webhook, steam_api_key
+from TrailTimer import TrailTimer, AntiCheatMeasure, TimerNotStarted
 
 
 class Player():
-    def __init__(self, steam_name, steam_id, world_name, is_competitor):
+    def __init__(self, steam_name, steam_id, world_name, is_competitor, ban_status):
         print("Player created with steam id", steam_id)
         self.steam_name = steam_name
         self.steam_id = steam_id
+        self.ban_status = ban_status
+        self.world = world_name
+        self.is_competitor = is_competitor
+        self.monitored = False
+        self.online = False
+        self.time_started = 0
+        self.trail_timer = TrailTimer(self)
         avatar_src_req = requests.get(
             f"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={steam_api_key}&steamids={steam_id}"
         )
@@ -20,114 +30,85 @@ class Player():
             self.avatar_src = avatar_src
         except:
             self.avatar_src = ""
-        self.current_world = world_name
-        self.current_trail = "none"
-        self.online = False
+        self.entered_boundaries = {}
+        self.trail = "unknown"
+        self.bike = "unknown"
+        self.update_player_in_db()
+
+    def on_competitor_status_change(self, is_competitor):
         self.is_competitor = is_competitor
-        self.trail_start_time = 0
-        self.split_times = []
-        self.amount_of_boundaries_inside = 0
-        self.being_monitored = False
-        self.time_started = None
-        self.time_ended = None
-        self.has_entered_checkpoint = False
-        self.current_bike = "unknown"
-        PlayerDB.add_player(steam_id, steam_name, is_competitor, self.avatar_src)
+        self.update_player_in_db()
 
-    def get_ban_status(self):
-        return PlayerDB.get_ban_status(self.steam_id)
+    def update_player_in_db(self):
+        PlayerDB.update_player(self.steam_id, self.steam_name, self.is_competitor, self.avatar_src)
 
-    def loaded(self, world_name):
+    def on_avatar_change(self, new_src):
+        self.avatar_src = new_src
+        self.update_player_in_db()
+
+    def on_bike_switch(self, new_bike):
+        self.bike = new_bike
+        if self.bike == "roadbike":
+            self.online = False
+        return "valid"
+
+    def on_boundry_enter(self, boundry_guid, boundry):
+        self.entered_boundaries[boundry_guid] = boundry
+
+    def on_boundry_exit(self, boundry_guid, boundry):
+        try:
+            self.entered_boundaries.pop(boundry_guid)
+        except:
+            logging.warning("Boundry already popped!?")
+        logging.info("Waiting 0.3 secs...")
+        time.sleep(0.3)
+        logging.info("Waited!")
+        if len(self.entered_boundaries) == 0:
+            logging.info("Outside of boundry!")
+            return "Ouside of boundry for more than 300 milliseconds!"
+        else:
+            return "valid"
+
+    def on_checkpoint_enter(self, checkpoint, client_time):
+        if checkpoint.type == "start":
+            self.trail_timer.start_timer(checkpoint)
+        elif checkpoint.type == "intermediate":
+            try:
+                logging.info("Taking Split Time")
+                self.trail_timer.split(client_time)
+            except AntiCheatMeasure:
+                print("Anticheat activated!")
+                logging.info("Anticheat activated!")
+                return "ERROR: AntiCheatMeasure has been called."
+            except TimerNotStarted:
+                logging.info("Timer not started!")
+                print("Timer not started!")
+                return "ERROR: Timer Not Started!"
+        elif checkpoint.type == "stop" and checkpoint.total_checkpoints == checkpoint.num:
+            self.trail_timer.end_timer()
+        return "valid"
+
+    def send_error(self, error):
+        print(f"Sending error '{error}' to client!")
+
+    def on_respawn(self):
+        if self.trail_timer.started:
+            self.trail_timer.cancel_timer()
+            self.send_error("Time invalid: You Respawned")
+
+    def on_map_enter(self, world_name):
         self.time_started = time.time()
         self.online = True
-        self.current_world = world_name
+        self.world = world_name
 
-    def unloaded(self):
-        self.time_ended = time.time()
-        PlayerDB.end_session(self.steam_id, self.time_started, self.time_ended, self.current_world)
-        self.time_started = None
-        self.time_ended = None
-        self.online = False
-        self.current_world = "None"
-
-    def set_competitor(self, is_competitor):
-        self.is_competitor = is_competitor
-        PlayerDB.become_competitor(self.steam_id, False)
-
-    async def entered_checkpoint(self, checkpoint_num : int, total_checkpoints : int, checkpoint_time : float, trail_name : str):
-        self.has_entered_checkpoint = True
-        self.current_trail = trail_name
-        self.online = True
-        if checkpoint_num == 0:
-            print("entered checkpoint at start - setting trail start time...")
-            self.split_times = []
-            self.current_trail = "none" 
-            self.trail_start_time = time.time()
-        elif checkpoint_num == total_checkpoints-1:
-            self.split_times.append(checkpoint_time - self.trail_start_time)
-            self.submit_time(self.split_times, trail_name)
-        else:
-            self.split_times.append(checkpoint_time - self.trail_start_time)
-        Thread(target=self.disable_entered_checkpoint, args=(5,)).start()
-
-    def submit_time(self, split_times, trail_name):
-        self.online = True
-        print("SUBMITTING TIME - TRAIL COMPLETE!!")
-        # webhook
-        try:
-            print(PlayerDB.get_fastest_split_times(trail_name))
-            fastest_times = PlayerDB.get_fastest_split_times(trail_name)
-            fastest_time = fastest_times[len(fastest_times)-1]
-            if split_times[len(split_times)-1] < fastest_time:
-                print("New Fastest Time!")
-                faster_amount = round(fastest_time - split_times[len(split_times)-1], 4)
-                emojis = ["🎉"]
-                data = {
-                    "content" : f"There's a new Time on {self.current_trail}!",
-                    "username" : "Descenders Gear Hub"
-                }
-                data["embeds"] = [
-                    {
-                        "description" : f"🎉🎉 00:00:000 on {self.current_trail}!",
-                        "title" : f"[Descenders Split Timer](https://gear-hub.nohumanman.com)",
-                        "author" : {
-                            "name": f"{self.steam_name}",
-                            "url": "",
-                            "icon_url": f"{self.avatar_src}"
-                        },
-                    }
-                ]
-                        
-                content = ""
-                content += random.choice(emojis) * 3
-                content += "\n"
-                congrats = ["Congratulations to", "Congrats to", "GG", "Well raced", "Good job", "Well done"]
-                content += random.choice(congrats)
-                content += f" **{self.steam_name}** "
-                quickestest = ["fastest"]
-                content += f"for the new " + random.choice(quickestest) + f" time on {trail_name} in {self.current_world}!"
-                content += f"\nIt's {round(faster_amount, 5)} seconds faster than the previous best 🔥"
-                data = {
-                    "content": content,
-                    "username": "Descenders Competitive"
-                }
-                result = requests.post(webhook, json = data)
-                
-        except Exception as e:
-            print(e)
-        PlayerDB.submit_time(self.steam_id, split_times, trail_name, self.being_monitored, self.current_world)
-
-    def seconds_to_string(self, millis):
-        seconds=(millis/1000)%60
-        minutes=(millis/(1000*60))%60
-        hours=(millis/(1000*60*60))%24
-        return str(round(minutes)) + ":" + str(round(seconds)) + ":" + str(int((millis)%1000))
-
-    def cancel_time(self):
-        self.has_entered_checkpoint = False
-        self.split_times = []
-        self.trail_start_time = 0
-
-    def disable_entered_checkpoint(self, delay):
-        time.sleep(delay)
-        self.has_entered_checkpoint = False
+    def on_map_exit(self):
+        if (self.time_started != 0):
+            self.online = False
+            self.world = "unknown"
+            self.trail_timer.cancel_timer()
+            PlayerDB.end_session(
+                self.steam_id,
+                self.time_started,
+                time.time(),
+                self.world
+            )

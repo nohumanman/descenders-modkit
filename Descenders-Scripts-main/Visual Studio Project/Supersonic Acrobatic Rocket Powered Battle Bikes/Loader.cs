@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using ModTool.Interface;
 
-namespace RocketLeagueMod
+namespace DescendersSplitTimer
 {
     public class Loader : ModBehaviour
     {
@@ -18,7 +18,7 @@ namespace RocketLeagueMod
             }
             Debug.Log("Finished Mod Check");
             gameObject = new GameObject();
-            gameObject.name = "loaderRockLeagu";
+            gameObject.name = "DescendersSplitTimerModLoaded";
             Debug.Log("GameObject Instantiated");
             gameObject.AddComponent<Utilities>();
             Debug.Log("Utilities added");

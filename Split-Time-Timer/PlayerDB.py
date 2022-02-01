@@ -7,16 +7,26 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 
 class PlayerDB():
     @staticmethod
-    def add_player(steam_id, steam_name, is_competitor, avatar_src):
-        print("Submitting player to database - steam id", steam_id, "steam name:", steam_name)
+    def execute_sql(statement : str, write=False):
         con = sqlite3.connect(script_path + "/TimeStats.db")
-        con.execute(
+        execution = con.execute(statement)
+        if write:
+            con.commit()
+        return execution.fetchall()
+
+    @staticmethod
+    def get_all_players():
+        return PlayerDB.execute_sql('''SELECT * FROM Players''')
+
+    @staticmethod
+    def update_player(steam_id, steam_name, is_competitor, avatar_src):
+        print("Submitting player to database - steam id", steam_id, "steam name:", steam_name)
+        PlayerDB.execute_sql(
             f'''
             REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status, avatar_src)
             VALUES ("{steam_id}", "{steam_name}", "{is_competitor}", "unbanned", "{avatar_src}")
-            '''
+            ''', write=True
         )
-        con.commit()
 
     @staticmethod
     def update_trail(trail_name, world_name):
@@ -34,28 +44,7 @@ class PlayerDB():
         )
 
     @staticmethod
-    def become_competitor(steam_id, is_competitor, steam_name):
-        con = sqlite3.connect(script_path + "/TimeStats.db")
-        if is_competitor:
-            con.execute(
-                f'''
-                REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status, avatar_src)
-                VALUES ("{steam_id}", "{steam_name}", "true", "unbanned", "")
-                '''
-            )
-        else:
-            con.execute(
-                f'''
-                REPLACE INTO Players (steam_id, steam_name, is_competitor, ban_status, avatar_src)
-                VALUES ("{steam_id}", "{steam_name}", "false", "unbanned", "")
-                '''
-            )
-        con.commit()
-        print("Function not complete - become_competitor")
-
-    @staticmethod
     def get_fastest_split_times(trail_name, competitors_only=False, min_timestamp=None, monitored_only=False):
-        con = sqlite3.connect(script_path + "/TimeStats.db")
         statement = '''
                 SELECT "Split Times".time_id, "Split Times".checkpoint_num, "Split Times".checkpoint_time, Times.trail_name, Players.is_competitor, Players.steam_name, Times.timestamp from 
                 "Split Times"
@@ -73,38 +62,25 @@ class PlayerDB():
             order by checkpoint_num DESC, checkpoint_time asc
             limit 1;
             '''
-        #print(statement)
-        time_id = con.execute(statement).fetchall()
+        time_id = PlayerDB.execute_sql(statement)
         try:
             fastest_time_on_trail_id = time_id[0][0]
         except IndexError:
             print("No trail specified")
             return []
-
-        times = con.execute(
+        times = PlayerDB.execute_sql(
             f'''
             SELECT * FROM "Split Times"
             WHERE time_id = "{fastest_time_on_trail_id}" ORDER BY checkpoint_num
             '''
-        ).fetchall()
-        #print(times)
+        )
         split_times = [time[2] for time in times]
-        #print(times)
-        con.close()
         return split_times
 
     @staticmethod
     def get_ban_status(steam_id):
         resp = PlayerDB.execute_sql(f'''SELECT ban_status FROM Players WHERE steam_id="{steam_id}"''')
         return resp[0][0]
-
-    @staticmethod
-    def execute_sql(statement : str, write=False):
-        with sqlite3.connect(script_path + "/TimeStats.db") as con:
-            execution = con.execute(statement)
-            if write:
-                con.commit()
-            return execution.fetchall()      
 
     @staticmethod
     def get_leaderboard_descenders(trail_name, num=10):
@@ -154,7 +130,7 @@ class PlayerDB():
             SELECT sum(time_ended - time_started) AS total_time FROM Session
             WHERE steam_id = "{steam_id}"
         '''
-        if world is not "none":
+        if world != "none":
             statement += f'''AND world_name = "{world}"'''
         result = PlayerDB.execute_sql(statement)
         if result[0][0] is None:
@@ -172,12 +148,11 @@ class PlayerDB():
 
     @staticmethod
     def get_trail_data():
-        con = sqlite3.connect(script_path + "/TimeStats.db")
-        times_req = con.execute(
+        times_req = PlayerDB.execute_sql(
             f'''
                 SELECT * FROM trail_info
             '''
-        ).fetchall()
+        )
         times = [
             {
                 "trail_name" : time[0],
@@ -196,15 +171,15 @@ class PlayerDB():
     @staticmethod
     def submit_time(steam_id, split_times, trail_name, being_monitored, current_world):
         PlayerDB.update_trail(trail_name, current_world)
-        con = sqlite3.connect(script_path + "/TimeStats.db")
+        
         time_hash = hash(str(split_times[len(split_times)-1])+str(steam_id)+str(time.time()))
-        con.execute(
+        PlayerDB.execute_sql(
             f'''
             INSERT INTO Times (steam_id, time_id, timestamp, trail_name, was_monitored)
             VALUES ("{steam_id}", "{time_hash}", {time.time()}, "{trail_name}", "{str(being_monitored)}")
             ''')
         for n, split_time in enumerate(split_times):
-            con.execute(
+            PlayerDB.execute_sql(
             f'''
             INSERT INTO "Split Times" (
                 time_id,
@@ -216,16 +191,14 @@ class PlayerDB():
                 "{n}",
                 {split_time}
                 )
-            ''')
-        con.commit()
+            ''', write=True)
 
     @staticmethod
     def end_session(steam_id, time_started, time_ended, world_name):
-        con = sqlite3.connect(script_path + "/TimeStats.db")
-        con.execute(
+        PlayerDB.execute_sql(
             f'''
             INSERT INTO Session (steam_id, time_started, time_ended, world_name)
             VALUES ("{steam_id}", "{time_started}", "{time_ended}", "{world_name}")
-            ''')
-        con.commit()
-        con.close()
+            ''',
+            write=True
+        )
