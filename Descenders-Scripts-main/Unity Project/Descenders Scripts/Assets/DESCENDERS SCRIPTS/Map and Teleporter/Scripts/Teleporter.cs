@@ -11,12 +11,13 @@ namespace CustomTeleporter {
 		public GameObject playerButtons;
 		public RectTransform rectTransformOfCanvas;
 		public RectTransform youUiRectTransform;
+		public RectTransform preemptiveSpawnPoint;
 		public UI uI;
 		public Camera cameraOverTerrain;
 		List<ArrayList> allPlayers;
 		GameObject player;
 		Button[] buttons;
-		
+
 		void Start () {
 			StartCoroutine(lateStartInitiator());
 			buttons = playerButtons.GetComponentsInChildren<Button>();
@@ -141,7 +142,7 @@ namespace CustomTeleporter {
 			}
 		}
 
-		void SetPositionFromGameobjectOverTerrain(GameObject player, RectTransform canvasRectTransform, RectTransform thisRectTransform){
+		public void SetPositionFromGameobjectOverTerrain(GameObject player, RectTransform canvasRectTransform, RectTransform thisRectTransform){
 			if (Application.isEditor){
 				return;
 			}

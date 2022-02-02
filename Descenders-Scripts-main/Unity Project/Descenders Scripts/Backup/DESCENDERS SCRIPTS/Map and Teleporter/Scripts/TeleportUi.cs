@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using ModTool.Interface;
 using CustomTeleporter;
 using CustomUi;
+using UnityEngine.EventSystems;
 
 public class TeleportUi : ModBehaviour {
 	public Object uiElement;
@@ -22,9 +23,32 @@ public class TeleportUi : ModBehaviour {
 			GameObject el = (GameObject)Instantiate(uiElement);
 			el.transform.SetParent(ContentObj.transform, false);
 			el.GetComponent<Button>().onClick.AddListener(delegate(){teleporter.SpawnAtPoint(teleportPoint.gameObject); uI.DisableUI();});
+			EventTrigger trigger = el.GetComponent<EventTrigger>();
+			EventTrigger.Entry entry = new EventTrigger.Entry();
+			entry.eventID = EventTriggerType.PointerEnter;
+			entry.callback.AddListener((eventData) => {
+				Debug.Log("Hovered over ui element!");
+				teleporter.preemptiveSpawnPoint.gameObject.SetActive(true);
+				teleporter.SetPositionFromGameobjectOverTerrain(
+					teleportPoint.gameObject,
+					teleporter.rectTransformOfCanvas,
+					teleporter.preemptiveSpawnPoint.GetComponent<RectTransform>()
+				);
+				teleporter.preemptiveSpawnPoint.GetComponentInChildren<Text>().text = teleportPoint.teleporterName;
+			});
+			trigger.triggers.Add(entry);
+
+			EventTrigger.Entry entry2 = new EventTrigger.Entry();
+			entry2.eventID = EventTriggerType.PointerExit;
+			entry2.callback.AddListener((eventData) => {
+				Debug.Log("Exited UI element!");
+				teleporter.preemptiveSpawnPoint.gameObject.SetActive(false);
+			});
+			trigger.triggers.Add(entry2);
 			el.GetComponentInChildren<Text>().text = teleportPoint.teleporterName;
 		}
 	}
+	
 	void Start () {
 		SpawnTeleportUiElements();	
 	}
