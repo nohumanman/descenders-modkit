@@ -71,8 +71,10 @@ class Player():
 
     def on_checkpoint_enter(self, checkpoint, client_time):
         if checkpoint.type == "start":
+            logging.info(f"Player {self.steam_name} has started trail!")
             self.trail_timer.start_timer(checkpoint)
         elif checkpoint.type == "intermediate":
+            logging.info(f"Player {self.steam_name} has intermediate on trail!")
             try:
                 logging.info("Taking Split Time")
                 self.trail_timer.split(client_time)
@@ -84,8 +86,11 @@ class Player():
                 logging.info("Timer not started!")
                 print("Timer not started!")
                 return "ERROR: Timer Not Started!"
-        elif checkpoint.type == "stop" and checkpoint.total_checkpoints == checkpoint.num:
+        elif checkpoint.type == "stop" and checkpoint.total_checkpoints == checkpoint.num+1:
+            logging.info(f"Player {self.steam_name} has finished trail!")
+            self.trail_timer.split(client_time)
             self.trail_timer.end_timer()
+        print(f"total checkpoints: {checkpoint.total_checkpoints}")
         return "valid"
 
     def send_error(self, error):

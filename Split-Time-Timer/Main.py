@@ -40,6 +40,7 @@ def on_boundry_enter(boundry_guid):
     logging.info(f'''Player {player.steam_name} (id {player.steam_id}) on {player.world} has entered boundry on trail "{trail_name}"''')
     boundry = Boundry(float(client_time))
     player.on_boundry_enter(boundry_guid, boundry)
+    player.trail = trail_name
     return "valid"
 
 @app.route("/API/DESCENDERS/ON-BOUNDRY-EXIT/<boundry_guid>")
@@ -49,6 +50,7 @@ def on_boundry_exit(boundry_guid):
     client_time = request.args.get("client_time")
     logging.info(f'''Player {player.steam_name} (id {player.steam_id}) on {player.world} has exited the boundry on trail "{trail_name}"''')
     boundry = Boundry(float(client_time))
+    player.trail = trail_name
     return player.on_boundry_exit(boundry_guid, boundry)
 
 @app.route("/API/DESCENDERS/ON-CHECKPOINT-ENTER/<checkpoint_num>")
@@ -60,6 +62,7 @@ async def on_checkpoint_enter(checkpoint_num):
     checkpoint_type = request.args.get("checkpoint_type")
     logging.info(f'''Player {player.steam_name} (id {player.steam_id}) on {player.world} has entered a checkpoint on {trail_name} (Checkpoint {checkpoint_num}/{total_checkpoints} and type '{checkpoint_type}')''')
     checkpoint = Checkpoint(checkpoint_type, int(checkpoint_num), int(total_checkpoints))
+    player.trail = trail_name
     return player.on_checkpoint_enter(checkpoint, client_time)
 
 @app.route("/API/DESCENDERS/ON-DEATH")

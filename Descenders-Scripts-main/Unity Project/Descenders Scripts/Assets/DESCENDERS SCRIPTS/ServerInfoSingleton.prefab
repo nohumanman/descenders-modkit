@@ -51,4 +51,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a131091aa5287ef4e8879eac0abbf59b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  server: https://descenders-api.nohumanman.com:8443
+  server: https://split-timer.nohumanman.com/

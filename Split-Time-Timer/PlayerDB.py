@@ -177,7 +177,7 @@ class PlayerDB():
             f'''
             INSERT INTO Times (steam_id, time_id, timestamp, trail_name, was_monitored)
             VALUES ("{steam_id}", "{time_hash}", {time.time()}, "{trail_name}", "{str(being_monitored)}")
-            ''')
+            ''', write=True)
         for n, split_time in enumerate(split_times):
             PlayerDB.execute_sql(
             f'''
