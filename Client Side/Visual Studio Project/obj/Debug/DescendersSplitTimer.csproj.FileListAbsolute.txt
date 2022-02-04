@@ -4,3 +4,10 @@ F:\Projects\Descenders-Snowbird\Descenders-Scripts-main\Visual Studio Project\Su
 F:\Projects\Descenders-Snowbird\Descenders-Scripts-main\Visual Studio Project\Supersonic Acrobatic Rocket Powered Battle Bikes\bin\Debug\DescendersSplitTimer.pdb
 F:\Projects\Descenders-Snowbird\Descenders-Scripts-main\Visual Studio Project\Supersonic Acrobatic Rocket Powered Battle Bikes\obj\Debug\DescendersSplitTimer.dll
 F:\Projects\Descenders-Snowbird\Descenders-Scripts-main\Visual Studio Project\Supersonic Acrobatic Rocket Powered Battle Bikes\obj\Debug\DescendersSplitTimer.pdb
+F:\Projects\Descenders-Split-Timer\Client Side\Visual Studio Project\bin\Debug\DescendersSplitTimer.dll
+F:\Projects\Descenders-Split-Timer\Client Side\Visual Studio Project\bin\Debug\DescendersSplitTimer.pdb
+F:\Projects\Descenders-Split-Timer\Client Side\Visual Studio Project\obj\Debug\DescendersSplitTimer.csproj.CoreCompileInputs.cache
+F:\Projects\Descenders-Split-Timer\Client Side\Visual Studio Project\obj\Debug\DescendersSplitTimer.csproj.CopyComplete
+F:\Projects\Descenders-Split-Timer\Client Side\Visual Studio Project\obj\Debug\DescendersSplitTimer.dll
+F:\Projects\Descenders-Split-Timer\Client Side\Visual Studio Project\obj\Debug\DescendersSplitTimer.pdb
+F:\Projects\Descenders-Split-Timer\Client Side\Visual Studio Project\obj\Debug\DescendersSplitTimer.csprojAssemblyReference.cache

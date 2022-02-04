@@ -13,8 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Descenders Scripts
   _author: nohumanman
-  _description: Added client submitted time
-  _version: 0.0.289
+  _description: Ticked IsTrigger
+  _version: 0.0.294
   _platforms: 1
   _content: 5
   _outputDirectory: D:/Games/Steam Games/steamapps/common/Descenders/Mods

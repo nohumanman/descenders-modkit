@@ -10,18 +10,19 @@ namespace DescendersSplitTimer
         public void Start()
         {
             Debug.Log("DescendersSplitTimer - IceHandler instantiated!");
-            GameObject encompassingCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            encompassingCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            encompassingCube.GetComponent<BoxCollider>().isTrigger = true;
             encompassingCube.name = "EncompassingCube";
-            encompassingCube.transform.localScale = new Vector3(1, 1, 1) * 50000;
+            encompassingCube.transform.localScale = new Vector3(1, 1, 1);
             encompassingCube.AddComponent<IceVolume>();
         }
         public void DisableIce()
         {
-            encompassingCube.SetActive(false);
+            encompassingCube.transform.localScale = new Vector3(1, 1, 1);
         }
         public void EnableIce()
         {
-            encompassingCube.SetActive(true);
+            encompassingCube.transform.localScale = new Vector3(1, 1, 1) * 50000;
         }
     }
 }

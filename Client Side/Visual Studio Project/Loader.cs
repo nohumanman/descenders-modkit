@@ -24,6 +24,8 @@ namespace DescendersSplitTimer
             Debug.Log("Utilities added");
             gameObject.AddComponent<BikeSwitcher>();
             Debug.Log("BikeSwitcher added");
+            gameObject.AddComponent<IceHandler>();
+            Debug.Log("Ice Handler added");
         }
         public static void Unload()
         {
