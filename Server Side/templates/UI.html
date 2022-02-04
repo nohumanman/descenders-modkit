@@ -85,7 +85,12 @@
                     }
                 },
                 updateData(){
-                    $.get("/API/GET-DATA?competitor_only=true&monitored_only=true", function(data){
+                    const queryString = window.location.search;
+                    console.log(queryString);
+                    const urlParams = new URLSearchParams(queryString);
+                    index = urlParams.get('index') 
+                    console.log(index);
+                    $.get("/API/GET-DATA/" + index + "?competitor_only=true&monitored_only=true", function(data){
                         if (data["monitoring"]){
                             app.time_start = data["time_start"]
                             app.name = data["name"]

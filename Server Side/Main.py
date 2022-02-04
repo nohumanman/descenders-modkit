@@ -123,16 +123,12 @@ def get_riders_gate():
 def app_monitor_steam_id(steam_id):
     name = request.cookies.get('id')
     if name == "4565421332145321234565tr5":
-        logging.info(f'''Monitoring player with id {steam_id}''')
-        if timer.monitored_player == timer.players[steam_id]:
-            if timer.monitored_player is not None:
-                timer.monitored_player.being_monitored = False
-            timer.monitored_player = None
+        if timer.players[steam_id] in timer.monitored_players:
+            timer.monitored_players.remove(timer.players[steam_id])
+            timer.players[steam_id].monitored = False
         else:
-            if timer.monitored_player is not None:
-                timer.monitored_player.being_monitored = False
-            timer.monitored_player = timer.players[steam_id]
-            timer.monitored_player.being_monitored = True
+            timer.monitored_players.append(timer.players[steam_id])
+            timer.players[steam_id].monitored = True
     return "Monitoring"
 
 @app.route("/API/UPDATE-BAN-STATUS/<steam_id>")
@@ -179,7 +175,7 @@ def api_get_players():
                         "is_competitor" : timer.players[player].is_competitor,
                         "online" : timer.players[player].online,
                         "colour" : (lambda online, is_competitor : "deep-purple accent-3" if (online and is_competitor) else("green accent-4" if (online) else("red accent-4")))(timer.players[player].online, timer.players[player].is_competitor),
-                        "being_monitored" : (lambda player : True if (timer.players[player] == timer.monitored_player) else False)(player),
+                        "being_monitored" : (lambda player : True if (timer.players[player] in timer.monitored_players) else False)(player),
                         "current_trail" : timer.players[player].trail,
                         "ban_state" : timer.players[player].ban_status,
                         "current_bike" : timer.players[player].bike,
@@ -251,8 +247,9 @@ def auto_gate():
 import threading
 threading.Thread(target=auto_gate).start()
 
-@app.route("/API/GET-DATA")
-def api_get_data():
+@app.route("/API/GET-DATA/<index>")
+def api_get_data(index):
+    index = int(index)
     comp_only = request.args.get("competitor_only")
     timestamp = request.args.get("min_timestamp")
     monitored_only = request.args.get("monitored_only")
@@ -267,11 +264,11 @@ def api_get_data():
     
     try:
         return jsonify({
-            "time_start" : timer.monitored_player.trail_start_time,
-            "name" : timer.monitored_player.steam_name,
-            "split_times" : timer.monitored_player.split_times,
-            "fastest_split_times" : PlayerDB.get_fastest_split_times(timer.monitored_player.current_trail, competitors_only=comp_only, min_timestamp=timestamp, monitored_only=monitored_only),
-            "entered_checkpoint" : timer.monitored_player.has_entered_checkpoint,
+            "time_start" : timer.monitored_players[index].trail_timer.time_started,
+            "name" : timer.monitored_players[index].steam_name,
+            "split_times" : timer.monitored_players[index].trail_timer.times,
+            "fastest_split_times" : PlayerDB.get_fastest_split_times(timer.monitored_players[index].trail, competitors_only=comp_only, min_timestamp=timestamp, monitored_only=monitored_only),
+            "entered_checkpoint" : True,#timer.monitored_players[index].has_entered_checkpoint,
             "monitoring" : True
         })
     except AttributeError as e:
