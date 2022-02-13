@@ -6,7 +6,7 @@ from PlayerDB import PlayerDB
 from Tokens import webhook, bot_token
 from RidersGate import RidersGate
 from Boundry import Boundry, Checkpoint
-import asyncio
+
 
 app = Flask(__name__)
 
@@ -54,7 +54,7 @@ def on_boundry_exit(boundry_guid):
     return player.on_boundry_exit(boundry_guid, boundry)
 
 @app.route("/API/DESCENDERS/ON-CHECKPOINT-ENTER/<checkpoint_num>")
-async def on_checkpoint_enter(checkpoint_num):
+def on_checkpoint_enter(checkpoint_num):
     player = get_player_from_req(request)
     client_time = request.args.get("client_time")
     trail_name = request.args.get("trail_name")
