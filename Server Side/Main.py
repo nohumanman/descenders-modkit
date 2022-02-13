@@ -37,7 +37,7 @@ def on_boundry_enter(boundry_guid):
     player = get_player_from_req(request)
     trail_name = request.args.get("trail_name")
     client_time = request.args.get("client_time")
-    logging.info(f'''Player {player.steam_name} (id {player.steam_id}) on {player.world} has entered boundry on trail "{trail_name}"''')
+    logging.info(f'''Player {player.steam_name} (id {player.steam_id}) on {player.world} has entered boundry on trail "{trail_name}" with client time {client_time}''')
     boundry = Boundry(float(client_time))
     player.on_boundry_enter(boundry_guid, boundry)
     player.trail = trail_name
@@ -48,7 +48,7 @@ def on_boundry_exit(boundry_guid):
     player = get_player_from_req(request)
     trail_name = request.args.get("trail_name")
     client_time = request.args.get("client_time")
-    logging.info(f'''Player {player.steam_name} (id {player.steam_id}) on {player.world} has exited the boundry on trail "{trail_name}"''')
+    logging.info(f'''Player {player.steam_name} (id {player.steam_id}) on {player.world} has exited the boundry on trail "{trail_name}" with client time {client_time}''')
     boundry = Boundry(float(client_time))
     player.trail = trail_name
     return player.on_boundry_exit(boundry_guid, boundry)
