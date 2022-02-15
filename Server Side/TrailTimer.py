@@ -1,5 +1,8 @@
 import time
 from PlayerDB import PlayerDB
+import requests
+import random
+from Tokens import webhook
 
 
 class TimerNotStarted(Exception):
@@ -28,6 +31,47 @@ class TrailTimer():
 
     def end_timer(self):
         self.started = False
+        try:
+            print(PlayerDB.get_fastest_split_times(self.player.trail))
+            fastest_times = PlayerDB.get_fastest_split_times(self.player.trail)
+            fastest_time = fastest_times[len(fastest_times)-1]
+            if self.times[len(self.times)-1] < fastest_time:
+                print("New Fastest Time!")
+                faster_amount = round(fastest_time - self.times[len(self.times)-1], 4)
+                emojis = ["🎉"]
+                data = {
+                    "content" : f"There's a new Time on {self.current_trail}!",
+                    "username" : "Descenders Gear Hub"
+                }
+                data["embeds"] = [
+                    {
+                        "description" : f"🎉🎉 00:00:000 on {self.current_trail}!",
+                        "title" : f"[Descenders Split Timer](https://gear-hub.nohumanman.com)",
+                        "author" : {
+                            "name": f"{self.steam_name}",
+                            "url": "",
+                            "icon_url": f"{self.avatar_src}"
+                        },
+                    }
+                ]
+                        
+                content = ""
+                content += random.choice(emojis) * 3
+                content += "\n"
+                congrats = ["Congratulations to", "Congrats to", "GG", "Well raced", "Good job", "Well done"]
+                content += random.choice(congrats)
+                content += f" **{self.steam_name}** "
+                quickestest = ["fastest"]
+                content += f"for the new " + random.choice(quickestest) + f" time on {self.player.trail} in {self.current_world}!"
+                content += f"\nIt's {round(faster_amount, 5)} seconds faster than the previous best 🔥"
+                data = {
+                    "content": content,
+                    "username": "Descenders Competitive"
+                }
+                result = requests.post(webhook, json = data)
+                
+        except Exception as e:
+            print(e)
         PlayerDB.submit_time(
             self.player.steam_id,
             self.times,
