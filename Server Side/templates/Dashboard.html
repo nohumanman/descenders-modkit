@@ -90,22 +90,14 @@
                             <v-row no-gutters>
                                 <v-col v-for="trail in trails" style="padding: 30px;" cols="12" sm="4">
                                     <v-card width="700" elevation="5">
-                                        <v-img :src="trail.src"></v-img>
+                                        <v-img :src="trail.trail_src"></v-img>
                                         <v-card-title>[[trail.trail_name]]</v-card-title>
                                         <v-card-text>
-                                            Total Checkpoints: [[trail.total_checkpoints]]<br>
-                                            Times Raced: [[trail.times_raced]]<br>
-                                            World Name: [[trail.world_name]]
+                                            World Name: [[trail.world_name]]<br>
+                                            Downhill Permitted? [[trail.downhill]]<br>
+                                            Enduro Permitted? [[trail.enduro]]<br>
+                                            Hardtail permitted? [[trail.hardtail]]
                                         </v-card-text>
-                                        <v-sparkline
-                                            :fill="fill"
-                                            :gradient="selectedGradient"
-                                            :line-width="width"
-                                            :padding="padding"
-                                            :smooth="radius "
-                                            :value="trail.timestamps"
-                                        >
-                                        </v-sparkline>
                                     </v-card>
                                 </v-col>
                             </v-row>

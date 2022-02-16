@@ -156,14 +156,11 @@ class PlayerDB():
         times = [
             {
                 "trail_name" : time[0],
-                "total_checkpoints" : time[1],
-                "times_raced" : time[2],
-                "world_name" : time[3],
-                "downhill" : time[4],
-                "enduro" : time[5],
-                "hardtail" : time[6],
-                "timestamps" : PlayerDB.get_times_trail_ridden(time[0]),
-                "src" : time[7]
+                "trail_src" : time[1],
+                "world_name" : time[2],
+                "downhill" : time[3],
+                "enduro" : time[4],
+                "hardtail" : time[5],
             }
             for time in times_req]
         return times
