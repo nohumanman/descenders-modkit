@@ -1,4 +1,3 @@
-from http.client import GATEWAY_TIMEOUT
 import socket
 
 class NetPlayer():
