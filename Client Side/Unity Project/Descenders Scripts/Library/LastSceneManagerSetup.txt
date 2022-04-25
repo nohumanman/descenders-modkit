@@ -1,4 +1,0 @@
-sceneSetups:
-- path: Assets/DESCENDERS SCRIPTS/Master.unity
-  isLoaded: 1
-  isActive: 1
