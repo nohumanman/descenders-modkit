@@ -8,7 +8,7 @@ class NetPlayer():
         self.steam_name = None
         self.world_name = None
         self.gates = []
-        self.send("PROBE")
+        self.send("SUCCESS")
 
     def send(self, data : str):
         self.conn.sendall((data + "\n").encode())
