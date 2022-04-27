@@ -1,17 +1,17 @@
 import socket
 
 operations = {
-    "STEAM_ID" : lambda (netPlayer, data) : netPlayer.steam_id = data[1],
-    "STEAM_NAME" : lambda (netPlayer, data) : netPlayer.steam_name = data[1],
-    "WORLD_NAME" : lambda (netPlayer, data) : netPlayer.world_name = data[1],
-    "BOUNDRY_ENTER" : lambda (netPlayer, data) : netPlayer.on_boundry_enter(data[1], data[2])
-    "BOUNDRY_EXIT" : lambda (netPlayer, data) : netPlayer.on_boundry_exit(data[1], data[2]),
-    "CHECKPOINT_ENTER" : lambda (netPlayer, data) : netPlayer.on_checkpoint_enter(data[1], data[2], data[3]),
-    "RESPAWN" : lambda (netPlayer, data) : netPlayer.on_respawn(),
-    "MAP_ENTER" : lambda (netPlayer, data) : netPlayer.on_map_enter(data[1], data[2]),
-    "MAP_EXIT" : lambda (netPlayer, data) : netPlayer.on_map_exit(),
-    "BIKE_SWITCH" : lambda (netPlayer, data) : netPlayer.on_bike_switch(data[1], data[2]),
-    "GATE_NAME" : lambda (netPlayer, data) : if (data_list[1] not in netPlayer.gates): netPlayer.gates.append(data_list[1])
+    "STEAM_ID" : lambda netPlayer, data : netPlayer.set_steam_id(data[1]),
+    "STEAM_NAME" : lambda netPlayer, data : netPlayer.set_steam_name(data[1]),
+    "WORLD_NAME" : lambda netPlayer, data : netPlayer.set_world_name(data[1]),
+    "BOUNDRY_ENTER" : lambda netPlayer, data : netPlayer.on_boundry_enter(data[1], data[2]),
+    "BOUNDRY_EXIT" : lambda netPlayer, data : netPlayer.on_boundry_exit(data[1], data[2]),
+    "CHECKPOINT_ENTER" : lambda netPlayer, data : netPlayer.on_checkpoint_enter(data[1], data[2], data[3]),
+    "RESPAWN" : lambda netPlayer, data : netPlayer.on_respawn(),
+    "MAP_ENTER" : lambda netPlayer, data : netPlayer.on_map_enter(data[1], data[2]),
+    "MAP_EXIT" : lambda netPlayer, data : netPlayer.on_map_exit(),
+    "BIKE_SWITCH" : lambda netPlayer, data : netPlayer.on_bike_switch(data[1], data[2]),
+    "GATE_NAME" : lambda netPlayer, data : netPlayer.gates.append(data_list[1]) if (data_list[1] not in netPlayer.gates) else False
 }
 
 class NetPlayer():
@@ -22,6 +22,15 @@ class NetPlayer():
         self.world_name = None
         self.gates = []
         self.send("SUCCESS")
+
+    def set_steam_name(self, steam_name):
+        self.steam_name = steam_name
+    
+    def set_steam_id(self, steam_id):
+        self.steam_id = steam_id
+
+    def set_world_name(self, world_name):
+        self.world_name = world_name
 
     def send(self, data : str):
         self.conn.sendall((data + "\n").encode())
