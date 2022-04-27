@@ -11,7 +11,7 @@ operations = {
     "MAP_ENTER" : lambda netPlayer, data : netPlayer.on_map_enter(data[1], data[2]),
     "MAP_EXIT" : lambda netPlayer, data : netPlayer.on_map_exit(),
     "BIKE_SWITCH" : lambda netPlayer, data : netPlayer.on_bike_switch(data[1], data[2]),
-    "GATE_NAME" : lambda netPlayer, data : netPlayer.gates.append(data_list[1]) if (data_list[1] not in netPlayer.gates) else False
+    "GATE_NAME" : lambda netPlayer, data : netPlayer.gates.append(data[1]) if (data[1] not in netPlayer.gates) else False
 }
 
 class NetPlayer():
@@ -38,7 +38,7 @@ class NetPlayer():
     def handle_data(self, data : str):
         if data == "":
             return
-        print(f"Handling data '{data}'")
+        print(f"From {self.steam_name} Handling data '{data}'")
         data_list = data.split("|")
         for operator in operations:
             if data.startswith(operator):
@@ -46,8 +46,13 @@ class NetPlayer():
 
     def recieve(self):
         while True:
-            data = self.conn.recv(1024)
+            try:
+                data = self.conn.recv(1024)
+            except ConnectionResetError:
+                print("User has disconnected, breaking loop")
+                break
             if not data:
+                print("No data!!!!")
                 break
             for piece in data.decode().split("\n"):
                 self.handle_data(piece)
@@ -67,7 +72,7 @@ class NetPlayer():
     def on_boundry_exit(self, boundry_guid, client_time):
         pass
 
-    def on_checkpoint_enter(self, checkpoint_num, total_checkpoints, client_time):
+    def on_checkpoint_enter(self, trail_name, type, total_checkpoints, client_time):
         pass
 
     def on_map_enter(self, map_id, map_name):
