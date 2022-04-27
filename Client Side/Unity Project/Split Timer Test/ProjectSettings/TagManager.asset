@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Checkpoint
+  - Startline
+  - Finishline
+  - Deathzone
+  - Nobailzone
+  - Trail
   layers:
   - Default
   - TransparentFX
@@ -13,11 +19,11 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Bike
+  - Cyclist
+  - TerrainPreview
+  - Attributes
+  - Bike_Collidable
   - 
   - 
   - 

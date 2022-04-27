@@ -1,4 +1,6 @@
 import socket
+import time
+from PlayerDB import PlayerDB
 
 operations = {
     "STEAM_ID" : lambda netPlayer, data : netPlayer.set_steam_id(data[1]),
@@ -20,6 +22,7 @@ class NetPlayer():
         self.steam_id = None
         self.steam_name = None
         self.world_name = None
+        self.time_started = time.time()
         self.gates = []
         self.send("SUCCESS")
 
@@ -66,17 +69,17 @@ class NetPlayer():
     def on_bike_switch(self, old_bike : str, new_bike : str):
         pass
 
-    def on_boundry_enter(self, boundry_guid, client_time):
+    def on_boundry_enter(self, trail_name, boundry_guid):
         pass
 
-    def on_boundry_exit(self, boundry_guid, client_time):
+    def on_boundry_exit(self, trail_name, boundry_guid):
         pass
 
-    def on_checkpoint_enter(self, trail_name, type, total_checkpoints, client_time):
+    def on_checkpoint_enter(self, trail_name, type, total_checkpoints):
         pass
 
     def on_map_enter(self, map_id, map_name):
-        pass
+        self.time_started = time.time()
 
     def on_map_exit(self):
-        pass
+        PlayerDB.end_session(self.steam_id, self.time_started, time.time(), self.world_name)

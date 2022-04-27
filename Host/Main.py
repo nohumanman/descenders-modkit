@@ -1,7 +1,7 @@
 from SocketServer import SocketServer
 import threading
 
-HOST = "127.0.0.1"
+HOST = "172.26.14.70"
 PORT = 65432
 
 webserverHost = SocketServer(HOST, PORT)

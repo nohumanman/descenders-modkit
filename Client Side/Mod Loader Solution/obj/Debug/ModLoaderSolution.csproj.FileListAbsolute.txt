@@ -1,0 +1,14 @@
+F:\Projects\Descenders-Mod-Loader-Template\Visual Studio Solution\Descenders Mod Loader Solution\bin\Debug\RocketLeagueMod.dll
+F:\Projects\Descenders-Mod-Loader-Template\Visual Studio Solution\Descenders Mod Loader Solution\bin\Debug\RocketLeagueMod.pdb
+F:\Projects\Descenders-Mod-Loader-Template\Visual Studio Solution\Descenders Mod Loader Solution\obj\Debug\ModLoaderSolution.csprojAssemblyReference.cache
+F:\Projects\Descenders-Mod-Loader-Template\Visual Studio Solution\Descenders Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.CoreCompileInputs.cache
+F:\Projects\Descenders-Mod-Loader-Template\Visual Studio Solution\Descenders Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.CopyComplete
+F:\Projects\Descenders-Mod-Loader-Template\Visual Studio Solution\Descenders Mod Loader Solution\obj\Debug\RocketLeagueMod.dll
+F:\Projects\Descenders-Mod-Loader-Template\Visual Studio Solution\Descenders Mod Loader Solution\obj\Debug\RocketLeagueMod.pdb
+F:\Projects\Descenders-Split-Timer\Client Side\Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.AssemblyReference.cache
+F:\Projects\Descenders-Split-Timer\Client Side\Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.CoreCompileInputs.cache
+F:\Projects\Descenders-Split-Timer\Client Side\Mod Loader Solution\bin\Debug\ModLoaderSolution.dll
+F:\Projects\Descenders-Split-Timer\Client Side\Mod Loader Solution\bin\Debug\ModLoaderSolution.pdb
+F:\Projects\Descenders-Split-Timer\Client Side\Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.CopyComplete
+F:\Projects\Descenders-Split-Timer\Client Side\Mod Loader Solution\obj\Debug\ModLoaderSolution.dll
+F:\Projects\Descenders-Split-Timer\Client Side\Mod Loader Solution\obj\Debug\ModLoaderSolution.pdb
