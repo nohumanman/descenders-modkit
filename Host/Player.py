@@ -1,5 +1,19 @@
 import socket
 
+operations = {
+    "STEAM_ID" : lambda (netPlayer, data) : netPlayer.steam_id = data[1],
+    "STEAM_NAME" : lambda (netPlayer, data) : netPlayer.steam_name = data[1],
+    "WORLD_NAME" : lambda (netPlayer, data) : netPlayer.world_name = data[1],
+    "BOUNDRY_ENTER" : lambda (netPlayer, data) : netPlayer.on_boundry_enter(data[1], data[2])
+    "BOUNDRY_EXIT" : lambda (netPlayer, data) : netPlayer.on_boundry_exit(data[1], data[2]),
+    "CHECKPOINT_ENTER" : lambda (netPlayer, data) : netPlayer.on_checkpoint_enter(data[1], data[2], data[3]),
+    "RESPAWN" : lambda (netPlayer, data) : netPlayer.on_respawn(),
+    "MAP_ENTER" : lambda (netPlayer, data) : netPlayer.on_map_enter(data[1], data[2]),
+    "MAP_EXIT" : lambda (netPlayer, data) : netPlayer.on_map_exit(),
+    "BIKE_SWITCH" : lambda (netPlayer, data) : netPlayer.on_bike_switch(data[1], data[2]),
+    "GATE_NAME" : lambda (netPlayer, data) : if (data_list[1] not in netPlayer.gates): netPlayer.gates.append(data_list[1])
+}
+
 class NetPlayer():
     def __init__(self, conn : socket):
         self.conn = conn
@@ -17,29 +31,9 @@ class NetPlayer():
             return
         print(f"Handling data '{data}'")
         data_list = data.split("|")
-        if data.startswith("STEAM_ID"):
-            self.steam_id = data_list[1]
-        elif data.startswith("STEAM_NAME"):
-            self.steam_name = data_list[1]
-        elif data.startswith("WORLD_NAME"):
-            self.world_name = data_list[1]
-        elif data.startswith("BOUNDRY_ENTER"):
-            self.on_boundry_enter(data_list[1], data_list[2])
-        elif data.startswith("BOUNDRY_EXIT"):
-            self.on_boundry_exit(data_list[1], data_list[2])
-        elif data.startswith("CHECKPOINT_ENTER"):
-            self.on_checkpoint_enter(data_list[1], data_list[2], data_list[3])
-        elif data.startswith("RESPAWN"):
-            self.on_respawn()
-        elif data.startswith("MAP_ENTER"):
-            self.on_map_enter(data_list[1], data_list[2])
-        elif data.startswith("MAP_EXIT"):
-            self.on_map_exit()
-        elif data.startswith("BIKE_SWITCH"):
-            self.on_bike_switch(data_list[1], data_list[2])
-        elif data.startswith("GATE_NAME"):
-            if (data_list[1] not in self.gates):
-                self.gates.append(data_list[1])
+        for operator in operations:
+            if data.startswith(operator):
+                operations[operator](self, data_list)
 
     def recieve(self):
         while True:
