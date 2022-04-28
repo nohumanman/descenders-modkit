@@ -16,8 +16,8 @@ namespace SplitTimer
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
                 PlayerInfo.Instance.OnBoundryEnter(
-                    this.gameObject.GetHashCode().ToString(),
-                    trail.clientTime
+                    trail.name,
+                    this.gameObject.GetHashCode().ToString()
                 );
             }
         }
@@ -26,8 +26,8 @@ namespace SplitTimer
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
                 PlayerInfo.Instance.OnBoundryExit(
-                    this.gameObject.GetHashCode().ToString(),
-                    5
+                    trail.name,
+                    this.gameObject.GetHashCode().ToString()
                 );
             }
         }

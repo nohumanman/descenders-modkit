@@ -41,14 +41,14 @@ namespace SplitTimer{
 		public void OnBikeSwitch(string old_bike, string new_bike){
 			NetClient.Instance.SendData("BIKE_SWITCH|" + old_bike + "|" + new_bike);
 		}
-		public void OnBoundryEnter(string boundry_guid, float client_time){
-			NetClient.Instance.SendData("BOUNDRY_ENTER|" + boundry_guid + "|" + client_time.ToString());
+		public void OnBoundryEnter(string trail_name, string boundry_guid){
+			NetClient.Instance.SendData("BOUNDRY_ENTER|" + trail_name + "|" + boundry_guid);
 		}
-		public void OnBoundryExit(string boundry_guid, float client_time){
-			NetClient.Instance.SendData("BOUNDRY_EXIT|" + boundry_guid + "|" + client_time.ToString());
+		public void OnBoundryExit(string trail_name, string boundry_guid){
+			NetClient.Instance.SendData("BOUNDRY_EXIT|" + trail_name + "|" + boundry_guid);
 		}
-		public void OnCheckpointEnter(string trail_name, string type, int total_checkpoints, float client_time){
-			NetClient.Instance.SendData("CHECKPOINT_ENTER|" + trail_name + "|" + type + "|" + total_checkpoints.ToString() + "|" + client_time.ToString());
+		public void OnCheckpointEnter(string trail_name, string type, int total_checkpoints){
+			NetClient.Instance.SendData("CHECKPOINT_ENTER|" + trail_name + "|" + type + "|" + total_checkpoints.ToString());
 		}
 		public void OnMapEnter(string map_id, string map_name){
 			NetClient.Instance.SendData("MAP_ENTER|" + map_id + "|" + map_name);

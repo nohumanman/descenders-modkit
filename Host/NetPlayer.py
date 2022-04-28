@@ -1,6 +1,7 @@
 import socket
 import time
 from PlayerDB import PlayerDB
+from TrailTimer import TrailTimer
 
 operations = {
     "STEAM_ID" : lambda netPlayer, data : netPlayer.set_steam_id(data[1]),
@@ -19,11 +20,11 @@ operations = {
 class NetPlayer():
     def __init__(self, conn : socket):
         self.conn = conn
+        self.trails = {}
         self.steam_id = None
         self.steam_name = None
         self.world_name = None
         self.time_started = time.time()
-        self.gates = []
         self.send("SUCCESS")
 
     def set_steam_name(self, steam_name):
@@ -64,22 +65,37 @@ class NetPlayer():
         self.send("BAN|" + reason + "|" + method)
 
     def on_respawn(self):
-        pass
+        for trail in self.trails:
+            self.trails[trail].invalidate_timer()
+
+    def get_trail(self, trail_name) -> TrailTimer:
+        if trail_name not in self.trails:
+            self.trails[trail_name] = TrailTimer(trail_name)
+        return self.trails[trail_name]
 
     def on_bike_switch(self, old_bike : str, new_bike : str):
         pass
 
-    def on_boundry_enter(self, trail_name, boundry_guid):
-        pass
+    def on_boundry_enter(self, trail_name : str, boundry_guid : str):
+        trail = self.get_trail(trail_name)
+        trail.add_boundary(boundry_guid)
 
-    def on_boundry_exit(self, trail_name, boundry_guid):
-        pass
+    def on_boundry_exit(self, trail_name : str, boundry_guid : str):
+        trail = self.get_trail(trail_name)
+        trail.remove_boundary(boundry_guid)
 
-    def on_checkpoint_enter(self, trail_name, type, total_checkpoints):
-        pass
+    def on_checkpoint_enter(self, trail_name : str, type : str, total_checkpoints : str):
+        self.get_trail(trail_name).total_checkpoints = int(total_checkpoints)
+        if type == "Start":
+            self.get_trail(trail_name).start_timer(total_checkpoints)
+        if type == "Intermediate":
+            self.get_trail(trail_name).checkpoint()
+        if type == "Finish":
+            self.get_trail(trail_name).end_timer()
 
     def on_map_enter(self, map_id, map_name):
         self.time_started = time.time()
 
     def on_map_exit(self):
+        self.trails = {}
         PlayerDB.end_session(self.steam_id, self.time_started, time.time(), self.world_name)

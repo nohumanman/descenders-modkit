@@ -15,6 +15,7 @@ namespace SplitTimer{
 		public RidersGate[] ridersGates;
 		private TcpClient socketConnection;
 		private Thread clientReceiveThread;
+		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
 		void Awake(){
@@ -28,6 +29,14 @@ namespace SplitTimer{
 			ConnectToTcpServer();
 			ridersGates = GameObject.FindObjectsOfType<RidersGate>();
 		}
+		void Update()
+        {
+			foreach(string message in messages)
+            {
+				MessageRecieved(message);
+            }
+			messages.Clear();
+        }
 		private void ConnectToTcpServer () {
 			try {
 				clientReceiveThread = new Thread (new ThreadStart(ListenForData));
@@ -42,16 +51,17 @@ namespace SplitTimer{
 			try {
 				socketConnection = new TcpClient(ip, port);
 				Byte[] bytes = new Byte[1024];
-				while (true) {			
+				while (true) {
 					using (NetworkStream stream = socketConnection.GetStream()) { 					
 						int length; 								
 						while ((length = stream.Read(bytes, 0, bytes.Length)) != 0) { 						
 							var incommingData = new byte[length]; 						
 							Array.Copy(bytes, 0, incommingData, 0, length); 						
 							string serverMessage = Encoding.ASCII.GetString(incommingData);
-							string[] messages = serverMessage.Split('\n');
-							foreach(string message in messages){
-								MessageRecieved(message);
+							string[] serverMessages = serverMessage.Split('\n');
+							foreach(string message in serverMessages)
+							{
+								messages.Add(message);
 							}
 						}
 					}
@@ -83,6 +93,10 @@ namespace SplitTimer{
 				foreach (RidersGate ridersGate in ridersGates) {
 					ridersGate.TriggerGate(randomTime);
 				}
+			}
+			if (message.StartsWith("TOGGLE_SPECTATOR"))
+            {
+				GetComponent<Utilities>().ToggleSpectator();
 			}
 			if (message.StartsWith("SPECTATE"))
             {

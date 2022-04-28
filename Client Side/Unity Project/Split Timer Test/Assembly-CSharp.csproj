@@ -231,6 +231,15 @@
  <Reference Include="UnityEngine.SpatialTracking">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
  </Reference>
+ <Reference Include="ModTool.Interface">
+ <HintPath>F:/Projects/Descenders-Split-Timer/Client Side/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Interface.dll</HintPath>
+ </Reference>
+ <Reference Include="ModTool.Shared">
+ <HintPath>F:/Projects/Descenders-Split-Timer/Client Side/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Shared.dll</HintPath>
+ </Reference>
+ <Reference Include="Mono.Cecil">
+ <HintPath>F:/Projects/Descenders-Split-Timer/Client Side/Unity Project/Split Timer Test/Assets/ModTool/Mono.Cecil/Mono.Cecil.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>C:/Users/point/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/UnityEngine.Analytics.dll</HintPath>
  </Reference>
@@ -239,15 +248,6 @@
  </Reference>
  <Reference Include="UnityEngine.StandardEvents">
  <HintPath>C:/Users/point/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.10/UnityEngine.StandardEvents.dll</HintPath>
- </Reference>
- <Reference Include="Mono.Cecil">
- <HintPath>F:/Projects/Descenders-Split-Timer/Client Side/Unity Project/Split Timer Test/Assets/ModTool/Mono.Cecil/Mono.Cecil.dll</HintPath>
- </Reference>
- <Reference Include="ModTool.Interface">
- <HintPath>F:/Projects/Descenders-Split-Timer/Client Side/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Interface.dll</HintPath>
- </Reference>
- <Reference Include="ModTool.Shared">
- <HintPath>F:/Projects/Descenders-Split-Timer/Client Side/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Shared.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

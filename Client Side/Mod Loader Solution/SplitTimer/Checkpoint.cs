@@ -16,7 +16,7 @@ namespace SplitTimer
         {
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-                PlayerInfo.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, trail.clientTime);
+                PlayerInfo.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count);
             }
         }
     }

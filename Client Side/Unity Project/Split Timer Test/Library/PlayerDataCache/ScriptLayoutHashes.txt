@@ -7,3 +7,4 @@ SceneListEnd?
 05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.0-Assembly-CSharp.dll:APILoaderScript.ModLoader
 50bf7c1edb20d61bbd0e109df11a7464 SplitTimerTest-0.0.0-Assembly-CSharp.dll:.JsonMapInfo
 6731c9dcfe8b17f5c0729fd5412af4fd SplitTimerTest-0.0.0-Assembly-CSharp.dll:.JsonRidersGate
+9738de0ee0316234a6878a3fa25b1a0a SplitTimerTest-0.0.0-Assembly-CSharp.dll:.TimerInfo

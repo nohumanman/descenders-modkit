@@ -733,7 +733,6 @@ namespace ModLoaderSolution
         {
             return GetPlayer().GetComponent<Cyclist>().onGroundFactor;
         }
-
         public bool isBailed()
         {
             //Y~IX\u0084YS
@@ -767,13 +766,17 @@ namespace ModLoaderSolution
             mm.SwitchToSpectate();
             Debug.Log("utilities.SwitchSpectate");
         }
-
+        public void ToggleSpectator()
+        {
+            MultiManager mm = MonoBehaviour.FindObjectOfType<MultiManager>();
+            mm.ToggleSpectator();
+            Debug.Log("utilities.SwitchSpectate");
+        }
         public void ClearSessionMarker()
         {
             PlayerInfoImpact pi = GetPlayerInfoImpact();
             pi.ClearSessionMarker();
         }
-
         public void ResetPlayer()
         {
             Debug.Log("utilities.ResetPlayer");
@@ -828,7 +831,6 @@ namespace ModLoaderSolution
             pi.RespawnOnTrack();
             Debug.Log("Utilities.RespawnOnTrack");
         }
-
         public void RespawnAtStartline()
         {
             PlayerInfoImpact pi = GetPlayerInfoImpact() ;
