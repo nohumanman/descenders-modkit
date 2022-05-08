@@ -72,6 +72,14 @@ var app = new Vue({
             }
             this.SubmitEval(this.controlled_player.id, "MODIFY_SPEED|" + timeScale.toString());
         },
+        changeRouteAll(timeScale){
+            if (timeScale == null){
+                timeScale = 1;
+            }
+            this.ids.forEach(function(id){
+                app.SubmitEval(id.id, "MODIFY_SPEED|" + timeScale.toString());
+            });
+        },
         setSelf(steam_id){
             this.self = steam_id
             window.localStorage.setItem('self', steam_id);

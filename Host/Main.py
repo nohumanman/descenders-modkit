@@ -51,7 +51,7 @@ import random
 shouldRandomise = True
 def riders_gate():
     while True:
-        time.sleep(10)
+        time.sleep(15)
         if (shouldRandomise):
             rand = str(random.randint(0, 5000) / 1000)
             for player in webserverHost.players:
