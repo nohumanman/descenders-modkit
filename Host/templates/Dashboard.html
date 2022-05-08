@@ -41,15 +41,6 @@
                     <br>
                     <h1 style="text-align:center; font-size:50px; text-decoration: underline;">Descenders Split Timer</h1>
                     <br>
-                    <v-slider
-                        hint="Time.timeScale"
-                        v-on:change="changeRouteAll"
-                        max="4"
-                        min="0"
-                        step="0.1"
-                        thumb-label="always"
-                    ></v-slider>
-                    <br>
                     <v-btn @click="RidersGate();">RIDERS GATE</v-btn>
                     <v-btn @click="Randomise();">Randomise</v-btn>
                     <div style="background-color:rgba(16, 120, 168, 0.292); width:50%; margin:0 auto; border-radius: 10px;">
@@ -61,7 +52,21 @@
                         ></v-text-field>
                     </div>
                     <v-row>
-                        <v-col v-if="search_value == '' || id.name.includes(search_value)"  v-for="id in ids" style="padding:40px;">
+                        <v-col style="padding:40px;">
+                            <v-card width="400px">
+                                <h1>All Players</h1>
+                                <br><br>
+                                <v-slider
+                                    hint="Time.timeScale"
+                                    v-on:change="changeRouteAll"
+                                    max="4"
+                                    min="0"
+                                    step="0.1"
+                                    thumb-label="always"
+                                ></v-slider>
+                            </v-card>
+                        </v-col>
+                        <v-col v-if="search_value == '' || id.name.includes(search_value)" v-for="id in ids" style="padding:40px;">
                             <v-card width="400px" :loading="loading">
                                 <v-card-title>
                                     <v-avatar size="75">
