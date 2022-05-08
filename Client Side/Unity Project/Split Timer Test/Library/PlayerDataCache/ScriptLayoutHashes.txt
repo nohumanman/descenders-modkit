@@ -1,10 +1,16 @@
 WindowsStandalone
 PlayerPath?
-F:/Projects/Descenders-Split-Timer/Client Side/Unity Project/Split Timer Test/Temp/Split Timer Test/Windows/split timer test.scenes
+E:/Descenders-Split-Timer/Client Side/Unity Project/Split Timer Test/Temp/Split Timer Test/Windows/split timer test.scenes
 SceneListBegin?
 Assets/Split Timer Test-sample.unity
 SceneListEnd?
+0b0399c4b7b49c440fa718ace4ac585a UnityEngine.UI.dll:UnityEngine.UI.CanvasScaler
+eb1b98eae58d1c3cddd6ef4553520642 UnityEngine.UI.dll:UnityEngine.EventSystems.EventSystem
+a2313de45ed47f1a12bb2d80e8b2de54 UnityEngine.UI.dll:UnityEngine.UI.GraphicRaycaster
+a4ef7c59ab7201ab109de36901ceb49b UnityEngine.UI.dll:UnityEngine.EventSystems.StandaloneInputModule
+769e576fcd3f60fa29a2cccb9e8127d9 UnityEngine.UI.dll:UnityEngine.UI.Text
 05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.0-Assembly-CSharp.dll:APILoaderScript.ModLoader
 50bf7c1edb20d61bbd0e109df11a7464 SplitTimerTest-0.0.0-Assembly-CSharp.dll:.JsonMapInfo
 6731c9dcfe8b17f5c0729fd5412af4fd SplitTimerTest-0.0.0-Assembly-CSharp.dll:.JsonRidersGate
 9738de0ee0316234a6878a3fa25b1a0a SplitTimerTest-0.0.0-Assembly-CSharp.dll:.TimerInfo
+05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.0-Assembly-CSharp.dll:.TimerText

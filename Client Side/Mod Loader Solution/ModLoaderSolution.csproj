@@ -39,6 +39,10 @@
     <None Include=".vs\Universal Race Mod\v16\.suo" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SplitTimer\BikeSwitcher.cs" />
+    <Compile Include="SplitTimer\TimerText.cs" />
+    <Compile Include="SplitTimer\TimeModifier.cs" />
+    <Compile Include="SplitTimer\SpeedBoost.cs" />
     <Compile Include="SplitTimer\Boundary.cs" />
     <Compile Include="SplitTimer\Checkpoint.cs" />
     <Compile Include="SplitTimer\Initialisation.cs" />
