@@ -46,6 +46,11 @@ class NetPlayer():
         self.time_started = time.time()
         self.send("SUCCESS")
 
+    def get_total_time(self, onWorld=False):
+        if onWorld:
+            return DBMS.get_time_on_world(self.steam_id, self.world_name)
+        return DBMS.get_time_on_world(self.steam_id)
+
     def get_avatar_src(self):
         if self.__avatar_src is not None:
             return self.__avatar_src
