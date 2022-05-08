@@ -1,7 +1,9 @@
 import socket
 import time
-from PlayerDB import PlayerDB
+from DBMS import DBMS
 from TrailTimer import TrailTimer
+import requests
+from Tokens import steam_api_key
 
 operations = {
     "STEAM_ID" : lambda netPlayer, data : netPlayer.set_steam_id(data[1]),
@@ -13,22 +15,42 @@ operations = {
     "RESPAWN" : lambda netPlayer, data : netPlayer.on_respawn(),
     "MAP_ENTER" : lambda netPlayer, data : netPlayer.on_map_enter(data[1], data[2]),
     "MAP_EXIT" : lambda netPlayer, data : netPlayer.on_map_exit(),
-    "BIKE_SWITCH" : lambda netPlayer, data : netPlayer.on_bike_switch(data[1], data[2]),
-    "GATE_NAME" : lambda netPlayer, data : netPlayer.gates.append(data[1]) if (data[1] not in netPlayer.gates) else False
+    "BIKE_SWITCH" : lambda netPlayer, data : netPlayer.on_bike_switch(data[1], data[2])
 }
 
 class NetPlayer():
     def __init__(self, conn : socket):
         self.conn = conn
         self.trails = {}
+        self.__avatar_src = None
         self.steam_id = None
         self.steam_name = None
         self.world_name = None
         self.time_started = time.time()
         self.send("SUCCESS")
+        #while (self.steam_id == None
+        #        or self.steam_name == None
+        #        or self.world_name == None):
+        #    time.sleep(0.5)
+        #DBMS().update_player(self.steam_id, self.steam_name, self.get_avatar_src())
+
+    def get_avatar_src(self):
+        if self.__avatar_src is not None:
+            return self.__avatar_src
+        avatar_src_req = requests.get(f"https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={steam_api_key}&steamids={self.steam_id}")
+        try:
+            self.__avatar_src = avatar_src_req.json()["response"]["players"][0]["avatarfull"]
+        except KeyError:
+            self.__avatar_src = ""
+        return self.__avatar_src
 
     def set_steam_name(self, steam_name):
         self.steam_name = steam_name
+        data = {
+            "content" : f"{self.steam_name} has joined the server!",
+            "username" : "Split Timer"
+        }
+        requests.post("https://discord.com/api/webhooks/972656466748141628/uejju8_qlDscdimgiGP3wnf9s1Igwazyrlxm6Hb9Aary3OhKYU_sbwuMp3sLWt8cUxjL", json=data)
     
     def set_steam_id(self, steam_id):
         self.steam_id = steam_id
@@ -60,21 +82,25 @@ class NetPlayer():
                 break
             for piece in data.decode().split("\n"):
                 self.handle_data(piece)
+        del(self)
 
     def ban(self, reason, method):
         self.send("BAN|" + reason + "|" + method)
 
-    def on_respawn(self):
+    def invalidate_all_trails(self, reason : str):
         for trail in self.trails:
-            self.trails[trail].invalidate_timer()
+            self.trails[trail].invalidate_timer(reason)
+
+    def on_respawn(self):
+        self.invalidate_all_trails("You respawned!")
 
     def get_trail(self, trail_name) -> TrailTimer:
         if trail_name not in self.trails:
-            self.trails[trail_name] = TrailTimer(trail_name)
+            self.trails[trail_name] = TrailTimer(trail_name, self)
         return self.trails[trail_name]
 
     def on_bike_switch(self, old_bike : str, new_bike : str):
-        pass
+        self.invalidate_all_trails("You switched bikes!")
 
     def on_boundry_enter(self, trail_name : str, boundry_guid : str):
         trail = self.get_trail(trail_name)
@@ -98,4 +124,5 @@ class NetPlayer():
 
     def on_map_exit(self):
         self.trails = {}
-        PlayerDB.end_session(self.steam_id, self.time_started, time.time(), self.world_name)
+        DBMS.end_session(self.steam_id, self.time_started, time.time(), self.world_name)
+        self.conn.close()

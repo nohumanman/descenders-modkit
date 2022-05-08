@@ -1,6 +1,3 @@
-
-
-
 var app = new Vue({
     el: '#app',
     delimiters: ['[[', ']]'],
@@ -18,14 +15,73 @@ var app = new Vue({
     },
     }),
     data : {
-        ids : [{"id" : "123123", "command" : ""}],
+        ids : [{"name":"nohumanman", "id" : "123123", "command" : "", "steam_avatar_src" : "https://images.unsplash.com/photo-1566275529824-cca6d008f3da?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8&w=1000&q=80"}],
         suggested : ["SPECTATE|nohumanman", "SET_BIKE|1", "FREEZE_PLAYER", "UNFREEZE_PLAYER", "TOGGLE_CONTROL|true", "CLEAR_SESSION_MARKER", "RESET_PLAYER", "ADD_MODIFIER|FAKIEBALANCE", "ADD_MODIFIER|PUMPSTRENGTH", "RESPAWN_ON_TRACK", "RESPAWN_AT_START"],
+        controlling : false,
+        bike_types : [
+            {"name" : "Enduro", "val" : 0},
+            {"name" : "Hardtail", "val" : 2},
+            {"name" : "Downhill", "val" : 1}
+        ],
+        controlled_player : {},
+        loading : false,
+        search_value: "",
+        self : null,
+        command : "",
+        valee: "",
     },
     methods: {
-        SubmitEval(id){
-            $.get("/eval/" + id.id + "?order=" + id.command);
+        SubmitEval(id, eval_command){
+            $.get("/eval/" + id + "?order=" + eval_command);
+        },
+        Randomise(){
+            $.get("/randomise");
+        },
+        RidersGate(){
+            let num = Math.floor(Math.random() * (5 - 0 + 1) + 0)
+            app.ids.forEach(function(id){
+                $.get("/eval/" + id.id + "?order=RIDERSGATE|" + num.toString());
+            });
+        },
+        killPlayer(){
+            let x = confirm('Do you want to kill this player?')
+            if (x){
+                this.SubmitEval(this.controlled_player.id, "FREEZE_PLAYER")
+                this.SubmitEval(this.controlled_player, "UNFREEZE_PLAYER");
+            }
+        },
+        ToggleControl(id){
+            try{
+                let x = id.paused
+            }
+            catch(err){
+                id["paused"] = false;
+            }
+            if (id.paused == null || !id.paused) {
+                app.SubmitEval(id.id, 'TOGGLE_CONTROL|false');
+                id["paused"] = true;
+            }
+            else{
+                app.SubmitEval(id.id, 'TOGGLE_CONTROL|true');
+                id["paused"] = false;
+            }
+        },
+        changeRoute(timeScale){
+            if (timeScale == null){
+                timeScale = 1;
+            }
+            this.SubmitEval(this.controlled_player.id, "MODIFY_SPEED|" + timeScale.toString());
+        },
+        setSelf(steam_id){
+            this.self = steam_id
+            window.localStorage.setItem('self', steam_id);
+        },
+        Spectate(id){
+            app.SubmitEval(app.self, "SPECTATE|" + id.name);
         }
     }
 });
+
+app.self = window.localStorage.getItem('self');
 
 $.getJSON("/get", function(data){app.ids = data["ids"]})

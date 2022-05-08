@@ -2,8 +2,9 @@ import time
 import math
 
 class TrailTimer():
-    def __init__(self, trail_name):
+    def __init__(self, trail_name, network_player):
         self.trail_name = trail_name
+        self.network_player = network_player
         self.started = False
         self.times = []
         self.total_checkpoints = None
@@ -12,7 +13,7 @@ class TrailTimer():
 
     def add_boundary(self, boundary_guid):
         if len(self.__boundaries) == 0:
-            self.invalidate_timer()
+            self.invalidate_timer("No boundaries entered")
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
 
@@ -20,7 +21,7 @@ class TrailTimer():
         if boundary_guid in self.__boundaries:
             self.__boundaries.remove(boundary_guid)
         if len(self.__boundaries) == 0:
-            self.invalidate_timer()
+            self.invalidate_timer("Exited boundry without entering")
 
     def start_timer(self, total_checkpoints : int):
         self.started = True
@@ -32,14 +33,15 @@ class TrailTimer():
         if self.started:
             self.times.append(time.time() - self.time_started)
 
-    def invalidate_timer(self):
+    def invalidate_timer(self, reason : str):
         print("TIME INVALIDATED!!")
+        self.network_player.send(f"INVALIDATE_TIME|{reason}")
         self.started = False
         self.times = []
 
     def end_timer(self):
         if self.total_checkpoints is None:
-            self.invalidate_timer()
+            self.invalidate_timer("Didn't go through all checkpoints.")
         self.times.append(time.time() - self.time_started)
         if (len(self.times) == self.total_checkpoints-1):
             print(f"Times submitted: {self.times}")

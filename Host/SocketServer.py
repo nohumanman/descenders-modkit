@@ -17,8 +17,11 @@ class SocketServer():
         print("Watching Client")
         player = NetPlayer(conn)
         self.players.append(player)
-        with conn:
-            player.recieve()
+        try:
+            with conn:
+                player.recieve()
+        except OSError:
+            print("Client has disconnected")
         self.players.remove(player)
 
     def start(self):

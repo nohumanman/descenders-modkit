@@ -523,7 +523,6 @@ namespace ModLoaderSolution
             else
                 Debug.Log("Player not found: " + name);
         }
-
         public void SetBike(int bike)
         {
             UI_BikeSelection ui_BikeSelection = new UI_BikeSelection();
@@ -868,6 +867,15 @@ namespace ModLoaderSolution
         {
             yield return new WaitForSeconds(5f);
             LogUI.gameObject.SetActive(false);
+        }
+        public bool bailEnabled = false;
+        public void ToggleGod()
+        {
+            
+            PlayerInfoImpact pi = GetPlayerInfoImpact();
+            bailEnabled = !bailEnabled;
+            Debug.Log("Enabling Bail? " + bailEnabled.ToString());
+            pi.Nobail(bailEnabled);
         }
 
     }

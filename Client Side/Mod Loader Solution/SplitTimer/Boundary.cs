@@ -21,6 +21,11 @@ namespace SplitTimer
                 );
             }
         }
+        void Update()
+        {
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.U))
+                this.gameObject.GetComponent<MeshRenderer>().enabled = !this.gameObject.GetComponent<MeshRenderer>().enabled;
+        }
         void OnTriggerExit(Collider other)
         {
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")

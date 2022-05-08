@@ -18,12 +18,14 @@ namespace ModLoaderSolution
             }
             Debug.Log("ModLoaderSolution | Finished Mod Check");
             gameObject = new GameObject();
+            gameObject.name = "DescendersSplitTimerModLoaded";
             Debug.Log("ModLoaderSolution | GameObject Instantiated");
             gameObject.AddComponent<Utilities>();
             Debug.Log("ModLoaderSolution | Utilities added");
             gameObject.AddComponent<SplitTimer.Initialisation>();
             Debug.Log("ModLoaderSolution | FreeReign added");
             // gameObject.AddComponent<NetClient>();
+            //DontDestroyOnLoad(gameObject);
         }
         public static void Unload()
         {

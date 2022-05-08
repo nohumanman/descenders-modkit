@@ -15,6 +15,7 @@ namespace SplitTimer{
 		public RidersGate[] ridersGates;
 		private TcpClient socketConnection;
 		private Thread clientReceiveThread;
+		bool PlayerCollision = false;
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
@@ -26,14 +27,27 @@ namespace SplitTimer{
 			this.gameObject.AddComponent<Utilities>();
 		}
 		void Start () {
+			Debug.Log("connecting to tcp server");
 			ConnectToTcpServer();
 			ridersGates = GameObject.FindObjectsOfType<RidersGate>();
 		}
 		void Update()
         {
+			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
+            {
+				Physics.IgnoreLayerCollision(8, 8, PlayerCollision);
+				PlayerCollision = !PlayerCollision;
+			}
 			foreach(string message in messages)
             {
-				MessageRecieved(message);
+                try
+                {
+					MessageRecieved(message);
+				}
+				catch (Exception ex)
+                {
+					Debug.Log(ex);
+                }
             }
 			messages.Clear();
         }
@@ -88,9 +102,11 @@ namespace SplitTimer{
 					Application.Quit();
 			}
 			if (message.StartsWith("RIDERSGATE")) {
+				Debug.Log("Riderz Gate");
 				string[] gate = message.Split('|');
 				float randomTime = float.Parse(gate[1]);
 				foreach (RidersGate ridersGate in ridersGates) {
+					Debug.Log("GATE");
 					ridersGate.TriggerGate(randomTime);
 				}
 			}
@@ -142,6 +158,39 @@ namespace SplitTimer{
 			if (message.StartsWith("RESPAWN_AT_START"))
             {
 				gameObject.GetComponent<Utilities>().RespawnAtStartline();
+			}
+			if (message.StartsWith("INVALIDATE_TIME"))
+            {
+				string[] gate = message.Split('|');
+				string reason = gate[1];
+				TimerText.Instance.count = false;
+				TimerText.Instance.text.text = reason;
+				TimerText.Instance.text.color = Color.red;
+			}
+			if (message.StartsWith("TOGGLE_COLLISION"))
+            {
+				Physics.IgnoreLayerCollision(8, 8, PlayerCollision);
+				PlayerCollision = !PlayerCollision;
+			}
+			if (message.StartsWith("TOGGLE_BOOST"))
+            {
+				if (gameObject.GetComponent<SpeedBoost>() == null)
+					gameObject.AddComponent<SpeedBoost>();
+				SpeedBoost speedBoost = gameObject.GetComponent<SpeedBoost>();
+				speedBoost.speedEnabled = !speedBoost.speedEnabled;
+				speedBoost.speedMultiplier = float.Parse(message.Split('|')[1]);
+			}
+			if (message.StartsWith("MODIFY_SPEED"))
+            {
+				if (gameObject.GetComponent<TimeModifier>() == null)
+					gameObject.AddComponent<TimeModifier>();
+				TimeModifier timeModifier = gameObject.GetComponent<TimeModifier>();
+				timeModifier.speed = float.Parse(message.Split('|')[1]);
+			}
+			if (message.StartsWith("TOGGLE_GOD"))
+            {
+				Debug.Log("Toggling God.");
+				gameObject.GetComponent<Utilities>().ToggleGod();
 			}
 			SendData("pong");
 			Debug.Log("Message recieved: " + message);

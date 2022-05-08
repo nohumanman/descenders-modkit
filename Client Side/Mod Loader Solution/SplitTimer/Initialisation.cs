@@ -25,6 +25,11 @@ namespace SplitTimer
                     MapInfo mapInfo = this.gameObject.AddComponent<MapInfo>();
                     JsonUtility.FromJsonOverwrite(jsonMapInfo, mapInfo);
                 }
+                string timerText = JsonUtility.ToJson(g.GetComponent("TimerText"));
+                if (timerText != "" && timerText != null)
+                {
+                    g.AddComponent<TimerText>();
+                }
                 string jsonRidersGate = JsonUtility.ToJson(g.GetComponent("JsonRidersGate"));
                 if (jsonRidersGate != "" && jsonRidersGate != null)
                 {
@@ -36,6 +41,7 @@ namespace SplitTimer
                 Debug.LogError("ERROR - No Map info found in scene!!");
             this.gameObject.AddComponent<PlayerInfo>();
             this.gameObject.AddComponent<NetClient>();
+            this.gameObject.AddComponent<BikeSwitcher>();
         }
     }
 }
