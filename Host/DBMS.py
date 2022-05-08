@@ -4,9 +4,10 @@ import os
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
+
 class DBMS():
     @staticmethod
-    def execute_sql(statement : str, write=False):
+    def execute_sql(statement: str, write=False):
         con = sqlite3.connect(script_path + "/SplitTimer.db")
         execution = con.execute(statement)
         if write:
@@ -21,7 +22,6 @@ class DBMS():
 
     @staticmethod
     def update_player(steam_id, steam_name, avatar_src):
-        print("Submitting player to database - steam id", steam_id, "steam name:", steam_name)
         DBMS.execute_sql(
             f'''
             REPLACE INTO Player (steam_id, steam_name, avatar_src)
@@ -30,7 +30,12 @@ class DBMS():
         )
 
     @staticmethod
-    def get_fastest_split_times(trail_name, competitors_only=False, min_timestamp=None, monitored_only=False):
+    def get_fastest_split_times(
+        trail_name,
+        competitors_only=False,
+        min_timestamp=None,
+        monitored_only=False
+    ):
         statement = '''
                 SELECT SplitTime.time_id, SplitTime.checkpoint_num, SplitTime.checkpoint_time, Times.trail_name, Players.is_competitor, Players.steam_name, Times.timestamp from 
                 SplitTime
@@ -72,7 +77,7 @@ class DBMS():
     def get_leaderboard(trail_name, num=10) -> list:
         statement = f'''
             SELECT *, MIN(checkpoint_time) FROM Time
-            INNER JOIN SplitTime ON SplitTime.time_id=Time.time_id 
+            INNER JOIN SplitTime ON SplitTime.time_id=Time.time_id
             INNER JOIN (SELECT max(checkpoint_num) AS max_checkpoint FROM SplitTime)  ON SplitTime.time_id=Time.time_id
             INNER JOIN Player ON Player.steam_id=Time.steam_id
             WHERE trail_name = "{trail_name}" AND checkpoint_num = max_checkpoint
@@ -83,16 +88,16 @@ class DBMS():
         result = DBMS.execute_sql(statement)
         return [
             {
-                "steam_id" : time[0],
-                "time_id" : time[1],
-                "timestamp" : time[2],
-                "world_name" : time[3],
+                "steam_id": time[0],
+                "time_id": time[1],
+                "timestamp": time[2],
+                "world_name": time[3],
                 "trail_name": time[4],
-                "was_monitored" : time[5],
-                "total_time" : time[9],
-                "bike" : time[6],
+                "was_monitored": time[5],
+                "total_time": time[9],
+                "bike": time[6],
                 "steam_name": time[12],
-                "avatar_src" : time[13],
+                "avatar_src": time[13],
             }
             for time in result
         ]

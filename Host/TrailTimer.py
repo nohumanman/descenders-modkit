@@ -1,6 +1,7 @@
 import time
 import math
 
+
 class TrailTimer():
     def __init__(self, trail_name, network_player):
         self.trail_name = trail_name
@@ -23,7 +24,7 @@ class TrailTimer():
         if len(self.__boundaries) == 0:
             self.invalidate_timer("Exited boundry without entering")
 
-    def start_timer(self, total_checkpoints : int):
+    def start_timer(self, total_checkpoints: int):
         self.started = True
         self.total_checkpoints = total_checkpoints
         self.time_started = time.time()
@@ -33,7 +34,7 @@ class TrailTimer():
         if self.started:
             self.times.append(time.time() - self.time_started)
 
-    def invalidate_timer(self, reason : str):
+    def invalidate_timer(self, reason: str):
         print("TIME INVALIDATED!!")
         self.network_player.send(f"INVALIDATE_TIME|{reason}")
         self.started = False
@@ -46,7 +47,14 @@ class TrailTimer():
         self.times.append(time.time() - self.time_started)
         if (len(self.times) == self.total_checkpoints-1):
             print(f"Times submitted: {self.times}")
-            DBMS().submit_time(self.network_player.steam_id, self.times, self.trail_name, False, self.network_player.world_name, self.network_player.bike_type)
+            DBMS().submit_time(
+                self.network_player.steam_id,
+                self.times,
+                self.trail_name,
+                False,
+                self.network_player.world_name,
+                self.network_player.bike_type
+            )
         self.started = False
         self.times = []
 

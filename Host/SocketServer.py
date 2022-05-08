@@ -2,13 +2,14 @@ from NetPlayer import NetPlayer
 import socket
 import threading
 
+
 class SocketServer():
-    def __init__(self, host : str, port : int):
+    def __init__(self, host: str, port: int):
         self.host = host
         self.port = port
         self.players = []
 
-    def get_player_by_id(self, id : str) -> NetPlayer:
+    def get_player_by_id(self, id: str) -> NetPlayer:
         for player in self.players:
             if player.steam_id == id:
                 return player
