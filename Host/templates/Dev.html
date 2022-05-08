@@ -17,12 +17,12 @@
         <div id="app">
             <v-app>
                 <v-main>
-                    <v-overlay v-if="self == null">
+                    <v-overlay v-if="self == null" opacity="1">
                         <v-text-field
                             placeholder="Please enter your steam ID."
                             v-model="valee"
                         ></v-text-field>
-                        <v-btn @click="setSelf(valee)"></v-btn>
+                        <v-btn @click="setSelf(valee)">SUBMIT STEAM ID</v-btn>
                     </v-overlay>
                     <v-overlay opacity="1" v-model="controlling">
                         <v-btn @click="controlling = false;"><v-icon>mdi-exit-to-app</v-icon></v-btn>

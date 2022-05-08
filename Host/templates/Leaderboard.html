@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" class="transparent">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
         <title>Dev Portal</title>
@@ -13,22 +13,27 @@
         <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     </head>
-    <body>
-        <div id="app">
-            <v-app>
-                <v-overlay opacity="0">
-                    
-                </v-overlay>
-                <v-main>
-                    <v-col>
-                        <v-row v-for="(item, i) in leaderboard" :key="i">
-                            [[i+1]] - [[item.name]] - [[item.time]]
-                        </v-row>
-                    </v-col>
+    <body class="transparent">
+        <div id="app" class="transparent">
+            <v-app class="transparent">
+                <v-main class="transparent">
+                    <h1 style="text-align:center; font-size:70px;" v-if="leaderboard.length != 0">[[leaderboard[0].world_name]] - [[leaderboard[0].trail_name]]</h1>
+                    <v-container fill-height fluid>
+                        <v-col>
+                            <v-row style="font-size:40px;" align="center" justify="center" v-for="(item, i) in leaderboard" :key="i">
+                                [[i+1]] - [[item.steam_name]] - [[item.total_time]] on the [[item.bike]] <img :src="item.avatar_src" height="50" width="50">
+                            </v-row>
+                        </v-col>
+                    </v-container>
                 </v-main>
             </v-app>
         </div>
     </body>
+    <style>
+        .transparent{
+            background-color:rgba(0, 0, 0, 0)
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="/static/leaderboard.js"></script>

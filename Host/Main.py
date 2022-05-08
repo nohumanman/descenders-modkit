@@ -1,6 +1,6 @@
 from SocketServer import SocketServer
 import threading
-import DBMS
+from DBMS import DBMS
 
 HOST = "172.26.14.70"
 PORT = 65432
@@ -23,7 +23,7 @@ def get_leaderboard():
 
 @app.route("/leaderboard/<trail>")
 def get_leaderboard_trail(trail):
-    return jsonify(DBMS().get_leaderboard_descenders(trail))
+    return jsonify(DBMS().get_leaderboard(trail))
 
 @app.route("/eval/<id>")
 def hello(id):
@@ -51,9 +51,9 @@ import random
 shouldRandomise = True
 def riders_gate():
     while True:
-        time.sleep(15)
+        time.sleep(25)
         if (shouldRandomise):
-            rand = str(random.randint(0, 5000) / 1000)
+            rand = str(random.randint(0, 3000) / 1000)
             for player in webserverHost.players:
                 player.send(
                     "RIDERSGATE|"

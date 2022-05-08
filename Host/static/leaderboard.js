@@ -15,13 +15,12 @@ var app = new Vue({
     },
     }),
     data : {
-        trails: [],
         leaderboard: [],
     },
     methods: {
         GetLeaderboard(trail){
             $.get("/leaderboard/" + trail, function(data){
-                app.trails = data;
+                app.leaderboard = data;
             });
         }
     }

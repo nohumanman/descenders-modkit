@@ -11,7 +11,9 @@ class DBMS():
         execution = con.execute(statement)
         if write:
             con.commit()
-        return execution.fetchall()
+        result = execution.fetchall()
+        con.close()
+        return result
 
     @staticmethod
     def get_all_players():
@@ -22,7 +24,7 @@ class DBMS():
         print("Submitting player to database - steam id", steam_id, "steam name:", steam_name)
         DBMS.execute_sql(
             f'''
-            REPLACE INTO Players (steam_id, steam_name, avatar_src)
+            REPLACE INTO Player (steam_id, steam_name, avatar_src)
             VALUES ("{steam_id}", "{steam_name}", "{avatar_src}")
             ''', write=True
         )
@@ -30,9 +32,9 @@ class DBMS():
     @staticmethod
     def get_fastest_split_times(trail_name, competitors_only=False, min_timestamp=None, monitored_only=False):
         statement = '''
-                SELECT "Split Times".time_id, "Split Times".checkpoint_num, "Split Times".checkpoint_time, Times.trail_name, Players.is_competitor, Players.steam_name, Times.timestamp from 
-                "Split Times"
-                INNER JOIN Times ON "Split Times".time_id = Times.time_id
+                SELECT SplitTime.time_id, SplitTime.checkpoint_num, SplitTime.checkpoint_time, Times.trail_name, Players.is_competitor, Players.steam_name, Times.timestamp from 
+                SplitTime
+                INNER JOIN Times ON SplitTime.time_id = Times.time_id
                 INNER JOIN Players ON Times.steam_id = Players.steam_id\n
             '''
         statement += f'''WHERE trail_name = "{trail_name}"'''''
@@ -54,7 +56,7 @@ class DBMS():
             return []
         times = DBMS.execute_sql(
             f'''
-            SELECT * FROM "Split Times"
+            SELECT * FROM SplitTime
             WHERE time_id = "{fastest_time_on_trail_id}" ORDER BY checkpoint_num
             '''
         )
@@ -68,17 +70,13 @@ class DBMS():
 
     @staticmethod
     def get_leaderboard(trail_name, num=10) -> list:
-        # to get the top 10 fastest times from Times.
-        # this requires finding the highest checkpoint
-        # number with the lowest checkpoint time, 10 times.
-        # WHERE trail_name = "xyz"
         statement = f'''
-            SELECT *, MIN(checkpoint_time) FROM Times
-            INNER JOIN "Split Times" ON "Split Times".time_id=Times.time_id 
-            INNER JOIN (SELECT max(checkpoint_num) AS max_checkpoint FROM "Split Times")  ON "Split Times".time_id=Times.time_id
-            INNER JOIN Players ON Players.steam_id=Times.steam_id
+            SELECT *, MIN(checkpoint_time) FROM Time
+            INNER JOIN SplitTime ON SplitTime.time_id=Time.time_id 
+            INNER JOIN (SELECT max(checkpoint_num) AS max_checkpoint FROM SplitTime)  ON SplitTime.time_id=Time.time_id
+            INNER JOIN Player ON Player.steam_id=Time.steam_id
             WHERE trail_name = "{trail_name}" AND checkpoint_num = max_checkpoint
-            GROUP BY Players.steam_id
+            GROUP BY Player.steam_id
             ORDER BY checkpoint_time ASC
             LIMIT {num};
         '''
@@ -88,11 +86,13 @@ class DBMS():
                 "steam_id" : time[0],
                 "time_id" : time[1],
                 "timestamp" : time[2],
-                "trail_name": time[3],
-                "was_monitored" : time[4],
-                "total_time" : time[7],
-                "steam_name": time[10],
-                "is_competitor" : time[11]
+                "world_name" : time[3],
+                "trail_name": time[4],
+                "was_monitored" : time[5],
+                "total_time" : time[9],
+                "bike" : time[6],
+                "steam_name": time[12],
+                "avatar_src" : time[13],
             }
             for time in result
         ]
@@ -113,7 +113,7 @@ class DBMS():
     @staticmethod
     def get_times_trail_ridden(trail_name):
         statement = f'''
-            SELECT timestamp FROM Times
+            SELECT timestamp FROM Time
             WHERE trail_name = "{trail_name}"
         '''
         timestamps = DBMS.execute_sql(statement)
@@ -136,8 +136,8 @@ class DBMS():
                 checkpoint_time
                 )
             VALUES (
-                "{time_id}",
-                "{n}",
+                {time_id},
+                {n},
                 {split_time}
                 )
             ''', write=True)

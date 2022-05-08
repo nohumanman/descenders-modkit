@@ -40,12 +40,13 @@ class TrailTimer():
         self.times = []
 
     def end_timer(self):
+        from DBMS import DBMS
         if self.total_checkpoints is None:
             self.invalidate_timer("Didn't go through all checkpoints.")
         self.times.append(time.time() - self.time_started)
         if (len(self.times) == self.total_checkpoints-1):
             print(f"Times submitted: {self.times}")
-            #PlayerDB.submit_time(self.player.steam_id, self.times, self.player.trail, self.player.monitored, self.player.world)
+            DBMS().submit_time(self.network_player.steam_id, self.times, self.trail_name, False, self.network_player.world_name, self.network_player.bike_type)
         self.started = False
         self.times = []
 

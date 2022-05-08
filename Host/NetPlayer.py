@@ -25,6 +25,7 @@ class NetPlayer():
         self.__avatar_src = None
         self.steam_id = None
         self.steam_name = None
+        self.bike_type = "enduro"
         self.world_name = None
         self.time_started = time.time()
         self.send("SUCCESS")
@@ -32,7 +33,6 @@ class NetPlayer():
         #        or self.steam_name == None
         #        or self.world_name == None):
         #    time.sleep(0.5)
-        #DBMS().update_player(self.steam_id, self.steam_name, self.get_avatar_src())
 
     def get_avatar_src(self):
         if self.__avatar_src is not None:
@@ -57,6 +57,7 @@ class NetPlayer():
 
     def set_world_name(self, world_name):
         self.world_name = world_name
+        DBMS().update_player(self.steam_id, self.steam_name, self.get_avatar_src())
 
     def send(self, data : str):
         self.conn.sendall((data + "\n").encode())
@@ -100,6 +101,7 @@ class NetPlayer():
         return self.trails[trail_name]
 
     def on_bike_switch(self, old_bike : str, new_bike : str):
+        self.bike_type = new_bike
         self.invalidate_all_trails("You switched bikes!")
 
     def on_boundry_enter(self, trail_name : str, boundry_guid : str):
