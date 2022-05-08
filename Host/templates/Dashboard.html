@@ -75,8 +75,15 @@
                                         <p style="text-align:center;">
                                             ([[id.id]])
                                         </p>
+                                        <p style="text-align:center;">
+                                            Total time in [[id.world_name]] - [[toHours(id.total_time)]]
+                                        </p>
+                                        <v-card-actions class="justify-center">
+                                            <v-btn @click="SubmitEval(id.id, 'SET_BIKE|2')">Hardtail</v-btn>
+                                            <v-btn @click="SubmitEval(id.id, 'SET_BIKE|1')">Downhill</v-btn>
+                                            <v-btn @click="SubmitEval(id.id, 'SET_BIKE|0')">Enduro</v-btn>
+                                        </v-card-actions>
                                     </div>
-                                    <v-btn @click="SubmitEval(id.id, 'SET_BIKE|2')">Hardtail</v-btn><v-btn @click="SubmitEval(id.id, 'SET_BIKE|1')">Downhill</v-btn><v-btn @click="SubmitEval(id.id, 'SET_BIKE|0')">Enduro</v-btn>
                                 </v-card-title>
                                 <v-card-actions class="justify-center">
                                     <v-btn @click="Spectate(id)" outlined color="green">
@@ -104,6 +111,6 @@
     </body>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-    <script src="/static/js/dev.js"></script>
+    <script src="/static/js/dashboard.js"></script>
 
 </html>

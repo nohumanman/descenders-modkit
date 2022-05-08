@@ -56,6 +56,7 @@ def get():
                     "name": player.steam_name,
                     "steam_avatar_src": player.get_avatar_src(),
                     "total_time": player.get_total_time(),
+                    "world_name": player.world_name
                 } for player in socket_server.players
             ]
         }
