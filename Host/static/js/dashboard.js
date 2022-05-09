@@ -105,4 +105,4 @@ app.self = window.localStorage.getItem('self');
 
 
 $.getJSON("/get", function(data){app.ids = data["ids"]})
-setInterval(function () {$.getJSON("/get", function(data){app.ids = data["ids"]})}, 100);
+//setInterval(function () {$.getJSON("/get", function(data){app.ids = data["ids"]})}, 100);
