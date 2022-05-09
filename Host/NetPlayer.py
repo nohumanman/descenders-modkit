@@ -64,7 +64,7 @@ class NetPlayer():
         try:
             self.__avatar_src = avatar_src_req.json()[
                 "response"]["players"][0]["avatarfull"]
-        except KeyError:
+        except (KeyError, IndexError):
             self.__avatar_src = ""
         return self.__avatar_src
 
