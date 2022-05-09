@@ -53,7 +53,7 @@ class TrailTimer():
             data = {
                 "content":
                     f"{self.network_player.steam_name}"
-                    "has submitted a time on"
+                    " has submitted a time on"
                     f" {self.network_player.world_name}!"
                     f" {self.times[len(self.times)-1]} seconds.",
                 "username": "Split Timer"
