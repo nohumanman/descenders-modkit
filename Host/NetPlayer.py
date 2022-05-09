@@ -5,6 +5,7 @@ from TrailTimer import TrailTimer
 import requests
 from Tokens import webhook
 from Tokens import steam_api_key
+import logging
 
 operations = {
     "STEAM_ID":
@@ -92,7 +93,7 @@ class NetPlayer():
     def handle_data(self, data: str):
         if data == "":
             return
-        print(f"From {self.steam_name} Handling data '{data}'")
+        logging.info(f"From {self.steam_name} Handling data '{data}'")
         data_list = data.split("|")
         for operator in operations:
             if data.startswith(operator):
@@ -103,10 +104,10 @@ class NetPlayer():
             try:
                 data = self.conn.recv(1024)
             except ConnectionResetError:
-                print("User has disconnected, breaking loop")
+                logging.info("User has disconnected, breaking loop")
                 break
             if not data:
-                print("No data!!!!")
+                logging.info("User has disconnected, breaking loop 2")
                 break
             for piece in data.decode().split("\n"):
                 self.handle_data(piece)

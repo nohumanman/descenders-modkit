@@ -1,6 +1,7 @@
 from NetPlayer import NetPlayer
 import socket
 import threading
+import logging
 
 
 class SocketServer():
@@ -15,14 +16,14 @@ class SocketServer():
                 return player
 
     def create_client(self, conn):
-        print("Watching Client")
+        logging.info("Creating client")
         player = NetPlayer(conn)
         self.players.append(player)
         try:
             with conn:
                 player.recieve()
         except OSError:
-            print("Client has disconnected")
+            logging.info("Client has disconnected")
         self.players.remove(player)
 
     def start(self):
@@ -31,7 +32,7 @@ class SocketServer():
             s.listen()
             while True:
                 conn, addr = s.accept()
-                print(f"Connected by {addr}")
+                logging.info(f"Connected by {addr}")
                 threading.Thread(
                     target=self.create_client,
                     args=(conn,)
