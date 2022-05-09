@@ -70,7 +70,7 @@ class NetPlayer():
     def set_steam_name(self, steam_name):
         self.steam_name = steam_name
         data = {
-            "content": f"{self.steam_name} has joined the server!",
+            "content": f"{self.steam_name} has **joined** {self.world_name}!",
             "username": "Split Timer"
         }
         requests.post(webhook, json=data)
@@ -157,6 +157,11 @@ class NetPlayer():
         self.time_started = time.time()
 
     def on_map_exit(self):
+        data = {
+            "content": f"{self.steam_name} has **exited** {self.world_name}!",
+            "username": "Split Timer"
+        }
+        requests.post(webhook, json=data)
         self.trails = {}
         DBMS.end_session(
             self.steam_id,
