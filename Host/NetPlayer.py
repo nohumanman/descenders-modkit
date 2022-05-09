@@ -69,11 +69,6 @@ class NetPlayer():
 
     def set_steam_name(self, steam_name):
         self.steam_name = steam_name
-        data = {
-            "content": f"{self.steam_name} has **joined** {self.world_name}!",
-            "username": "Split Timer"
-        }
-        requests.post(webhook, json=data)
 
     def set_steam_id(self, steam_id):
         self.steam_id = steam_id
@@ -85,6 +80,11 @@ class NetPlayer():
             self.steam_name,
             self.get_avatar_src()
         )
+        data = {
+            "content": f"{self.steam_name} has **joined** {self.world_name}!",
+            "username": "Split Timer"
+        }
+        requests.post(webhook, json=data)
 
     def send(self, data: str):
         self.conn.sendall((data + "\n").encode())
