@@ -1,5 +1,7 @@
 import time
 import math
+from Tokens import webhook
+import requests
 
 
 class TrailTimer():
@@ -47,6 +49,15 @@ class TrailTimer():
         self.times.append(time.time() - self.time_started)
         if (len(self.times) == self.total_checkpoints-1):
             print(f"Times submitted: {self.times}")
+            data = {
+                "content":
+                    f"{self.network_player.steam_name}"
+                    "has submitted a time on"
+                    f" {self.network_player.world_name}!"
+                    f" {self.times[len(self.times)-1]} seconds.",
+                "username": "Split Timer"
+            }
+            requests.post(webhook, json=data)
             DBMS().submit_time(
                 self.network_player.steam_id,
                 self.times,
