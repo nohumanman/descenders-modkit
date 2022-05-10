@@ -3,7 +3,6 @@ import socket
 import threading
 import logging
 
-
 class SocketServer():
     def __init__(self, host: str, port: int):
         self.host = host
@@ -15,9 +14,9 @@ class SocketServer():
             if player.steam_id == id:
                 return player
 
-    def create_client(self, conn):
+    def create_client(self, conn, addr):
         logging.info("Creating client")
-        player = NetPlayer(conn)
+        player = NetPlayer(conn, addr)
         self.players.append(player)
         try:
             with conn:
@@ -35,5 +34,5 @@ class SocketServer():
                 logging.info(f"Connected by {addr}")
                 threading.Thread(
                     target=self.create_client,
-                    args=(conn,)
+                    args=(conn, addr)
                 ).start()

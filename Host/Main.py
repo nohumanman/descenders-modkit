@@ -102,7 +102,10 @@ def riders_gate():
         if (shouldRandomise):
             rand = str(random.randint(0, 3000) / 1000)
             for player in socket_server.players:
-                player.send("RIDERSGATE|" + rand)
+                try:
+                    player.send("RIDERSGATE|" + rand)
+                except Exception:
+                    logging.warning("Failed to send random gate to player!")
 
 
 riders_gate_thread = threading.Thread(target=riders_gate)

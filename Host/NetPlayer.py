@@ -36,7 +36,8 @@ operations = {
 
 
 class NetPlayer():
-    def __init__(self, conn: socket):
+    def __init__(self, conn: socket, addr):
+        self.addr = addr
         self.conn = conn
         self.trails = {}
         self.__avatar_src = None
@@ -81,6 +82,11 @@ class NetPlayer():
             self.steam_name,
             self.get_avatar_src()
         )
+        try:
+            logging.info("submitting ip.")
+            DBMS.submit_ip(self.steam_id, self.addr[0], self.addr[1])
+        except Exception as e:
+            logging.error(e)
         data = {
             "content": f"{self.steam_name} has **joined** {self.world_name}!",
             "username": "Split Timer"

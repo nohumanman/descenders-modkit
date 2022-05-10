@@ -103,6 +103,26 @@ class DBMS():
         ]
 
     @staticmethod
+    def submit_ip(steam_id, address, port):
+        timestamp = time.time()
+        statement = f'''
+            INSERT INTO IP (steam_id, timestamp, address, port)
+            VALUES ({steam_id}, {timestamp}, "{address}", {port})
+        '''
+        DBMS.execute_sql(statement, write=True)
+
+    @staticmethod
+    def get_archive():
+        statement = '''
+            SELECT sum(time_ended - time_started) AS total_time, Session.steam_id, Player.steam_name, Session.world_name, Player.avatar_src FROM Session
+            INNER JOIN Player ON Session.steam_id = Player.steam_id
+            GROUP BY Session.steam_id
+            ORDER BY total_time DESC
+        '''
+        result = DBMS.execute_sql(statement)
+        return result
+
+    @staticmethod
     def get_time_on_world(steam_id, world="none"):
         statement = f'''
             SELECT sum(time_ended - time_started) AS total_time FROM Session
