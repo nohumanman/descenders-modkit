@@ -1,4 +1,6 @@
 from SocketServer import SocketServer
+from DiscordBot import DiscordBot
+from Tokens import discord_token
 from DBMS import DBMS
 from flask import Flask, render_template, request, jsonify
 import threading
@@ -111,4 +113,8 @@ def riders_gate():
 riders_gate_thread = threading.Thread(target=riders_gate)
 riders_gate_thread.start()
 
-# app.run(WEBSITE_HOST, port=WEBSITE_PORT)
+
+DiscordBot(discord_token, "#", socket_server)
+
+if __name__ == "__main__":
+    app.run(WEBSITE_HOST, port=WEBSITE_PORT)

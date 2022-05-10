@@ -3,6 +3,7 @@ import socket
 import threading
 import logging
 
+
 class SocketServer():
     def __init__(self, host: str, port: int):
         self.host = host
