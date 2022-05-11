@@ -17,6 +17,13 @@ class DBMS():
         return result
 
     @staticmethod
+    def get_webhooks(trail_name):
+        return DBMS.execute_sql(
+            "SELECT webhook_url FROM webhooks"
+            f" WHERE trail_name = '{trail_name}'"
+        )
+
+    @staticmethod
     def get_all_players():
         return DBMS.execute_sql('''SELECT * FROM Players''')
 

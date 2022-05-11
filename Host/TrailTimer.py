@@ -1,5 +1,6 @@
 import time
 import math
+from DBMS import DBMS
 from Tokens import webhook
 import requests
 import logging
@@ -14,6 +15,14 @@ class TrailTimer():
         self.total_checkpoints = None
         self.__boundaries = []
         self.time_started = 0
+
+    def send_message(self, content: str):
+        for webhook[0] in DBMS.get_webhooks(self.trail_name):
+            data = {
+                "content": content,
+                "username": "Split Timer"
+            }
+            requests.post(webhook, json=data)
 
     def add_boundary(self, boundary_guid):
         if len(self.__boundaries) == 0:
@@ -50,15 +59,16 @@ class TrailTimer():
         self.times.append(time.time() - self.time_started)
         if (len(self.times) == self.total_checkpoints-1):
             logging.info(f"Times submitted: {self.times}")
-            data = {
-                "content":
-                    f"{self.network_player.steam_name}"
-                    " has submitted a time on"
-                    f" {self.network_player.world_name}!"
-                    f" {self.times[len(self.times)-1]} seconds.",
-                "username": "Split Timer"
-            }
-            requests.post(webhook, json=data)
+            fastest = DBMS.get_fastest_split_times(self.trail_name)
+            if self.times[len(self.times)-1] < fastest[len(fastest)]:
+                our_time = TrailTimer.secs_to_str(
+                    self.times[len(self.times)-1]
+                )
+                self.send_message(
+                    f"{self.network_player.steam_name} has beaten the fastest"
+                    f" time for {self.trail_name} with a"
+                    f" {our_time}!"
+                )
             DBMS().submit_time(
                 self.network_player.steam_id,
                 self.times,

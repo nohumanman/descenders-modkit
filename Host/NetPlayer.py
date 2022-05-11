@@ -82,11 +82,7 @@ class NetPlayer():
             self.steam_name,
             self.get_avatar_src()
         )
-        try:
-            logging.info("submitting ip.")
-            DBMS.submit_ip(self.steam_id, self.addr[0], self.addr[1])
-        except Exception as e:
-            logging.error(e)
+        DBMS.submit_ip(self.steam_id, self.addr[0], self.addr[1])
         data = {
             "content": f"{self.steam_name} has **joined** {self.world_name}!",
             "username": "Split Timer"
@@ -103,7 +99,10 @@ class NetPlayer():
         data_list = data.split("|")
         for operator in operations:
             if data.startswith(operator):
-                operations[operator](self, data_list)
+                try:
+                    operations[operator](self, data_list)
+                except Exception as e:
+                    logging.error(e)
 
     def recieve(self):
         while True:
