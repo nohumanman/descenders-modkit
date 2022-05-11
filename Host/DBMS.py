@@ -37,10 +37,17 @@ class DBMS():
         monitored_only=False
     ):
         statement = '''
-                SELECT SplitTime.time_id, SplitTime.checkpoint_num, SplitTime.checkpoint_time, Times.trail_name, Players.is_competitor, Players.steam_name, Times.timestamp from 
-                SplitTime
-                INNER JOIN Times ON SplitTime.time_id = Times.time_id
-                INNER JOIN Players ON Times.steam_id = Players.steam_id\n
+                SELECT
+                    SplitTime.time_id,
+                    SplitTime.checkpoint_num,
+                    SplitTime.checkpoint_time,
+                    Times.trail_name, Players.is_competitor,
+                    Players.steam_name,
+                    Times.timestamp
+                from
+                    SplitTime
+                    INNER JOIN Times ON SplitTime.time_id = Times.time_id
+                    INNER JOIN Players ON Times.steam_id = Players.steam_id\n
             '''
         statement += f'''WHERE trail_name = "{trail_name}"'''''
         if min_timestamp is not None:
@@ -61,8 +68,14 @@ class DBMS():
             return []
         times = DBMS.execute_sql(
             f'''
-            SELECT * FROM SplitTime
-            WHERE time_id = "{fastest_time_on_trail_id}" ORDER BY checkpoint_num
+            SELECT
+                *
+            FROM
+                SplitTime
+            WHERE
+                time_id = "{fastest_time_on_trail_id}"
+            ORDER BY
+                checkpoint_num
             '''
         )
         split_times = [time[2] for time in times]
@@ -70,19 +83,41 @@ class DBMS():
 
     @staticmethod
     def get_ban_status(steam_id):
-        resp = DBMS.execute_sql(f'''SELECT ban_status FROM Players WHERE steam_id="{steam_id}"''')
+        resp = DBMS.execute_sql(f'''
+            SELECT
+                ban_status
+            FROM
+                Players
+            WHERE
+                steam_id="{steam_id}"
+            ''')
         return resp[0][0]
 
     @staticmethod
     def get_leaderboard(trail_name, num=10) -> list:
         statement = f'''
-            SELECT *, MIN(checkpoint_time) FROM Time
-            INNER JOIN SplitTime ON SplitTime.time_id=Time.time_id
-            INNER JOIN (SELECT max(checkpoint_num) AS max_checkpoint FROM SplitTime)  ON SplitTime.time_id=Time.time_id
-            INNER JOIN Player ON Player.steam_id=Time.steam_id
-            WHERE trail_name = "{trail_name}" AND checkpoint_num = max_checkpoint
-            GROUP BY Player.steam_id
-            ORDER BY checkpoint_time ASC
+            SELECT
+                *,
+                MIN(checkpoint_time)
+            FROM
+                Time
+                INNER JOIN
+                    SplitTime ON SplitTime.time_id = Time.time_id
+                INNER JOIN
+                    (SELECT
+                        max(checkpoint_num) AS max_checkpoint
+                    FROM
+                        SplitTime) ON SplitTime.time_id=Time.time_id
+                INNER JOIN
+                    Player ON Player.steam_id = Time.steam_id
+            WHERE
+                trail_name = "{trail_name}"
+                AND
+                checkpoint_num = max_checkpoint
+            GROUP BY
+                Player.steam_id
+            ORDER BY
+                checkpoint_time ASC
             LIMIT {num};
         '''
         result = DBMS.execute_sql(statement)
@@ -114,10 +149,20 @@ class DBMS():
     @staticmethod
     def get_archive():
         statement = '''
-            SELECT sum(time_ended - time_started) AS total_time, Session.steam_id, Player.steam_name, Session.world_name, Player.avatar_src FROM Session
-            INNER JOIN Player ON Session.steam_id = Player.steam_id
-            GROUP BY Session.steam_id
-            ORDER BY total_time DESC
+            SELECT
+                sum(time_ended - time_started) AS total_time,
+                Session.steam_id,
+                Player.steam_name,
+                Session.world_name,
+                Player.avatar_src
+            FROM
+                Session
+            INNER JOIN
+                Player ON Session.steam_id = Player.steam_id
+            GROUP BY
+                Session.steam_id
+            ORDER BY
+                total_time DESC
         '''
         result = DBMS.execute_sql(statement)
         return result
@@ -145,16 +190,42 @@ class DBMS():
         return [stamp[0] for stamp in timestamps]
 
     @staticmethod
-    def submit_time(steam_id, split_times, trail_name, being_monitored, current_world, bike_type):
-        time_id = hash(str(split_times[len(split_times)-1])+str(steam_id)+str(time.time()))
+    def submit_time(
+        steam_id,
+        split_times,
+        trail_name,
+        being_monitored,
+        current_world,
+        bike_type
+    ):
+        time_id = hash(
+            str(split_times[len(split_times)-1])
+            + str(steam_id)
+            + str(time.time())
+        )
         DBMS.execute_sql(
             f'''
-            INSERT INTO Time (steam_id, time_id, timestamp, world_name, trail_name, was_monitored, bike_type)
-            VALUES ("{steam_id}", "{time_id}", {time.time()}, "{current_world}", "{trail_name}", "{str(being_monitored)}", "{bike_type}")
+            INSERT INTO Time (
+                steam_id,
+                time_id,
+                timestamp,
+                world_name,
+                trail_name,
+                was_monitored,
+                bike_type
+            )
+            VALUES (
+                "{steam_id}",
+                "{time_id}",
+                {time.time()},
+                "{current_world}",
+                "{trail_name}",
+                "{str(being_monitored)}",
+                "{bike_type}"
+            )
             ''', write=True)
         for n, split_time in enumerate(split_times):
-            DBMS.execute_sql(
-            f'''
+            DBMS.execute_sql(f'''
             INSERT INTO SplitTime (
                 time_id,
                 checkpoint_num,
@@ -171,8 +242,18 @@ class DBMS():
     def end_session(steam_id, time_started, time_ended, world_name):
         DBMS.execute_sql(
             f'''
-            INSERT INTO Session (steam_id, time_started, time_ended, world_name)
-            VALUES ("{steam_id}", {time_started}, {time_ended}, "{world_name}")
+            INSERT INTO Session (
+                steam_id,
+                time_started,
+                time_ended,
+                world_name
+            )
+            VALUES (
+                "{steam_id}",
+                {time_started},
+                {time_ended},
+                "{world_name}"
+            )
             ''',
             write=True
         )
