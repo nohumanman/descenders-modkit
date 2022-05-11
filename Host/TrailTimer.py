@@ -70,7 +70,9 @@ class TrailTimer():
         self.started = False
         self.times = []
 
-    def secs_to_str(self, secs):
+    @staticmethod
+    def secs_to_str(secs):
+        secs = float(secs)
         d_mins = int(round(secs // 60))
         d_secs = int(round(secs - (d_mins * 60)))
         d_millis = int(round(secs-math.trunc(secs), 3) * 1000)
@@ -81,3 +83,15 @@ class TrailTimer():
         while len(str(d_millis)) < 3:
             d_millis = str(d_millis) + "0"
         return f"{d_mins}:{d_secs}.{d_millis}"
+
+    @staticmethod
+    def ord(n):
+        return (
+            str(n)
+            + ("th" if 4 <= (n % 100) <= 20 else {
+                1: "st",
+                2: "nd",
+                3: "rd"
+            }.get(n % 10, "th")
+            )
+        )
