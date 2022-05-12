@@ -28,6 +28,3 @@ function del(){
     })
 }
 del();
-setInterval(function () {
-    del();
-}, 5000);

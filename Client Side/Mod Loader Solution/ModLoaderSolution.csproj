@@ -40,7 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SplitTimer\BikeSwitcher.cs" />
-    <Compile Include="SplitTimer\TimerText.cs" />
+    <Compile Include="SplitTimer\SplitTimerText.cs" />
     <Compile Include="SplitTimer\TimeModifier.cs" />
     <Compile Include="SplitTimer\SpeedBoost.cs" />
     <Compile Include="SplitTimer\Boundary.cs" />

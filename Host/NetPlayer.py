@@ -31,7 +31,9 @@ operations = {
     "MAP_EXIT":
         lambda netPlayer, data: netPlayer.on_map_exit(),
     "BIKE_SWITCH":
-        lambda netPlayer, data: netPlayer.on_bike_switch(data[1], data[2])
+        lambda netPlayer, data: netPlayer.on_bike_switch(data[1], data[2]),
+    "REP":
+        lambda netPlayer, data: netPlayer.set_reputation(data[1]),
 }
 
 
@@ -45,8 +47,13 @@ class NetPlayer():
         self.steam_name = None
         self.bike_type = "enduro"
         self.world_name = None
+        self.reputation = 0
         self.time_started = time.time()
         self.send("SUCCESS")
+
+    def set_reputation(self, reputation):
+        self.reputation = int(reputation)
+        DBMS.log_rep(self.steam_id, self.reputation)
 
     def get_total_time(self, onWorld=False):
         if onWorld:

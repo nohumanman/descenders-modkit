@@ -5,11 +5,12 @@ using UnityEngine.UI;
 
 namespace SplitTimer
 {
-	public class TimerText : MonoBehaviour
+	public class SplitTimerText : MonoBehaviour
 	{
-		public static TimerText Instance { get; private set; }
+		public static SplitTimerText Instance { get; private set; }
 		public Text text;
 		public float time;
+		public string checkpointTime = "";
 		public bool count = false;
 		void Awake()
 		{
@@ -18,6 +19,16 @@ namespace SplitTimer
 			else
 				Instance = this;
 		}
+		public void CheckpointTime(string message)
+        {
+			checkpointTime = message;
+			StartCoroutine(DisableCheckpoint());
+		}
+		IEnumerator DisableCheckpoint()
+        {
+			yield return new WaitForSeconds(5f);
+			checkpointTime = "";
+        }
 		void Start()
         {
 			text = GetComponent<Text>();
@@ -27,7 +38,7 @@ namespace SplitTimer
 		{
 			time = 0;
 			count = true;
-			TimerText.Instance.text.color = Color.black;
+			SplitTimerText.Instance.text.color = Color.black;
 		}
 		public void StopTimer()
 		{
@@ -43,7 +54,7 @@ namespace SplitTimer
 			while (true)
             {
 				if (count)
-					text.text = FormatTime(time).ToString();
+					text.text = FormatTime(time).ToString() + "\n" + checkpointTime;
 				yield return new WaitForSeconds(0.01f);
 			}
 		}

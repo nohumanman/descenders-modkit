@@ -66,7 +66,11 @@ def get_leaderboard_trail(trail):
 def hello(id):
     args = request.args.get("order")
     print(args)
-    socket_server.get_player_by_id(id).send(args)
+    try:
+        socket_server.get_player_by_id(id).send(args)
+    except Exception as e:
+        logging.error(e)
+        return e
     return "Hello World!"
 
 

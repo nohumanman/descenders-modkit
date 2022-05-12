@@ -41,7 +41,8 @@ class DiscordBot(commands.Bot):
                     num = "🥉"
                 else:
                     num = TrailTimer.ord(i + 1)
-                leaderboard_str += f"{num} - {name} with {time}\n"
+                bike = player["bike"]
+                leaderboard_str += f"{num} - {name} with {time} on {bike}\n"
             logging.info(leaderboard_str)
             try:
                 await message.channel.send(

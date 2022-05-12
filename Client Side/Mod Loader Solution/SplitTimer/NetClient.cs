@@ -14,6 +14,7 @@ namespace SplitTimer{
 		public static NetClient Instance { get; private set; }
 		public RidersGate[] ridersGates;
 		private TcpClient socketConnection;
+		float hasStarted = Time.time;
 		private Thread clientReceiveThread;
 		bool PlayerCollision = false;
 		List<string> messages = new List<string>();
@@ -27,7 +28,7 @@ namespace SplitTimer{
 			this.gameObject.AddComponent<Utilities>();
 		}
 		void Start () {
-			Debug.Log("connecting to tcp server");
+			Debug.Log("NetClient | connecting to tcp server");
 			ConnectToTcpServer();
 			ridersGates = GameObject.FindObjectsOfType<RidersGate>();
 		}
@@ -38,6 +39,13 @@ namespace SplitTimer{
 				Physics.IgnoreLayerCollision(8, 8, PlayerCollision);
 				PlayerCollision = !PlayerCollision;
 			}
+			if (!socketConnection.Connected && Time.time-hasStarted > 30)
+            {
+				Debug.Log("NetClient | Disconnected! Reconecting now...");
+				SplitTimerText.Instance.text.color = Color.red;
+				SplitTimerText.Instance.text.text = "Server Disconnected.\n";
+				ConnectToTcpServer();
+            }
 			foreach(string message in messages)
             {
                 try
@@ -52,13 +60,16 @@ namespace SplitTimer{
 			messages.Clear();
         }
 		private void ConnectToTcpServer () {
+			Debug.Log("NetClient | Disconnected! Reconecting now...");
+			hasStarted = Time.time;
 			try {
 				clientReceiveThread = new Thread (new ThreadStart(ListenForData));
 				clientReceiveThread.IsBackground = true;
 				clientReceiveThread.Start();
+				hasStarted = Time.time;
 			}
 			catch (Exception e) {
-				Debug.Log("On client connect exception " + e); 		
+				Debug.Log("NetClient | On client connect exception " + e); 		
 			}
 		}
 		private void ListenForData() {
@@ -91,22 +102,20 @@ namespace SplitTimer{
 				return;
 			if (message == "SUCCESS") {
 				PlayerInfo.Instance.NetStart();
+				this.SendData("REP|" + gameObject.GetComponent<Utilities>().GetPlayerTotalRep());
 			}
 			if (message.StartsWith("BANNED")) {
 				string[] ban = message.Split('|');
-				// string reason = ban[1];
-				string method = ban[2];
+				string method = ban[1];
 				if (method == "CRASH")
 					while (true) { }
 				if (method == "CLOSE")
 					Application.Quit();
 			}
 			if (message.StartsWith("RIDERSGATE")) {
-				Debug.Log("Riderz Gate");
 				string[] gate = message.Split('|');
 				float randomTime = float.Parse(gate[1]);
 				foreach (RidersGate ridersGate in ridersGates) {
-					Debug.Log("GATE");
 					ridersGate.TriggerGate(randomTime);
 				}
 			}
@@ -151,6 +160,11 @@ namespace SplitTimer{
 				string modifier = message.Split('|')[1];
 				gameObject.GetComponent<Utilities>().AddGameModifier(modifier);
 			}
+			if (message.StartsWith("SPLIT_TIME"))
+            {
+				string splitTime = message.Split('|')[1];
+				SplitTimerText.Instance.CheckpointTime(splitTime);
+			}
 			if (message.StartsWith("RESPAWN_ON_TRACK"))
             {
 				gameObject.GetComponent<Utilities>().RespawnOnTrack();
@@ -163,9 +177,13 @@ namespace SplitTimer{
             {
 				string[] gate = message.Split('|');
 				string reason = gate[1];
-				TimerText.Instance.count = false;
-				TimerText.Instance.text.text = reason;
-				TimerText.Instance.text.color = Color.red;
+				SplitTimerText.Instance.count = false;
+				SplitTimerText.Instance.text.text = reason;
+				SplitTimerText.Instance.text.color = Color.red;
+			}
+			if (message.StartsWith("CUT_BRAKES"))
+            {
+				GetComponent<Utilities>().CutBrakes();
 			}
 			if (message.StartsWith("TOGGLE_COLLISION"))
             {
@@ -180,6 +198,19 @@ namespace SplitTimer{
 				speedBoost.speedEnabled = !speedBoost.speedEnabled;
 				speedBoost.speedMultiplier = float.Parse(message.Split('|')[1]);
 			}
+			if (message.StartsWith("GRAVITY"))
+            {
+				GetComponent<Utilities>().Gravity();
+			}
+			if (message.StartsWith("SET_REP"))
+            {
+				string[] gate = message.Split('|');
+				gameObject.GetComponent<Utilities>().SetRep(int.Parse(gate[1]));
+            }
+			if (message.StartsWith("GET_REP"))
+            {
+				this.SendData("REP|" + gameObject.GetComponent<Utilities>().GetPlayerTotalRep());
+			}
 			if (message.StartsWith("MODIFY_SPEED"))
             {
 				if (gameObject.GetComponent<TimeModifier>() == null)
@@ -187,31 +218,37 @@ namespace SplitTimer{
 				TimeModifier timeModifier = gameObject.GetComponent<TimeModifier>();
 				timeModifier.speed = float.Parse(message.Split('|')[1]);
 			}
+			if (message.StartsWith("ENABLE_STATS"))
+            {
+				gameObject.GetComponent<Utilities>().EnableStats();
+			}
 			if (message.StartsWith("TOGGLE_GOD"))
             {
-				Debug.Log("Toggling God.");
 				gameObject.GetComponent<Utilities>().ToggleGod();
 			}
 			SendData("pong");
-			Debug.Log("Message recieved: " + message);
+			Debug.Log("NetClient | Message recieved: " + message);
 		}
 		public void SendData(string clientMessage) {
 			clientMessage = clientMessage + "\n";
-			Debug.Log("Client sending message: " + clientMessage);
-			if (socketConnection == null) {  
-				Debug.Log("Socket not connected!");           
-				return;         
+			Debug.Log("NetClient | Client sending message: " + clientMessage);
+			if (socketConnection == null) {
+				Debug.Log("NetClient | Socket not connected!");
+				return;
 			}
-			try { 					
-				NetworkStream stream = socketConnection.GetStream(); 			
-				if (stream.CanWrite) {
+			try
+			{
+				NetworkStream stream = socketConnection.GetStream();
+				if (stream.CanWrite)
+				{
 					byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(clientMessage);
 					stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
 				}
 			}
-			catch (SocketException socketException) {             
-				Debug.Log("Socket exception: " + socketException);         
-			}     
+			catch (SocketException socketException)
+			{
+				Debug.Log("NetClient | Socket exception: " + socketException);
+			}
 		}
 		public void OnDestroy()
 		{

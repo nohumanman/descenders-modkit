@@ -45,6 +45,19 @@ class TrailTimer():
     def checkpoint(self):
         if self.started:
             self.times.append(time.time() - self.time_started)
+            fastest = DBMS.get_fastest_split_times(self.trail_name)
+            try:
+                time_diff = (
+                    fastest[len(self.times)-1]
+                    - (time.time() - self.time_started)
+                )
+            except Exception:
+                time_diff = "unknown"
+            if time_diff > 0:
+                mess = str(round(abs(time_diff), 4)) + " seconds faster"
+            elif time_diff < 0:
+                mess = str(round(abs(time_diff), 4)) + " seconds slower"
+            self.network_player.send(f"SPLIT_TIME|{mess}")
 
     def invalidate_timer(self, reason: str):
         logging.info(f"invalidating time of {self.network_player.steam_name}")
@@ -60,15 +73,18 @@ class TrailTimer():
         if (len(self.times) == self.total_checkpoints-1):
             logging.info(f"Times submitted: {self.times}")
             fastest = DBMS.get_fastest_split_times(self.trail_name)
-            if self.times[len(self.times)-1] < fastest[len(fastest)]:
-                our_time = TrailTimer.secs_to_str(
-                    self.times[len(self.times)-1]
-                )
-                self.send_message(
-                    f"{self.network_player.steam_name} has beaten the fastest"
-                    f" time for {self.trail_name} with a"
-                    f" {our_time}!"
-                )
+            try:
+                if self.times[len(self.times)-1] < fastest[len(fastest)-1]:
+                    our_time = TrailTimer.secs_to_str(
+                        self.times[len(self.times)-1]
+                    )
+                    self.send_message(
+                        f"{self.network_player.steam_name} has beaten the fastest"
+                        f" time for {self.trail_name} with a"
+                        f" {our_time}!"
+                    )
+            except Exception as e:
+                logging.error(f"Fastest not found: {e}")
             DBMS().submit_time(
                 self.network_player.steam_id,
                 self.times,

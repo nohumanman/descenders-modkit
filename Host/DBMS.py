@@ -44,28 +44,20 @@ class DBMS():
         monitored_only=False
     ):
         statement = '''
-                SELECT
-                    SplitTime.time_id,
-                    SplitTime.checkpoint_num,
-                    SplitTime.checkpoint_time,
-                    Times.trail_name, Players.is_competitor,
-                    Players.steam_name,
-                    Times.timestamp
-                from
-                    SplitTime
-                    INNER JOIN Times ON SplitTime.time_id = Times.time_id
-                    INNER JOIN Players ON Times.steam_id = Players.steam_id\n
-            '''
-        statement += f'''WHERE trail_name = "{trail_name}"'''''
-        if min_timestamp is not None:
-            statement += f''' AND timestamp>{float(min_timestamp)}'''
-        elif competitors_only:
-            statement += ''' AND is_competitor != "false"'''
-        elif monitored_only:
-            statement += ''' AND was_monitored != "True"'''
-        statement += '''
-            order by checkpoint_num DESC, checkpoint_time asc
-            limit 1;
+            SELECT
+                SplitTime.time_id,
+                SplitTime.checkpoint_num,
+                SplitTime.checkpoint_time,
+                Time.trail_name,
+                Player.steam_name,
+                Time.timestamp
+            from
+                SplitTime
+                INNER JOIN Time ON SplitTime.time_id = Time.time_id
+                INNER JOIN Player ON Time.steam_id = Player.steam_id
+            WHERE trail_name = "Blue Trail"
+            ORDER BY checkpoint_num DESC, checkpoint_time ASC
+            LIMIT 1
             '''
         time_id = DBMS.execute_sql(statement)
         try:
@@ -87,6 +79,22 @@ class DBMS():
         )
         split_times = [time[2] for time in times]
         return split_times
+
+    @staticmethod
+    def log_rep(steam_id, rep):
+        statement = f'''
+            INSERT INTO Rep (
+                steam_id,
+                timestamp,
+                rep
+            )
+            VALUES (
+                "{steam_id}",
+                {time.time()},
+                "{rep}"
+            )
+            '''
+        DBMS.execute_sql(statement, write=True)
 
     @staticmethod
     def get_ban_status(steam_id):

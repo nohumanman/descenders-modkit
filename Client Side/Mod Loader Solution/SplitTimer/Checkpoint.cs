@@ -1,6 +1,6 @@
 ﻿using System;
 using UnityEngine;
-
+using ModLoaderSolution;
 
 namespace SplitTimer
 {
@@ -24,11 +24,11 @@ namespace SplitTimer
                 PlayerInfo.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count);
                 if (this.checkpointType == CheckpointType.Start)
                 {
-                    TimerText.Instance.RestartTimer();
+                    SplitTimerText.Instance.RestartTimer();
                 }
-                if (this.checkpointType == CheckpointType.Finish)
+                else if (this.checkpointType == CheckpointType.Finish)
                 {
-                    TimerText.Instance.StopTimer();
+                    SplitTimerText.Instance.StopTimer();
                 }
             }
         }

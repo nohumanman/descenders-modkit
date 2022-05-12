@@ -412,7 +412,10 @@ namespace ModLoaderSolution
             }
             return trick;
         }
-
+        public void SetRep(int rep)
+        {
+            DevCommandsBackEnd.Reputation = rep;
+        }
         public string GetPlayerTotalRep()
         {
             if (playerTotalRep != null)
@@ -758,7 +761,17 @@ namespace ModLoaderSolution
             VehicleController vc = GetPlayer().GetComponent<VehicleController>();
             vc.ToggleControl(set);
         }
-
+        bool brakesCut = false;
+        public void CutBrakes()
+        {
+            VehicleController vc = GetPlayer().GetComponent<VehicleController>();
+            brakesCut = !brakesCut;
+            vc.brakesCut = brakesCut;
+        }
+        public void Gravity()
+        {
+            Physics.gravity = Vector3.down * 3;
+        }
         public void SwitchSpectate()
         {
             MultiManager mm = MonoBehaviour.FindObjectOfType<MultiManager>();
@@ -869,15 +882,21 @@ namespace ModLoaderSolution
             LogUI.gameObject.SetActive(false);
         }
         public bool bailEnabled = false;
+        public int GetFaction()
+        {
+            return DevCommandsGameplay.faction;
+        }
+        public void EnableStats()
+        {
+            PlayerInfoImpact pi = GetPlayerInfoImpact();
+            DevTools.EnableAll();
+            DevCommandsNetwork.ToggleInfo();
+            DevCommandsPostFX.EnableAll();
+        }
         public void ToggleGod()
         {
-            
-            PlayerInfoImpact pi = GetPlayerInfoImpact();
-            bailEnabled = !bailEnabled;
-            Debug.Log("Enabling Bail? " + bailEnabled.ToString());
-            pi.Nobail(bailEnabled);
+            DevCommandsGameplay.ToggleGodmode();
         }
-
     }
 
 
