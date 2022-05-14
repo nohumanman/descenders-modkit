@@ -14,3 +14,4 @@ a4ef7c59ab7201ab109de36901ceb49b UnityEngine.UI.dll:UnityEngine.EventSystems.Sta
 6731c9dcfe8b17f5c0729fd5412af4fd SplitTimerTest-0.0.0-Assembly-CSharp.dll:.JsonRidersGate
 9738de0ee0316234a6878a3fa25b1a0a SplitTimerTest-0.0.0-Assembly-CSharp.dll:.TimerInfo
 05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.0-Assembly-CSharp.dll:.TimerText
+d4a3fa09e8c1b10ee29698931cbcbe6a SplitTimerTest-0.0.0-Assembly-CSharp.dll:SpeedRunDot.SpeedrunDotCom

@@ -107,11 +107,18 @@ def riders_gate():
         time.sleep(25)
         if (shouldRandomise):
             rand = str(random.randint(0, 3000) / 1000)
+            logging.info("Sending Random Gate to all players...")
             for player in socket_server.players:
                 try:
                     player.send("RIDERSGATE|" + rand)
                 except Exception:
                     logging.warning("Failed to send random gate to player!")
+                    try:
+                        logging.warning(player.steam_id)
+                    except Exception:
+                        logging.warning(
+                            "Failed to get steam id from failed player!"
+                        )
 
 
 riders_gate_thread = threading.Thread(target=riders_gate)

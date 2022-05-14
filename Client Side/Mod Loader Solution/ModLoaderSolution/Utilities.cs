@@ -768,6 +768,13 @@ namespace ModLoaderSolution
             brakesCut = !brakesCut;
             vc.brakesCut = brakesCut;
         }
+
+        public void SetVel(float multFactor)
+        {
+            Vector3 x = GetPlayer().transform.forward;
+            x.y = 0;
+            GetPlayer().SendMessage("SetVelocity", x * multFactor);
+        }
         public void Gravity()
         {
             Physics.gravity = Vector3.down * 3;

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using SpeedRunDot;
 
 
 namespace SplitTimer
@@ -33,6 +34,7 @@ namespace SplitTimer
                     Debug.Log("SplitTimer | Found Timer Text");
                     g.AddComponent<SplitTimerText>();
                 }
+                
                 string jsonRidersGate = JsonUtility.ToJson(g.GetComponent("JsonRidersGate"));
                 if (jsonRidersGate != "" && jsonRidersGate != null)
                 {
@@ -41,6 +43,7 @@ namespace SplitTimer
                     JsonUtility.FromJsonOverwrite(jsonRidersGate, x);
                 }
             }
+            this.gameObject.AddComponent<SpeedrunDotCom>();
             if (this.GetComponent<MapInfo>() == null)
                 Debug.LogError("ERROR - No Map info found in scene!!");
             this.gameObject.AddComponent<PlayerInfo>();

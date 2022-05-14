@@ -79,9 +79,10 @@ class TrailTimer():
                         self.times[len(self.times)-1]
                     )
                     self.send_message(
-                        f"{self.network_player.steam_name} has beaten the fastest"
-                        f" time for {self.trail_name} with a"
-                        f" {our_time}!"
+                        f"{self.network_player.steam_name} "
+                        "has beaten the fastest time for "
+                        f"{self.trail_name} with a"
+                        f"{our_time}!"
                     )
             except Exception as e:
                 logging.error(f"Fastest not found: {e}")

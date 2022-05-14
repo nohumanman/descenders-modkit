@@ -25,6 +25,7 @@ namespace SplitTimer
                 if (this.checkpointType == CheckpointType.Start)
                 {
                     SplitTimerText.Instance.RestartTimer();
+                    //NetClient.Instance.gameObject.GetComponent<Utilities>().SetVel(5);
                 }
                 else if (this.checkpointType == CheckpointType.Finish)
                 {

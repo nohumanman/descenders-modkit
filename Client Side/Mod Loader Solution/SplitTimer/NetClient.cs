@@ -137,10 +137,6 @@ namespace SplitTimer{
             {
 				gameObject.GetComponent<Utilities>().FreezePlayer();
 			}
-			if (message.StartsWith("UNFREEZE_PLAYER"))
-            {
-				gameObject.GetComponent<Utilities>().UnfreezePlayer();
-			}
 			if (message.StartsWith("TOGGLE_CONTROL"))
             {
 				string shouldStr = message.Split('|')[1];
@@ -180,6 +176,7 @@ namespace SplitTimer{
 				SplitTimerText.Instance.count = false;
 				SplitTimerText.Instance.text.text = reason;
 				SplitTimerText.Instance.text.color = Color.red;
+				StartCoroutine(SplitTimerText.Instance.DisableTimerText(5));
 			}
 			if (message.StartsWith("CUT_BRAKES"))
             {
@@ -190,13 +187,13 @@ namespace SplitTimer{
 				Physics.IgnoreLayerCollision(8, 8, PlayerCollision);
 				PlayerCollision = !PlayerCollision;
 			}
-			if (message.StartsWith("TOGGLE_BOOST"))
+			if (message.StartsWith("SET_VEL"))
             {
-				if (gameObject.GetComponent<SpeedBoost>() == null)
-					gameObject.AddComponent<SpeedBoost>();
-				SpeedBoost speedBoost = gameObject.GetComponent<SpeedBoost>();
-				speedBoost.speedEnabled = !speedBoost.speedEnabled;
-				speedBoost.speedMultiplier = float.Parse(message.Split('|')[1]);
+				string[] gate = message.Split('|');
+				string multiplicationFactor = gate[1];
+				GetComponent<Utilities>().SetVel(
+					float.Parse(multiplicationFactor)
+				);
 			}
 			if (message.StartsWith("GRAVITY"))
             {

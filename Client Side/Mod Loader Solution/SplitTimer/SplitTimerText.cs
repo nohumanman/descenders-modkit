@@ -29,9 +29,15 @@ namespace SplitTimer
 			yield return new WaitForSeconds(5f);
 			checkpointTime = "";
         }
+		public IEnumerator DisableTimerText(float tim)
+        {
+			yield return new WaitForSeconds(tim);
+			text.text = "";
+		}
 		void Start()
         {
 			text = GetComponent<Text>();
+			text.text = "";
 			StartCoroutine(UpdateTime());
 		}
 		public void RestartTimer()
@@ -43,6 +49,7 @@ namespace SplitTimer
 		public void StopTimer()
 		{
 			count = false;
+			StartCoroutine(DisableTimerText(15));
 		}
 		public void FixedUpdate()
 		{
