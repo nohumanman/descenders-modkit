@@ -7,8 +7,11 @@ import threading
 import time
 import random
 import logging
+import os
 
-log_location = "/home/admin/log.txt"
+script_path = os.path.dirname(os.path.realpath(__file__))
+
+log_location = script_path + "splittimer.log"
 
 logging.basicConfig(
     filename=log_location,
