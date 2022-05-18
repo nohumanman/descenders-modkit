@@ -22,8 +22,8 @@ class SocketServer():
         try:
             with conn:
                 player.recieve()
-        except OSError:
-            logging.info("Client has disconnected")
+        except Exception as error:
+            logging.info(f"Client has disconnected with error code {error}")
         self.players.remove(player)
 
     def start(self):
