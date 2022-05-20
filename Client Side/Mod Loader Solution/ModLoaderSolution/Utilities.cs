@@ -889,10 +889,6 @@ namespace ModLoaderSolution
             LogUI.gameObject.SetActive(false);
         }
         public bool bailEnabled = false;
-        public int GetFaction()
-        {
-            return DevCommandsGameplay.faction;
-        }
         public void EnableStats()
         {
             PlayerInfoImpact pi = GetPlayerInfoImpact();

@@ -60,7 +60,6 @@
      <Compile Include="Assets\Mod Loader\MonoImageOpenStatus.cs" />
      <Compile Include="Assets\Mod Loader\Native.cs" />
      <Compile Include="Assets\Mod Loader\ProcessUtils.cs" />
-     <Compile Include="Assets\Speedrun Dot Com\SpeedrunDotCom.cs" />
      <Compile Include="Assets\Split Timer\JsonMapInfo.cs" />
      <Compile Include="Assets\Split Timer\JsonRidersGate.cs" />
      <Compile Include="Assets\Split Timer\TimerInfo.cs" />
