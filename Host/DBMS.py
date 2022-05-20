@@ -138,18 +138,11 @@ class DBMS():
         result = DBMS.execute_sql(statement)
         return [
             {
-                "steam_id": time[0],
-                "time_id": time[1],
-                "timestamp": time[2],
-                "world_name": time[3],
-                "trail_name": time[4],
-                "was_monitored": time[5],
-                "total_time": time[9],
-                "bike": time[6],
-                "steam_name": time[12],
-                "avatar_src": time[13],
+                "place": i + 1,
+                "time": time[9],
+                "name": time[12],
             }
-            for time in result
+            for i, time in enumerate(result)
         ]
 
     @staticmethod

@@ -28,9 +28,12 @@ class SocketServer():
 
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            print("Binding with self")
             s.bind((self.host, self.port))
+            print("Bound, listening...")
             s.listen()
             while True:
+                print("Waiting for client...")
                 conn, addr = s.accept()
                 logging.info(f"Connected by {addr}")
                 threading.Thread(

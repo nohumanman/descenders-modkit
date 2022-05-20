@@ -1,5 +1,7 @@
 import socket
 import time
+import srcomapi
+import srcomapi.datatypes as dt
 from DBMS import DBMS
 from TrailTimer import TrailTimer
 import requests
@@ -34,6 +36,26 @@ operations = {
         lambda netPlayer, data: netPlayer.on_bike_switch(data[1], data[2]),
     "REP":
         lambda netPlayer, data: netPlayer.set_reputation(data[1]),
+    "SPEEDRUN_DOT_COM_LEADERBOARD":
+        lambda netPlayer, data: (
+            netPlayer.send(
+                "SPEEDRUN_DOT_COM_LEADERBOARD|"
+                + data[1] + "|"
+                + str(netPlayer.convert_to_unity(
+                    netPlayer.get_speedrun_dot_com_leaderboard(data[1])
+                ))
+            )
+        ),
+    "LEADERBOARD":
+        lambda netPlayer, data: (
+            netPlayer.send(
+                "LEADERBOARD|"
+                + data[1] + "|"
+                + str(
+                    netPlayer.get_leaderboard(data[1])
+                )
+            )
+        ),
 }
 
 
@@ -54,6 +76,52 @@ class NetPlayer():
     def set_reputation(self, reputation):
         self.reputation = int(reputation)
         DBMS.log_rep(self.steam_id, self.reputation)
+
+    def convert_to_unity(self, leaderboard):
+        logging.info("Getting speedrun.com leaderboard")
+        if len(leaderboard) == 0:
+            return {}
+        keys = [key for key in leaderboard[0]]
+        unityLeaderboard = {}
+        for key in keys:
+            unityLeaderboard[key] = []
+        for leaderboardTime in leaderboard:
+            for key in leaderboardTime:
+                unityLeaderboard[key].append(leaderboardTime[key])
+        return unityLeaderboard
+
+    def get_leaderboard(self, trail_name):
+        logging.info("Getting speedrun.com leaderboard for " + trail_name)
+        return self.convert_to_unity(
+            DBMS.get_leaderboard(
+                trail_name
+                )
+            )
+
+    def get_speedrun_dot_com_leaderboard(self, trail_name):
+        logging.info("Getting speedrun.com leaderboard for " + trail_name)
+        api = srcomapi.SpeedrunCom()
+        game = api.get_game("Descenders")
+        for level in game.levels:
+            if level.data["name"] == trail_name:
+                leaderboard = dt.Leaderboard(
+                    api,
+                    data=api.get(
+                        f"leaderboards/{game.id}/level/{level.id}"
+                        f"/7dg4yg4d?embed=variables"
+                    )
+                )
+                leaderboard_json = ([
+                    {
+                        "place": leaderboard["place"],
+                        "time": leaderboard["run"].times["realtime_t"],
+                        "name": leaderboard["run"].players[0].name
+                    } for leaderboard in leaderboard.runs if (
+                        leaderboard["place"] != 0
+                    )
+                    ])
+                return leaderboard_json
+        return {}
 
     def get_total_time(self, onWorld=False):
         if onWorld:
@@ -133,6 +201,8 @@ class NetPlayer():
             self.trails[trail].invalidate_timer(reason)
 
     def on_respawn(self):
+        if str(self.steam_id) == "76561198314526424":
+            self.invalidate_all_trails("THOU HAST EATEN SHIT")
         self.invalidate_all_trails("You respawned!")
 
     def get_trail(self, trail_name) -> TrailTimer:

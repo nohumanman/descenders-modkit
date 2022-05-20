@@ -21,9 +21,15 @@ logging.basicConfig(
     datefmt='%d-%b-%y %H:%M:%S'
 )
 
+logging.info(
+    "-------------------------------- "
+    "Descenders Split Timer Started"
+    " --------------------------------"
+)
+
 # Create Socket Server
 
-SOCKET_HOST = "172.26.14.70"
+SOCKET_HOST = "0.0.0.0"
 SOCKET_PORT = 65432
 
 socket_server = SocketServer(SOCKET_HOST, SOCKET_PORT)
@@ -32,7 +38,7 @@ socket_server_thread.start()
 
 # Create Website Server
 
-WEBSITE_HOST = "172.26.14.70"
+WEBSITE_HOST = "0.0.0.0"
 WEBSITE_PORT = 8080
 
 app = Flask(__name__)
@@ -88,7 +94,8 @@ def get():
                     "name": player.steam_name,
                     "steam_avatar_src": player.get_avatar_src(),
                     "total_time": player.get_total_time(),
-                    "world_name": player.world_name
+                    "world_name": player.world_name,
+                    "reputation": player.reputation
                 } for player in socket_server.players
             ]
         }

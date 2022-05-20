@@ -3,3 +3,5 @@ Client Side/Unity Project/Descenders Scripts/Assets/DESCENDERS SCRIPTS/SplashScr
 Websocket-Host/__pycache__
 Host/Tokens.py
 SplitTimer.db
+*.pyc
+*.pyc

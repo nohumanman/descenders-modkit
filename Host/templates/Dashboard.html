@@ -1,7 +1,7 @@
 <html lang="en">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-        <title>Descenders Split Timer</title>
+        <title>D-Split Dashboard</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link rel="icon" type="image/png" href="/static/images/Descenders Competitive Logo.png">
         <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
@@ -23,48 +23,50 @@
                         <v-btn @click="setSelf(valee)">SUBMIT STEAM ID</v-btn>
                     </v-overlay>
                     <v-overlay opacity="1" v-model="controlling">
+                        <div style="padding:200px;">
                         <v-btn @click="controlling = false;"><v-icon>mdi-exit-to-app</v-icon></v-btn>
-                        You are currently controlling "[[controlled_player.name]]"
-                        <v-text-field placeholder="Command" v-model="command"></v-text-field>
-                        <v-btn @click="SubmitEval(controlled_player.id, command)">SUBMIT</v-btn>
+                        <br><br>
+                        <h1 style="text-align:center; font-size:50px;">Controlling [[controlled_player.name]]</h1>
+                        <br><br>
+                        <h1 style="text-align:center;">Commands</h1>
+                        <br>
+                        <v-row>
+                            <v-col class="d-flex justify-center" v-for="command in commands">
+                                <v-btn :color="stringToColour(command.eval)" size="50" @click="SubmitEval(controlled_player.id, command.eval)">
+                                    [[command.name]]
+                                </v-btn>
+                            </v-col>
+                        </v-row>
+                        <br><br>
+                        <h1>Time Control</h1>
+                        <br><br>
                         <v-slider
                             hint="Time.timeScale"
                             v-on:change="changeRoute"
+                            v-model="timeScale"
                             max="4"
                             min="0"
                             step="0.1"
                             thumb-label="always"
                         ></v-slider>
+                        <br><br>
+                        <v-spacer color="blue"></v-spacer>
+                        <h1>Dev CLI</h1>
+                        <v-text-field placeholder="Command" v-model="command"></v-text-field>
+                        <v-btn @click="SubmitEval(controlled_player.id, command)">SUBMIT</v-btn>
+                        </div>
+
                     </v-overlay>
                     <br>
-                    <h1 style="text-align:center; font-size:50px; text-decoration: underline;">Descenders Split Timer</h1>
+                    <h1 style="text-align:center; font-size:50px;">
+                        D-Split Dashboard
+                    </h1>
                     <br>
-                    <v-btn @click="RidersGate();">RIDERS GATE</v-btn>
-                    <v-btn @click="Randomise();">Randomise</v-btn>
-                    <div style="background-color:rgba(16, 120, 168, 0.292); width:50%; margin:0 auto; border-radius: 10px;">
-                        <v-text-field
-                            style="padding:20px; text-align:center;"
-                            clearable
-                            label="Search for user"
-                            v-model="search_value"
-                        ></v-text-field>
-                    </div>
+                    <v-divider color="black"></v-divider>
+                    <br>
+                    <v-btn @click="Randomise();">Disable Gates</v-btn>
                     <v-row>
-                        <v-col style="padding:40px;">
-                            <v-card width="400px">
-                                <h1>All Players</h1>
-                                <br><br>
-                                <v-slider
-                                    hint="Time.timeScale"
-                                    v-on:change="changeRouteAll"
-                                    max="4"
-                                    min="0"
-                                    step="0.1"
-                                    thumb-label="always"
-                                ></v-slider>
-                            </v-card>
-                        </v-col>
-                        <v-col v-if="search_value == '' || id.name.includes(search_value)" v-for="id in ids" style="padding:40px;">
+                        <v-col :key="id.id" v-for="id in ids" style="padding:40px;">
                             <v-card width="400px" :loading="loading">
                                 <v-card-title>
                                     <v-avatar size="75">
@@ -81,26 +83,20 @@
                                         <p style="text-align:center;">
                                             Total time in [[id.world_name]] - [[toHours(id.total_time)]]
                                         </p>
+                                        <p>Rep - [[id.reputation]]</p>
                                         <v-card-actions class="justify-center">
-                                            <v-btn @click="SubmitEval(id.id, 'SET_BIKE|2')">Hardtail</v-btn>
+                                            <v-btn ci @click="SubmitEval(id.id, 'SET_BIKE|2')">Hardtail</v-btn>
                                             <v-btn @click="SubmitEval(id.id, 'SET_BIKE|1')">Downhill</v-btn>
                                             <v-btn @click="SubmitEval(id.id, 'SET_BIKE|0')">Enduro</v-btn>
+                                        </v-card-actions>
+                                        <v-divider color="pink"></v-divider>
+                                        <v-card-actions class="justify-center">
+                                            <v-btn @click="Spectate(id)">Spectate</v-btn>
+                                            <v-btn @click="SubmitEval(id.id, 'RIDERSGATE|2')">Trigger Gate</v-btn>
                                         </v-card-actions>
                                     </div>
                                 </v-card-title>
                                 <v-card-actions class="justify-center">
-                                    <v-btn @click="Spectate(id)" outlined color="green">
-                                        <v-icon>mdi-eye</v-icon>
-                                    </v-btn>
-                                    <v-btn @click="SubmitEval(id.id, 'RESPAWN_AT_START')" outlined color="blue">
-                                        <v-icon>mdi-delete</v-icon>
-                                    </v-btn>
-                                    <v-btn color="white" @click="ToggleControl(id);">
-                                        <v-icon>mdi-pause-octagon</v-icon>
-                                    </v-btn>
-                                    <v-btn @click="SubmitEval(id.id, 'RESPAWN_ON_TRACK')" outlined color="red">
-                                        <v-icon>mdi-recycle</v-icon>
-                                    </v-btn>
                                     <v-btn @click="controlled_player = id; controlling = true;">
                                         <v-icon>mdi-open-in-new</v-icon>
                                     </v-btn>
@@ -115,4 +111,10 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <script src="/static/js/dashboard.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dosis&family=Source+Code+Pro:wght@700&display=swap');
+        * {
+            font-family: 'Source Code Pro', monospace;
+        }
+    </style>
 </html>

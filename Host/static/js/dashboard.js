@@ -23,16 +23,88 @@ var app = new Vue({
             {"name" : "Hardtail", "val" : 2},
             {"name" : "Downhill", "val" : 1}
         ],
+        commands: [
+            {
+                "eval" : "RESPAWN_AT_START",
+                "name": "Respawn at Start"
+            },
+            {
+                "eval": "RESPAWN_ON_TRACK",
+                "name": "Respawn on Track"
+            },
+            {
+                "eval": "CUT_BRAKES",
+                "name": "Cut Brakes"
+            },
+            {
+                "eval": "BANNED|CRASH",
+                "name": "Crash Game"
+            },
+            {
+                "eval": "BANNED|CLOSE",
+                "name": "Close Game"
+            },
+            {
+                "eval": "TOGGLE_SPECTATOR",
+                "name": "Make 'em dissapear"
+            },
+            {
+                "eval": "CLEAR_SESSION_MARKER",
+                "name": "Clear Session Marker"
+            },
+            {
+                "eval": "RESET_PLAYER",
+                "name": "Reset Player"
+            },
+            {
+                "eval": "TOGGLE_COLLISION",
+                "name": "Toggle Collision"
+            },
+            {
+                "eval": "SET_VEL|500",
+                "name": "Into Orbit"
+            },
+            {
+                "eval": "ENABLE_STATS",
+                "name": "Enable Stats"
+            },
+            {
+                "eval": "TOGGLE_GOD",
+                "name": "Activate Anticheat"
+            },
+        ],
         controlled_player : {},
         loading : false,
         search_value: "",
         self : null,
         command : "",
         valee: "",
+        timeScale: 1,
     },
     methods: {
         SubmitEval(id, eval_command){
-            $.get("/eval/" + id + "?order=" + eval_command);
+            if (id == "ALL"){
+                this.ids.forEach(id => {
+                    if (id.id != "ALL"){
+                        this.SubmitEval(id.id, eval_command);
+                    }
+                });
+            }
+            else{
+                $.get("/eval/" + id + "?order=" + eval_command);
+            }
+        },
+        stringToColour(str) {
+            var hash = 0;
+            for (var i = 0; i < str.length; i++) {
+              hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            var colour = '#';
+            for (var i = 0; i < 3; i++) {
+              var value = (hash >> (i * 8)) & 0xFF;
+              colour += ('00' + value.toString(16)).substr(-2);
+            }
+            return colour;
         },
         Randomise(){
             $.get("/randomise");
@@ -83,14 +155,6 @@ var app = new Vue({
             }
             this.SubmitEval(this.controlled_player.id, "MODIFY_SPEED|" + timeScale.toString());
         },
-        changeRouteAll(timeScale){
-            if (timeScale == null){
-                timeScale = 1;
-            }
-            this.ids.forEach(function(id){
-                app.SubmitEval(id.id, "MODIFY_SPEED|" + timeScale.toString());
-            });
-        },
         setSelf(steam_id){
             this.self = steam_id
             window.localStorage.setItem('self', steam_id);
@@ -103,6 +167,26 @@ var app = new Vue({
 
 app.self = window.localStorage.getItem('self');
 
+function updatePlayers() {
+    $.getJSON("/get", function(data){
+        app.ids = data["ids"]
+        let startTime = new Date().getTime();
+        if (app.ids[0] == null || app.ids[0].id != "ALL"){
+            app.ids.unshift(
+                {
+                    "name":"All Players",
+                    "id" : "ALL",
+                    "command" : "",
+                    "steam_avatar_src" : "https://dinahjean.files.wordpress.com/2020/04/all.jpg",
+                    "total_time": new Date().getTime()-startTime,
+                    "world_name": "this place",
+                    "reputation":  420420,
+                }
+            )
+        }
+    })
+}
 
-$.getJSON("/get", function(data){app.ids = data["ids"]})
-setInterval(function () {$.getJSON("/get", function(data){app.ids = data["ids"]})}, 5000);
+updatePlayers();
+setInterval(updatePlayers, 5000);
+
