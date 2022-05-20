@@ -7,4 +7,6 @@ public class TimerInfo : ModBehaviour {
 	public GameObject boundaries;
 	public GameObject startCheckpoint;
 	public GameObject endCheckpoint;
+	public GameObject leaderboardText;
+	public GameObject autoLeaderboardText;
 }

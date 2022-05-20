@@ -9,7 +9,7 @@ namespace SplitTimer
         public Trail trail;
         public void Start()
         {
-            Debug.Log("Boundary added to " + this.gameObject.name);
+            Debug.Log("Boundary | Boundary added to " + this.gameObject.name);
         }
         void OnTriggerEnter(Collider other)
         {

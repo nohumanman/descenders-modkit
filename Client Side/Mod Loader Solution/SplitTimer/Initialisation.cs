@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using SpeedRunDot;
 
 
 namespace SplitTimer
@@ -16,7 +15,7 @@ namespace SplitTimer
                 string json = JsonUtility.ToJson(g.GetComponent("TimerInfo"));
                 if (json != "" && json != null)
                 {
-                    Debug.Log("SplitTimer | Found TimerInfo");
+                    Debug.Log("Initialisation | Found TimerInfo");
                     Trail trail = g.AddComponent<Trail>();
                     JsonUtility.FromJsonOverwrite(json, trail);
                     trail.AddScripts();
@@ -24,26 +23,25 @@ namespace SplitTimer
                 string jsonMapInfo = JsonUtility.ToJson(g.GetComponent("JsonMapInfo"));
                 if (jsonMapInfo != "" && jsonMapInfo != null)
                 {
-                    Debug.Log("SplitTimer | Found MapInfo");
+                    Debug.Log("Initialisation | Found MapInfo");
                     MapInfo mapInfo = this.gameObject.AddComponent<MapInfo>();
                     JsonUtility.FromJsonOverwrite(jsonMapInfo, mapInfo);
                 }
                 string timerText = JsonUtility.ToJson(g.GetComponent("TimerText"));
                 if (timerText != "" && timerText != null)
                 {
-                    Debug.Log("SplitTimer | Found Timer Text");
+                    Debug.Log("Initialisation | Found Timer Text");
                     g.AddComponent<SplitTimerText>();
                 }
-                
                 string jsonRidersGate = JsonUtility.ToJson(g.GetComponent("JsonRidersGate"));
                 if (jsonRidersGate != "" && jsonRidersGate != null)
                 {
-                    Debug.Log("SplitTimer | Found RidersGate");
+                    Debug.Log("Initialisation | Found RidersGate");
                     RidersGate x = g.AddComponent<RidersGate>();
                     JsonUtility.FromJsonOverwrite(jsonRidersGate, x);
                 }
             }
-            this.gameObject.AddComponent<SpeedrunDotCom>();
+            
             if (this.GetComponent<MapInfo>() == null)
                 Debug.LogError("ERROR - No Map info found in scene!!");
             this.gameObject.AddComponent<PlayerInfo>();

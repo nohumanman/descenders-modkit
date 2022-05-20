@@ -10,6 +10,8 @@ namespace SplitTimer
         public GameObject boundaries;
         public GameObject startCheckpoint;
         public GameObject endCheckpoint;
+        public GameObject leaderboardText;
+        public GameObject autoLeaderboardText;
         public List<GameObject> boundaryList = new List<GameObject>();
         public List<GameObject> checkpointList = new List<GameObject>();
         public float clientTime = 0f;
@@ -20,7 +22,7 @@ namespace SplitTimer
                 foreach (Transform boundary in boundaries.transform)
                 {
                     GameObject boundaryObj = boundary.gameObject;
-                    Debug.Log("Adding boundary to " + boundaryObj.name);
+                    Debug.Log("Trail '" + this.name + "' | Adding boundary to " + boundaryObj.name);
                     Boundary boun = boundaryObj.AddComponent<Boundary>();
                     boun.trail = this;
                     boundaryList.Add(boundaryObj);
@@ -28,7 +30,7 @@ namespace SplitTimer
                 foreach (Transform checkpoint in startCheckpoint.transform.parent)
                 {
                     GameObject checkpointObj = checkpoint.gameObject;
-                    Debug.Log("Adding checkpoint to " + checkpointObj.name);
+                    Debug.Log("Trail '" + this.name + "' | Adding checkpoint to " + checkpointObj.name);
                     Checkpoint check = checkpointObj.AddComponent<Checkpoint>();
                     check.trail = this;
                     if (checkpointObj == startCheckpoint)
