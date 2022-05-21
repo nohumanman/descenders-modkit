@@ -43,7 +43,7 @@ class DBMS():
         min_timestamp=None,
         monitored_only=False
     ):
-        statement = '''
+        statement = f'''
             SELECT
                 SplitTime.time_id,
                 SplitTime.checkpoint_num,
@@ -55,7 +55,7 @@ class DBMS():
                 SplitTime
                 INNER JOIN Time ON SplitTime.time_id = Time.time_id
                 INNER JOIN Player ON Time.steam_id = Player.steam_id
-            WHERE trail_name = "Blue Trail"
+            WHERE trail_name = "{trail_name}"
             ORDER BY checkpoint_num DESC, checkpoint_time ASC
             LIMIT 1
             '''
@@ -119,10 +119,15 @@ class DBMS():
                 INNER JOIN
                     SplitTime ON SplitTime.time_id = Time.time_id
                 INNER JOIN
-                    (SELECT
-                        max(checkpoint_num) AS max_checkpoint
-                    FROM
-                        SplitTime) ON SplitTime.time_id=Time.time_id
+                    (
+                        SELECT
+                            max(checkpoint_num) AS max_checkpoint
+                        FROM
+                            SplitTime
+                            INNER JOIN
+                                Time ON Time.time_id = SplitTime.time_id
+                            WHERE Time.trail_name = "{trail_name}"
+                    ) ON SplitTime.time_id=Time.time_id
                 INNER JOIN
                     Player ON Player.steam_id = Time.steam_id
             WHERE
@@ -130,10 +135,12 @@ class DBMS():
                 AND
                 checkpoint_num = max_checkpoint
             GROUP BY
+                trail_name,
                 Player.steam_id
+                
             ORDER BY
                 checkpoint_time ASC
-            LIMIT {num};
+            LIMIT {num}
         '''
         result = DBMS.execute_sql(statement)
         return [

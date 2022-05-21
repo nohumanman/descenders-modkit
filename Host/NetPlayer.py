@@ -60,9 +60,10 @@ operations = {
 
 
 class NetPlayer():
-    def __init__(self, conn: socket, addr):
+    def __init__(self, conn: socket, addr, parent):
         self.addr = addr
         self.conn = conn
+        self.parent = parent
         self.trails = {}
         self.__avatar_src = None
         self.steam_id = None
@@ -203,6 +204,7 @@ class NetPlayer():
     def on_respawn(self):
         if str(self.steam_id) == "76561198314526424":
             self.invalidate_all_trails("THOU HAST EATEN SHIT")
+            return
         self.invalidate_all_trails("You respawned!")
 
     def get_trail(self, trail_name) -> TrailTimer:

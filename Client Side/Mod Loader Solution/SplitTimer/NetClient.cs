@@ -108,12 +108,15 @@ namespace SplitTimer{
             {
 				string[] leaderboard = message.Split('|');
 				string trailName = leaderboard[1];
-				foreach(Trail trail in GameObject.FindObjectsOfType<Trail>())
-                {
-					string leaderboardJson = leaderboard[2];
-					LeaderboardInfo leaderboardInfo = JsonUtility.FromJson<LeaderboardInfo>(leaderboardJson.Replace("'", "\""));
-					trail.leaderboardText.GetComponent<TextMesh>().text = trailName + " - Speedrun.com\n" + leaderboardInfo.LeaderboardAsString();
-				}
+				foreach (Trail trail in GameObject.FindObjectsOfType<Trail>())
+				{
+					if (trail.name == trailName)
+					{
+						string leaderboardJson = leaderboard[2];
+						LeaderboardInfo leaderboardInfo = JsonUtility.FromJson<LeaderboardInfo>(leaderboardJson.Replace("'", "\""));
+						trail.leaderboardText.GetComponent<TextMesh>().text = trailName + " - Speedrun.com\n" + leaderboardInfo.LeaderboardAsString();
+					}
+                }
 			}
 			if (message.StartsWith("LEADERBOARD"))
             {
@@ -121,10 +124,20 @@ namespace SplitTimer{
 				string trailName = leaderboard[1];
 				foreach (Trail trail in GameObject.FindObjectsOfType<Trail>())
 				{
-					string leaderboardJson = leaderboard[2];
-					LeaderboardInfo leaderboardInfo = JsonUtility.FromJson<LeaderboardInfo>(leaderboardJson.Replace("'", "\""));
-					trail.autoLeaderboardText.GetComponent<TextMesh>().text = trailName + " - Automatic\n" + leaderboardInfo.LeaderboardAsString();
+					if (trail.name == trailName)
+                    {
+						string leaderboardJson = leaderboard[2];
+						LeaderboardInfo leaderboardInfo = JsonUtility.FromJson<LeaderboardInfo>(leaderboardJson.Replace("'", "\""));
+						trail.autoLeaderboardText.GetComponent<TextMesh>().text = trailName + " - Automatic\n" + leaderboardInfo.LeaderboardAsString();
+					}
 				}
+			}
+			if (message.StartsWith("TIMER_FINISH"))
+            {
+				string[] leaderboard = message.Split('|');
+				string info = leaderboard[1];
+				SplitTimerText.Instance.text.color = Color.green;
+				SplitTimerText.Instance.text.text = info;
 			}
 			if (message.StartsWith("BANNED")) {
 				string[] ban = message.Split('|');

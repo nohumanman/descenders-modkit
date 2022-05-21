@@ -17,7 +17,7 @@ class SocketServer():
 
     def create_client(self, conn, addr):
         logging.info("Creating client")
-        player = NetPlayer(conn, addr)
+        player = NetPlayer(conn, addr, self)
         self.players.append(player)
         try:
             with conn:

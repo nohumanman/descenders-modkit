@@ -96,6 +96,14 @@ class TrailTimer():
             )
         self.started = False
         self.times = []
+        for net_player in self.network_player.parent.players:
+            net_player.send(
+                "LEADERBOARD|"
+                + self.trail_name + "|"
+                + str(
+                    self.network_player.get_leaderboard(self.trail_name)
+                )
+            )
 
     @staticmethod
     def secs_to_str(secs):

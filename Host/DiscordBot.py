@@ -30,8 +30,8 @@ class DiscordBot(commands.Bot):
             logging.info("dmbs request successfull.")
             leaderboard_str = ""
             for i, player in enumerate(leaderboard):
-                name = player["steam_name"]
-                time = TrailTimer.secs_to_str(player["total_time"])
+                name = player["name"]
+                time = TrailTimer.secs_to_str(float(player["time"]))
                 num = ""
                 if i == 0:
                     num = "🥇"
@@ -41,7 +41,8 @@ class DiscordBot(commands.Bot):
                     num = "🥉"
                 else:
                     num = TrailTimer.ord(i + 1)
-                bike = player["bike"]
+                # bike = player["bike"]
+                bike = "some bike"
                 leaderboard_str += f"{num} - {name} with {time} on {bike}\n"
             logging.info(leaderboard_str)
             try:
