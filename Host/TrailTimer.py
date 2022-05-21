@@ -60,6 +60,8 @@ class TrailTimer():
             self.network_player.send(f"SPLIT_TIME|{mess}")
 
     def invalidate_timer(self, reason: str):
+        if not self.started:
+            return
         logging.info(f"invalidating time of {self.network_player.steam_name}")
         self.network_player.send(f"INVALIDATE_TIME|{reason}")
         self.started = False
@@ -93,6 +95,12 @@ class TrailTimer():
                 False,
                 self.network_player.world_name,
                 self.network_player.bike_type
+            )
+            self.network_player.send(
+                "TIMER_FINISH|Time - "
+                + str(TrailTimer.secs_to_str(
+                            self.times[len(self.times)-1]
+                        ))
             )
         self.started = False
         self.times = []

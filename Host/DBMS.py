@@ -137,7 +137,6 @@ class DBMS():
             GROUP BY
                 trail_name,
                 Player.steam_id
-                
             ORDER BY
                 checkpoint_time ASC
             LIMIT {num}

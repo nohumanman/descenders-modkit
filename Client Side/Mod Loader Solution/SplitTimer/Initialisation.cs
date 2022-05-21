@@ -40,6 +40,10 @@ namespace SplitTimer
                     RidersGate x = g.AddComponent<RidersGate>();
                     JsonUtility.FromJsonOverwrite(jsonRidersGate, x);
                 }
+                if (g.name == "SLOZONE")
+                {
+                    g.AddComponent<SloMoZone>();
+                }
             }
             
             if (this.GetComponent<MapInfo>() == null)
@@ -47,6 +51,7 @@ namespace SplitTimer
             this.gameObject.AddComponent<PlayerInfo>();
             this.gameObject.AddComponent<NetClient>();
             this.gameObject.AddComponent<BikeSwitcher>();
+            this.gameObject.AddComponent<TimeModifier>();
         }
     }
 }
