@@ -51,22 +51,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Mod Loader\Assembler.cs" />
-     <Compile Include="Assets\Mod Loader\ExportedFunction.cs" />
-     <Compile Include="Assets\Mod Loader\Injector.cs" />
-     <Compile Include="Assets\Mod Loader\InjectorException.cs" />
-     <Compile Include="Assets\Mod Loader\Memory.cs" />
-     <Compile Include="Assets\Mod Loader\ModLoader.cs" />
-     <Compile Include="Assets\Mod Loader\MonoImageOpenStatus.cs" />
-     <Compile Include="Assets\Mod Loader\Native.cs" />
-     <Compile Include="Assets\Mod Loader\ProcessUtils.cs" />
-     <Compile Include="Assets\Split Timer\JsonMapInfo.cs" />
-     <Compile Include="Assets\Split Timer\JsonRidersGate.cs" />
-     <Compile Include="Assets\Split Timer\TimerInfo.cs" />
-     <Compile Include="Assets\Split Timer\TimerText.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Assembler.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\ExportedFunction.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Injector.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\InjectorException.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Memory.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\ModLoader.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\MonoImageOpenStatus.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Native.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\ProcessUtils.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Split Timer\JsonMapInfo.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Split Timer\JsonRidersGate.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Split Timer\TimerInfo.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Split Timer\TimerText.cs" />
      <None Include="Assets\ModTool\ModTool.Shared.xml" />
      <None Include="Assets\ModTool\ModTool.Interface.xml" />
-     <None Include="Assets\Speedrun Dot Com\3DText.shader" />
+     <None Include="Assets\Descenders Split Timer\Leaderboard\Text\3DText.shader" />
      <None Include="Assets\ModTool\Mono.Cecil\LICENSE.txt" />
  <Reference Include="UnityEngine.CoreModule">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll</HintPath>
@@ -234,13 +234,13 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
  </Reference>
  <Reference Include="ModTool.Interface">
- <HintPath>E:/Descenders-Split-Timer/Client Side/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Interface.dll</HintPath>
+ <HintPath>E:/Descenders-Split-Timer/Client/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Interface.dll</HintPath>
  </Reference>
  <Reference Include="ModTool.Shared">
- <HintPath>E:/Descenders-Split-Timer/Client Side/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Shared.dll</HintPath>
+ <HintPath>E:/Descenders-Split-Timer/Client/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Shared.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Cecil">
- <HintPath>E:/Descenders-Split-Timer/Client Side/Unity Project/Split Timer Test/Assets/ModTool/Mono.Cecil/Mono.Cecil.dll</HintPath>
+ <HintPath>E:/Descenders-Split-Timer/Client/Unity Project/Split Timer Test/Assets/ModTool/Mono.Cecil/Mono.Cecil.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>C:/Users/point/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/UnityEngine.Analytics.dll</HintPath>
