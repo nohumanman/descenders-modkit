@@ -5,6 +5,13 @@ This repository contains an assortment of C# scripts that can be implemented in 
 
 ## Tools & Features
 
+### Split Timer
+- A timer system that has split times integrated
+- Timer has configurable 'boundary' such that a player's time is invalidated when they exit the boundary.
+- Has a leaderboard
+- Note: Relies on an external server, *uptime is not guaranteed*.
+- Note II: Requires externally loaded DLL as described later.
+
 ### Map Navigation
 - Player Tracking - allows both networked players and local players to be visually represented on the map, with the name displayed.
 - Player Teleportation - allows you to teleport to the players that are visually represented on the map.
@@ -23,13 +30,6 @@ This repository contains an assortment of C# scripts that can be implemented in 
 ### Riders Gate
 - A BMX-Style start gate **that is synced with other networked players**.
 - Has audio accompaniment for auditory queues.
-- Note: Relies on an external server, *uptime is not guaranteed*.
-- Note II: Requires externally loaded DLL as described later.
-
-### Split Timer
-- A timer system that has split times integrated
-- Timer has configurable 'boundary' such that a player's time is invalidated when they exit the boundary.
-- Has a leaderboard
 - Note: Relies on an external server, *uptime is not guaranteed*.
 - Note II: Requires externally loaded DLL as described later.
 
