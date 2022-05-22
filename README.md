@@ -12,6 +12,12 @@ This repository contains an assortment of C# scripts that can be implemented in 
 - Note: Relies on an external server, *uptime is not guaranteed*.
 - Note II: Requires externally loaded DLL as described later.
 
+### Speedrun.com Leaderboard
+- A physical leaderboard in the game that displays the top 10 fastest times on that trail on speedrun.com
+- Physical Leaderboard model courtesy of BBB171
+- Note: Relies on an external server, *uptime is not guaranteed*.
+- Note II: Requires externally loaded DLL as described later.
+
 ### Map Navigation
 - Player Tracking - allows both networked players and local players to be visually represented on the map, with the name displayed.
 - Player Teleportation - allows you to teleport to the players that are visually represented on the map.
