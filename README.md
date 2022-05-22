@@ -9,8 +9,8 @@ This repository contains an assortment of C# scripts that can be implemented in 
 - A timer system that has split times integrated.
 - Timer has configurable 'boundary' such that a player's time is invalidated when they exit the boundary.
 - Has a leaderboard.
-- Note: Relies on an external server, *uptime is not guaranteed*.
-- Note II: Requires externally loaded DLL as described later.
+Note: Relies on an external server, *uptime is not guaranteed*.
+Note II: Requires externally loaded DLL as described later.
 
 ### Map Navigation
 - Player Tracking - allows both networked players and local players to be visually represented on the map, with the name displayed.
@@ -20,7 +20,7 @@ This repository contains an assortment of C# scripts that can be implemented in 
 
 ### Bike Switcher
 - Allows you to switch between Hardtail, Downhill, and Enduro bike types via UI.
-- Note: Requires externally loaded DLL as described later.
+Note: Requires externally loaded DLL as described later.
 
 ### Splash Screen
 - Allows you to load a video file of your choice and start it when the map is loaded.
@@ -30,12 +30,12 @@ This repository contains an assortment of C# scripts that can be implemented in 
 ### Riders Gate
 - A BMX-Style start gate **that is synced with other networked players**.
 - Has audio accompaniment for auditory queues.
-- Note: Relies on an external server, *uptime is not guaranteed*.
-- Note II: Requires externally loaded DLL as described later.
+Note: Relies on an external server, *uptime is not guaranteed*.
+Note II: Requires externally loaded DLL as described later.
 
 ### Ice Mod
 - Adds the same functionality as in Bikeout, where the rider is extremely slippery.
-- Note: Requires externally loaded DLL as described later.
+Note: Requires externally loaded DLL as described later.
 
 ### Teleport Pad
 - Gives you the ability to teleport players using a box collider.
