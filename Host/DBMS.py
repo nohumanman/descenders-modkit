@@ -147,6 +147,7 @@ class DBMS():
                 "place": i + 1,
                 "time": time[9],
                 "name": time[12],
+                "bike": time[6]
             }
             for i, time in enumerate(result)
         ]
