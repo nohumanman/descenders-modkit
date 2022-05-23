@@ -17,6 +17,17 @@ class DiscordBot(commands.Bot):
         self.loop.create_task(self.start(discord_token))
         threading.Thread(target=self.loop.run_forever).start()
 
+    async def on_ready(self):
+        logging.info("Discord bot ready.")
+        await self.wait_until_ready()
+        await self.change_presence(
+            status=discord.Status.online,
+            activity=discord.Activity(
+                type=discord.ActivityType.watching,
+                name="your times."
+            )
+        )
+
     async def on_message(self, message):
         if message.author == self.user:
             return
