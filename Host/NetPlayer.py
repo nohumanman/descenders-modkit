@@ -159,11 +159,11 @@ class NetPlayer():
             self.get_avatar_src()
         )
         DBMS.submit_ip(self.steam_id, self.addr[0], self.addr[1])
-        data = {
-            "content": f"{self.steam_name} has **joined** {self.world_name}!",
-            "username": "Split Timer"
-        }
-        requests.post(webhook, json=data)
+        # data = {
+        #    "content": f"{self.steam_name} has **joined** {self.world_name}!",
+        #     "username": "Split Timer"
+        # }
+        # requests.post(webhook, json=data)
 
     def send(self, data: str):
         self.conn.sendall((data + "\n").encode())
