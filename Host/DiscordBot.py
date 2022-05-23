@@ -17,6 +17,11 @@ class DiscordBot(commands.Bot):
         self.loop.create_task(self.start(discord_token))
         threading.Thread(target=self.loop.run_forever).start()
 
+    async def new_fastest_time(self, time):
+        channel_id = 929121402597015685
+        channel = self.get_channel(channel_id)
+        await channel.send(time)
+
     async def on_ready(self):
         logging.info("Discord bot ready.")
         await self.wait_until_ready()

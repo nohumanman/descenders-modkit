@@ -8,6 +8,7 @@ class SocketServer():
     def __init__(self, host: str, port: int):
         self.host = host
         self.port = port
+        self.discord_bot = None
         self.players = []
 
     def get_player_by_id(self, id: str) -> NetPlayer:

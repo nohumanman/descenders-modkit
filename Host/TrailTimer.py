@@ -1,8 +1,6 @@
 import time
 import math
 from DBMS import DBMS
-from Tokens import webhook
-import requests
 import logging
 
 
@@ -15,14 +13,6 @@ class TrailTimer():
         self.total_checkpoints = None
         self.__boundaries = []
         self.time_started = 0
-
-    def send_message(self, content: str):
-        for webhook[0] in DBMS.get_webhooks(self.trail_name):
-            data = {
-                "content": content,
-                "username": "Split Timer"
-            }
-            requests.post(webhook, json=data)
 
     def add_boundary(self, boundary_guid):
         if len(self.__boundaries) == 0:
@@ -71,6 +61,8 @@ class TrailTimer():
         from DBMS import DBMS
         if self.total_checkpoints is None:
             self.invalidate_timer("Didn't go through all checkpoints.")
+        if (self.times[len(self.times)-1] < 0):
+            self.invalidate_timer("Time was negative")
         self.times.append(time.time() - self.time_started)
         if (len(self.times) == self.total_checkpoints-1):
             logging.info(f"Times submitted: {self.times}")
@@ -80,11 +72,17 @@ class TrailTimer():
                     our_time = TrailTimer.secs_to_str(
                         self.times[len(self.times)-1]
                     )
-                    self.send_message(
-                        f"{self.network_player.steam_name} "
-                        "has beaten the fastest time for "
-                        f"{self.trail_name} with a"
-                        f"{our_time}!"
+                    logging.info("New fastest time.")
+                    discord_bot = self.network_player.parent.discord_bot
+                    discord_bot.loop.run_until_complete(
+                        discord_bot.new_fastest_time(
+                            "🎉 New fastest time on **"
+                            + self.trail_name
+                            + "** by **"
+                            + self.network_player.steam_name
+                            + "**! 🎉\nTime to beat is: "
+                            + our_time
+                        )
                     )
             except Exception as e:
                 logging.error(f"Fastest not found: {e}")

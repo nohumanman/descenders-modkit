@@ -135,7 +135,9 @@ riders_gate_thread = threading.Thread(target=riders_gate)
 riders_gate_thread.start()
 
 
-DiscordBot(discord_token, "!", socket_server)
+discord_bot = DiscordBot(discord_token, "!", socket_server)
+
+socket_server.discord_bot = discord_bot
 
 if __name__ == "__main__":
     app.run(WEBSITE_HOST, port=WEBSITE_PORT)
