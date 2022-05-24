@@ -9,6 +9,7 @@ namespace SplitTimer{
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
 		public float speed;
+		bool hasLoadedPlayer = false;
 		public static PlayerInfo Instance { get; private set; }
 		void Awake(){
 			if (Instance != null && Instance != this) 
@@ -21,7 +22,7 @@ namespace SplitTimer{
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
 			NetClient.Instance.SendData("WORLD_NAME|" + MapInfo.Instance.MapName);
-			foreach(Trail trail in GameObject.FindObjectsOfType<Trail>())
+			foreach (Trail trail in GameObject.FindObjectsOfType<Trail>())
             {
 				Debug.Log("PlayerInfo | Looking for leaderboard texts on trail '" + trail.name + "'");
 				if (trail.leaderboardText != null)
@@ -40,6 +41,9 @@ namespace SplitTimer{
 			if (PlayerHuman == null)
 				PlayerHuman = GameObject.Find("Player_Human");
 			if (PlayerHuman != null){
+				if (!hasLoadedPlayer)
+					GetComponent<BikeSwitcher>().ToEnduro();
+				hasLoadedPlayer = true;
 				if (Vector3.Distance(
 						PlayerHuman.transform.position,
 						PreviousPos
