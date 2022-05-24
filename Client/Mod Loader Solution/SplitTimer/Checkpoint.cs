@@ -24,6 +24,7 @@ namespace SplitTimer
                 PlayerInfo.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count);
                 if (this.checkpointType == CheckpointType.Start)
                 {
+                    NetClient.Instance.SendData("START_SPEED|" + PlayerInfo.Instance.speed);
                     SplitTimerText.Instance.RestartTimer();
                     //NetClient.Instance.gameObject.GetComponent<Utilities>().SetVel(5);
                 }

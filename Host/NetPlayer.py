@@ -56,6 +56,8 @@ operations = {
                 )
             )
         ),
+    "START_SPEED":
+        lambda netPlayer, data: netPlayer.start_speed(float(data[1])),
 }
 
 
@@ -77,6 +79,10 @@ class NetPlayer():
     def set_reputation(self, reputation):
         self.reputation = int(reputation)
         DBMS.log_rep(self.steam_id, self.reputation)
+
+    def start_speed(self, starting_speed: float):
+        if starting_speed > 8:
+            self.send("INVALIDATE_TIME|You went through the start too fast!")
 
     def convert_to_unity(self, leaderboard):
         logging.info("Getting speedrun.com leaderboard")

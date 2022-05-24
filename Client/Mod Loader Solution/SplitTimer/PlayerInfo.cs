@@ -8,6 +8,7 @@ namespace SplitTimer{
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
+		public float speed;
 		public static PlayerInfo Instance { get; private set; }
 		void Awake(){
 			if (Instance != null && Instance != this) 
@@ -46,6 +47,8 @@ namespace SplitTimer{
 					OnRespawn();
 					PreviousPos = PlayerHuman.transform.position;
 				}
+				speed = Vector3.Distance(PlayerHuman.transform.position, PreviousPos) / Time.deltaTime;
+				Debug.Log(speed);
 				PreviousPos = PlayerHuman.transform.position;
 			}
 		}
