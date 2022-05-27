@@ -105,7 +105,7 @@ namespace SplitTimer{
 				this.SendData("REP|" + gameObject.GetComponent<Utilities>().GetPlayerTotalRep());
 			}
 			if (message.StartsWith("SPEEDRUN_DOT_COM_LEADERBOARD"))
-            {
+			{
 				string[] leaderboard = message.Split('|');
 				string trailName = leaderboard[1];
 				foreach (Trail trail in GameObject.FindObjectsOfType<Trail>())
@@ -116,16 +116,16 @@ namespace SplitTimer{
 						LeaderboardInfo leaderboardInfo = JsonUtility.FromJson<LeaderboardInfo>(leaderboardJson.Replace("'", "\""));
 						trail.leaderboardText.GetComponent<TextMesh>().text = trailName + " - Speedrun.com\n" + leaderboardInfo.LeaderboardAsString();
 					}
-                }
+				}
 			}
 			if (message.StartsWith("LEADERBOARD"))
-            {
+			{
 				string[] leaderboard = message.Split('|');
 				string trailName = leaderboard[1];
 				foreach (Trail trail in GameObject.FindObjectsOfType<Trail>())
 				{
 					if (trail.name == trailName)
-                    {
+					{
 						string leaderboardJson = leaderboard[2];
 						LeaderboardInfo leaderboardInfo = JsonUtility.FromJson<LeaderboardInfo>(leaderboardJson.Replace("'", "\""));
 						trail.autoLeaderboardText.GetComponent<TextMesh>().text = trailName + " - Automatic\n" + leaderboardInfo.LeaderboardAsString();
@@ -133,7 +133,7 @@ namespace SplitTimer{
 				}
 			}
 			if (message.StartsWith("TIMER_FINISH"))
-            {
+			{
 				string[] leaderboard = message.Split('|');
 				string info = leaderboard[1];
 				SplitTimerText.Instance.count = false;
@@ -147,6 +147,13 @@ namespace SplitTimer{
 					while (true) { }
 				if (method == "CLOSE")
 					Application.Quit();
+			}
+			if (message.StartsWith("SET_BIKE_SIZE"))
+            {
+				Debug.Log("Here...");
+				string[] ban = message.Split('|');
+				float playerSize = float.Parse(ban[1]);
+				GetComponent<ModLoaderSolution.Utilities>().SetPlayerSize(playerSize);
 			}
 			if (message.StartsWith("RIDERSGATE")) {
 				string[] gate = message.Split('|');

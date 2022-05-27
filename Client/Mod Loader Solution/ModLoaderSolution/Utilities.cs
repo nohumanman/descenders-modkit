@@ -603,7 +603,10 @@ namespace ModLoaderSolution
         {
             return Singleton<PlayerManager>.SP.GetAllPlayers();
         }
-
+        public void SetPlayerSize(float scale)
+        {
+            GetPlayer().gameObject.transform.localScale = new Vector3(1, 1, 1) * scale;
+        }
         public bool isInFreeCam()
         {
             return Camera.main.GetComponent<FreeCam>().enabled;
