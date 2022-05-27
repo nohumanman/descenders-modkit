@@ -136,6 +136,7 @@ namespace SplitTimer{
             {
 				string[] leaderboard = message.Split('|');
 				string info = leaderboard[1];
+				SplitTimerText.Instance.count = false;
 				SplitTimerText.Instance.text.color = Color.green;
 				SplitTimerText.Instance.text.text = info;
 			}

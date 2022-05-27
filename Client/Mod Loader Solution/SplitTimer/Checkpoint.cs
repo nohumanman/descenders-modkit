@@ -30,7 +30,7 @@ namespace SplitTimer
                 }
                 else if (this.checkpointType == CheckpointType.Finish)
                 {
-                    SplitTimerText.Instance.StopTimer();
+                    // SplitTimerText.Instance.StopTimer();
                 }
             }
         }
