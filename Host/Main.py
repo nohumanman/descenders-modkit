@@ -22,9 +22,9 @@ logging.basicConfig(
 )
 
 logging.info(
-    "-------------------------------- "
-    "Descenders Split Timer Started"
-    " --------------------------------"
+    "--------------------------------"
+    " Descenders Split Timer Started "
+    "--------------------------------"
 )
 
 # Create Socket Server
