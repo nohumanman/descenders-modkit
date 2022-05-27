@@ -36,6 +36,11 @@ socket_server = SocketServer(SOCKET_HOST, SOCKET_PORT)
 socket_server_thread = threading.Thread(target=socket_server.start)
 socket_server_thread.start()
 
+# Could have another instance of socket server to handle
+# the dashboard (to prevent periodic get requests)
+# or could use the websocket to prompt a reload?
+
+
 # Create Website Server
 
 WEBSITE_HOST = "0.0.0.0"
