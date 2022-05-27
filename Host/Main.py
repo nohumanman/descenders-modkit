@@ -39,6 +39,8 @@ socket_server_thread.start()
 # Could have another instance of socket server to handle
 # the dashboard (to prevent periodic get requests)
 # or could use the websocket to prompt a reload?
+# Or could just use the existing socket server to handle
+# the dashboard.
 
 
 # Create Website Server
