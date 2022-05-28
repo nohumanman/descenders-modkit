@@ -90,7 +90,8 @@ def get():
                     "steam_avatar_src": player.get_avatar_src(),
                     "total_time": player.get_total_time(),
                     "world_name": player.world_name,
-                    "reputation": player.reputation
+                    "reputation": player.reputation,
+                    "last_trick": player.last_trick,
                 } for player in socket_server.players
             ]
         }

@@ -39,6 +39,7 @@
     <None Include=".vs\Universal Race Mod\v16\.suo" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SplitTimer\TrickCapturer.cs" />
     <Compile Include="SplitTimer\SloMoZone.cs" />
     <Compile Include="SplitTimer\LeaderboardInfo.cs" />
     <Compile Include="SplitTimer\BikeSwitcher.cs" />

@@ -58,6 +58,8 @@ operations = {
         ),
     "START_SPEED":
         lambda netPlayer, data: netPlayer.start_speed(float(data[1])),
+    "TRICK":
+        lambda netPlayer, data: netPlayer.set_last_trick(str(data[1])),
 }
 
 
@@ -72,9 +74,13 @@ class NetPlayer():
         self.steam_name = None
         self.bike_type = "enduro"
         self.world_name = None
+        self.last_trick = ""
         self.reputation = 0
         self.time_started = time.time()
         self.send("SUCCESS")
+
+    def set_last_trick(self, trick: str):
+        self.last_trick = trick
 
     def set_reputation(self, reputation):
         self.reputation = int(reputation)

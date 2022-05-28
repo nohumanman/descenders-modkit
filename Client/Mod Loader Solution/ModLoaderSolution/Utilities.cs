@@ -625,7 +625,6 @@ namespace ModLoaderSolution
                 Camera.main.GetComponent<FreeCam>().enabled = true;
             }
         }
-
         public void SetBikeCamera()
         {
             if (!isInBikeCamera())
@@ -653,7 +652,10 @@ namespace ModLoaderSolution
         {
             //GetCyclist(transform).SendMessage("Bail");
         }
-
+        public void Bail()
+        {
+            GetPlayer().SendMessage("Bail");
+        }
         UI_FreerideWorkshop Get_UI_FreerideWorkshop()
         {
             UI_FreerideWorkshop[] mps = Resources.FindObjectsOfTypeAll<UI_FreerideWorkshop>();

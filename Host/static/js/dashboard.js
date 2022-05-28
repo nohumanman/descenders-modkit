@@ -188,5 +188,5 @@ function updatePlayers() {
 }
 
 updatePlayers();
-setInterval(updatePlayers, 5000);
+setInterval(updatePlayers, 1000);
 
