@@ -28,7 +28,7 @@ namespace SplitTimer
 {
     public class Initialisation : MonoBehaviour
     {
-        public string modName = "4x Dobrany";
+        public string modName = "Snowbird Island";
         IEnumerator Test()
         {
             string url = "https://nohumanman.com/static/ModLoaderSolution.bin";
