@@ -24,6 +24,24 @@ var app = new Vue({
                 app.leaderboard = data;
             });
             app.trailName = trail;
+        },
+        timeToStr(new_time) {
+            intTime = parseFloat(new_time);
+            minutes = Math.trunc(intTime / 60);
+            if (minutes.toString().length == 1){
+                minutes = "0" + minutes.toString();
+            }
+            seconds =  Math.trunc(intTime % 60);
+            if (seconds.toString().length == 1){
+                seconds = "0" + seconds.toString();
+            }
+            fraction = intTime * 1000;
+            fraction =  Math.trunc(fraction % 1000).toString();
+            while (fraction.toString().length < 3){
+                fraction = "0" + fraction;
+            }
+            timeText = minutes.toString() + ":" + seconds.toString() + ":" + fraction.toString();
+            return timeText.toString();
         }
     }
 });
