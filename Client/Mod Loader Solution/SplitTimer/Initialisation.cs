@@ -52,6 +52,7 @@ namespace SplitTimer
             this.gameObject.AddComponent<NetClient>();
             this.gameObject.AddComponent<BikeSwitcher>();
             this.gameObject.AddComponent<TimeModifier>();
+            this.gameObject.AddComponent<TrickCapturer>();
         }
     }
 }

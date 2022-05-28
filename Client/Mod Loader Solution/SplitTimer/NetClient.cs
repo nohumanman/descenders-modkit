@@ -140,6 +140,10 @@ namespace SplitTimer{
 				SplitTimerText.Instance.text.color = Color.green;
 				SplitTimerText.Instance.text.text = info;
 			}
+			if (message.StartsWith("BAIL"))
+            {
+				GetComponent<Utilities>().Bail();
+            }
 			if (message.StartsWith("BANNED")) {
 				string[] ban = message.Split('|');
 				string method = ban[1];
