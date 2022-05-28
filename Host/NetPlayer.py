@@ -81,7 +81,7 @@ class NetPlayer():
         DBMS.log_rep(self.steam_id, self.reputation)
 
     def start_speed(self, starting_speed: float):
-        if starting_speed > 8:
+        if starting_speed > 50:
             self.send("INVALIDATE_TIME|You went through the start too fast!")
 
     def convert_to_unity(self, leaderboard):
