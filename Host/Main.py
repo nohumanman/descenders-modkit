@@ -51,18 +51,6 @@ WEBSITE_PORT = 8080
 app = Flask(__name__)
 
 
-@app.route("/get-log")
-def log():
-    with open(log_location) as my_file:
-        log = my_file.read()
-    return jsonify({"log": log.split("\n")})
-
-
-@app.route("/logs")
-def logs():
-    return render_template("log.html")
-
-
 @app.route("/")
 def index():
     return render_template("Dashboard.html")
