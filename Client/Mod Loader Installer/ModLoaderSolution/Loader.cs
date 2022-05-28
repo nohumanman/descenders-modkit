@@ -18,7 +18,7 @@ namespace ModLoaderInstaller
             }
             Debug.Log("ModLoaderSolution | Finished Mod Check");
             gameObject = new GameObject();
-            gameObject.name = "DescendersSplitTimerModLoaded";
+            gameObject.name = "ModLoaderInstaller";
             Debug.Log("ModLoaderSolution | GameObject Instantiated");
             gameObject.AddComponent<Utilities>();
             Debug.Log("ModLoaderSolution | Utilities added");

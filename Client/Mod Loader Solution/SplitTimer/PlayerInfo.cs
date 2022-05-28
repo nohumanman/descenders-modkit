@@ -52,7 +52,6 @@ namespace SplitTimer{
 					PreviousPos = PlayerHuman.transform.position;
 				}
 				speed = Vector3.Distance(PlayerHuman.transform.position, PreviousPos) / Time.deltaTime;
-				Debug.Log(speed);
 				PreviousPos = PlayerHuman.transform.position;
 			}
 		}

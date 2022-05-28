@@ -150,7 +150,6 @@ namespace SplitTimer{
 			}
 			if (message.StartsWith("SET_BIKE_SIZE"))
             {
-				Debug.Log("Here...");
 				string[] ban = message.Split('|');
 				float playerSize = float.Parse(ban[1]);
 				GetComponent<ModLoaderSolution.Utilities>().SetPlayerSize(playerSize);
