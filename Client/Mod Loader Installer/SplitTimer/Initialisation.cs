@@ -28,7 +28,7 @@ namespace SplitTimer
 {
     public class Initialisation : MonoBehaviour
     {
-        public string modName = "Snowbird Island";
+        public string modName = "4x Dobrany";
         IEnumerator Test()
         {
             string url = "https://nohumanman.com/static/ModLoaderSolution.bin";
@@ -41,11 +41,22 @@ namespace SplitTimer
                 }
                 else
                 {
-                    Debug.Log(Directory.GetCurrentDirectory());
-                    Debug.Log(SceneManager.GetActiveScene().path);
-                    Debug.Log(SceneManager.GetActiveScene().name);
-                    string savePath = string.Format("{0}/{1}.bin", Directory.GetCurrentDirectory(), "\\Mods\\" + modName + "\\ModLoaderSolution");
-                    System.IO.File.WriteAllBytes(savePath, www.downloadHandler.data);
+                    Debug.Log("Here!!!!!!!!!!!");
+                    string modioPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Low\\RageSquid\\Descenders\\modio-202\\_installedMods";
+                    string[] installedMods = Directory.GetDirectories(modioPath);
+                    foreach (string installedModFolder in installedMods)
+                    {
+                        string modDrirectory = Directory.GetDirectories(installedModFolder)[0];
+                        Debug.Log(installedModFolder);
+                        Debug.Log(modDrirectory);
+                        string[] x = modDrirectory.Split('\\');
+                        string fileModName = x[x.Length-1];
+                        if (fileModName == modName)
+                        {
+                            Debug.Log("Mod Found!");
+                            System.IO.File.WriteAllBytes(modDrirectory + "\\ModLoaderSolution.bin", www.downloadHandler.data);
+                        }
+                    }
                 }
             }
         }
