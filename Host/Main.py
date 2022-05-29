@@ -92,6 +92,7 @@ def get():
                     "world_name": player.world_name,
                     "reputation": player.reputation,
                     "last_trick": player.last_trick,
+                    "version": player.version,
                 } for player in socket_server.players
             ]
         }
