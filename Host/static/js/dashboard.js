@@ -181,6 +181,7 @@ function updatePlayers() {
                     "total_time": new Date().getTime()-startTime,
                     "world_name": "this place",
                     "reputation":  420420,
+                    "version": "latest, obvs.",
                 }
             )
         }

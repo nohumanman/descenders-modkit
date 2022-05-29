@@ -77,7 +77,7 @@ class NetPlayer():
         self.bike_type = "enduro"
         self.world_name = None
         self.last_trick = ""
-        self.reputation = 0
+        self.reputation = 6969
         self.version = "OUTDATED"
         self.time_started = time.time()
         self.send("SUCCESS")
