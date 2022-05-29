@@ -81,10 +81,14 @@
                                             ([[id.id]])
                                         </p>
                                         <p style="text-align:center;">
-                                            Total time in [[id.world_name]] - [[toHours(id.total_time)]]
+                                            <span style="text-decoration:underline;">Total time in [[id.world_name]]</span>
+                                            <br>[[toHours(id.total_time)]]
                                         </p>
-                                        <p>
+                                        <p style="text-align:center;">
                                             [[id.last_trick]]
+                                        </p>
+                                        <p style="text-align:center;">
+                                            Version: [[id.version]]
                                         </p>
                                         <p>Rep - [[id.reputation]]</p>
                                         <v-card-actions class="justify-center">
@@ -104,6 +108,11 @@
                                         <v-icon>mdi-open-in-new</v-icon>
                                     </v-btn>
                                 </v-card-actions>
+                            </v-card>
+                        </v-col>
+                        <v-col v-for="x in 4" style="padding:40px;" v-if="(ids.length + x+1) % 4 != 0">
+                            <v-card width="400px">
+
                             </v-card>
                         </v-col>
                     </v-row>
