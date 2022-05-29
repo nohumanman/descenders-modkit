@@ -124,7 +124,7 @@ var app = new Vue({
             if (hours   < 10) {hours   = "0"+hours;}
             if (minutes < 10) {minutes = "0"+minutes;}
             if (seconds < 10) {seconds = "0"+seconds;}
-            return hours+' hours, '+minutes+' minutes, '+seconds+' seconds.'; // Return is HH : MM : SS
+            return hours+' hrs, '+minutes+' mins, '+seconds+' secs'; // Return is HH : MM : SS
         },
         killPlayer(){
             let x = confirm('Do you want to kill this player?')
@@ -181,7 +181,7 @@ function updatePlayers() {
                     "total_time": new Date().getTime()-startTime,
                     "world_name": "this place",
                     "reputation":  420420,
-                    "version": "latest, obvs.",
+                    "version": "N/A",
                 }
             )
         }
