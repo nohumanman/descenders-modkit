@@ -14,7 +14,12 @@
     <body class="transparent">
         <div id="app" class="transparent">
             <v-app class="transparent">
-                <v-main class="transparent">
+                <v-main>
+                    <v-row>
+                        <v-col>Trail Name Here</v-col>
+                    </v-row>
+                </v-main>
+                <v-main class="transparent" id="leaderboard">
                     <h1 style="text-align:center; font-size:70px; text-decoration: underline;" v-if="leaderboard.length != 0">[[trailName]]</h1>
                     <v-container fill-height fluid>
                         <v-col>

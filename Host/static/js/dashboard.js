@@ -80,6 +80,7 @@ var app = new Vue({
         command : "",
         valee: "",
         timeScale: 1,
+        validated: "UNAUTHORISED",
     },
     methods: {
         SubmitEval(id, eval_command){
@@ -93,6 +94,11 @@ var app = new Vue({
             else{
                 $.get("/eval/" + id + "?order=" + eval_command);
             }
+        },
+        CheckStatus(){
+            $.get("/permission", function(data){
+                app.validated = data;
+            })
         },
         stringToColour(str) {
             var hash = 0;
@@ -189,5 +195,6 @@ function updatePlayers() {
 }
 
 updatePlayers();
+app.CheckStatus();
 setInterval(updatePlayers, 1000);
-
+setInterval(app.CheckStatus, 1000);

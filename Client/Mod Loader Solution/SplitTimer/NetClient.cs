@@ -42,7 +42,8 @@ namespace SplitTimer{
 			if (Time.time - hasStarted > 30 && !socketConnection.Connected)
             {
 				Debug.Log("NetClient | Disconnected! Reconecting now...");
-				SplitTimerText.Instance.text.color = Color.red;
+                SplitTimerText.Instance.count = false;
+                SplitTimerText.Instance.text.color = Color.red;
 				SplitTimerText.Instance.text.text = "Server Disconnected.\n";
 				ConnectToTcpServer();
             }
