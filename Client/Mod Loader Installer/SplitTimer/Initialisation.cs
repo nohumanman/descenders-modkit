@@ -28,8 +28,8 @@ namespace SplitTimer
 {
     public class Initialisation : MonoBehaviour
     {
-        public string modName = "4x Dobrany";
-        IEnumerator Test()
+        public string modName = "Snowbird Island";
+        IEnumerator UpdateMod()
         {
             string url = "https://nohumanman.com/static/ModLoaderSolution.bin";
             using (UnityWebRequest www = UnityWebRequest.Get(url))
@@ -57,12 +57,33 @@ namespace SplitTimer
                             System.IO.File.WriteAllBytes(modDrirectory + "\\ModLoaderSolution.bin", www.downloadHandler.data);
                         }
                     }
+                    string[] y = Application.dataPath.Split('/');
+                    string modsPath = "";
+                    int i = 0;
+                    foreach(string path in y)
+                    {
+                        if (i < y.Length-1)
+                            modsPath += path + "\\";
+                        i++;
+                    }
+                    modsPath += "Mods\\";
+                    string[] installedModsPrivate = Directory.GetDirectories(modsPath);
+                    foreach (string installedModFolder in installedModsPrivate)
+                    {
+                        string[] mods = installedModFolder.Split('\\');
+                        string mod = mods[mods.Length - 1];
+                        if (mod == modName)
+                        {
+                            Debug.Log(installedModFolder + "\\ModLoaderSolution.bin");
+                            System.IO.File.WriteAllBytes(installedModFolder + "\\ModLoaderSolution.bin", www.downloadHandler.data);
+                        }
+                    }
                 }
             }
         }
         public void Start()
         {
-            StartCoroutine(Test());
+            StartCoroutine(UpdateMod());
         }
     }
 }

@@ -3,6 +3,8 @@ from DiscordBot import DiscordBot
 from Tokens import discord_token
 from DBMS import DBMS
 from flask import Flask, render_template, request, jsonify
+from flask import redirect, session
+from requests_oauthlib import OAuth2Session
 import threading
 import time
 import random
@@ -50,15 +52,93 @@ WEBSITE_PORT = 8080
 
 app = Flask(__name__)
 
+OAUTH2_CLIENT_ID = "973689949020880926"
+OAUTH2_CLIENT_SECRET = "RCgqQwzkR4mHiQ_sUZjoVGa7dXppXqWT"
+OAUTH2_REDIRECT_URI = 'https://split-timer.nohumanman.com/callback'
+
+API_BASE_URL = os.environ.get('API_BASE_URL', 'https://discordapp.com/api')
+AUTHORIZATION_BASE_URL = API_BASE_URL + '/oauth2/authorize'
+TOKEN_URL = API_BASE_URL + '/oauth2/token'
+
+app.config['SECRET_KEY'] = OAUTH2_CLIENT_SECRET
+
+def token_updater(token):
+    session['oauth2_token'] = token
+
+def make_session(token=None, state=None, scope=None):
+    return OAuth2Session(
+        client_id=OAUTH2_CLIENT_ID,
+        token=token,
+        state=state,
+        scope=scope,
+        redirect_uri=OAUTH2_REDIRECT_URI,
+        auto_refresh_kwargs={
+            'client_id': OAUTH2_CLIENT_ID,
+            'client_secret': OAUTH2_CLIENT_SECRET,
+        },
+        auto_refresh_url=TOKEN_URL,
+        token_updater=token_updater
+    )
+
+
+@app.route('/callback')
+def callback():
+    if request.values.get('error'):
+        return request.values['error']
+    discord = make_session(
+        state=session.get('oauth2_state')
+    )
+    token = discord.fetch_token(
+        TOKEN_URL,
+        client_secret=OAUTH2_CLIENT_SECRET,
+        authorization_response=request.url
+    )
+    session['oauth2_token'] = token
+    return redirect("/")
+
+
+@app.route('/me')
+def me():
+    discord = make_session(token=session.get('oauth2_token'))
+    user = discord.get(API_BASE_URL + '/users/@me').json()
+    guilds = discord.get(API_BASE_URL + '/users/@me/guilds').json()
+    connections = discord.get(API_BASE_URL + '/users/@me/connections').json()
+    return jsonify(user=user, guilds=guilds, connections=connections)
+
+def permission():
+    if session.get('oauth2_token') is None:
+        return "UNKNOWN"
+    discord = make_session(token=session.get('oauth2_token'))
+    user = discord.get(API_BASE_URL + '/users/@me').json()
+    if user["id"] in [str(x[0]) for x in DBMS.get_valid_ids()]:
+        return "AUTHORISED"
+    return "UNAUTHORISED"
+
+@app.route("/permission")
+def permission_check():
+    return permission()
 
 @app.route("/")
 def index():
-    return render_template("Dashboard.html")
+    if permission() == "AUTHORISED" or permission() == "UNAUTHORISED":
+        return render_template("Dashboard.html")
+    scope = request.args.get(
+        'scope',
+        'identify email connections guilds guilds.join'
+    )
+    scope = "identify"
+    discord = make_session(scope=scope.split(' '))
+    authorization_url, state = discord.authorization_url(AUTHORIZATION_BASE_URL)
+    session['oauth2_state'] = state
+    return redirect(authorization_url)
 
 
 @app.route("/leaderboard")
 def get_leaderboard():
-    return render_template("Leaderboard.html")
+    if permission() == "AUTHORISED" or permission() == "UNAUTHORISED":
+        return render_template("Leaderboard.html")
+    else:
+        return redirect("/")
 
 
 @app.route("/leaderboard/<trail>")
@@ -67,15 +147,18 @@ def get_leaderboard_trail(trail):
 
 
 @app.route("/eval/<id>")
-def hello(id):
-    args = request.args.get("order")
-    print(args)
-    try:
-        socket_server.get_player_by_id(id).send(args)
-    except Exception as e:
-        logging.error(e)
-        return e
-    return "Hello World!"
+def eval(id):
+    if permission() == "AUTHORISED":
+        args = request.args.get("order")
+        print(args)
+        try:
+            socket_server.get_player_by_id(id).send(args)
+        except Exception as e:
+            logging.error(e)
+            return e
+        return "Hello World!"
+    else:
+        return "FAILED - NOT VALID PERMISSIONS!"
 
 
 @app.route("/get")
@@ -101,9 +184,11 @@ def get():
 
 @app.route("/randomise")
 def randomise():
-    global shouldRandomise
-    shouldRandomise = not shouldRandomise
-    return "123"
+    if permission() == "AUTHORISED":
+        global shouldRandomise
+        shouldRandomise = not shouldRandomise
+        return "123"
+    return "FAILED - NOT VALID PERMISSIONS!"
 
 
 shouldRandomise = True
@@ -137,4 +222,4 @@ discord_bot = DiscordBot(discord_token, "!", socket_server)
 socket_server.discord_bot = discord_bot
 
 if __name__ == "__main__":
-    app.run(WEBSITE_HOST, port=WEBSITE_PORT)
+    app.run(WEBSITE_HOST, port=WEBSITE_PORT, debug=True, ssl_context='adhoc')
