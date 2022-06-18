@@ -109,6 +109,17 @@ class DBMS():
         return resp[0][0]
 
     @staticmethod
+    def get_valid_ids():
+        return DBMS.execute_sql('''
+            SELECT
+                discord_id
+            FROM
+                User
+            WHERE
+                valid = "TRUE"
+            ''')
+
+    @staticmethod
     def get_leaderboard(trail_name, num=10) -> list:
         statement = f'''
             SELECT

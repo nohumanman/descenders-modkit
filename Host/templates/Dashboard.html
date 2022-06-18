@@ -14,6 +14,9 @@
     <body>
         <div id="app">
             <v-app>
+                <v-banner color="red" v-if="validated != 'AUTHORISED'">
+                    You are not permitted to modify any user's status because your steam account is not whitelisted.
+                </v-banner>
                 <v-main>
                     <v-overlay v-if="self == null" opacity="1">
                         <v-text-field
