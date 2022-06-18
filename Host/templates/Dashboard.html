@@ -68,8 +68,16 @@
                     <v-divider color="black"></v-divider>
                     <br>
                     <v-btn @click="Randomise();">Disable Gates</v-btn>
+                    <v-autocomplete
+                        v-model="search"
+                        :items="ids"
+                        item-text="name"
+                        item-value="id"
+                        clearable
+                        label="Search for a player"
+                    ></v-autocomplete>
                     <v-row>
-                        <v-col :key="id.id" v-for="id in ids" style="padding:40px;">
+                        <v-col v-if="search == null || search == id.id" :key="id.id" v-for="id in ids" style="padding:40px;">
                             <v-card width="400px" :loading="loading">
                                 <v-card-title>
                                     <v-avatar size="75">

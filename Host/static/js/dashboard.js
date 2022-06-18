@@ -80,6 +80,7 @@ var app = new Vue({
         command : "",
         valee: "",
         timeScale: 1,
+        search: null,
         validated: "UNAUTHORISED",
     },
     methods: {
