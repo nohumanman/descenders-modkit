@@ -32,4 +32,4 @@ E:\Descenders-Split-Timer\Client\Mod Loader Installer\obj\Debug\ModLoaderSolutio
 E:\Descenders-Split-Timer\Client\Mod Loader Installer\obj\Debug\ModLoaderSolution.csproj.CopyComplete
 E:\Descenders-Split-Timer\Client\Mod Loader Installer\obj\Debug\ModLoaderInstaller.dll
 E:\Descenders-Split-Timer\Client\Mod Loader Installer\obj\Debug\ModLoaderInstaller.pdb
-E:\Descenders-Split-Timer\Client\Mod Loader Installer\obj\Debug\ModLoaderSolution.csprojAssemblyReference.cache
+E:\Descenders-Split-Timer\Client\Mod Loader Installer\obj\Debug\ModLoaderSolution.csproj.AssemblyReference.cache
