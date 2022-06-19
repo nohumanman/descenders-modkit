@@ -1,5 +1,4 @@
 import time
-import math
 from DBMS import DBMS
 import logging
 
@@ -114,16 +113,17 @@ class TrailTimer():
     @staticmethod
     def secs_to_str(secs):
         secs = float(secs)
-        d_mins = int(round(secs // 60))
-        d_secs = int(round(secs - (d_mins * 60)))
-        d_millis = int(round(secs-math.trunc(secs), 3) * 1000)
+        d_mins = int(secs // 60)
+        d_secs = int(secs % 60)
+        fraction = float(secs * 1000)
+        fraction = round(fraction % 1000)
         if len(str(d_mins)) == 1:
             d_mins = "0" + str(d_mins)
         if len(str(d_secs)) == 1:
             d_secs = "0" + str(d_secs)
-        while len(str(d_millis)) < 3:
-            d_millis = str(d_millis) + "0"
-        return f"{d_mins}:{d_secs}.{d_millis}"
+        while len(str(fraction)) < 3:
+            fraction = str(fraction) + "0"
+        return f"{d_mins}:{d_secs}.{fraction}"
 
     @staticmethod
     def ord(n):
