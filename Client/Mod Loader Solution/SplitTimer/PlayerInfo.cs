@@ -19,21 +19,21 @@ namespace SplitTimer{
 		}
 		public void NetStart(){
 			OnMapEnter(MapInfo.Instance.MapId, MapInfo.Instance.MapName);
-			NetClient.Instance.SendData("VERSION|0.1.0");
+			NetClient.Instance.SendData("VERSION|0.1.1");
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
 			NetClient.Instance.SendData("WORLD_NAME|" + MapInfo.Instance.MapName);
 			foreach (Trail trail in GameObject.FindObjectsOfType<Trail>())
             {
-				Debug.Log("PlayerInfo | Looking for leaderboard texts on trail '" + trail.name + "'");
+				// Debug.Log("PlayerInfo | Looking for leaderboard texts on trail '" + trail.name + "'");
 				if (trail.leaderboardText != null)
                 {
-					Debug.Log("PlayerInfo | Found Speedrun.com Leaderboard");
+					// Debug.Log("PlayerInfo | Found Speedrun.com Leaderboard");
 					NetClient.Instance.SendData("SPEEDRUN_DOT_COM_LEADERBOARD|" + trail.name);
 				}
 				if (trail.autoLeaderboardText != null)
                 {
-					Debug.Log("PlayerInfo | Found auto Leaderboard");
+					// Debug.Log("PlayerInfo | Found auto Leaderboard");
 					NetClient.Instance.SendData("LEADERBOARD|" + trail.name);
 				}
             }

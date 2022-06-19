@@ -28,7 +28,7 @@ namespace SplitTimer{
 			this.gameObject.AddComponent<Utilities>();
 		}
 		void Start () {
-			Debug.Log("NetClient | Connecting to tcp server port " + port.ToString() + " with ip " + ip);
+			// Debug.Log("NetClient | Connecting to tcp server port " + port.ToString() + " with ip " + ip);
 			ConnectToTcpServer();
 			ridersGates = GameObject.FindObjectsOfType<RidersGate>();
 		}
@@ -41,7 +41,7 @@ namespace SplitTimer{
 			}
 			if (Time.time - hasStarted > 30 && !socketConnection.Connected)
             {
-				Debug.Log("NetClient | Disconnected! Reconecting now...");
+				// Debug.Log("NetClient | Disconnected! Reconecting now...");
                 SplitTimerText.Instance.count = false;
                 SplitTimerText.Instance.text.color = Color.red;
 				SplitTimerText.Instance.text.text = "Server Disconnected.\n";
@@ -55,13 +55,13 @@ namespace SplitTimer{
 				}
 				catch (Exception ex)
                 {
-					Debug.Log("NetClient | MessageRecieved failed with '" + ex + "'");
+					// Debug.Log("NetClient | MessageRecieved failed with '" + ex + "'");
                 }
             }
 			messages.Clear();
 		}
 		private void ConnectToTcpServer () {
-			Debug.Log("NetClient | Connecting to TCP Server...");
+			// Debug.Log("NetClient | Connecting to TCP Server...");
 			hasStarted = Time.time;
 			try {
 				clientReceiveThread = new Thread (new ThreadStart(ListenForData));
@@ -70,7 +70,7 @@ namespace SplitTimer{
 				hasStarted = Time.time;
 			}
 			catch (Exception e) {
-				Debug.Log("NetClient | On client connect exception " + e); 		
+				// Debug.Log("NetClient | On client connect exception " + e); 		
 			}
 		}
 		private void ListenForData() {
@@ -94,11 +94,11 @@ namespace SplitTimer{
 				}
 			}
 			catch (SocketException socketException) {             
-				Debug.Log("NetClient | Socket exception - " + socketException);         
+				// Debug.Log("NetClient | Socket exception - " + socketException);         
 			}
 		}
 		private void MessageRecieved(string message) {
-			Debug.Log("NetClient | Message Recieved: " + message);
+			// Debug.Log("NetClient | Message Recieved: " + message);
 			if (message == "")
 				return;
 			if (message == "SUCCESS") {
@@ -271,13 +271,13 @@ namespace SplitTimer{
 				gameObject.GetComponent<Utilities>().ToggleGod();
 			}
 			SendData("pong");
-			Debug.Log("NetClient | Message Processed: " + message);
+			// Debug.Log("NetClient | Message Processed: " + message);
 		}
 		public void SendData(string clientMessage) {
 			clientMessage = clientMessage + "\n";
-			Debug.Log("NetClient | Client sending message: " + clientMessage);
+			// Debug.Log("NetClient | Client sending message: " + clientMessage);
 			if (socketConnection == null) {
-				Debug.Log("NetClient | Socket not connected!");
+				// Debug.Log("NetClient | Socket not connected!");
 				return;
 			}
 			try
@@ -291,7 +291,7 @@ namespace SplitTimer{
 			}
 			catch (SocketException socketException)
 			{
-				Debug.Log("NetClient | Socket exception: " + socketException);
+				// Debug.Log("NetClient | Socket exception: " + socketException);
 			}
 		}
 		public void OnDestroy()

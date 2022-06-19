@@ -84,19 +84,19 @@ namespace ModLoaderSolution
                     StreamWriter sw = new StreamWriter(userFile);
                     sw.WriteLine(id);
                     sw.Close();
-                    Debug.Log("ModLoaderSolution | Created " + file);
+                    // Debug.Log("ModLoaderSolution | Created " + file);
                 }
                 else
                 {
                     id = File.ReadAllLines(userFile)[0];
                     id = id.Replace("\n", "");
-                    Debug.Log("ModLoaderSolution | Found UserID " + id);
+                    // Debug.Log("ModLoaderSolution | Found UserID " + id);
                 }
             }
             catch (Exception e)
             {
-                Debug.Log("ModLoaderSolution | Could not read user file:");
-                Debug.Log(e);
+                // Debug.Log("ModLoaderSolution | Could not read user file:");
+                // Debug.Log(e);
             }
 
             uniqueID = id;

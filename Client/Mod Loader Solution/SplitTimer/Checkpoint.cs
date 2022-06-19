@@ -10,7 +10,7 @@ namespace SplitTimer
         public Trail trail;
         public void Start()
         {
-            Debug.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
+            // Debug.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
         }
         void Update()
         {
