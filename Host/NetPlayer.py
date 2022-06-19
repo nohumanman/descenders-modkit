@@ -168,6 +168,8 @@ class NetPlayer():
 
     def set_steam_id(self, steam_id):
         self.steam_id = steam_id
+        if steam_id == "OFFLINE" or steam_id == "":
+            self.send("TOGGLE_GOD")
 
     def set_world_name(self, world_name):
         self.world_name = world_name
