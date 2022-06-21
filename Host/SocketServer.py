@@ -29,9 +29,10 @@ class SocketServer():
 
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            print("Binding with self")
+            logging.info("Binding with self")
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.bind((self.host, self.port))
-            print("Bound, listening...")
+            logging.info("Bound, listening...")
             s.listen()
             while True:
                 print("Waiting for client...")

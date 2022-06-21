@@ -13,7 +13,7 @@ import os
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
-log_location = script_path + "/splittimer.log"
+log_location = script_path + "/SplitTimer.log"
 
 logging.basicConfig(
     filename=log_location,
@@ -171,7 +171,7 @@ def get():
                     "id": player.steam_id,
                     "name": player.steam_name,
                     "steam_avatar_src": player.get_avatar_src(),
-                    "total_time": player.get_total_time(),
+                    "total_time": player.get_total_time(onWorld=True),
                     "world_name": player.world_name,
                     "reputation": player.reputation,
                     "last_trick": player.last_trick,

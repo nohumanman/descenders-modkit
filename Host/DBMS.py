@@ -120,6 +120,16 @@ class DBMS():
             ''')
 
     @staticmethod
+    def get_banned_users():
+        statement = "SELECT steam_id, ban_type FROM Player"
+        result = DBMS.execute_sql(statement)
+        return [
+            (steam_id, ban_type)
+            for (steam_id, ban_type) in result
+            if ban_type != "" or ban_type is not None
+        ]
+
+    @staticmethod
     def get_leaderboard(trail_name, num=10) -> list:
         statement = f'''
             SELECT
@@ -145,6 +155,8 @@ class DBMS():
                 trail_name = "{trail_name}"
                 AND
                 checkpoint_num = max_checkpoint
+                AND
+                Time.ignore = "FALSE"
             GROUP BY
                 trail_name,
                 Player.steam_id
@@ -156,12 +168,22 @@ class DBMS():
         return [
             {
                 "place": i + 1,
-                "time": time[9],
-                "name": time[12],
+                "time": time[10],
+                "name": time[13],
                 "bike": time[6]
             }
             for i, time in enumerate(result)
         ]
+
+    @staticmethod
+    def get_avatar(steam_id):
+        statement = f'''
+            SELECT avatar_src
+                FROM Player
+            WHERE steam_id = {steam_id}
+        '''
+        result = DBMS.execute_sql(statement)
+        return result[0][0]
 
     @staticmethod
     def submit_ip(steam_id, address, port):

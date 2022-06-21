@@ -26,10 +26,11 @@ class TrailTimer():
             self.invalidate_timer("Exited boundry without entering")
 
     def start_timer(self, total_checkpoints: int):
-        self.started = True
-        self.total_checkpoints = total_checkpoints
-        self.time_started = time.time()
-        self.times = []
+        if len(self.__boundaries) != 0:
+            self.started = True
+            self.total_checkpoints = total_checkpoints
+            self.time_started = time.time()
+            self.times = []
 
     def checkpoint(self):
         if self.started:
@@ -64,27 +65,28 @@ class TrailTimer():
             self.invalidate_timer("Time was negative")
         self.times.append(time.time() - self.time_started)
         if (len(self.times) == self.total_checkpoints-1):
-            logging.info(f"Times submitted: {self.times}")
-            fastest = DBMS.get_fastest_split_times(self.trail_name)
-            try:
-                if self.times[len(self.times)-1] < fastest[len(fastest)-1]:
-                    our_time = TrailTimer.secs_to_str(
-                        self.times[len(self.times)-1]
-                    )
-                    logging.info("New fastest time.")
-                    discord_bot = self.network_player.parent.discord_bot
-                    discord_bot.loop.run_until_complete(
-                        discord_bot.new_fastest_time(
-                            "🎉 New fastest time on **"
-                            + self.trail_name
-                            + "** by **"
-                            + self.network_player.steam_name
-                            + "**! 🎉\nTime to beat is: "
-                            + our_time
+            if self.trail_name != "4x Dobrany":
+                logging.info(f"Times submitted: {self.times}")
+                fastest = DBMS.get_fastest_split_times(self.trail_name)
+                try:
+                    if self.times[len(self.times)-1] < fastest[len(fastest)-1]:
+                        our_time = TrailTimer.secs_to_str(
+                            self.times[len(self.times)-1]
                         )
-                    )
-            except Exception as e:
-                logging.error(f"Fastest not found: {e}")
+                        logging.info("New fastest time.")
+                        discord_bot = self.network_player.parent.discord_bot
+                        discord_bot.loop.run_until_complete(
+                            discord_bot.new_fastest_time(
+                                "🎉 New fastest time on **"
+                                + self.trail_name
+                                + "** by **"
+                                + self.network_player.steam_name
+                                + "**! 🎉\nTime to beat is: "
+                                + our_time
+                            )
+                        )
+                except Exception as e:
+                    logging.error(f"Fastest not found: {e}")
             DBMS().submit_time(
                 self.network_player.steam_id,
                 self.times,

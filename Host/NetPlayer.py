@@ -81,6 +81,7 @@ class NetPlayer():
         self.version = "OUTDATED"
         self.time_started = time.time()
         self.send("SUCCESS")
+        self.send("INVALIDATE_TIME|Server Restarted - Timer Reset.")
 
     def set_last_trick(self, trick: str):
         self.last_trick = trick
@@ -160,7 +161,7 @@ class NetPlayer():
             self.__avatar_src = avatar_src_req.json()[
                 "response"]["players"][0]["avatarfull"]
         except (KeyError, IndexError):
-            self.__avatar_src = ""
+            self.__avatar_src = DBMS().get_avatar(self.steam_id)
         return self.__avatar_src
 
     def set_steam_name(self, steam_name):
@@ -168,8 +169,26 @@ class NetPlayer():
 
     def set_steam_id(self, steam_id):
         self.steam_id = steam_id
+        for player in self.parent.players:
+            if (
+                player.steam_id == self.steam_id
+                and not isinstance(self, player)
+            ):
+                logging.warning(
+                    f"Duplicate steam id on {player.steam_id} "
+                    f"named {player.steam_name}! Destroying old player now!"
+                )
+                self.parent.players.remove(player)
+                del(player)
         if steam_id == "OFFLINE" or steam_id == "":
             self.send("TOGGLE_GOD")
+        for steam_id, ban_type in DBMS().get_banned_users():
+            if ban_type == "CLOSE":
+                self.send("BANNED|CLOSE")
+            elif ban_type == "CRASH":
+                self.send("BANNED|CRASH")
+            elif ban_type == "ILLEGAL":
+                self.send("BANNED|TOGGLE_GOD")
 
     def set_world_name(self, world_name):
         self.world_name = world_name
