@@ -18,7 +18,7 @@ log_location = script_path + "/SplitTimer.log"
 logging.basicConfig(
     filename=log_location,
     filemode="a",
-    level=logging.DEBUG,
+    level=logging.ERROR,
     format='%(asctime)s - %(message)s',
     datefmt='%d-%b-%y %H:%M:%S'
 )
