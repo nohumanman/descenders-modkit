@@ -31,8 +31,24 @@ class DBMS():
     def update_player(steam_id, steam_name, avatar_src):
         DBMS.execute_sql(
             f'''
-            REPLACE INTO Player (steam_id, steam_name, avatar_src)
-            VALUES ("{steam_id}", "{steam_name}", "{avatar_src}")
+            REPLACE INTO Player (
+                steam_id,
+                steam_name,
+                avatar_src,
+                ignore_times,
+                ban_type
+            )
+            VALUES (
+                "{steam_id}", "{steam_name}", "{avatar_src}",
+                (
+                    select ignore_times FROM Player
+                    WHERE steam_id = "{steam_id}"
+                ),
+                (
+                    select ban_type from Player
+                    WHERE steam_id = "{steam_id}"
+                )
+            )
             ''', write=True
         )
 
@@ -56,6 +72,7 @@ class DBMS():
                 INNER JOIN Time ON SplitTime.time_id = Time.time_id
                 INNER JOIN Player ON Time.steam_id = Player.steam_id
             WHERE trail_name = "{trail_name}"
+            AND (Time.ignore = "FALSE" OR Time.ignore is NULL)
             ORDER BY checkpoint_num DESC, checkpoint_time ASC
             LIMIT 1
             '''
@@ -97,14 +114,10 @@ class DBMS():
         DBMS.execute_sql(statement, write=True)
 
     @staticmethod
-    def get_ban_status(steam_id):
+    def get_ban_status(steam_id: str):
         resp = DBMS.execute_sql(f'''
-            SELECT
-                ban_status
-            FROM
-                Players
-            WHERE
-                steam_id="{steam_id}"
+                SELECT ban_type FROM Player
+                WHERE steam_id = "{steam_id}"
             ''')
         return resp[0][0]
 
@@ -118,16 +131,6 @@ class DBMS():
             WHERE
                 valid = "TRUE"
             ''')
-
-    @staticmethod
-    def get_banned_users():
-        statement = "SELECT steam_id, ban_type FROM Player"
-        result = DBMS.execute_sql(statement)
-        return [
-            (steam_id, ban_type)
-            for (steam_id, ban_type) in result
-            if ban_type != "" or ban_type is not None
-        ]
 
     @staticmethod
     def get_leaderboard(trail_name, num=10) -> list:
@@ -156,7 +159,7 @@ class DBMS():
                 AND
                 checkpoint_num = max_checkpoint
                 AND
-                Time.ignore = "FALSE"
+                (Time.ignore = "FALSE" OR Time.ignore is NULL)
             GROUP BY
                 trail_name,
                 Player.steam_id

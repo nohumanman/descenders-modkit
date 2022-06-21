@@ -13,6 +13,9 @@ class TrailTimer():
         self.__boundaries = []
         self.time_started = 0
 
+    def get_boundaries(self):
+        return self.__boundaries
+
     def add_boundary(self, boundary_guid):
         if len(self.__boundaries) == 0:
             self.invalidate_timer("No boundaries entered")
@@ -23,10 +26,12 @@ class TrailTimer():
         if boundary_guid in self.__boundaries:
             self.__boundaries.remove(boundary_guid)
         if len(self.__boundaries) == 0:
-            self.invalidate_timer("Exited boundry without entering")
+            self.invalidate_timer("out of bounds!")
 
     def start_timer(self, total_checkpoints: int):
-        if len(self.__boundaries) != 0:
+        if len(self.__boundaries) == 0:
+            self.invalidate_timer("out of bounds!", always=True)
+        else:
             self.started = True
             self.total_checkpoints = total_checkpoints
             self.time_started = time.time()
@@ -49,8 +54,8 @@ class TrailTimer():
                 mess = str(round(abs(time_diff), 4)) + " seconds slower"
             self.network_player.send(f"SPLIT_TIME|{mess}")
 
-    def invalidate_timer(self, reason: str):
-        if not self.started:
+    def invalidate_timer(self, reason: str, always=False):
+        if (not self.started) and not always:
             return
         logging.info(f"invalidating time of {self.network_player.steam_name}")
         self.network_player.send(f"INVALIDATE_TIME|{reason}")
@@ -101,6 +106,8 @@ class TrailTimer():
                             self.times[len(self.times)-1]
                         ))
             )
+        else:
+            self.invalidate_timer("Didn't enter all checkpoints.")
         self.started = False
         self.times = []
         for net_player in self.network_player.parent.players:

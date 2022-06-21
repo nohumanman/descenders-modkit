@@ -81,7 +81,7 @@ class NetPlayer():
         self.version = "OUTDATED"
         self.time_started = time.time()
         self.send("SUCCESS")
-        self.send("INVALIDATE_TIME|Server Restarted - Timer Reset.")
+        self.send("INVALIDATE_TIME|Server Connected")
 
     def set_last_trick(self, trick: str):
         self.last_trick = trick
@@ -172,7 +172,7 @@ class NetPlayer():
         for player in self.parent.players:
             if (
                 player.steam_id == self.steam_id
-                and not isinstance(self, player)
+                and self is not player
             ):
                 logging.warning(
                     f"Duplicate steam id on {player.steam_id} "
@@ -182,13 +182,14 @@ class NetPlayer():
                 del(player)
         if steam_id == "OFFLINE" or steam_id == "":
             self.send("TOGGLE_GOD")
-        for steam_id, ban_type in DBMS().get_banned_users():
-            if ban_type == "CLOSE":
-                self.send("BANNED|CLOSE")
-            elif ban_type == "CRASH":
-                self.send("BANNED|CRASH")
-            elif ban_type == "ILLEGAL":
-                self.send("BANNED|TOGGLE_GOD")
+        ban_type = DBMS().get_ban_status(self.steam_id)
+        logging.info(f"222222 - {ban_type}")
+        if ban_type == "CLOSE":
+            self.send("BANNED|CLOSE")
+        elif ban_type == "CRASH":
+            self.send("BANNED|CRASH")
+        elif ban_type == "ILLEGAL":
+            self.send("BANNED|TOGGLE_GOD")
 
     def set_world_name(self, world_name):
         self.world_name = world_name
@@ -243,6 +244,9 @@ class NetPlayer():
     def on_respawn(self):
         if str(self.steam_id) == "76561198314526424":
             self.invalidate_all_trails("THOU HAST EATEN SHIT")
+            return
+        if str(self.steam_id) == "76561198154432619":
+            self.invalidate_all_trails("R.I.P. Bozo")
             return
         self.invalidate_all_trails("You respawned!")
 

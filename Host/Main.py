@@ -62,8 +62,10 @@ TOKEN_URL = API_BASE_URL + '/oauth2/token'
 
 app.config['SECRET_KEY'] = OAUTH2_CLIENT_SECRET
 
+
 def token_updater(token):
     session['oauth2_token'] = token
+
 
 def make_session(token=None, state=None, scope=None):
     return OAuth2Session(
@@ -105,6 +107,7 @@ def me():
     connections = discord.get(API_BASE_URL + '/users/@me/connections').json()
     return jsonify(user=user, guilds=guilds, connections=connections)
 
+
 def permission():
     if session.get('oauth2_token') is None:
         return "UNKNOWN"
@@ -114,9 +117,11 @@ def permission():
         return "AUTHORISED"
     return "UNAUTHORISED"
 
+
 @app.route("/permission")
 def permission_check():
     return permission()
+
 
 @app.route("/")
 def index():
@@ -128,7 +133,9 @@ def index():
     )
     scope = "identify"
     discord = make_session(scope=scope.split(' '))
-    authorization_url, state = discord.authorization_url(AUTHORIZATION_BASE_URL)
+    authorization_url, state = discord.authorization_url(
+        AUTHORIZATION_BASE_URL
+    )
     session['oauth2_state'] = state
     return redirect(authorization_url)
 
@@ -176,6 +183,10 @@ def get():
                     "reputation": player.reputation,
                     "last_trick": player.last_trick,
                     "version": player.version,
+                    "trails": [
+                        player.trails[trail].get_boundaries()
+                        for trail in player.trails
+                    ]
                 } for player in socket_server.players
             ]
         }

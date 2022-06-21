@@ -58,7 +58,6 @@
                         <v-text-field placeholder="Command" v-model="command"></v-text-field>
                         <v-btn @click="SubmitEval(controlled_player.id, command)">SUBMIT</v-btn>
                         </div>
-
                     </v-overlay>
                     <br>
                     <h1 style="text-align:center; font-size:50px;">
@@ -120,6 +119,7 @@
                                         <v-icon>mdi-open-in-new</v-icon>
                                     </v-btn>
                                 </v-card-actions>
+                                [[id.trails]]
                             </v-card>
                         </v-col>
                         <v-col v-for="x in 4" style="padding:40px;" v-if="(ids.length + x+1) % 4 != 0">
