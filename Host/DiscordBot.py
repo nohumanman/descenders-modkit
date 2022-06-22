@@ -80,7 +80,7 @@ class DiscordBot(commands.Bot):
             try:
                 num = int(message.content.split(" ")[1])
             except (IndexError, KeyError):
-                num = 10
+                num = 3
             self.queue[message.author.id] = num
             await message.channel.send(
                 'Please enter the name of the trail you want to check.'
