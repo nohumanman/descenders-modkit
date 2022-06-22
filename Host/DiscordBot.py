@@ -58,7 +58,13 @@ class DiscordBot(commands.Bot):
                 else:
                     num = TrailTimer.ord(i + 1)
                 bike = player["bike"]
-                leaderboard_str += f"{num} - {name} with {time} on {bike}\n"
+                leaderboard_str += f"{num} - {name} with {time} on {bike}"
+                if player['starting_speed'] is not None:
+                    leaderboard_str += " (starting speed of "
+                    st_time = round(float(player['starting_speed']), 2)
+                    leaderboard_str += f"{st_time}) \n"
+                else:
+                    leaderboard_str += "\n"
             logging.info(leaderboard_str)
             try:
                 await message.channel.send(

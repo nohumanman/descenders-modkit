@@ -96,6 +96,8 @@ class NetPlayer():
     def start_speed(self, starting_speed: float):
         if starting_speed > 50:
             self.send("INVALIDATE_TIME|You went through the start too fast!")
+        for trail in self.trails:
+            self.trails[trail].starting_speed = starting_speed
 
     def convert_to_unity(self, leaderboard):
         logging.info("Getting speedrun.com leaderboard")
@@ -189,7 +191,7 @@ class NetPlayer():
         elif ban_type == "CRASH":
             self.send("BANNED|CRASH")
         elif ban_type == "ILLEGAL":
-            self.send("BANNED|TOGGLE_GOD")
+            self.send("TOGGLE_GOD")
 
     def set_world_name(self, world_name):
         self.world_name = world_name

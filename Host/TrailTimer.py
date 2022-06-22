@@ -12,6 +12,7 @@ class TrailTimer():
         self.total_checkpoints = None
         self.__boundaries = []
         self.time_started = 0
+        self.starting_speed = None
 
     def get_boundaries(self):
         return self.__boundaries
@@ -98,7 +99,8 @@ class TrailTimer():
                 self.trail_name,
                 False,
                 self.network_player.world_name,
-                self.network_player.bike_type
+                self.network_player.bike_type,
+                str(self.starting_speed)
             )
             self.network_player.send(
                 "TIMER_FINISH|Time - "

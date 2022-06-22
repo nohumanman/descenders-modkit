@@ -171,9 +171,10 @@ class DBMS():
         return [
             {
                 "place": i + 1,
-                "time": time[10],
-                "name": time[13],
-                "bike": time[6]
+                "time": time[11],
+                "name": time[14],
+                "bike": time[6],
+                "starting_speed": time[8]
             }
             for i, time in enumerate(result)
         ]
@@ -186,7 +187,10 @@ class DBMS():
             WHERE steam_id = {steam_id}
         '''
         result = DBMS.execute_sql(statement)
-        return result[0][0]
+        try:
+            return result[0][0]
+        except Exception:
+            return ""
 
     @staticmethod
     def submit_ip(steam_id, address, port):
@@ -247,7 +251,8 @@ class DBMS():
         trail_name,
         being_monitored,
         current_world,
-        bike_type
+        bike_type,
+        starting_speed
     ):
         time_id = hash(
             str(split_times[len(split_times)-1])
@@ -263,7 +268,8 @@ class DBMS():
                 world_name,
                 trail_name,
                 was_monitored,
-                bike_type
+                bike_type,
+                starting_speed
             )
             VALUES (
                 "{steam_id}",
@@ -272,7 +278,8 @@ class DBMS():
                 "{current_world}",
                 "{trail_name}",
                 "{str(being_monitored)}",
-                "{bike_type}"
+                "{bike_type}",
+                "{starting_speed}"
             )
             ''', write=True)
         for n, split_time in enumerate(split_times):
