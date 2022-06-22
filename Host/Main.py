@@ -10,15 +10,17 @@ import time
 import random
 import logging
 import os
+from logging.handlers import RotatingFileHandler
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
 log_location = script_path + "/SplitTimer.log"
 
+
 logging.basicConfig(
     filename=log_location,
     filemode="a",
-    level=logging.ERROR,
+    level=logging.DEBUG,
     format='%(asctime)s - %(message)s',
     datefmt='%d-%b-%y %H:%M:%S'
 )
@@ -138,6 +140,17 @@ def index():
     )
     session['oauth2_state'] = state
     return redirect(authorization_url)
+
+
+@app.route("/leaderboards")
+def leaderboards():
+    return render_template("Leaderboards.html")
+
+
+#@app.route("/get-leaderboards")
+#def get_leaderboards():
+#    if permission() == "AUTHORISED":
+#        return DBMS.
 
 
 @app.route("/leaderboard")

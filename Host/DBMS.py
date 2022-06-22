@@ -133,6 +133,66 @@ class DBMS():
             ''')
 
     @staticmethod
+    def submit_alias(steam_id, alias):
+        statement = f'''
+            SELECT alias
+                FROM PlayerAliases
+            WHERE steam_id = {steam_id}
+        '''
+        result = DBMS.execute_sql(statement)
+        if alias not in [alias_result[0] for alias_result in result]:
+            statement = f'''
+                INSERT INTO PlayerAliases
+                VALUES ({steam_id}, "{alias}")
+            '''
+            DBMS.execute_sql(statement, write=True)
+
+    @staticmethod
+    def get_player_name(steam_id):
+        statement = f'''
+            SELECT steam_name
+                FROM Player
+            WHERE steam_id = {steam_id}
+        '''
+        result = DBMS.execute_sql(statement)
+        try:
+            return result[0][0]
+        except Exception:
+            return ""
+    
+
+    @staticmethod
+    def get_all_times():
+        statement = f'''
+            SELECT
+                *,
+                MIN(checkpoint_time)
+            FROM
+                Time
+                INNER JOIN
+                    SplitTime ON SplitTime.time_id = Time.time_id
+                INNER JOIN
+                    (
+                        SELECT
+                            max(checkpoint_num) AS max_checkpoint
+                        FROM
+                            SplitTime
+                            INNER JOIN
+                                Time ON Time.time_id = SplitTime.time_id
+                    ) ON SplitTime.time_id=Time.time_id
+                INNER JOIN
+                    Player ON Player.steam_id = Time.steam_id
+            WHERE
+                checkpoint_num = max_checkpoint
+                AND
+                (Time.ignore = "FALSE" OR Time.ignore is NULL)
+            GROUP BY
+                trail_name
+            ORDER BY
+                checkpoint_time ASC
+        '''
+
+    @staticmethod
     def get_leaderboard(trail_name, num=10) -> list:
         statement = f'''
             SELECT

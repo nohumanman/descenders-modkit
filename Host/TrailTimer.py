@@ -54,6 +54,10 @@ class TrailTimer():
             elif time_diff < 0:
                 mess = str(round(abs(time_diff), 4)) + " seconds slower"
             self.network_player.send(f"SPLIT_TIME|{mess}")
+            discord_bot = self.network_player.parent.discord_bot
+            discord_bot.loop.run_until_complete(
+                discord_bot.watch_user(self.network_player.steam_name)
+            )
 
     def invalidate_timer(self, reason: str, always=False):
         if (not self.started) and not always:

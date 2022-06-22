@@ -22,6 +22,15 @@ class DiscordBot(commands.Bot):
         channel = self.get_channel(channel_id)
         await channel.send(time)
 
+    async def watch_user(self, user_name: str):
+        await self.change_presence(
+            status=discord.Status.online,
+            activity=discord.Activity(
+                type=discord.ActivityType.watching,
+                name=user_name
+            )
+        )
+
     async def on_ready(self):
         logging.info("Discord bot ready.")
         await self.wait_until_ready()

@@ -100,7 +100,7 @@ class NetPlayer():
             self.trails[trail].starting_speed = starting_speed
 
     def convert_to_unity(self, leaderboard):
-        logging.info("Getting speedrun.com leaderboard")
+        logging.info(f"id{self.steam_id} alias {self.steam_name} - converting leaderboard to Unity.")
         if len(leaderboard) == 0:
             return {}
         keys = [key for key in leaderboard[0]]
@@ -113,15 +113,22 @@ class NetPlayer():
         return unityLeaderboard
 
     def get_leaderboard(self, trail_name):
-        logging.info("Getting speedrun.com leaderboard for " + trail_name)
+        logging.info(f"id{self.steam_id} alias {self.steam_name} - getting speedrun.com leaderboard for {trail_name}")
         return self.convert_to_unity(
-            DBMS.get_leaderboard(
-                trail_name
+            [
+                {
+                    "place": leaderboard["place"],
+                    "time": leaderboard["time"],
+                    "name": leaderboard["name"],
+                    "bike": leaderboard["bike"]
+                    } for leaderboard in DBMS.get_leaderboard(
+                    trail_name
                 )
+                ]
             )
 
     def get_speedrun_dot_com_leaderboard(self, trail_name):
-        logging.info("Getting speedrun.com leaderboard for " + trail_name)
+        logging.info(f"id{self.steam_id} alias {self.steam_name} - getting speedrun.com leaderboard for {trail_name}")
         api = srcomapi.SpeedrunCom()
         game = api.get_game("Descenders")
         for level in game.levels:
@@ -168,6 +175,8 @@ class NetPlayer():
 
     def set_steam_name(self, steam_name):
         self.steam_name = steam_name
+        if self.steam_id is not None:
+            DBMS.submit_alias(self.steam_id, self.steam_name)
 
     def set_steam_id(self, steam_id):
         self.steam_id = steam_id
@@ -177,21 +186,22 @@ class NetPlayer():
                 and self is not player
             ):
                 logging.warning(
-                    f"Duplicate steam id on {player.steam_id} "
-                    f"named {player.steam_name}! Destroying old player now!"
+                    f"id{self.steam_id} alias {self.steam_name} - duplicate steam id!"
                 )
                 self.parent.players.remove(player)
                 del(player)
         if steam_id == "OFFLINE" or steam_id == "":
             self.send("TOGGLE_GOD")
         ban_type = DBMS().get_ban_status(self.steam_id)
-        logging.info(f"222222 - {ban_type}")
+        logging.info(f"id{self.steam_id} alias {self.steam_name} - Banning with {ban_type}")
         if ban_type == "CLOSE":
             self.send("BANNED|CLOSE")
         elif ban_type == "CRASH":
             self.send("BANNED|CRASH")
         elif ban_type == "ILLEGAL":
             self.send("TOGGLE_GOD")
+        if self.steam_name is not None:
+            DBMS.submit_alias(self.steam_id, self.steam_name)
 
     def set_world_name(self, world_name):
         self.world_name = world_name
@@ -208,12 +218,13 @@ class NetPlayer():
         # requests.post(webhook, json=data)
 
     def send(self, data: str):
+        logging.debug(f"id{self.steam_id} alias {self.steam_name} - Sending data '{data}'")
         self.conn.sendall((data + "\n").encode())
 
     def handle_data(self, data: str):
         if data == "":
             return
-        logging.info(f"From {self.steam_name} Handling data '{data}'")
+        logging.info(f"id{self.steam_id} alias {self.steam_name} - handling data '{data}'")
         data_list = data.split("|")
         for operator in operations:
             if data.startswith(operator):
@@ -227,10 +238,10 @@ class NetPlayer():
             try:
                 data = self.conn.recv(1024)
             except ConnectionResetError:
-                logging.info("User has disconnected, breaking loop")
+                logging.info(f"id{self.steam_id} alias {self.steam_name} - User has disconnected, breaking loop")
                 break
             if not data:
-                logging.info("User has disconnected, breaking loop 2")
+                logging.info(f"id{self.steam_id} alias {self.steam_name} - User has disconnected, breaking loop 2")
                 break
             for piece in data.decode().split("\n"):
                 self.handle_data(piece)
