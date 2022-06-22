@@ -19,7 +19,7 @@ namespace SplitTimer{
 		}
 		public void NetStart(){
 			OnMapEnter(MapInfo.Instance.MapId, MapInfo.Instance.MapName);
-			NetClient.Instance.SendData("VERSION|0.1.1");
+			NetClient.Instance.SendData("VERSION|0.1.2");
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
 			NetClient.Instance.SendData("WORLD_NAME|" + MapInfo.Instance.MapName);
@@ -68,8 +68,8 @@ namespace SplitTimer{
 		public void OnBoundryExit(string trail_name, string boundry_guid){
 			NetClient.Instance.SendData("BOUNDRY_EXIT|" + trail_name + "|" + boundry_guid);
 		}
-		public void OnCheckpointEnter(string trail_name, string type, int total_checkpoints){
-			NetClient.Instance.SendData("CHECKPOINT_ENTER|" + trail_name + "|" + type + "|" + total_checkpoints.ToString());
+		public void OnCheckpointEnter(string trail_name, string type, int total_checkpoints, string client_time){
+			NetClient.Instance.SendData("CHECKPOINT_ENTER|" + trail_name + "|" + type + "|" + total_checkpoints.ToString() + "|" + client_time);
 		}
 		public void OnMapEnter(string map_id, string map_name){
 			NetClient.Instance.SendData("MAP_ENTER|" + map_id + "|" + map_name);

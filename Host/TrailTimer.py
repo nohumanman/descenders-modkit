@@ -38,9 +38,10 @@ class TrailTimer():
             self.time_started = time.time()
             self.times = []
 
-    def checkpoint(self):
+    def checkpoint(self, client_time: str):
         if self.started:
-            self.times.append(time.time() - self.time_started)
+            # self.times.append(time.time() - self.time_started)
+            self.times.append(float(client_time))
             fastest = DBMS.get_fastest_split_times(self.trail_name)
             try:
                 time_diff = (
@@ -67,13 +68,14 @@ class TrailTimer():
         self.started = False
         self.times = []
 
-    def end_timer(self):
+    def end_timer(self, client_time: str):
         from DBMS import DBMS
         if self.total_checkpoints is None:
             self.invalidate_timer("Didn't go through all checkpoints.")
         if (self.times[len(self.times)-1] < 0):
             self.invalidate_timer("Time was negative")
-        self.times.append(time.time() - self.time_started)
+        # self.times.append(time.time() - self.time_started)
+        self.times.append(float(client_time))
         if (len(self.times) == self.total_checkpoints-1):
             if self.trail_name != "4x Dobrany":
                 logging.info(f"Times submitted: {self.times}")
@@ -113,7 +115,7 @@ class TrailTimer():
                         ))
             )
         else:
-            self.invalidate_timer("Didn't enter all checkpoints.")
+            self.invalidate_timer("Didn't enter all checkpoints.", always=True)
         self.started = False
         self.times = []
         for net_player in self.network_player.parent.players:

@@ -72,6 +72,10 @@ var app = new Vue({
                 "eval": "TOGGLE_GOD",
                 "name": "Activate Anticheat"
             },
+            {
+                "eval": "BAIL",
+                "name": "Force Bail"
+            }
         ],
         controlled_player : {},
         loading : false,

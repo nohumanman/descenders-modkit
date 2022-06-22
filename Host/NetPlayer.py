@@ -24,7 +24,8 @@ operations = {
         lambda netPlayer, data: netPlayer.on_checkpoint_enter(
             data[1],
             data[2],
-            data[3]
+            data[3],
+            data[4]
         ),
     "RESPAWN":
         lambda netPlayer, data: netPlayer.on_respawn(),
@@ -284,15 +285,16 @@ class NetPlayer():
         self,
         trail_name: str,
         type: str,
-        total_checkpoints: str
+        total_checkpoints: str,
+        client_time: str
     ):
         self.get_trail(trail_name).total_checkpoints = int(total_checkpoints)
         if type == "Start":
             self.get_trail(trail_name).start_timer(total_checkpoints)
         if type == "Intermediate":
-            self.get_trail(trail_name).checkpoint()
+            self.get_trail(trail_name).checkpoint(client_time)
         if type == "Finish":
-            self.get_trail(trail_name).end_timer()
+            self.get_trail(trail_name).end_timer(client_time)
 
     def on_map_enter(self, map_id, map_name):
         self.time_started = time.time()
