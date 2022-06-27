@@ -2,20 +2,10 @@ var app = new Vue({
     el: '#app',
     delimiters: ['[[', ']]'],
     vuetify : new Vuetify({
-        theme: {
-            dark : {
-                primary: '#1976D2',
-                secondary: '#424242',
-                accent: '#82B1FF',
-                error: '#FF5252',
-                info: '#2196F3',
-                success: '#4CAF50',
-                warning: '#FFC107',
-            }
-    },
+        theme: { dark: true },
     }),
     data : {
-        ids : [{"name":"nohumanman", "id" : "123123", "command" : "", "steam_avatar_src" : "https://images.unsplash.com/photo-1566275529824-cca6d008f3da?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8&w=1000&q=80"}],
+        ids : [{"name":"nohumanman", "id" : "123123", "command" : "", "steam_avatar_src" : "https://images.unsplash.com/photo-1566275529824-cca6d008f3da?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8&w=1000&q=80", version:"23"}],
         suggested : ["SPECTATE|nohumanman", "SET_BIKE|1", "FREEZE_PLAYER", "UNFREEZE_PLAYER", "TOGGLE_CONTROL|true", "CLEAR_SESSION_MARKER", "RESET_PLAYER", "ADD_MODIFIER|FAKIEBALANCE", "ADD_MODIFIER|PUMPSTRENGTH", "RESPAWN_ON_TRACK", "RESPAWN_AT_START"],
         controlling : false,
         bike_types : [
@@ -86,6 +76,8 @@ var app = new Vue({
         timeScale: 1,
         search: null,
         validated: "UNAUTHORISED",
+        onlineOnly: false,
+        streamControls: false,
     },
     methods: {
         SubmitEval(id, eval_command){
@@ -192,13 +184,15 @@ function updatePlayers() {
         
         function compare_lname( a, b )
         {
-        if ( a.name.toLowerCase() < b.name.toLowerCase()){
-            return -1;
-        }
-        if ( a.name.toLowerCase() > b.name.toLowerCase()){
-            return 1;
-        }
-        return 0;
+            if (a != null && b != null){
+                if ( a.name.toLowerCase() < b.name.toLowerCase()){
+                    return -1;
+                }
+                if ( a.name.toLowerCase() > b.name.toLowerCase()){
+                    return 1;
+                }
+            }
+            return 0;
         }
     
         data["ids"].sort(compare_lname);
@@ -217,6 +211,15 @@ function updatePlayers() {
                     "version": "N/A",
                 }
             )
+        }
+        if (app.controlling){
+            ids = []
+            app.ids.forEach(function(val){
+                ids.push(val.id)
+            })
+            if (!(ids.includes(app.controlled_player.id))){
+                app.controlling = false;
+            }
         }
     })
 }
