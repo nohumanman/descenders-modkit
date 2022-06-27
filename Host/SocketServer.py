@@ -29,7 +29,7 @@ class SocketServer():
 
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            logging.info("Binding with self")
+            logging.info(f"Socket server open on {self.host} {self.port}")
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.bind((self.host, self.port))
             logging.info("Bound, listening...")

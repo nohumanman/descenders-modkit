@@ -74,7 +74,7 @@ var app = new Vue({
             },
             {
                 "eval": "BAIL",
-                "name": "Force Bail"
+                "name": "Kill."
             }
         ],
         controlled_player : {},
@@ -168,18 +168,40 @@ var app = new Vue({
         },
         setSelf(steam_id){
             this.self = steam_id
-            window.localStorage.setItem('self', steam_id);
+            $.get("/submit-steam-id", data={"steam_id": app.self})
+            // window.localStorage.setItem('self', steam_id);
         },
         Spectate(id){
+            $.get("/spectating", data={"steam_id" : app.self, "player_name" : id.name})
+
             app.SubmitEval(app.self, "SPECTATE|" + id.name);
         }
     }
 });
 
-app.self = window.localStorage.getItem('self');
+$.get("/get-steam-id", function(data){
+    app.self = data["steam_id"];
+    console.log(app.self);
+})
+
+// app.self = window.localStorage.getItem('self');
+
 
 function updatePlayers() {
     $.getJSON("/get", function(data){
+        
+        function compare_lname( a, b )
+        {
+        if ( a.name.toLowerCase() < b.name.toLowerCase()){
+            return -1;
+        }
+        if ( a.name.toLowerCase() > b.name.toLowerCase()){
+            return 1;
+        }
+        return 0;
+        }
+    
+        data["ids"].sort(compare_lname);
         app.ids = data["ids"]
         let startTime = new Date().getTime();
         if (app.ids[0] == null || app.ids[0].id != "ALL"){

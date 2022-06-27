@@ -64,6 +64,7 @@
                         D-Split Dashboard
                     </h1>
                     <h2 style="text-align:center;">Current Concurrent Users: [[ids.length-1]]</h2>
+                    <h2 style="text-align:center;">Players are sorted alphabetically</h2>
                     <br>
                     <v-divider color="black"></v-divider>
                     <br>
@@ -77,20 +78,18 @@
                         label="Search for a player"
                     ></v-autocomplete>
                     <v-row>
-                        <v-col v-if="search == null || search == id.id" :key="id.id" v-for="id in ids" style="padding:40px;">
+                        <v-col v-if="search == null || search == id.id" :key="id.id" v-for="id in ids" style="padding:30px;">
                             <v-card width="400px" :loading="loading">
                                 <v-card-title>
                                     <v-avatar size="75">
                                         <img alt="user" :src="id.steam_avatar_src">
                                     </v-avatar>
-                                    <p style="font-size:20px; padding-left:20px;">
-                                        [[id.name]]
+                                    <p style="font-size:30px; padding-left:20px;">
+                                        [[id.name]]<br>
+                                        ([[id.id]])
                                     </p>
                                     <br><br><br>
                                     <div style="width: 100%;">
-                                        <p style="text-align:center;">
-                                            ([[id.id]])
-                                        </p>
                                         <p style="text-align:center;">
                                             <span style="text-decoration:underline;">Total time in [[id.world_name]]</span>
                                             <br>[[toHours(id.total_time)]]

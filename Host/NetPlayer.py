@@ -77,6 +77,7 @@ class NetPlayer():
         self.steam_name = None
         self.bike_type = "enduro"
         self.world_name = None
+        self.spectating = ""
         self.last_trick = ""
         self.reputation = 6969
         self.version = "OUTDATED"
@@ -168,9 +169,8 @@ class NetPlayer():
             f"&steamids={self.steam_id}"
         )
         try:
-            self.__avatar_src = avatar_src_req.json()[
-                "response"]["players"][0]["avatarfull"]
-        except (KeyError, IndexError):
+            self.__avatar_src = avatar_src_req.json()["response"]["players"][0]["avatarfull"]
+        except Exception:
             self.__avatar_src = DBMS().get_avatar(self.steam_id)
         return self.__avatar_src
 
@@ -261,6 +261,9 @@ class NetPlayer():
             return
         if str(self.steam_id) == "76561198154432619":
             self.invalidate_all_trails("R.I.P. Bozo")
+            return
+        if str(self.steam_id) == "76561198113876228":
+            self.invalidate_all_trails("Skill issue.")
             return
         self.invalidate_all_trails("You respawned!")
 

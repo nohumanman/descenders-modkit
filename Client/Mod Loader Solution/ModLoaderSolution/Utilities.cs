@@ -26,7 +26,6 @@ namespace ModLoaderSolution
         public Text LogUI;
         public int maxLines = 6;
         List<string> history = new List<string>();
-
         private Camera mainCamera;
         private float GameTime = 0f;
         public float gameTime
@@ -62,6 +61,16 @@ namespace ModLoaderSolution
         public void Start()
         {
             instance = this;
+        }
+        GameObject cyclist;
+        public bool hasBailed()
+        {
+            if (cyclist == null)
+                cyclist = GameObject.Find("Cyclist");
+            if (cyclist != null)
+                if (cyclist.transform.root.name == "Player_Human")
+                    return false;
+            return true;
         }
 
         public string GetUniqueID()
@@ -102,7 +111,10 @@ namespace ModLoaderSolution
             uniqueID = id;
             return uniqueID;
         }
-
+        public void GoToPrivateLobby()
+        {
+            
+        }
         public string GetCurrentMap()
         {
             SessionManager sessionManager = Singleton<SessionManager>.SP;
@@ -188,7 +200,6 @@ namespace ModLoaderSolution
             }
             return seed;
         }
-
         public StartLine GetStartLine()
         {
             try

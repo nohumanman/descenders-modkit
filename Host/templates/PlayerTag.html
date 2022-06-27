@@ -1,0 +1,45 @@
+<html lang="en" class="transparent">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+        <title>Leaderboard</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link rel="icon" type="image/png" href="/static/images/Descenders Competitive Logo.png">
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <meta property="OG:image" content="/static/images/Descenders Competitive Logo.png">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    </head>
+    <body class="transparent">
+        <div id="app" class="transparent">
+            <v-app class="transparent">
+                <v-main class="transparent">
+                    <v-overlay class="transparent" v-if="self == null" opacity="1">
+                        <v-text-field
+                            placeholder="Please enter your steam ID."
+                            v-model="self_to_submit"
+                            width="50%"
+                        ></v-text-field>
+                        <v-btn @click="setSelf(self_to_submit)">I want to submit the steam ID I have entered.</v-btn>
+                    </v-overlay>
+                    <h1 class="transparent" style="text-align:center; font-size:70px; top:50%; font-family: Snowlatte;">
+                        [[spectating]]
+                    </h1>
+                </v-main>
+            </v-app>
+        </div>
+    </body>
+    <style>
+        .transparent{
+            background-color:rgba(0, 0, 0, 0)
+        }
+        @font-face {
+            font-family: Snowlatte; 
+			src: url('/static/Snowlatte.otf');
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="/static/js/PlayerTag.js"></script>
+</html>

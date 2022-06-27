@@ -105,6 +105,10 @@ namespace SplitTimer{
 				PlayerInfo.Instance.NetStart();
 				this.SendData("REP|" + gameObject.GetComponent<Utilities>().GetPlayerTotalRep());
 			}
+			if (message == "PRIVATE_LOBBY")
+            {
+				Utilities.instance.GoToPrivateLobby();
+			}
 			if (message.StartsWith("SPEEDRUN_DOT_COM_LEADERBOARD"))
 			{
 				string[] leaderboard = message.Split('|');

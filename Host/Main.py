@@ -19,7 +19,7 @@ log_location = script_path + "/SplitTimer.log"
 
 logging.basicConfig(
     filename=log_location,
-    filemode="a",
+    filemode="w",
     level=logging.DEBUG,
     format='%(asctime)s - %(message)s',
     datefmt='%d-%b-%y %H:%M:%S'
@@ -125,6 +125,10 @@ def permission_check():
     return permission()
 
 
+@app.route("/tag")
+def tag():
+    return render_template("PlayerTag.html")
+
 @app.route("/")
 def index():
     if permission() == "AUTHORISED" or permission() == "UNAUTHORISED":
@@ -164,6 +168,19 @@ def get_leaderboard():
 @app.route("/leaderboard/<trail>")
 def get_leaderboard_trail(trail):
     return jsonify(DBMS().get_leaderboard(trail))
+
+
+@app.route('/spectating')
+def spectating():
+    self_id = request.args.get("steam_id")
+    spectating = request.args.get("player_name")
+    socket_server.get_player_by_id(self_id).spectating = spectating
+    return "Gotcha"
+
+@app.route("/get-spectating")
+def get_spectating():
+    self_id = request.args.get("steam_id")
+    return socket_server.get_player_by_id(self_id).spectating
 
 
 @app.route("/eval/<id>")

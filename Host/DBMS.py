@@ -1,3 +1,4 @@
+from re import T
 import sqlite3
 import time
 import os
@@ -133,6 +134,29 @@ class DBMS():
             ''')
 
     @staticmethod
+    def get_steam_id(discord_id):
+        statement = f'''
+            SELECT steam_id FROM
+            User where discord_id = "{discord_id}"
+        '''
+        try:
+            return DBMS().execute_sql(statement, write=True)[0][0]
+        except Exception:
+            return None
+
+    @staticmethod
+    def submit_steam_id(discord_id, steam_id):
+        statement = f'''
+            INSERT INTO PlayerAliases
+            VALUES (
+                {steam_id},
+                (select valid FROM User WHERE discord_id = "{discord_id}"),
+                "{steam_id}"
+            )
+        '''
+        DBMS.execute_sql(statement, write=True)
+
+    @staticmethod
     def submit_alias(steam_id, alias):
         statement = f'''
             SELECT alias
@@ -210,12 +234,12 @@ class DBMS():
                             SplitTime
                             INNER JOIN
                                 Time ON Time.time_id = SplitTime.time_id
-                            WHERE Time.trail_name = "{trail_name}"
+                            WHERE LOWER(Time.trail_name) = LOWER("{trail_name}")
                     ) ON SplitTime.time_id=Time.time_id
                 INNER JOIN
                     Player ON Player.steam_id = Time.steam_id
             WHERE
-                trail_name = "{trail_name}"
+                LOWER(trail_name) = LOWER("{trail_name}")
                 AND
                 checkpoint_num = max_checkpoint
                 AND
