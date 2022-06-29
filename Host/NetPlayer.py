@@ -8,6 +8,10 @@ import requests
 from Tokens import webhook
 from Tokens import steam_api_key
 import logging
+import json
+import os
+
+script_path = os.path.dirname(os.path.realpath(__file__))
 
 operations = {
     "STEAM_ID":
@@ -90,6 +94,11 @@ class NetPlayer():
 
     def set_version(self, version: str):
         self.version = version
+        with open(script_path + "/current_version.json") as json_file:
+            data = json.load(json_file)
+            if version != data["latest_version"]:
+                latest_version = data["latest_version"]
+                self.send(f"INVALIDATE_TIME|You are on version {version}, latest is {latest_version} - Please restart your game.")
 
     def set_reputation(self, reputation):
         self.reputation = int(reputation)

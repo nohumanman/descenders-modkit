@@ -19,7 +19,7 @@ namespace SplitTimer{
 		}
 		public void NetStart(){
 			OnMapEnter(MapInfo.Instance.MapId, MapInfo.Instance.MapName);
-			NetClient.Instance.SendData("VERSION|0.1.31");
+			NetClient.Instance.SendData("VERSION|0.1.42");
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
 			NetClient.Instance.SendData("WORLD_NAME|" + MapInfo.Instance.MapName);
@@ -55,6 +55,9 @@ namespace SplitTimer{
 				speed = Vector3.Distance(PlayerHuman.transform.position, PreviousPos) / Time.deltaTime;
 				PreviousPos = PlayerHuman.transform.position;
 			}
+			//Debug.Log(PhotonNetwork.CloudRegion);
+			//Debug.Log(PhotonNetwork.CreateRoom("6969"));
+			//Debug.Log(PhotonNetwork.JoinRoom("6969"));
 		}
 		public void OnRespawn(){
 			NetClient.Instance.SendData("RESPAWN");

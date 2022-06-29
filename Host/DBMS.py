@@ -2,6 +2,7 @@ from re import T
 import sqlite3
 import time
 import os
+import json
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -60,6 +61,11 @@ class DBMS():
         min_timestamp=None,
         monitored_only=False
     ):
+        latest_version = ""
+        with open(script_path + "/current_version.json") as json_file:
+            data = json.load(json_file)
+            latest_version = data["latest_version"]
+
         statement = f'''
             SELECT
                 SplitTime.time_id,
@@ -72,7 +78,7 @@ class DBMS():
                 SplitTime
                 INNER JOIN Time ON SplitTime.time_id = Time.time_id
                 INNER JOIN Player ON Time.steam_id = Player.steam_id
-            WHERE trail_name = "{trail_name}"
+            WHERE trail_name = "{trail_name}" AND Time.version = "{latest_version}"
             AND (Time.ignore = "FALSE" OR Time.ignore is NULL)
             ORDER BY checkpoint_num DESC, checkpoint_time ASC
             LIMIT 1
@@ -218,9 +224,16 @@ class DBMS():
 
     @staticmethod
     def get_leaderboard(trail_name, num=10) -> list:
+        latest_version = ""
+        with open(script_path + "/current_version.json") as json_file:
+            data = json.load(json_file)
+            latest_version = data["latest_version"]
+
         statement = f'''
             SELECT
-                *,
+                starting_speed,
+                steam_name,
+                bike_type,
                 MIN(checkpoint_time)
             FROM
                 Time
@@ -244,6 +257,8 @@ class DBMS():
                 checkpoint_num = max_checkpoint
                 AND
                 (Time.ignore = "FALSE" OR Time.ignore is NULL)
+                AND
+                (Time.version = "{latest_version}")
             GROUP BY
                 trail_name,
                 Player.steam_id
@@ -255,10 +270,10 @@ class DBMS():
         return [
             {
                 "place": i + 1,
-                "time": time[11],
-                "name": time[14],
-                "bike": time[6],
-                "starting_speed": time[8]
+                "time": time[3],
+                "name": time[1],
+                "bike": time[2],
+                "starting_speed": time[0]
             }
             for i, time in enumerate(result)
         ]
@@ -336,7 +351,8 @@ class DBMS():
         being_monitored,
         current_world,
         bike_type,
-        starting_speed
+        starting_speed,
+        version
     ):
         time_id = hash(
             str(split_times[len(split_times)-1])
@@ -353,7 +369,8 @@ class DBMS():
                 trail_name,
                 was_monitored,
                 bike_type,
-                starting_speed
+                starting_speed,
+                version
             )
             VALUES (
                 "{steam_id}",
@@ -363,7 +380,8 @@ class DBMS():
                 "{trail_name}",
                 "{str(being_monitored)}",
                 "{bike_type}",
-                "{starting_speed}"
+                "{starting_speed}",
+                "{version}"
             )
             ''', write=True)
         for n, split_time in enumerate(split_times):

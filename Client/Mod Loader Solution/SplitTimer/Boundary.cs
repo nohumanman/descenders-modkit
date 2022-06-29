@@ -10,7 +10,8 @@ namespace SplitTimer
         string boundaryHash;
         public Trail trail;
         bool inBoundary = false;
-        bool notifiedServer = false;
+        bool notifiedServerOfExit = false;
+        bool notifiedServerOfEnter = false;
         public string GetHash(int minCharAmount, int maxCharAmount)
         {
             string glyphs = "abcdefghijklmnopqrstuvwxyz1234567890";
@@ -27,50 +28,41 @@ namespace SplitTimer
             boundaryHash = GetHash(20, 50);
             Debug.Log("Boundary | Boundary added to " + this.gameObject.name);
         }
-        void OnTriggerEnter(Collider other)
+        public void OnTriggerStay(Collider other)
         {
-            if (other.transform.name == "bicycleDude_Rig_V02_Slave_R_Elbow" && other.transform.root.name == "Player_Human")
-            {
-                other.gameObject.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
-                PlayerInfo.Instance.OnBoundryEnter(
-                    trail.name,
-                    boundaryHash
-                );
-                notifiedServer = false;
-                inBoundary = true;
-            }
+            StartCoroutine(OnTriggerStayEnum(other));
         }
-        IEnumerable OnTriggerStay(Collider other)
+        IEnumerator OnTriggerStayEnum(Collider other)
         {
             yield return new WaitForFixedUpdate();
             if (other.transform.name == "bicycleDude_Rig_V02_Slave_R_Elbow" && other.transform.root.name == "Player_Human")
             {
+                if (!inBoundary && !notifiedServerOfEnter)
+                {
+                    other.gameObject.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
+                    PlayerInfo.Instance.OnBoundryEnter(
+                        trail.name,
+                        boundaryHash
+                    );
+                }
+                notifiedServerOfEnter = true;
+                notifiedServerOfExit = false;
                 inBoundary = true;
-                notifiedServer = false;
             }
         }
         void FixedUpdate()
         {
-            if (!inBoundary && !notifiedServer) {
+            if (!inBoundary && !notifiedServerOfExit) {
                 PlayerInfo.Instance.OnBoundryExit(
                     trail.name,
                     boundaryHash
                 );
-                notifiedServer = true;
+                notifiedServerOfExit = true;
+                notifiedServerOfEnter = false;
             }
             inBoundary = false;
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.U))
                 this.gameObject.GetComponent<MeshRenderer>().enabled = !this.gameObject.GetComponent<MeshRenderer>().enabled;
-        }
-        void OnTriggerExit(Collider other)
-        {
-            if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
-            {
-                PlayerInfo.Instance.OnBoundryExit(
-                    trail.name,
-                    boundaryHash
-                );
-            }
         }
     }
 }

@@ -94,7 +94,7 @@ namespace SplitTimer{
 				}
 			}
 			catch (SocketException socketException) {             
-				// Debug.Log("NetClient | Socket exception - " + socketException);         
+				Debug.Log("NetClient | Socket exception - " + socketException);         
 			}
 		}
 		private void MessageRecieved(string message) {
@@ -103,7 +103,7 @@ namespace SplitTimer{
 				return;
 			if (message == "SUCCESS") {
 				PlayerInfo.Instance.NetStart();
-				this.SendData("REP|" + gameObject.GetComponent<Utilities>().GetPlayerTotalRep());
+				this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
 			}
 			if (message == "PRIVATE_LOBBY")
             {
@@ -177,35 +177,35 @@ namespace SplitTimer{
 			if (message.StartsWith("SPECTATE"))
             {
 				string name = message.Split('|')[1];
-				gameObject.GetComponent<Utilities>().SpectatePlayer(name);
+				Utilities.instance.SpectatePlayer(name);
             }
 			if (message.StartsWith("SET_BIKE"))
             {
 				int num = int.Parse(message.Split('|')[1]);
-				gameObject.GetComponent<Utilities>().SetBike(num);
+				Utilities.instance.SetBike(num);
 			}
 			if (message.StartsWith("FREEZE_PLAYER"))
             {
-				gameObject.GetComponent<Utilities>().FreezePlayer();
+				Utilities.instance.FreezePlayer();
 			}
 			if (message.StartsWith("TOGGLE_CONTROL"))
             {
 				string shouldStr = message.Split('|')[1];
 				bool should = shouldStr == "true";
-				gameObject.GetComponent<Utilities>().ToggleControl(should);
+				Utilities.instance.ToggleControl(should);
 			}
 			if (message.StartsWith("CLEAR_SESSION_MARKER"))
             {
-				gameObject.GetComponent<Utilities>().ClearSessionMarker();
+				Utilities.instance.ClearSessionMarker();
 			}
 			if (message.StartsWith("RESET_PLAYER"))
             {
-				gameObject.GetComponent<Utilities>().ResetPlayer();
+				Utilities.instance.ResetPlayer();
 			}
 			if (message.StartsWith("ADD_MODIFIER"))
             {
 				string modifier = message.Split('|')[1];
-				gameObject.GetComponent<Utilities>().AddGameModifier(modifier);
+				Utilities.instance.AddGameModifier(modifier);
 			}
 			if (message.StartsWith("SPLIT_TIME"))
             {
@@ -214,11 +214,11 @@ namespace SplitTimer{
 			}
 			if (message.StartsWith("RESPAWN_ON_TRACK"))
             {
-				gameObject.GetComponent<Utilities>().RespawnOnTrack();
+				Utilities.instance.RespawnOnTrack();
 			}
 			if (message.StartsWith("RESPAWN_AT_START"))
             {
-				gameObject.GetComponent<Utilities>().RespawnAtStartline();
+				Utilities.instance.RespawnAtStartline();
 			}
 			if (message.StartsWith("INVALIDATE_TIME"))
             {
@@ -253,11 +253,11 @@ namespace SplitTimer{
 			if (message.StartsWith("SET_REP"))
             {
 				string[] gate = message.Split('|');
-				gameObject.GetComponent<Utilities>().SetRep(int.Parse(gate[1]));
+				Utilities.instance.SetRep(int.Parse(gate[1]));
             }
 			if (message.StartsWith("GET_REP"))
             {
-				this.SendData("REP|" + gameObject.GetComponent<Utilities>().GetPlayerTotalRep());
+				this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
 			}
 			if (message.StartsWith("MODIFY_SPEED"))
             {
@@ -268,11 +268,11 @@ namespace SplitTimer{
 			}
 			if (message.StartsWith("ENABLE_STATS"))
             {
-				gameObject.GetComponent<Utilities>().EnableStats();
+				Utilities.instance.EnableStats();
 			}
 			if (message.StartsWith("TOGGLE_GOD"))
             {
-				gameObject.GetComponent<Utilities>().ToggleGod();
+				Utilities.instance.ToggleGod();
 			}
 			SendData("pong");
 			// Debug.Log("NetClient | Message Processed: " + message);

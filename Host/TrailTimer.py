@@ -106,7 +106,8 @@ class TrailTimer():
                 False,
                 self.network_player.world_name,
                 self.network_player.bike_type,
-                str(self.starting_speed)
+                str(self.starting_speed),
+                str(self.network_player.version)
             )
             self.network_player.send(
                 "TIMER_FINISH|Time - "

@@ -72,7 +72,10 @@ namespace ModLoaderSolution
                     return false;
             return true;
         }
-
+        public float AngleFromGround()
+        {
+            return Vector3.Angle(GetPlayer().transform.up, Vector3.up);
+        }
         public string GetUniqueID()
         {
             if (uniqueID != null)
