@@ -183,6 +183,11 @@ def get_spectating():
     return socket_server.get_player_by_id(self_id).spectating
 
 
+@app.route("/get-all-times")
+def get_all_times():
+    return jsonify({"times": DBMS.get_all_times()})
+
+
 @app.route("/eval/<id>")
 def eval(id):
     if permission() == "AUTHORISED":

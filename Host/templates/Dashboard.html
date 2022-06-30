@@ -60,107 +60,133 @@
                         </div>
                     </v-overlay>
                     <br>
-                    <h1 style="text-align:center; font-size:50px;">
-                        D-Split Dashboard
-                    </h1>
-                    <h2 style="text-align:center;">Current Concurrent Users: [[ids.length-1]]</h2>
-                    <h2 style="text-align:center;">Players are sorted alphabetically</h2>
-                    <br>
-                    <v-divider color="#4287f5"></v-divider>
-                    <br>
-                    <v-row align="center" justify="center" class="d-flex justify-center">
-                        <v-col class="d-flex justify-center">
-                            <v-btn @click="Randomise();">Disable Gates</v-btn>
-                        </v-col>
-                        <v-col class="d-flex justify-center">
-                            <v-autocomplete
-                                v-model="search"
-                                :items="ids"
-                                item-text="name"
-                                item-value="id"
-                                clearable
-                                label="Search for a player"
-                            ></v-autocomplete>
-                        </v-col>
-                        <v-col class="d-flex justify-center">
-                            <v-switch
-                                v-model="onlineOnly"
-                                label="Online Only"
-                            ></v-switch>
-                        </v-col>
-                        <v-col class="d-flex justify-center">
-                            <v-switch
-                                v-model="streamControls"
-                                label="Stream Controls"
-                            ></v-switch>
-                        </v-col>
-                    </v-row>
-                    <br>
-                    <v-divider color="#4287f5"></v-divider>
-                    <v-row>
-                        <v-col class="fill-height" v-if="search == null || search == id.id" :key="id.id" v-for="id in ids" style="padding:30px;">
-                            <v-card :color="stringToColour(id.version)" width="400px" :loading="loading">
-                                <v-col>
-                                    <v-row justify="center">
-                                        <p style="text-align:center;">v[[id.version]]</p>
-                                    </v-row>
-                                    <v-row justify="center">
-                                        <v-avatar size="200">
-                                            <img alt="user" :src="id.steam_avatar_src">
-                                        </v-avatar>
-                                    </v-row>
-                                    <v-row justify="center">
-                                        <p style="font-size:40px;">[[id.name]]</p>
-                                    </v-row>
-                                    <v-row justify="center">
-                                        ([[id.id]])
-                                    </v-row>
-                                    <v-row justify="center">
-                                        <p style="text-align:center;">
-                                            <span style="text-decoration:underline;">Total time in [[id.world_name]]</span>
-                                            <br>[[toHours(id.total_time)]]
-                                        </p>
-                                    </v-row>
-                                    <v-row justify="center">
-                                        Last Trick '[[id.last_trick]]'
-                                    </v-row>
-                                    <v-row justify="center">
-                                        <p>Rep - [[id.reputation]]</p>
-                                    </v-row>
-                                    <v-row justify="center">
-                                        [[id.trails]]
-                                    </v-row>
+
+                    <v-tabs v-model="tab">
+                        <v-tab>User Dashboard</v-tab>
+                        <v-tab>Times</v-tab>
+                    </v-tabs>
+                    <v-tabs-items v-model="tab">
+                        <v-tab-item>
+                            <h1 style="text-align:center; font-size:50px;">
+                                D-Split Dashboard
+                            </h1>
+                            <h2 style="text-align:center;">Current Concurrent Users: [[ids.length-1]]</h2>
+                            <h2 style="text-align:center;">Players are sorted alphabetically</h2>
+                            <br>
+                            <v-divider color="#4287f5"></v-divider>
+                            <br>
+                            <v-row align="center" justify="center" class="d-flex justify-center">
+                                <v-col class="d-flex justify-center">
+                                    <v-btn @click="Randomise();">Disable Gates</v-btn>
                                 </v-col>
-                                <v-card-actions class="justify-center">
-                                    <v-btn @click="SubmitEval(id.id, 'SET_BIKE|2')">Hardtail</v-btn>
-                                    <v-btn @click="SubmitEval(id.id, 'SET_BIKE|1')">Downhill</v-btn>
-                                    <v-btn @click="SubmitEval(id.id, 'SET_BIKE|0')">Enduro</v-btn>
-                                </v-card-actions>
-                                <br>
-                                <span v-if="streamControls">
-                                    <v-divider color="pink"></v-divider>
-                                    <br>
-                                    <v-card-actions class="justify-center">
-                                        <v-btn color="lime" width="110px" height="110px" @click="Spectate(id)">Spectate</v-btn>
-                                        <v-btn width="110px" height="110px" @click="SubmitEval(id.id, 'RIDERSGATE|2')">Trigger Gate</v-btn>
-                                    </v-card-actions>
-                                </span>
+                                <v-col class="d-flex justify-center">
+                                    <v-autocomplete
+                                        v-model="search"
+                                        :items="ids"
+                                        item-text="name"
+                                        item-value="id"
+                                        clearable
+                                        label="Search for a player"
+                                    ></v-autocomplete>
+                                </v-col>
+                                <v-col class="d-flex justify-center">
+                                    <v-switch
+                                        v-model="onlineOnly"
+                                        label="Online Only"
+                                    ></v-switch>
+                                </v-col>
+                                <v-col class="d-flex justify-center">
+                                    <v-switch
+                                        v-model="streamControls"
+                                        label="Stream Controls"
+                                    ></v-switch>
+                                </v-col>
+                            </v-row>
+                            <br>
+                            <v-divider color="#4287f5"></v-divider>
+                            <v-row>
+                                <v-col class="fill-height" v-if="search == null || search == id.id" :key="id.id" v-for="id in ids" style="padding:30px;">
+                                    <v-card :color="stringToColour(id.version)" width="400px" :loading="loading">
+                                        <v-col>
+                                            <v-row justify="center">
+                                                <p style="text-align:center;">v[[id.version]]</p>
+                                            </v-row>
+                                            <v-row justify="center">
+                                                <v-avatar size="200">
+                                                    <img alt="user" :src="id.steam_avatar_src">
+                                                </v-avatar>
+                                            </v-row>
+                                            <v-row justify="center">
+                                                <p style="font-size:40px;">[[id.name]]</p>
+                                            </v-row>
+                                            <v-row justify="center">
+                                                ([[id.id]])
+                                            </v-row>
+                                            <v-row justify="center">
+                                                <p style="text-align:center;">
+                                                    <span style="text-decoration:underline;">Total time in [[id.world_name]]</span>
+                                                    <br>[[toHours(id.total_time)]]
+                                                </p>
+                                            </v-row>
+                                            <v-row justify="center">
+                                                Last Trick '[[id.last_trick]]'
+                                            </v-row>
+                                            <v-row justify="center">
+                                                <p>Rep - [[id.reputation]]</p>
+                                            </v-row>
+                                            <v-row justify="center">
+                                                [[id.trails]]
+                                            </v-row>
+                                        </v-col>
+                                        <v-card-actions class="justify-center">
+                                            <v-btn @click="SubmitEval(id.id, 'SET_BIKE|2')">Hardtail</v-btn>
+                                            <v-btn @click="SubmitEval(id.id, 'SET_BIKE|1')">Downhill</v-btn>
+                                            <v-btn @click="SubmitEval(id.id, 'SET_BIKE|0')">Enduro</v-btn>
+                                        </v-card-actions>
+                                        <br>
+                                        <span v-if="streamControls">
+                                            <v-divider color="pink"></v-divider>
+                                            <br>
+                                            <v-card-actions class="justify-center">
+                                                <v-btn color="lime" width="110px" height="110px" @click="Spectate(id)">Spectate</v-btn>
+                                                <v-btn width="110px" height="110px" @click="SubmitEval(id.id, 'RIDERSGATE|2')">Trigger Gate</v-btn>
+                                            </v-card-actions>
+                                        </span>
+                                        <v-card-actions class="justify-center">
+                                            <v-btn @click="controlled_player = id; controlling = true;">
+                                                <v-icon>mdi-open-in-new</v-icon>
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-col>
+                                <v-col v-for="x in 4" style="padding:40px;" v-if="(ids.length + x+1) % 4 != 0">
+                                    <v-card width="400px">
+                                    </v-card>
+                                </v-col>
+                            </v-row>
+                        </v-tab-item>
+                        <v-tab-item>
+                            <v-row v-if="times.length == 0" style="width:100%;">
+                                <v-col>
+                                    <p style="text-align: center;">Times may take a while to load.</p>
+                                    <v-progress-circular
+                                        indeterminate
+                                        size="300"
+                                        color="primary"
+                                    ></v-progress-circular>
+                                </v-col>
+                            </v-row>
 
-                            
-                                <v-card-actions class="justify-center">
-                                    <v-btn @click="controlled_player = id; controlling = true;">
-                                        <v-icon>mdi-open-in-new</v-icon>
-                                    </v-btn>
-                                </v-card-actions>
-                                
-                            </v-card>
-                        </v-col>
-                        <v-col v-for="x in 4" style="padding:40px;" v-if="(ids.length + x+1) % 4 != 0">
-                            <v-card width="400px">
 
-                            </v-card>
-                        </v-col>
-                    </v-row>
+                            <v-col>
+                                <v-col v-for="time in times">
+                                    <img height="50" width="50" :src="time.avatar_src">
+                                    [[time.steam_name]] - [[time.steam_id]] - [[time.time_id]] - [[time.world_name]] - [[time.trail_name]] - [[time.total_time]] - [[time.ignore]] - [[time.was_monitored]] - [[time.starting_speed]] - [[time.version]]
+                                </v-col>
+                            </v-col>
+                        </v-tab-item>
+                    </v-tabs-items>
+                    
                 </v-main>
             </v-app>
         </div>

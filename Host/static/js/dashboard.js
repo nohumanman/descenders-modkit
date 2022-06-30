@@ -78,6 +78,8 @@ var app = new Vue({
         validated: "UNAUTHORISED",
         onlineOnly: false,
         streamControls: false,
+        tab: 0,
+        times: [],
     },
     methods: {
         SubmitEval(id, eval_command){
@@ -228,3 +230,7 @@ updatePlayers();
 app.CheckStatus();
 setInterval(updatePlayers, 1000);
 setInterval(app.CheckStatus, 1000);
+
+$.get("/get-all-times", function(data){
+    app.times = data["times"];
+})

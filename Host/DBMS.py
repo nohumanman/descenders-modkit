@@ -194,33 +194,31 @@ class DBMS():
     @staticmethod
     def get_all_times():
         statement = f'''
-            SELECT
-                *,
-                MIN(checkpoint_time)
-            FROM
-                Time
-                INNER JOIN
-                    SplitTime ON SplitTime.time_id = Time.time_id
-                INNER JOIN
-                    (
-                        SELECT
-                            max(checkpoint_num) AS max_checkpoint
-                        FROM
-                            SplitTime
-                            INNER JOIN
-                                Time ON Time.time_id = SplitTime.time_id
-                    ) ON SplitTime.time_id=Time.time_id
-                INNER JOIN
-                    Player ON Player.steam_id = Time.steam_id
-            WHERE
-                checkpoint_num = max_checkpoint
-                AND
-                (Time.ignore = "FALSE" OR Time.ignore is NULL)
-            GROUP BY
-                trail_name
-            ORDER BY
-                checkpoint_time ASC
+            SELECT * FROM all_times
         '''
+        result = DBMS.execute_sql(statement)
+        return [
+            {
+
+                "steam_id": time[0],
+                "steam_name": time[1],
+                "avatar_src": time[2],
+                "ban_type": time[3],
+                "ignore_times": time[4],
+                "timestamp": time[5],
+                "time_id": time[6],
+                "total_checkpoints": time[7],
+                "total_time": time[8],
+                "trail_name": time[9],
+                "world_name": time[10],
+                "was_monitored": time[11],
+                "ignore": time[12],
+                "bike_type": time[13],
+                "starting_speed": time[14],
+                "version": time[15]
+            }
+            for time in result
+        ]
 
     @staticmethod
     def get_leaderboard(trail_name, num=10) -> list:
