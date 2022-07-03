@@ -166,7 +166,11 @@ var app = new Vue({
             // window.localStorage.setItem('self', steam_id);
         },
         Spectate(id){
-            $.get("/spectating", data={"steam_id" : app.self, "player_name" : id.name})
+            $.get("/spectating", data={
+                "steam_id" : app.self,
+                "target_id": id.id,
+                "player_name" : id.name
+            });
 
             app.SubmitEval(app.self, "SPECTATE|" + id.name);
         }

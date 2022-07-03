@@ -17,13 +17,18 @@ var app = new Vue({
     data : {
         leaderboard: [],
         trailName: '',
+        timestamp: 0.0,
     },
     methods: {
-        GetLeaderboard(trail){
-            $.get("/leaderboard/" + trail, function(data){
+        GetLeaderboard(trail_name, timestamp){
+            $.get("/get-leaderboard", {
+                "trail_name" : trail_name,
+                "timestamp" : timestamp
+            }, function(data){
                 app.leaderboard = data;
             });
-            app.trailName = trail;
+            app.trail_name = trail_name;
+            app.timestamp = parseFloat(timestamp);
         },
         timeToStr(new_time) {
             intTime = parseFloat(new_time);
@@ -48,5 +53,8 @@ var app = new Vue({
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const trail = urlParams.get('trail')
-app.GetLeaderboard(trail);
+const trail = urlParams.get('trail_name')
+const timestamp = urlParams.get('timestamp')
+
+
+app.GetLeaderboard(trail, timestamp);

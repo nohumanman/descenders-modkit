@@ -146,15 +146,21 @@ def index():
     return redirect(authorization_url)
 
 
-@app.route("/leaderboards")
+@app.route("/leaderboard")
 def leaderboards():
-    return render_template("Leaderboards.html")
+    return render_template("Leaderboard.html")
 
 
-#@app.route("/get-leaderboards")
-#def get_leaderboards():
-#    if permission() == "AUTHORISED":
-#        return DBMS.
+@app.route("/get-leaderboard")
+def get_leaderboards():
+    timestamp = float(request.args.get("timestamp"))
+    trail_name = request.args.get("trail_name")
+    return jsonify(
+        DBMS.get_times_after_timestamp(
+            timestamp,
+            trail_name
+        )
+    )
 
 
 @app.route("/leaderboard")
@@ -174,7 +180,11 @@ def get_leaderboard_trail(trail):
 def spectating():
     self_id = request.args.get("steam_id")
     spectating = request.args.get("player_name")
+    target_id = request.args.get("target_id")
+    for player in socket_server.players:
+        player.being_monitored = False
     socket_server.get_player_by_id(self_id).spectating = spectating
+    socket_server.get_player_by_id(target_id).being_monitored = True
     return "Gotcha"
 
 @app.route("/get-spectating")

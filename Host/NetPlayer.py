@@ -82,6 +82,7 @@ class NetPlayer():
         self.bike_type = "enduro"
         self.world_name = None
         self.spectating = ""
+        self.being_monitored = False
         self.last_trick = ""
         self.reputation = 6969
         self.version = "OUTDATED"
@@ -265,16 +266,17 @@ class NetPlayer():
             self.trails[trail].invalidate_timer(reason)
 
     def on_respawn(self):
-        if str(self.steam_id) == "76561198314526424":
-            self.invalidate_all_trails("THOU HAST EATEN SHIT")
-            return
-        if str(self.steam_id) == "76561198154432619":
-            self.invalidate_all_trails("R.I.P. Bozo")
-            return
-        if str(self.steam_id) == "76561198113876228":
-            self.invalidate_all_trails("Skill issue.")
-            return
-        self.invalidate_all_trails("You respawned!")
+        if not self.being_monitored:
+            if str(self.steam_id) == "76561198314526424":
+                self.invalidate_all_trails("THOU HAST EATEN SHIT")
+                return
+            if str(self.steam_id) == "76561198154432619":
+                self.invalidate_all_trails("R.I.P. Bozo")
+                return
+            if str(self.steam_id) == "76561198113876228":
+                self.invalidate_all_trails("Skill issue.")
+                return
+            self.invalidate_all_trails("You respawned!")
 
     def get_trail(self, trail_name) -> TrailTimer:
         if trail_name not in self.trails:
