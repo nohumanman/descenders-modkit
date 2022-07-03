@@ -22,24 +22,25 @@
                     <v-container fill-height fluid>
                         <v-col>
                             <v-row
-                                style="text-align: left; font-size:40px;"
+                                style="text-align: left; font-size:40px; color: white;"
                                 align="center"
                                 justify="center"
                             >
                                 <table style="text-align: center; font-size:40px;">
                                     <tr style="text-align: center; font-size:40px;">
                                         <th style="padding:10px;">Place</th>
-                                        <th style="padding:10px;">Starting Time</th>
                                         <th style="padding:10px;">Name</th>
-                                        <th style="padding:10px;">Bike Type</th>
                                         <th style="padding:10px;">Time</th>
                                     </tr>
                                     <tr v-if="leaderboard.length != 0" style="text-align: center; font-size:40px;" v-for="(item, i) in leaderboard" :key="i">
                                         <td style="padding:10px;">
                                             [[i+1]]
                                         </td>
-                                        <td v-for="x in item" style="padding:10px;">
+                                        <td v-for="(x, i) in item" style="padding:10px;" v-if="i == 1">
                                             [[x]]
+                                        </td>
+                                        <td v-for="(x, i) in item" style="padding:10px;" v-if="i == 3">
+                                            [[timeToStr(x)]]
                                         </td>
                                     </tr>
                                 </table>

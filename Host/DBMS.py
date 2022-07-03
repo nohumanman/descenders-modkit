@@ -198,37 +198,23 @@ class DBMS():
                 starting_speed,
                 steam_name,
                 bike_type,
-                MIN(checkpoint_time)
+                MAX(checkpoint_time)
             FROM
                 Time
                 INNER JOIN
                     SplitTime ON SplitTime.time_id = Time.time_id
                 INNER JOIN
-                    (
-                        SELECT
-                            max(checkpoint_num) AS max_checkpoint
-                        FROM
-                            SplitTime
-                            INNER JOIN
-                                Time ON Time.time_id = SplitTime.time_id
-                            WHERE
-                                LOWER(Time.trail_name) = LOWER("{trail_name}")
-                    ) ON SplitTime.time_id=Time.time_id
-                INNER JOIN
                     Player ON Player.steam_id = Time.steam_id
             WHERE
                 LOWER(trail_name) = LOWER("{trail_name}")
-                AND
-                checkpoint_num = max_checkpoint
                 AND
                 (Time.ignore = "FALSE" OR Time.ignore is NULL)
                 AND
                 timestamp > {timestamp}
                 AND
                 was_monitored = "True"
-            GROUP BY
-                trail_name,
-                Player.steam_id
+			GROUP BY
+				Time.time_id
             ORDER BY
                 checkpoint_time ASC
         '''
