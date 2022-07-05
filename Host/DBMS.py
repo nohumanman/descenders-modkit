@@ -285,8 +285,6 @@ class DBMS():
                 checkpoint_num = max_checkpoint
                 AND
                 (Time.ignore = "FALSE" OR Time.ignore is NULL)
-                AND
-                (Time.version = "{latest_version}")
             GROUP BY
                 trail_name,
                 Player.steam_id
