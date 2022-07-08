@@ -1,6 +1,6 @@
 from SocketServer import SocketServer
 from DiscordBot import DiscordBot
-from Tokens import discord_token
+from Tokens import discord_token, OAUTH2_CLIENT_ID, OAUTH2_CLIENT_SECRET
 from DBMS import DBMS
 from flask import Flask, render_template, request, jsonify
 from flask import redirect, session
@@ -54,8 +54,7 @@ WEBSITE_PORT = 8080
 
 app = Flask(__name__)
 
-OAUTH2_CLIENT_ID = "973689949020880926"
-OAUTH2_CLIENT_SECRET = "RCgqQwzkR4mHiQ_sUZjoVGa7dXppXqWT"
+
 OAUTH2_REDIRECT_URI = 'https://split-timer.nohumanman.com/callback'
 
 API_BASE_URL = os.environ.get('API_BASE_URL', 'https://discordapp.com/api')
