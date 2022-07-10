@@ -12,6 +12,7 @@ class TrailTimer():
         self.total_checkpoints = None
         self.__boundaries = []
         self.time_started = 0
+        self.time_ended = 0
         self.starting_speed = None
 
     def get_boundaries(self):
@@ -78,6 +79,7 @@ class TrailTimer():
             self.invalidate_timer("Time was negative")
         # self.times.append(time.time() - self.time_started)
         self.times.append(float(client_time))
+        self.time_ended = client_time
         if (len(self.times) == self.total_checkpoints-1):
             if self.trail_name != "4x Dobrany":
                 logging.info(f"Times submitted: {self.times}")
@@ -137,12 +139,13 @@ class TrailTimer():
         d_secs = int(secs % 60)
         fraction = float(secs * 1000)
         fraction = round(fraction % 1000)
+        print(fraction)
         if len(str(d_mins)) == 1:
             d_mins = "0" + str(d_mins)
         if len(str(d_secs)) == 1:
             d_secs = "0" + str(d_secs)
         while len(str(fraction)) < 3:
-            fraction = str(fraction) + "0"
+            fraction = "0" + str(fraction)
         return f"{d_mins}:{d_secs}.{fraction}"
 
     @staticmethod

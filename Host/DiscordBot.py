@@ -32,7 +32,7 @@ class DiscordBot(commands.Bot):
         )
 
     async def on_ready(self):
-        logging.info("Discord bot ready.")
+        logging.info("Discord bot started.")
         await self.wait_until_ready()
         await self.change_presence(
             status=discord.Status.online,
@@ -46,13 +46,10 @@ class DiscordBot(commands.Bot):
         if message.author == self.user:
             return
         if message.author.id in [id for id in self.queue]:
-            logging.info("Getting leaderboard")
-            logging.info(message.content)
             leaderboard = DBMS.get_leaderboard(
                 message.content,
                 self.queue[message.author.id]
             )
-            logging.info("dmbs request successfull.")
             leaderboard_str = ""
             for i, player in enumerate(leaderboard):
                 name = player["name"]
@@ -67,14 +64,14 @@ class DiscordBot(commands.Bot):
                 else:
                     num = TrailTimer.ord(i + 1)
                 bike = player["bike"]
-                leaderboard_str += f"{num} - {name} with {time} on {bike}"
+                version = player["version"]
+                leaderboard_str += f"{num} - {name} with {time} on {bike} (v{version})"
                 if player['starting_speed'] is not None:
                     leaderboard_str += " (starting speed of "
                     st_time = round(float(player['starting_speed']), 2)
                     leaderboard_str += f"{st_time}) \n"
                 else:
                     leaderboard_str += "\n"
-            logging.info(leaderboard_str)
             try:
                 await message.channel.send(
                     f"Top {self.queue[message.author.id]}"

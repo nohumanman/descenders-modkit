@@ -77,6 +77,7 @@ var app = new Vue({
         search: null,
         validated: "UNAUTHORISED",
         onlineOnly: false,
+        range: [0, 50],
         streamControls: false,
         tab: 0,
         times: [],
@@ -173,6 +174,84 @@ var app = new Vue({
             });
 
             app.SubmitEval(app.self, "SPECTATE|" + id.name);
+        },
+        secs_to_str(secs){
+            secs = parseFloat(secs);
+            d_mins = Math.floor(secs / 60);
+            d_secs = Math.floor(secs % 60)
+            fraction = secs * 1000;
+            fraction = Math.round(fraction % 1000);
+            d_mins = d_mins.toString();
+            d_secs = d_secs.toString();
+            fraction = fraction.toString();
+            if (d_mins.length == 1)
+                d_mins = "0" + d_mins.toString()
+            if (d_secs.length == 1)
+                d_secs = "0" + d_secs
+            while (fraction.length < 3)
+                fraction = "0" + fraction
+            return d_mins + ":" + d_secs + "." + fraction
+        },
+        tgglmntb(time){
+            index = 0;
+            x = true;
+            app.times.forEach(function(val){
+                if (val.time_id == time.time_id)
+                    x = false;
+                if (x)
+                    index += 1;
+            })
+            
+            if (time.was_monitored == 'False'){
+                app.toggle_monitored(
+                    time.time_id,
+                    'True'
+                )
+                app.times[index].was_monitored = "True";
+            }
+            else{
+                app.toggle_monitored(
+                    time.time_id,
+                    'False'
+                )
+                app.times[index].was_monitored = "False";
+            }
+        },
+        ignr(time){
+            index = 0;
+            x = true;
+            app.times.forEach(function(val){
+                if (val.time_id == time.time_id)
+                    x = false;
+                if (x)
+                    index += 1;
+            })
+            if (time.ignore == 'False'){
+                app.toggle_ignore_time(
+                    time.time_id,
+                    'True'
+                )
+                app.times[index].ignore = "True";
+            }
+            else{
+                app.toggle_ignore_time(
+                    time.time_id,
+                    'False'
+                )
+                app.times[index].ignore = "False";
+            }
+        },
+        toggle_ignore_time(time_id, val){
+            $.get("/toggle-ignore-time/" + time_id, data={"val": val});
+        },
+        toggle_monitored(time_id, val){
+            $.get("/toggle-monitored/" + time_id, data={"val": val})
+        },
+        getLeaderboard(){
+            app.times = [];
+            $.get("/get-all-times", function(data){
+                app.times = data["times"];
+            })
         }
     }
 });
@@ -235,6 +314,5 @@ app.CheckStatus();
 setInterval(updatePlayers, 1000);
 setInterval(app.CheckStatus, 1000);
 
-$.get("/get-all-times", function(data){
-    app.times = data["times"];
-})
+
+app.getLeaderboard();

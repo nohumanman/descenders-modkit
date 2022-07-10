@@ -30,23 +30,22 @@ var app = new Vue({
             app.trail_name = trail_name;
             app.timestamp = parseFloat(timestamp);
         },
-        timeToStr(new_time) {
-            intTime = parseFloat(new_time);
-            minutes = Math.trunc(intTime / 60);
-            if (minutes.toString().length == 1){
-                minutes = "0" + minutes.toString();
-            }
-            seconds =  Math.trunc(intTime % 60);
-            if (seconds.toString().length == 1){
-                seconds = "0" + seconds.toString();
-            }
-            fraction = intTime * 1000;
-            fraction =  Math.trunc(fraction % 1000).toString();
-            while (fraction.toString().length < 3){
-                fraction = "0" + fraction;
-            }
-            timeText = minutes.toString() + ":" + seconds.toString() + ":" + fraction.toString();
-            return timeText.toString();
+        secs_to_str(secs){
+            secs = parseFloat(secs);
+            d_mins = Math.floor(secs / 60);
+            d_secs = Math.floor(secs % 60)
+            fraction = secs * 1000;
+            fraction = Math.round(fraction % 1000);
+            d_mins = d_mins.toString();
+            d_secs = d_secs.toString();
+            fraction = fraction.toString();
+            if (d_mins.length == 1)
+                d_mins = "0" + d_mins.toString()
+            if (d_secs.length == 1)
+                d_secs = "0" + d_secs
+            while (fraction.length < 3)
+                fraction = "0" + fraction
+            return d_mins + ":" + d_secs + "." + fraction
         }
     }
 });

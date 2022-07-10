@@ -119,6 +119,33 @@ def permission():
     return "UNAUTHORISED"
 
 
+@app.route("/split-time")
+def split_time():
+    return render_template("SplitTime.html")
+
+
+@app.route("/get-spectated-info")
+def get_spectated_info():
+    for player in socket_server.players:
+        if player.spectating != "":
+            spectated_player = socket_server.get_player_by_name(player.spectating)
+            return jsonify({
+                "trails": [
+                    {
+                        "trail_name": trail,
+                        "time_started" : spectated_player.get_trail(trail).time_started,
+                        "starting_speed": spectated_player.get_trail(trail).starting_speed,
+                        "started": spectated_player.get_trail(trail).started,
+                        "last_time": spectated_player.get_trail(trail).time_ended
+                    }
+                    for trail in spectated_player.trails
+                ],
+                "bike_type": spectated_player.bike_type,
+                "rep": spectated_player.reputation
+            })
+    return "None Found"
+
+
 @app.route("/permission")
 def permission_check():
     return permission()
@@ -168,6 +195,26 @@ def get_leaderboard():
         return render_template("Leaderboard.html")
     else:
         return redirect("/")
+
+
+@app.route("/toggle-ignore-time/<time_id>")
+def toggle_ignore_time(time_id):
+    if permission() == "AUTHORISED":
+        val = request.args.get("val")
+        DBMS().set_ignore_time(time_id, val)
+        return "Done"
+    else:
+        return "NOT VALID"
+
+
+@app.route("/toggle-monitored/<time_id>")
+def toggle_monitored(time_id):
+    if permission() == "AUTHORISED":
+        val = request.args.get("val")
+        DBMS().set_monitored(time_id, val)
+        return "Done"
+    else:
+        return "NOT VALID"
 
 
 @app.route("/leaderboard/<trail>")

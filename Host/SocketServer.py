@@ -16,6 +16,11 @@ class SocketServer():
             if player.steam_id == id:
                 return player
 
+    def get_player_by_name(self, name: str) -> NetPlayer:
+        for player in self.players:
+            if player.steam_name == name:
+                return player
+
     def create_client(self, conn, addr):
         logging.info("Creating client")
         player = NetPlayer(conn, addr, self)

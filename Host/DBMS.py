@@ -79,7 +79,7 @@ class DBMS():
                 INNER JOIN Time ON SplitTime.time_id = Time.time_id
                 INNER JOIN Player ON Time.steam_id = Player.steam_id
             WHERE trail_name = "{trail_name}" AND Time.version = "{latest_version}"
-            AND (Time.ignore = "FALSE" OR Time.ignore is NULL)
+            AND (Time.ignore = "False" OR Time.ignore is NULL)
             ORDER BY checkpoint_num DESC, checkpoint_time ASC
             LIMIT 1
             '''
@@ -208,7 +208,7 @@ class DBMS():
             WHERE
                 LOWER(trail_name) = LOWER("{trail_name}")
                 AND
-                (Time.ignore = "FALSE" OR Time.ignore is NULL)
+                (Time.ignore = "False" OR Time.ignore is NULL)
                 AND
                 timestamp > {timestamp}
                 AND
@@ -225,18 +225,19 @@ class DBMS():
     def get_all_times():
         statement = f'''
             SELECT * FROM all_times
+            LIMIT 25
         '''
         result = DBMS.execute_sql(statement)
         return [
             {
 
-                "steam_id": time[0],
+                "steam_id": str(time[0]),
                 "steam_name": time[1],
                 "avatar_src": time[2],
                 "ban_type": time[3],
                 "ignore_times": time[4],
                 "timestamp": time[5],
-                "time_id": time[6],
+                "time_id": str(time[6]),
                 "total_checkpoints": time[7],
                 "total_time": time[8],
                 "trail_name": time[9],
@@ -262,7 +263,8 @@ class DBMS():
                 starting_speed,
                 steam_name,
                 bike_type,
-                MIN(checkpoint_time)
+                MIN(checkpoint_time),
+                Time.version
             FROM
                 Time
                 INNER JOIN
@@ -284,7 +286,7 @@ class DBMS():
                 AND
                 checkpoint_num = max_checkpoint
                 AND
-                (Time.ignore = "FALSE" OR Time.ignore is NULL)
+                (Time.ignore = "False" OR Time.ignore is NULL)
             GROUP BY
                 trail_name,
                 Player.steam_id
@@ -299,10 +301,34 @@ class DBMS():
                 "time": time[3],
                 "name": time[1],
                 "bike": time[2],
-                "starting_speed": time[0]
+                "starting_speed": time[0],
+                "version": time[4]
             }
             for i, time in enumerate(result)
         ]
+
+    @staticmethod
+    def set_ignore_time(time_id, val):
+        statement = f'''
+            UPDATE Time
+            SET
+                ignore = "{val}"
+            WHERE
+                time_id = {time_id}
+        '''
+        DBMS.execute_sql(statement, write=True)
+
+    @staticmethod
+    def set_monitored(time_id, val):
+        statement = f'''
+            UPDATE Time
+            SET
+                was_monitored = "{val}"
+            WHERE
+                time_id = {time_id}
+        '''
+        DBMS.execute_sql(statement, write=True)
+
 
     @staticmethod
     def get_avatar(steam_id):
