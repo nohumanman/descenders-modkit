@@ -19,7 +19,7 @@ namespace SplitTimer{
 		}
 		public void NetStart(){
 			OnMapEnter(MapInfo.Instance.MapId, MapInfo.Instance.MapName);
-			NetClient.Instance.SendData("VERSION|0.1.42");
+			NetClient.Instance.SendData("VERSION|0.1.43");
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
 			NetClient.Instance.SendData("WORLD_NAME|" + MapInfo.Instance.MapName);

@@ -61,11 +61,6 @@ class DBMS():
         min_timestamp=None,
         monitored_only=False
     ):
-        latest_version = ""
-        with open(script_path + "/current_version.json") as json_file:
-            data = json.load(json_file)
-            latest_version = data["latest_version"]
-
         statement = f'''
             SELECT
                 SplitTime.time_id,
@@ -78,7 +73,7 @@ class DBMS():
                 SplitTime
                 INNER JOIN Time ON SplitTime.time_id = Time.time_id
                 INNER JOIN Player ON Time.steam_id = Player.steam_id
-            WHERE trail_name = "{trail_name}" AND Time.version = "{latest_version}"
+            WHERE trail_name = "{trail_name}"
             AND (Time.ignore = "False" OR Time.ignore is NULL)
             ORDER BY checkpoint_num DESC, checkpoint_time ASC
             LIMIT 1
@@ -253,11 +248,6 @@ class DBMS():
 
     @staticmethod
     def get_leaderboard(trail_name, num=10) -> list:
-        latest_version = ""
-        with open(script_path + "/current_version.json") as json_file:
-            data = json.load(json_file)
-            latest_version = data["latest_version"]
-
         statement = f'''
             SELECT
                 starting_speed,

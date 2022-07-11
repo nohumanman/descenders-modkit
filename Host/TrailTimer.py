@@ -101,6 +101,20 @@ class TrailTimer():
                                 + our_time
                             )
                         )
+                    our_time = TrailTimer.secs_to_str(
+                            self.times[len(self.times)-1]
+                        )
+                    discord_bot = self.network_player.parent.discord_bot
+                    discord_bot.loop.run_until_complete(
+                        discord_bot.new_fastest_time(
+                            "Time on '"
+                            + self.trail_name
+                            + "' by '"
+                            + self.network_player.steam_name
+                            + "' of "
+                            + our_time
+                        )
+                    )
                 except Exception as e:
                     logging.error(f"Fastest not found: {e}")
             DBMS().submit_time(
