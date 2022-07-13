@@ -251,6 +251,13 @@ def eval(id):
         print(args)
         try:
             socket_server.get_player_by_id(id).send(args)
+            if args.startswith("SET_BIKE"):
+                if args[9:10] == "1":
+                    socket_server.get_player_by_id(id).bike_type = "downhill"
+                elif args[9:10] == "0":
+                    socket_server.get_player_by_id(id).bike_type = "enduro"
+                elif args[9:10] == "2":
+                    socket_server.get_player_by_id(id).bike_type = "hardtail"
         except Exception as e:
             logging.error(e)
             return e
@@ -277,7 +284,9 @@ def get():
                     "trails": [
                         player.trails[trail].get_boundaries()
                         for trail in player.trails
-                    ]
+                    ],
+                    "bike_type": player.bike_type,
+                    "time_loaded": player.time_started,
                 } for player in socket_server.players
             ]
         }

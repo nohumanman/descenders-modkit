@@ -8,7 +8,7 @@ namespace SplitTimer{
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
-		public string version = "0.1.5";
+		public string version = "0.1.51";
 		public float speed;
 		bool hasLoadedPlayer = false;
 		public static PlayerInfo Instance { get; private set; }
@@ -27,11 +27,12 @@ namespace SplitTimer{
 				MapInfo.Instance.AddMetric("steam_name", steamIntegration.getName());
 				MapInfo.Instance.AddMetric("world_name", MapInfo.Instance.MapName);
 			}
-
+			
 			NetClient.Instance.SendData("VERSION|" + version);
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
 			NetClient.Instance.SendData("WORLD_NAME|" + MapInfo.Instance.MapName);
+			NetClient.Instance.SendData("BIKE_TYPE|" + GetComponent<BikeSwitcher>().oldBike);
 			foreach (Trail trail in GameObject.FindObjectsOfType<Trail>())
             {
 				// Debug.Log("PlayerInfo | Looking for leaderboard texts on trail '" + trail.name + "'");

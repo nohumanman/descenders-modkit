@@ -132,6 +132,9 @@ var app = new Vue({
             if (seconds < 10) {seconds = "0"+seconds;}
             return hours+' hrs, '+minutes+' mins, '+seconds+' secs'; // Return is HH : MM : SS
         },
+        timeFromTimestamp(stamp){
+            return (Date.now()/1000) - stamp
+        },
         killPlayer(){
             let x = confirm('Do you want to kill this player?')
             if (x){
@@ -252,6 +255,15 @@ var app = new Vue({
             $.get("/get-all-times", function(data){
                 app.times = data["times"];
             })
+        },
+        getColourOfBikeSelect(ourBike, setBike){
+            if (ourBike == setBike){
+                return "green"
+            }
+            return "black"
+        },
+        addCommaToNum(num){
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     }
 });
@@ -294,6 +306,7 @@ function updatePlayers() {
                     "world_name": "this place",
                     "reputation":  420420,
                     "version": "N/A",
+                    "bike_type": "enduro"
                 }
             )
         }

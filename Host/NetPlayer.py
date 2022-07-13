@@ -67,6 +67,8 @@ operations = {
         lambda netPlayer, data: netPlayer.set_last_trick(str(data[1])),
     "VERSION":
         lambda netPlayer, data: netPlayer.set_version(str(data[1])),
+    "BIKE_TYPE":
+        lambda netPlayer, data: netPlayer.set_bike(str(data[1])),
 }
 
 
@@ -88,10 +90,13 @@ class NetPlayer():
         self.version = "OUTDATED"
         self.time_started = time.time()
         self.send("SUCCESS")
-        self.send("INVALIDATE_TIME|Server Connected")
+        self.send("INVALIDATE_TIME|Connected to 'split-timer.nohumanman.com'")
 
     def set_last_trick(self, trick: str):
         self.last_trick = trick
+
+    def set_bike(self, bike):
+        self.bike_type = bike
 
     def set_version(self, version: str):
         self.version = version

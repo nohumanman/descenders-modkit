@@ -15,7 +15,7 @@
         <div id="app">
             <v-app>
                 <v-banner color="red" v-if="validated != 'AUTHORISED'">
-                    You are not permitted to modify any user's status because your steam account is not whitelisted.
+                    You are not permitted to modify any user because your steam account is not whitelisted.
                 </v-banner>
                 <v-main>
                     <v-overlay v-if="self == null" opacity="1">
@@ -89,12 +89,6 @@
                                 </v-col>
                                 <v-col class="d-flex justify-center">
                                     <v-switch
-                                        v-model="onlineOnly"
-                                        label="Online Only"
-                                    ></v-switch>
-                                </v-col>
-                                <v-col class="d-flex justify-center">
-                                    <v-switch
                                         v-model="streamControls"
                                         label="Stream Controls"
                                     ></v-switch>
@@ -104,8 +98,9 @@
                             <v-divider color="#4287f5"></v-divider>
                             <v-row>
                                 <v-col class="fill-height" v-if="search == null || search == id.id" :key="id.id" v-for="id in ids" style="padding:30px;">
-                                    <v-card :color="stringToColour(id.version)" width="400px" :loading="loading">
+                                    <v-card width="400px" color="#404040" :loading="loading">
                                         <v-col>
+                                            <br>
                                             <v-row justify="center">
                                                 <p style="text-align:center;">v[[id.version]]</p>
                                             </v-row>
@@ -116,30 +111,44 @@
                                             </v-row>
                                             <v-row justify="center">
                                                 <p style="font-size:40px;">[[id.name]]</p>
+                                                
                                             </v-row>
                                             <v-row justify="center">
-                                                ([[id.id]])
+                                                id - [[id.id]]
                                             </v-row>
+                                            <br><br>
                                             <v-row justify="center">
                                                 <p style="text-align:center;">
                                                     <span style="text-decoration:underline;">Total time in [[id.world_name]]</span>
-                                                    <br>[[toHours(id.total_time)]]
+                                                    <br>[[toHours(id.total_time + timeFromTimestamp(id.time_loaded))]]
                                                 </p>
+                                                <br>
                                             </v-row>
                                             <v-row justify="center">
                                                 Last Trick '[[id.last_trick]]'
                                             </v-row>
+                                            <br><br>
                                             <v-row justify="center">
-                                                <p>Rep - [[id.reputation]]</p>
+                                                <p>Reputation: [[addCommaToNum(id.reputation)]]</p><br>
                                             </v-row>
                                             <v-row justify="center">
-                                                [[id.trails]]
+                                                Trail Boundaries: [[id.trails]]
                                             </v-row>
+                                            <br>
                                         </v-col>
                                         <v-card-actions class="justify-center">
-                                            <v-btn @click="SubmitEval(id.id, 'SET_BIKE|2')">Hardtail</v-btn>
-                                            <v-btn @click="SubmitEval(id.id, 'SET_BIKE|1')">Downhill</v-btn>
-                                            <v-btn @click="SubmitEval(id.id, 'SET_BIKE|0')">Enduro</v-btn>
+                                            <v-btn
+                                                @click="SubmitEval(id.id, 'SET_BIKE|2')"
+                                                :color="getColourOfBikeSelect('hardtail', id.bike_type)"
+                                            >Hardtail</v-btn>
+                                            <v-btn
+                                                @click="SubmitEval(id.id, 'SET_BIKE|1')"
+                                                :color="getColourOfBikeSelect('downhill', id.bike_type)"
+                                            >Downhill</v-btn>
+                                            <v-btn
+                                                @click="SubmitEval(id.id, 'SET_BIKE|0')"
+                                                :color="getColourOfBikeSelect('enduro', id.bike_type)"
+                                            >Enduro</v-btn>
                                         </v-card-actions>
                                         <br>
                                         <span v-if="streamControls">
