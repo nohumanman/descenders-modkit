@@ -275,6 +275,7 @@ $.get("/get-steam-id", function(data){
 
 // app.self = window.localStorage.getItem('self');
 
+let startTime = new Date().getTime();
 
 function updatePlayers() {
     $.getJSON("/get", function(data){
@@ -294,7 +295,7 @@ function updatePlayers() {
     
         data["ids"].sort(compare_lname);
         app.ids = data["ids"]
-        let startTime = new Date().getTime();
+        ;
         if (app.ids[0] == null || app.ids[0].id != "ALL"){
             app.ids.unshift(
                 {
@@ -302,11 +303,12 @@ function updatePlayers() {
                     "id" : "ALL",
                     "command" : "",
                     "steam_avatar_src" : "https://dinahjean.files.wordpress.com/2020/04/all.jpg",
-                    "total_time": new Date().getTime()-startTime,
-                    "world_name": "this place",
-                    "reputation":  420420,
-                    "version": "N/A",
-                    "bike_type": "enduro"
+                    "total_time": 0,
+                    "time_loaded": startTime/1000,
+                    "world_name": "this dashboard",
+                    "reputation":  0,
+                    "version": "0.0.0",
+                    "bike_type": ""
                 }
             )
         }
