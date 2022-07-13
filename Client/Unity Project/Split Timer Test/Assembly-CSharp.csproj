@@ -51,6 +51,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Descenders Split Timer\CameraProps.cs" />
+     <Compile Include="Assets\Descenders Split Timer\CustomRespawn\CustomRespawnJson.cs" />
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Assembler.cs" />
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\ExportedFunction.cs" />
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Injector.cs" />
@@ -64,6 +66,8 @@
      <Compile Include="Assets\Descenders Split Timer\Split Timer\JsonRidersGate.cs" />
      <Compile Include="Assets\Descenders Split Timer\Split Timer\TimerInfo.cs" />
      <Compile Include="Assets\Descenders Split Timer\Split Timer\TimerText.cs" />
+     <Compile Include="Assets\TeleportPad.cs" />
+     <Compile Include="Assets\TeleportPadTerrain.cs" />
      <None Include="Assets\ModTool\ModTool.Shared.xml" />
      <None Include="Assets\ModTool\ModTool.Interface.xml" />
      <None Include="Assets\Descenders Split Timer\Leaderboard\Text\3DText.shader" />
@@ -234,13 +238,13 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
  </Reference>
  <Reference Include="ModTool.Interface">
- <HintPath>E:/Descenders-Split-Timer/Client/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Interface.dll</HintPath>
+ <HintPath>E:/Projects/descenders-split-timer/Client/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Interface.dll</HintPath>
  </Reference>
  <Reference Include="ModTool.Shared">
- <HintPath>E:/Descenders-Split-Timer/Client/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Shared.dll</HintPath>
+ <HintPath>E:/Projects/descenders-split-timer/Client/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Shared.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Cecil">
- <HintPath>E:/Descenders-Split-Timer/Client/Unity Project/Split Timer Test/Assets/ModTool/Mono.Cecil/Mono.Cecil.dll</HintPath>
+ <HintPath>E:/Projects/descenders-split-timer/Client/Unity Project/Split Timer Test/Assets/ModTool/Mono.Cecil/Mono.Cecil.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>C:/Users/point/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/UnityEngine.Analytics.dll</HintPath>

@@ -8,6 +8,7 @@ namespace SplitTimer{
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
+		public string version = "0.1.5";
 		public float speed;
 		bool hasLoadedPlayer = false;
 		public static PlayerInfo Instance { get; private set; }
@@ -19,7 +20,15 @@ namespace SplitTimer{
 		}
 		public void NetStart(){
 			OnMapEnter(MapInfo.Instance.MapId, MapInfo.Instance.MapName);
-			NetClient.Instance.SendData("VERSION|0.1.43");
+			if (MapInfo.Instance != null)
+            {
+				MapInfo.Instance.AddMetric("version", version);
+				MapInfo.Instance.AddMetric("steam_id", steamIntegration.getSteamId());
+				MapInfo.Instance.AddMetric("steam_name", steamIntegration.getName());
+				MapInfo.Instance.AddMetric("world_name", MapInfo.Instance.MapName);
+			}
+
+			NetClient.Instance.SendData("VERSION|" + version);
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
 			NetClient.Instance.SendData("WORLD_NAME|" + MapInfo.Instance.MapName);

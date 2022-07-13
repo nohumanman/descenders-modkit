@@ -18,6 +18,10 @@ namespace SplitTimer
         void Update()
         {
             Time.timeScale = speed;
+            if (MapInfo.Instance != null && MapInfo.Instance.debugEnabled)
+            {
+                MapInfo.Instance.AddMetric("timeScale", Time.timeScale.ToString());
+            }
         }
     }
 }

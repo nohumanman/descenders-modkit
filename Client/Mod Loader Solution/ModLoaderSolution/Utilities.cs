@@ -745,8 +745,9 @@ namespace ModLoaderSolution
 
         public bool isInAir()
         {
-            if (GetGroundFactor() < 0.9)
-                return true;
+            if (GetPlayer() != null)
+                if (GetGroundFactor() < 0.9)
+                    return true;
             return false;
         }
 

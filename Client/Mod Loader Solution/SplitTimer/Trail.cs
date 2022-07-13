@@ -15,6 +15,10 @@ namespace SplitTimer
         public List<GameObject> boundaryList = new List<GameObject>();
         public List<GameObject> checkpointList = new List<GameObject>();
         public float clientTime = 0f;
+        public void Start()
+        {
+            AddScripts();
+        }
         public void AddScripts()
         {
             if (boundaries != null && startCheckpoint != null && endCheckpoint != null)

@@ -28,7 +28,7 @@ namespace SplitTimer{
 			this.gameObject.AddComponent<Utilities>();
 		}
 		void Start () {
-			// Debug.Log("NetClient | Connecting to tcp server port " + port.ToString() + " with ip " + ip);
+			Debug.Log("NetClient | Connecting to tcp server port " + port.ToString() + " with ip " + ip);
 			ConnectToTcpServer();
 			ridersGates = GameObject.FindObjectsOfType<RidersGate>();
 		}
@@ -41,27 +41,35 @@ namespace SplitTimer{
 			}
 			if (Time.time - hasStarted > 30 && !socketConnection.Connected)
             {
-				// Debug.Log("NetClient | Disconnected! Reconecting now...");
+				Debug.Log("NetClient | Disconnected! Reconecting now...");
                 SplitTimerText.Instance.count = false;
                 SplitTimerText.Instance.text.color = Color.red;
 				SplitTimerText.Instance.text.text = "Server Disconnected.\n";
 				ConnectToTcpServer();
             }
-			foreach (string message in messages)
+            try
             {
-                try
-                {
-					MessageRecieved(message);
+				foreach (string message in messages)
+				{
+					try
+					{
+						MessageRecieved(message);
+						messages.Remove(message);
+					}
+					catch (Exception ex)
+					{
+						Debug.Log("NetClient | MessageRecieved failed! Error '" + ex + "'");
+					}
 				}
-				catch (Exception ex)
-                {
-					// Debug.Log("NetClient | MessageRecieved failed with '" + ex + "'");
-                }
+				messages.Clear();
+			}
+			catch (InvalidOperationException)
+            {
+				Debug.Log("NetClient | Message was recieved while messages were being read - cancelled reading.");
             }
-			messages.Clear();
 		}
 		private void ConnectToTcpServer () {
-			// Debug.Log("NetClient | Connecting to TCP Server...");
+			Debug.Log("NetClient | Connecting to TCP Server...");
 			hasStarted = Time.time;
 			try {
 				clientReceiveThread = new Thread (new ThreadStart(ListenForData));
@@ -70,7 +78,7 @@ namespace SplitTimer{
 				hasStarted = Time.time;
 			}
 			catch (Exception e) {
-				// Debug.Log("NetClient | On client connect exception " + e); 		
+				Debug.Log("NetClient | On client connect exception " + e); 		
 			}
 		}
 		private void ListenForData() {
@@ -219,6 +227,10 @@ namespace SplitTimer{
 			if (message.StartsWith("RESPAWN_AT_START"))
             {
 				Utilities.instance.RespawnAtStartline();
+			}
+			if (message.StartsWith("SET_FAR_CLIP"))
+            {
+				CameraModifier.Instance.farClipPlane = float.Parse(message.Split('|')[1]);
 			}
 			if (message.StartsWith("INVALIDATE_TIME"))
             {
