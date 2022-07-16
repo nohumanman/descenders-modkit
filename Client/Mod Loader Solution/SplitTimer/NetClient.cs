@@ -44,7 +44,7 @@ namespace SplitTimer{
 				Debug.Log("NetClient | Disconnected! Reconecting now...");
                 SplitTimerText.Instance.count = false;
                 SplitTimerText.Instance.text.color = Color.red;
-				SplitTimerText.Instance.text.text = "Server Disconnected.\n";
+				SplitTimerText.Instance.SetText("Server Disconnected.\n");
 				ConnectToTcpServer();
             }
             try
@@ -151,7 +151,7 @@ namespace SplitTimer{
 				string info = leaderboard[1];
 				SplitTimerText.Instance.count = false;
 				SplitTimerText.Instance.text.color = Color.green;
-				SplitTimerText.Instance.text.text = info;
+				SplitTimerText.Instance.SetText(info);
 			}
 			if (message.StartsWith("BAIL"))
             {
@@ -237,7 +237,7 @@ namespace SplitTimer{
 				string[] gate = message.Split('|');
 				string reason = gate[1];
 				SplitTimerText.Instance.count = false;
-				SplitTimerText.Instance.text.text = reason + "\n";
+				SplitTimerText.Instance.SetText(reason + "\n");
 				SplitTimerText.Instance.text.color = Color.red;
 				StartCoroutine(SplitTimerText.Instance.DisableTimerText(5));
 			}

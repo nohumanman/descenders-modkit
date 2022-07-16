@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SplitTimer\CameraModifier.cs" />
+    <Compile Include="SplitTimer\SpeedTrapInfo.cs" />
+    <Compile Include="SplitTimer\SpeedTrap.cs" />
     <Compile Include="SplitTimer\CustomTeleporter.cs" />
     <Compile Include="SplitTimer\TrickCapturer.cs" />
     <Compile Include="SplitTimer\SloMoZone.cs" />

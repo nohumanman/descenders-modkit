@@ -364,6 +364,14 @@ class DBMS():
         return result
 
     @staticmethod
+    def discord_login(discord_id, discord_name, email, steam_id):
+        statement = f'''
+            INSERT OR IGNORE INTO User
+            VALUES({discord_id}, "FALSE", "{steam_id}", "{discord_name}", "{email}")
+        '''
+        DBMS.execute_sql(statement, write=True)
+
+    @staticmethod
     def get_time_on_world(steam_id, world="none"):
         statement = f'''
             SELECT sum(time_ended - time_started) AS total_time FROM Session

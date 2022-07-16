@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\BoundryMaker.cs" />
      <Compile Include="Assets\Descenders Split Timer\CameraProps.cs" />
      <Compile Include="Assets\Descenders Split Timer\CustomRespawn\CustomRespawnJson.cs" />
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Assembler.cs" />
@@ -66,8 +67,10 @@
      <Compile Include="Assets\Descenders Split Timer\Split Timer\JsonRidersGate.cs" />
      <Compile Include="Assets\Descenders Split Timer\Split Timer\TimerInfo.cs" />
      <Compile Include="Assets\Descenders Split Timer\Split Timer\TimerText.cs" />
+     <Compile Include="Assets\SpeedTrapJson.cs" />
      <Compile Include="Assets\TeleportPad.cs" />
      <Compile Include="Assets\TeleportPadTerrain.cs" />
+     <None Include="Assets\Speed Track\3DText.shader" />
      <None Include="Assets\ModTool\ModTool.Shared.xml" />
      <None Include="Assets\ModTool\ModTool.Interface.xml" />
      <None Include="Assets\Descenders Split Timer\Leaderboard\Text\3DText.shader" />

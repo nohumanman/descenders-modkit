@@ -22,6 +22,11 @@ class DiscordBot(commands.Bot):
         channel = self.get_channel(channel_id)
         await channel.send(time)
 
+    async def ban_note(self, message):
+        channel_id = 997942390432206879
+        channel = self.get_channel(channel_id)
+        await channel.send(message)
+
     async def watch_user(self, user_name: str):
         await self.change_presence(
             status=discord.Status.online,

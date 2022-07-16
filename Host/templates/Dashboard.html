@@ -18,11 +18,14 @@
                     You are not permitted to modify any user because your steam account is not whitelisted.
                 </v-banner>
                 <v-main>
-                    <v-overlay v-if="self == null" opacity="1">
+                    <v-overlay v-if="self == ''" opacity="1">
                         <v-text-field
                             placeholder="Please enter your steam ID."
                             v-model="valee"
                         ></v-text-field>
+                        <br><br>
+                        If you're seeing this, you haven't linked your steam account to your discord account, so we can't take your steam id automatically.
+                        <br>
                         <v-btn @click="setSelf(valee)">SUBMIT STEAM ID</v-btn>
                     </v-overlay>
                     <v-overlay opacity="1" v-model="controlling">
@@ -64,10 +67,12 @@
                         <v-tab>Times</v-tab>
                     </v-tabs>
                     <v-tabs-items v-model="tab" fill-height>
+                        
                         <v-tab-item>
                             <h1 style="text-align:center; font-size:50px;">
                                 D-Split Dashboard
                             </h1>
+                            <h2 style="text-align:center;">Your Steam ID: [[self]] <v-btn @click="copyText(self);"><v-icon>mdi-content-copy</v-icon></v-btn></h2>
                             <h2 style="text-align:center;">Current Concurrent Users: [[ids.length-1]]</h2>
                             <h2 style="text-align:center;">Players are sorted alphabetically</h2>
                             <br>
@@ -119,10 +124,9 @@
                                             <br><br>
                                             <v-row justify="center">
                                                 <p style="text-align:center;">
-                                                    <span style="text-decoration:underline;">Total time in [[id.world_name]]</span>
-                                                    <br>[[toHours(id.total_time + timeFromTimestamp(id.time_loaded))]]
+                                                    Time in all maps:<br>[[toHours(id.total_time + timeFromTimestamp(id.time_loaded))]]
+                                                    <br><br>Time in [[id.world_name]]:<br>[[toHours(id.time_on_world + timeFromTimestamp(id.time_loaded))]]
                                                 </p>
-                                                <br>
                                             </v-row>
                                             <v-row justify="center">
                                                 Last Trick '[[id.last_trick]]'

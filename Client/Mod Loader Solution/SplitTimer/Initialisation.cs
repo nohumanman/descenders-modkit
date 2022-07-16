@@ -71,6 +71,7 @@ namespace SplitTimer
             this.gameObject.AddComponent<BikeSwitcher>();
             this.gameObject.AddComponent<TimeModifier>();
             this.gameObject.AddComponent<TrickCapturer>();
+            GameObject.Find("SpeedTrapTrigger").AddComponent<SpeedTrap>();
         }
     }
 }

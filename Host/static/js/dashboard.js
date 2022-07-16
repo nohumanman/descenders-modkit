@@ -70,7 +70,7 @@ var app = new Vue({
         controlled_player : {},
         loading : false,
         search_value: "",
-        self : null,
+        self : "",
         command : "",
         valee: "",
         timeScale: 1,
@@ -95,10 +95,16 @@ var app = new Vue({
                 $.get("/eval/" + id + "?order=" + eval_command);
             }
         },
+        copyText(text) {
+            navigator.clipboard.writeText(text);
+        },
         CheckStatus(){
             $.get("/permission", function(data){
                 app.validated = data;
             })
+        },
+        setSelf(id){
+            app.self = id;
         },
         stringToColour(str) {
             var hash = 0;
@@ -163,11 +169,6 @@ var app = new Vue({
                 timeScale = 1;
             }
             this.SubmitEval(this.controlled_player.id, "MODIFY_SPEED|" + timeScale.toString());
-        },
-        setSelf(steam_id){
-            this.self = steam_id
-            $.get("/submit-steam-id", data={"steam_id": app.self})
-            // window.localStorage.setItem('self', steam_id);
         },
         Spectate(id){
             $.get("/spectating", data={
@@ -262,16 +263,26 @@ var app = new Vue({
             }
             return "black"
         },
+        getSteamId(){
+            $.get("/me", function(data){
+                data.connections.forEach(function(val){
+                    if (val["type"] == "steam"){
+                        app.self = val["id"];
+                    }
+                })
+            })
+        },
         addCommaToNum(num){
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            if (num != null){
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            else{
+                return ""
+            }
         }
     }
 });
 
-$.get("/get-steam-id", function(data){
-    app.self = data["steam_id"];
-    console.log(app.self);
-})
 
 // app.self = window.localStorage.getItem('self');
 
@@ -303,6 +314,7 @@ function updatePlayers() {
                     "id" : "ALL",
                     "command" : "",
                     "steam_avatar_src" : "https://dinahjean.files.wordpress.com/2020/04/all.jpg",
+                    "time_on_world": 0,
                     "total_time": 0,
                     "time_loaded": startTime/1000,
                     "world_name": "this dashboard",
@@ -328,6 +340,9 @@ updatePlayers();
 app.CheckStatus();
 setInterval(updatePlayers, 1000);
 setInterval(app.CheckStatus, 1000);
-
+app.getSteamId();
+setInterval(app.getSteamId, 500);
 
 app.getLeaderboard();
+
+

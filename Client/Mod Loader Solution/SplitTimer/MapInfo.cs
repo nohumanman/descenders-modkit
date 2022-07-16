@@ -14,6 +14,7 @@ namespace SplitTimer{
 		public string MapName;
 		public Text debugText;
 		public bool debugEnabled = false;
+		SplitTimerText disabledText;
 		public List<Metric> metrics;
 		public static MapInfo Instance { get; private set; }
 		void Awake(){
@@ -45,7 +46,7 @@ namespace SplitTimer{
 			}
 		}
 		void Update()
-        {
+        {			
 			if (debugText != null)
 			{
 				if (Input.GetKeyDown(KeyCode.B) && Input.GetKey(KeyCode.D))

@@ -186,7 +186,10 @@ class NetPlayer():
         try:
             self.__avatar_src = avatar_src_req.json()["response"]["players"][0]["avatarfull"]
         except Exception:
-            self.__avatar_src = DBMS().get_avatar(self.steam_id)
+            try:
+                self.__avatar_src = DBMS().get_avatar(self.steam_id)
+            except Exception:
+                self.__avatar_src = ""
         return self.__avatar_src
 
     def set_steam_name(self, steam_name):
@@ -212,10 +215,28 @@ class NetPlayer():
         logging.info(f"id{self.steam_id} alias {self.steam_name} - Banning with {ban_type}")
         if ban_type == "CLOSE":
             self.send("BANNED|CLOSE")
+            discord_bot = self.parent.discord_bot
+            discord_bot.loop.run_until_complete(
+                discord_bot.ban_note(
+                    f"Player {self.steam_name} (id{self.steam_id}) tried to join but was banned with 'close'."
+                )
+            )
         elif ban_type == "CRASH":
             self.send("BANNED|CRASH")
+            discord_bot = self.parent.discord_bot
+            discord_bot.loop.run_until_complete(
+                discord_bot.ban_note(
+                    f"Player {self.steam_name} (id{self.steam_id}) tried to join but was banned with 'crash'."
+                )
+            )
         elif ban_type == "ILLEGAL":
             self.send("TOGGLE_GOD")
+            discord_bot = self.parent.discord_bot
+            discord_bot.loop.run_until_complete(
+                discord_bot.ban_note(
+                    f"Player {self.steam_name} (id{self.steam_id}) tried to join but was banned with 'illegal'."
+                )
+            )
         if self.steam_name is not None:
             DBMS.submit_alias(self.steam_id, self.steam_name)
 

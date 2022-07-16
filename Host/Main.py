@@ -10,7 +10,6 @@ import time
 import random
 import logging
 import os
-from logging.handlers import RotatingFileHandler
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -96,6 +95,19 @@ def callback():
         client_secret=OAUTH2_CLIENT_SECRET,
         authorization_response=request.url
     )
+    user = discord.get(API_BASE_URL + '/users/@me').json()
+
+    id = user["id"]
+    try:
+        email = user["email"]
+        username = user["username"]
+        connections = discord.get(API_BASE_URL + '/users/@me/connections').json()
+        for connection in connections:
+            if connection["type"] == "steam":
+                steam_id = connection["id"]
+        DBMS.discord_login(id, username, email, steam_id)
+    except:
+        pass
     session['oauth2_token'] = token
     return redirect("/")
 
@@ -104,8 +116,9 @@ def callback():
 def me():
     discord = make_session(token=session.get('oauth2_token'))
     user = discord.get(API_BASE_URL + '/users/@me').json()
-    guilds = discord.get(API_BASE_URL + '/users/@me/guilds').json()
     connections = discord.get(API_BASE_URL + '/users/@me/connections').json()
+    #DBMS.discord_login(id, username, email, steam_id)
+    guilds = discord.get(API_BASE_URL + '/users/@me/guilds').json()
     return jsonify(user=user, guilds=guilds, connections=connections)
 
 
@@ -224,14 +237,17 @@ def get_leaderboard_trail(trail):
 
 @app.route('/spectating')
 def spectating():
-    self_id = request.args.get("steam_id")
-    spectating = request.args.get("player_name")
-    target_id = request.args.get("target_id")
-    for player in socket_server.players:
-        player.being_monitored = False
-    socket_server.get_player_by_id(self_id).spectating = spectating
-    socket_server.get_player_by_id(target_id).being_monitored = True
-    return "Gotcha"
+    try:
+        self_id = request.args.get("steam_id")
+        spectating = request.args.get("player_name")
+        target_id = request.args.get("target_id")
+        for player in socket_server.players:
+            player.being_monitored = False
+        socket_server.get_player_by_id(self_id).spectating = spectating
+        socket_server.get_player_by_id(target_id).being_monitored = True
+        return "Gotcha"
+    except Exception as e:
+        return str(e)
 
 @app.route("/get-spectating")
 def get_spectating():
@@ -246,24 +262,27 @@ def get_all_times():
 
 @app.route("/eval/<id>")
 def eval(id):
-    if permission() == "AUTHORISED":
-        args = request.args.get("order")
-        print(args)
-        try:
-            socket_server.get_player_by_id(id).send(args)
-            if args.startswith("SET_BIKE"):
-                if args[9:10] == "1":
-                    socket_server.get_player_by_id(id).bike_type = "downhill"
-                elif args[9:10] == "0":
-                    socket_server.get_player_by_id(id).bike_type = "enduro"
-                elif args[9:10] == "2":
-                    socket_server.get_player_by_id(id).bike_type = "hardtail"
-        except Exception as e:
-            logging.error(e)
-            return e
-        return "Hello World!"
-    else:
-        return "FAILED - NOT VALID PERMISSIONS!"
+    try:
+        if permission() == "AUTHORISED":
+            args = request.args.get("order")
+            print(args)
+            try:
+                socket_server.get_player_by_id(id).send(args)
+                if args.startswith("SET_BIKE"):
+                    if args[9:10] == "1":
+                        socket_server.get_player_by_id(id).bike_type = "downhill"
+                    elif args[9:10] == "0":
+                        socket_server.get_player_by_id(id).bike_type = "enduro"
+                    elif args[9:10] == "2":
+                        socket_server.get_player_by_id(id).bike_type = "hardtail"
+            except Exception as e:
+                logging.error(e)
+                return e
+            return "Hello World!"
+        else:
+            return "FAILED - NOT VALID PERMISSIONS!"
+    except Exception as e:
+        return str(e)
 
 
 @app.route("/get")
@@ -276,7 +295,8 @@ def get():
                     "id": player.steam_id,
                     "name": player.steam_name,
                     "steam_avatar_src": player.get_avatar_src(),
-                    "total_time": player.get_total_time(onWorld=True),
+                    "total_time": player.get_total_time(),
+                    "time_on_world": player.get_total_time(onWorld=True),
                     "world_name": player.world_name,
                     "reputation": player.reputation,
                     "last_trick": player.last_trick,

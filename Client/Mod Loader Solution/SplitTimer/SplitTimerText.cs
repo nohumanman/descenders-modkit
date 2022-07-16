@@ -12,6 +12,7 @@ namespace SplitTimer
 		public float time;
 		public string checkpointTime = "";
 		public bool count = false;
+		bool uiEnabled = true;
 		void Awake()
 		{
 			if (Instance != null && Instance != this)
@@ -32,13 +33,28 @@ namespace SplitTimer
 		public IEnumerator DisableTimerText(float tim)
         {
 			yield return new WaitForSeconds(tim);
-			text.text = "";
+			SetText("");
+		}
+		public void Update()
+        {
+			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.U))
+			{
+				uiEnabled = !uiEnabled;
+				text.text = "";
+			}
 		}
 		void Start()
         {
 			text = GetComponent<Text>();
-			text.text = "";
+			SetText("");
 			StartCoroutine(UpdateTime());
+		}
+		public void SetText(string textToSet)
+        {
+			if (uiEnabled)
+				text.text = textToSet;
+			else
+				text.text = "";
 		}
 		public void RestartTimer()
 		{
@@ -61,7 +77,7 @@ namespace SplitTimer
 			while (true)
             {
 				if (count)
-					text.text = FormatTime(time).ToString() + "\n" + checkpointTime;
+					SetText(FormatTime(time).ToString() + "\n" + checkpointTime);
 				yield return new WaitForSeconds(0.01f);
 			}
 		}
