@@ -155,7 +155,6 @@ class TrailTimer():
         d_secs = int(secs % 60)
         fraction = float(secs * 1000)
         fraction = round(fraction % 1000)
-        print(fraction)
         if len(str(d_mins)) == 1:
             d_mins = "0" + str(d_mins)
         if len(str(d_secs)) == 1:

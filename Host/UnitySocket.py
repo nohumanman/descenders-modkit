@@ -72,7 +72,7 @@ operations = {
 }
 
 
-class NetPlayer():
+class UnitySocket():
     def __init__(self, conn: socket, addr, parent):
         self.addr = addr
         self.conn = conn

@@ -1,36 +1,25 @@
-from NetPlayer import NetPlayer
+from DashboardSocket import DashboardSocket
 import socket
 import threading
 import logging
 
 
-class SocketServer():
+class DashboardSocketServer():
     def __init__(self, host: str, port: int):
         self.host = host
         self.port = port
         self.discord_bot = None
-        self.players = []
-
-    def get_player_by_id(self, id: str) -> NetPlayer:
-        for player in self.players:
-            if player.steam_id == id:
-                return player
-
-    def get_player_by_name(self, name: str) -> NetPlayer:
-        for player in self.players:
-            if player.steam_name == name:
-                return player
+        self.clients = []
 
     def create_client(self, conn, addr):
-        logging.info("Creating client")
-        player = NetPlayer(conn, addr, self)
-        self.players.append(player)
+        client = DashboardSocket(conn, addr, self)
+        self.clients.append(client)
         try:
             with conn:
-                player.recieve()
+                client.recieve()
         except Exception as error:
             logging.info(f"Client has disconnected with error code {error}")
-        self.players.remove(player)
+        self.clients.remove(client)
 
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

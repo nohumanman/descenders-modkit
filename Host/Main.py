@@ -1,4 +1,4 @@
-from SocketServer import SocketServer
+from UnitySocketServer import SocketServer
 from DiscordBot import DiscordBot
 from Tokens import discord_token, OAUTH2_CLIENT_ID, OAUTH2_CLIENT_SECRET
 from DBMS import DBMS
@@ -30,7 +30,7 @@ logging.info(
     "--------------------------------"
 )
 
-# Create Socket Server
+# -- Socket Server --
 
 SOCKET_HOST = "0.0.0.0"
 SOCKET_PORT = 65432
@@ -39,14 +39,7 @@ socket_server = SocketServer(SOCKET_HOST, SOCKET_PORT)
 socket_server_thread = threading.Thread(target=socket_server.start)
 socket_server_thread.start()
 
-# Could have another instance of socket server to handle
-# the dashboard (to prevent periodic get requests)
-# or could use the websocket to prompt a reload?
-# Or could just use the existing socket server to handle
-# the dashboard.
-
-
-# Create Website Server
+# -- Website Server --
 
 WEBSITE_HOST = "0.0.0.0"
 WEBSITE_PORT = 8080
@@ -122,41 +115,9 @@ def me():
     return jsonify(user=user, guilds=guilds, connections=connections)
 
 
-def permission():
-    if session.get('oauth2_token') is None:
-        return "UNKNOWN"
-    discord = make_session(token=session.get('oauth2_token'))
-    user = discord.get(API_BASE_URL + '/users/@me').json()
-    if user["id"] in [str(x[0]) for x in DBMS.get_valid_ids()]:
-        return "AUTHORISED"
-    return "UNAUTHORISED"
-
-
 @app.route("/split-time")
 def split_time():
     return render_template("SplitTime.html")
-
-
-@app.route("/get-spectated-info")
-def get_spectated_info():
-    for player in socket_server.players:
-        if player.spectating != "":
-            spectated_player = socket_server.get_player_by_name(player.spectating)
-            return jsonify({
-                "trails": [
-                    {
-                        "trail_name": trail,
-                        "time_started" : spectated_player.get_trail(trail).time_started,
-                        "starting_speed": spectated_player.get_trail(trail).starting_speed,
-                        "started": spectated_player.get_trail(trail).started,
-                        "last_time": spectated_player.get_trail(trail).time_ended
-                    }
-                    for trail in spectated_player.trails
-                ],
-                "bike_type": spectated_player.bike_type,
-                "rep": spectated_player.reputation
-            })
-    return "None Found"
 
 
 @app.route("/permission")
@@ -210,116 +171,14 @@ def get_leaderboard():
         return redirect("/")
 
 
-@app.route("/toggle-ignore-time/<time_id>")
-def toggle_ignore_time(time_id):
-    if permission() == "AUTHORISED":
-        val = request.args.get("val")
-        DBMS().set_ignore_time(time_id, val)
-        return "Done"
-    else:
-        return "NOT VALID"
-
-
-@app.route("/toggle-monitored/<time_id>")
-def toggle_monitored(time_id):
-    if permission() == "AUTHORISED":
-        val = request.args.get("val")
-        DBMS().set_monitored(time_id, val)
-        return "Done"
-    else:
-        return "NOT VALID"
-
-
 @app.route("/leaderboard/<trail>")
 def get_leaderboard_trail(trail):
     return jsonify(DBMS().get_leaderboard(trail))
 
 
-@app.route('/spectating')
-def spectating():
-    try:
-        self_id = request.args.get("steam_id")
-        spectating = request.args.get("player_name")
-        target_id = request.args.get("target_id")
-        for player in socket_server.players:
-            player.being_monitored = False
-        socket_server.get_player_by_id(self_id).spectating = spectating
-        socket_server.get_player_by_id(target_id).being_monitored = True
-        return "Gotcha"
-    except Exception as e:
-        return str(e)
-
-@app.route("/get-spectating")
-def get_spectating():
-    self_id = request.args.get("steam_id")
-    return socket_server.get_player_by_id(self_id).spectating
-
-
 @app.route("/get-all-times")
 def get_all_times():
     return jsonify({"times": DBMS.get_all_times()})
-
-
-@app.route("/eval/<id>")
-def eval(id):
-    try:
-        if permission() == "AUTHORISED":
-            args = request.args.get("order")
-            print(args)
-            try:
-                socket_server.get_player_by_id(id).send(args)
-                if args.startswith("SET_BIKE"):
-                    if args[9:10] == "1":
-                        socket_server.get_player_by_id(id).bike_type = "downhill"
-                    elif args[9:10] == "0":
-                        socket_server.get_player_by_id(id).bike_type = "enduro"
-                    elif args[9:10] == "2":
-                        socket_server.get_player_by_id(id).bike_type = "hardtail"
-            except Exception as e:
-                logging.error(e)
-                return e
-            return "Hello World!"
-        else:
-            return "FAILED - NOT VALID PERMISSIONS!"
-    except Exception as e:
-        return str(e)
-
-
-@app.route("/get")
-def get():
-    return jsonify(
-        {
-            'ids':
-            [
-                {
-                    "id": player.steam_id,
-                    "name": player.steam_name,
-                    "steam_avatar_src": player.get_avatar_src(),
-                    "total_time": player.get_total_time(),
-                    "time_on_world": player.get_total_time(onWorld=True),
-                    "world_name": player.world_name,
-                    "reputation": player.reputation,
-                    "last_trick": player.last_trick,
-                    "version": player.version,
-                    "trails": [
-                        player.trails[trail].get_boundaries()
-                        for trail in player.trails
-                    ],
-                    "bike_type": player.bike_type,
-                    "time_loaded": player.time_started,
-                } for player in socket_server.players
-            ]
-        }
-    )
-
-
-@app.route("/randomise")
-def randomise():
-    if permission() == "AUTHORISED":
-        global shouldRandomise
-        shouldRandomise = not shouldRandomise
-        return "123"
-    return "FAILED - NOT VALID PERMISSIONS!"
 
 
 shouldRandomise = True
