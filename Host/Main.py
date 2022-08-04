@@ -1,10 +1,11 @@
-from UnitySocketServer import SocketServer
+from DashboardSocketServer import DashboardSocketServer
+from Webserver import Webserver
+from UnitySocketServer import UnitySocketServer
 from DiscordBot import DiscordBot
-from Tokens import discord_token, OAUTH2_CLIENT_ID, OAUTH2_CLIENT_SECRET
+from Tokens import discord_token
 from DBMS import DBMS
 from flask import Flask, render_template, request, jsonify
 from flask import redirect, session
-from requests_oauthlib import OAuth2Session
 import threading
 import time
 import random
@@ -30,50 +31,43 @@ logging.info(
     "--------------------------------"
 )
 
-# -- Socket Server --
+# -- Unity Socket Server --
 
-SOCKET_HOST = "0.0.0.0"
-SOCKET_PORT = 65432
+UNITY_SOCKET_IP = "0.0.0.0"
+UNITY_SOCKET_PORT = 65432
+unity_socket_server = UnitySocketServer(
+    UNITY_SOCKET_IP,
+    UNITY_SOCKET_PORT
+)
 
-socket_server = SocketServer(SOCKET_HOST, SOCKET_PORT)
-socket_server_thread = threading.Thread(target=socket_server.start)
-socket_server_thread.start()
+# -- Dashboard Socket Server --
+
+DASHBOARD_SOCKET_IP = "0.0.0.0"
+DASHBOARD_SOCKET_PORT = 65432
+dashboard_socket_server = DashboardSocketServer(
+    DASHBOARD_SOCKET_IP,
+    DASHBOARD_SOCKET_PORT
+)
 
 # -- Website Server --
 
-WEBSITE_HOST = "0.0.0.0"
+WEBSITE_IP = "0.0.0.0"
 WEBSITE_PORT = 8080
+webserver = Webserver(
+    WEBSITE_IP,
+    WEBSITE_PORT
+)
+
 
 app = Flask(__name__)
 
 
-OAUTH2_REDIRECT_URI = 'https://split-timer.nohumanman.com/callback'
-
-API_BASE_URL = os.environ.get('API_BASE_URL', 'https://discordapp.com/api')
-AUTHORIZATION_BASE_URL = API_BASE_URL + '/oauth2/authorize'
-TOKEN_URL = API_BASE_URL + '/oauth2/token'
-
-app.config['SECRET_KEY'] = OAUTH2_CLIENT_SECRET
+# OATH2
 
 
-def token_updater(token):
-    session['oauth2_token'] = token
 
 
-def make_session(token=None, state=None, scope=None):
-    return OAuth2Session(
-        client_id=OAUTH2_CLIENT_ID,
-        token=token,
-        state=state,
-        scope=scope,
-        redirect_uri=OAUTH2_REDIRECT_URI,
-        auto_refresh_kwargs={
-            'client_id': OAUTH2_CLIENT_ID,
-            'client_secret': OAUTH2_CLIENT_SECRET,
-        },
-        auto_refresh_url=TOKEN_URL,
-        token_updater=token_updater
-    )
+
 
 
 @app.route('/callback')

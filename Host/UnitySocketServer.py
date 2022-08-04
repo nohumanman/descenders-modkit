@@ -5,8 +5,8 @@ import logging
 
 
 class UnitySocketServer():
-    def __init__(self, host: str, port: int):
-        self.host = host
+    def __init__(self, ip: str, port: int):
+        self.host = ip
         self.port = port
         self.discord_bot = None
         self.players = []

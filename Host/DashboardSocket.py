@@ -1,6 +1,7 @@
 import socket
 from UnitySocketServer import UnitySocketServer
 import logging
+from DBMS import DBMS
 
 
 class DashboardSocket():
@@ -19,7 +20,7 @@ class DashboardSocket():
         for player in self.unity_socket_server.players:
             if player.spectating != "":
                 spectated_player = self.socket_server.get_player_by_name(player.spectating)
-                return jsonify({
+                return {
                     "trails": [
                         {
                             "trail_name": trail,
@@ -32,7 +33,7 @@ class DashboardSocket():
                     ],
                     "bike_type": spectated_player.bike_type,
                     "rep": spectated_player.reputation
-                })
+                }
         return "None Found"
 
     def spectating(self, steam_id: str, player_name: str, target_id: str):
@@ -45,39 +46,37 @@ class DashboardSocket():
         except Exception as e:
             return str(e)
     
-    def toggle_ignore_time(time_id):
-        if permission() == "AUTHORISED":
-            val = request.args.get("val")
+    def toggle_ignore_time(self, time_id, val):
+        if self.permission() == "AUTHORISED":
             DBMS().set_ignore_time(time_id, val)
             return "Done"
         else:
             return "NOT VALID"
 
-    def toggle_monitored(time_id):
-        if permission() == "AUTHORISED":
-            val = request.args.get("val")
+    def toggle_monitored(self, time_id, val):
+        if self.permission() == "AUTHORISED":
             DBMS().set_monitored(time_id, val)
             return "Done"
         else:
             return "NOT VALID"
 
-    def get_spectating():
-        self_id = request.args.get("steam_id")
-        return self.unity_socket_server.get_player_by_id(self_id).spectating
+    def get_spectating(self, steam_id):
+        return self.unity_socket_server.get_player_by_id(steam_id).spectating
 
-    def eval(id):
+    def eval(self, id):
+        cmd = "SUCCESS"
         try:
-            if permission() == "AUTHORISED":
-                args = request.args.get("order")
-                print(args)
+            if self.permission() == "AUTHORISED":
                 try:
-                    self.unity_socket_server.get_player_by_id(id).send(args)
-                    if args.startswith("SET_BIKE"):
-                        if args[9:10] == "1":
+                    self.unity_socket_server.get_player_by_id(
+                        id
+                    ).send(cmd)
+                    if cmd.startswith("SET_BIKE"):
+                        if cmd[9:10] == "1":
                             self.unity_socket_server.get_player_by_id(id).bike_type = "downhill"
-                        elif args[9:10] == "0":
+                        elif cmd[9:10] == "0":
                             self.unity_socket_server.get_player_by_id(id).bike_type = "enduro"
-                        elif args[9:10] == "2":
+                        elif cmd[9:10] == "2":
                             self.unity_socket_server.get_player_by_id(id).bike_type = "hardtail"
                 except Exception as e:
                     logging.error(e)
@@ -88,8 +87,9 @@ class DashboardSocket():
         except Exception as e:
             return str(e)
 
-    def get():
-        return jsonify(
+    def get(self):
+        return ""
+        '''return jsonify(
             {
                 'ids':
                 [
@@ -112,17 +112,17 @@ class DashboardSocket():
                     } for player in self.unity_socket_server.players
                 ]
             }
-        )
+        )'''
 
-    def randomise():
-        if permission() == "AUTHORISED":
+    def randomise(self):
+        if self.permission() == "AUTHORISED":
             global shouldRandomise
             shouldRandomise = not shouldRandomise
             return "123"
         return "FAILED - NOT VALID PERMISSIONS!"
 
-
-
+    def permission(self):
+        pass
 
 
 
