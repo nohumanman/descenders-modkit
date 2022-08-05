@@ -90,7 +90,7 @@ class UnitySocket():
         self.version = "OUTDATED"
         self.time_started = time.time()
         self.send("SUCCESS")
-        self.send("INVALIDATE_TIME|Connected to 'split-timer.nohumanman.com'")
+        self.send("INVALIDATE_TIME|scripts by nohumanman")
 
     def set_last_trick(self, trick: str):
         self.last_trick = trick
@@ -104,7 +104,10 @@ class UnitySocket():
             data = json.load(json_file)
             if version != data["latest_version"]:
                 latest_version = data["latest_version"]
-                self.send(f"INVALIDATE_TIME|You are on version {version}, latest is {latest_version} - Please restart your game.")
+                self.send(
+                    f"INVALIDATE_TIME|You are on version {version}, "
+                    f"latest is {latest_version} - Please restart your game."
+                )
 
     def set_reputation(self, reputation):
         self.reputation = int(reputation)
@@ -117,7 +120,10 @@ class UnitySocket():
             self.trails[trail].starting_speed = starting_speed
 
     def convert_to_unity(self, leaderboard):
-        logging.info(f"id{self.steam_id} alias {self.steam_name} - converting leaderboard to Unity.")
+        logging.info(
+            f"id{self.steam_id} alias {self.steam_name} "
+            "- converting leaderboard to Unity."
+        )
         if len(leaderboard) == 0:
             return {}
         keys = [key for key in leaderboard[0]]
@@ -130,7 +136,10 @@ class UnitySocket():
         return unityLeaderboard
 
     def get_leaderboard(self, trail_name):
-        logging.info(f"id{self.steam_id} alias {self.steam_name} - getting speedrun.com leaderboard for {trail_name}")
+        logging.info(
+            f"id{self.steam_id} alias {self.steam_name} - "
+            f"getting speedrun.com leaderboard for {trail_name}"
+        )
         return self.convert_to_unity(
             [
                 {
@@ -145,7 +154,10 @@ class UnitySocket():
             )
 
     def get_speedrun_dot_com_leaderboard(self, trail_name):
-        logging.info(f"id{self.steam_id} alias {self.steam_name} - getting speedrun.com leaderboard for {trail_name}")
+        logging.info(
+            f"id{self.steam_id} alias {self.steam_name} - "
+            f"getting speedrun.com leaderboard for {trail_name}"
+        )
         api = srcomapi.SpeedrunCom()
         game = api.get_game("Descenders")
         for level in game.levels:
@@ -184,7 +196,8 @@ class UnitySocket():
             f"&steamids={self.steam_id}"
         )
         try:
-            self.__avatar_src = avatar_src_req.json()["response"]["players"][0]["avatarfull"]
+            self.__avatar_src = avatar_src_req.json()[
+                "response"]["players"][0]["avatarfull"]
         except Exception:
             try:
                 self.__avatar_src = DBMS().get_avatar(self.steam_id)
@@ -205,20 +218,25 @@ class UnitySocket():
                 and self is not player
             ):
                 logging.warning(
-                    f"id{self.steam_id} alias {self.steam_name} - duplicate steam id!"
+                    f"id{self.steam_id} alias {self.steam_name}"
+                    " - duplicate steam id!"
                 )
                 self.parent.players.remove(player)
                 del(player)
         if steam_id == "OFFLINE" or steam_id == "":
             self.send("TOGGLE_GOD")
         ban_type = DBMS().get_ban_status(self.steam_id)
-        logging.info(f"id{self.steam_id} alias {self.steam_name} - Banning with {ban_type}")
+        logging.info(
+            f"id{self.steam_id} alias {self.steam_name}"
+            " - Banning with {ban_type}"
+        )
         if ban_type == "CLOSE":
             self.send("BANNED|CLOSE")
             discord_bot = self.parent.discord_bot
             discord_bot.loop.run_until_complete(
                 discord_bot.ban_note(
-                    f"Player {self.steam_name} (id{self.steam_id}) tried to join but was banned with 'close'."
+                    f"Player {self.steam_name} (id{self.steam_id}) tried"
+                    " to join but was banned with 'close'."
                 )
             )
         elif ban_type == "CRASH":
@@ -226,7 +244,8 @@ class UnitySocket():
             discord_bot = self.parent.discord_bot
             discord_bot.loop.run_until_complete(
                 discord_bot.ban_note(
-                    f"Player {self.steam_name} (id{self.steam_id}) tried to join but was banned with 'crash'."
+                    f"Player {self.steam_name} (id{self.steam_id}) tried"
+                    " to join but was banned with 'crash'."
                 )
             )
         elif ban_type == "ILLEGAL":
@@ -234,7 +253,8 @@ class UnitySocket():
             discord_bot = self.parent.discord_bot
             discord_bot.loop.run_until_complete(
                 discord_bot.ban_note(
-                    f"Player {self.steam_name} (id{self.steam_id}) tried to join but was banned with 'illegal'."
+                    f"Player {self.steam_name} (id{self.steam_id}) tried"
+                    " to join but was banned with 'illegal'."
                 )
             )
         if self.steam_name is not None:
@@ -255,13 +275,19 @@ class UnitySocket():
         # requests.post(webhook, json=data)
 
     def send(self, data: str):
-        logging.debug(f"id{self.steam_id} alias {self.steam_name} - Sending data '{data}'")
+        logging.debug(
+            f"id{self.steam_id} alias {self.steam_name}"
+            " - Sending data '{data}'"
+        )
         self.conn.sendall((data + "\n").encode())
 
     def handle_data(self, data: str):
         if data == "":
             return
-        logging.info(f"id{self.steam_id} alias {self.steam_name} - handling data '{data}'")
+        logging.info(
+            f"id{self.steam_id} alias "
+            f"{self.steam_name} - handling data '{data}'"
+        )
         data_list = data.split("|")
         for operator in operations:
             if data.startswith(operator):
@@ -275,10 +301,16 @@ class UnitySocket():
             try:
                 data = self.conn.recv(1024)
             except ConnectionResetError:
-                logging.info(f"id{self.steam_id} alias {self.steam_name} - User has disconnected, breaking loop")
+                logging.info(
+                    f"id{self.steam_id} alias {self.steam_name}"
+                    " - User has disconnected, breaking loop"
+                )
                 break
             if not data:
-                logging.info(f"id{self.steam_id} alias {self.steam_name} - User has disconnected, breaking loop 2")
+                logging.info(
+                    f"id{self.steam_id} alias {self.steam_name}"
+                    " - User has disconnected, breaking loop 2"
+                )
                 break
             for piece in data.decode().split("\n"):
                 self.handle_data(piece)
