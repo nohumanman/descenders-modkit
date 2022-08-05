@@ -1,8 +1,6 @@
-from re import T
 import sqlite3
 import time
 import os
-import json
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -184,7 +182,6 @@ class DBMS():
             return result[0][0]
         except Exception:
             return ""
-    
 
     @staticmethod
     def get_times_after_timestamp(timestamp: float, trail_name: str):
@@ -208,8 +205,8 @@ class DBMS():
                 timestamp > {timestamp}
                 AND
                 was_monitored = "True"
-			GROUP BY
-				Time.time_id
+            GROUP BY
+                Time.time_id
             ORDER BY
                 checkpoint_time ASC
         '''
@@ -218,7 +215,7 @@ class DBMS():
 
     @staticmethod
     def get_all_times():
-        statement = f'''
+        statement = '''
             SELECT * FROM all_times
             LIMIT 25
         '''
@@ -267,7 +264,9 @@ class DBMS():
                             SplitTime
                             INNER JOIN
                                 Time ON Time.time_id = SplitTime.time_id
-                            WHERE LOWER(Time.trail_name) = LOWER("{trail_name}")
+                            WHERE LOWER(Time.trail_name) = LOWER(
+                                "{trail_name}"
+                            )
                     ) ON SplitTime.time_id=Time.time_id
                 INNER JOIN
                     Player ON Player.steam_id = Time.steam_id
@@ -319,7 +318,6 @@ class DBMS():
         '''
         DBMS.execute_sql(statement, write=True)
 
-
     @staticmethod
     def get_avatar(steam_id):
         statement = f'''
@@ -367,7 +365,13 @@ class DBMS():
     def discord_login(discord_id, discord_name, email, steam_id):
         statement = f'''
             INSERT OR IGNORE INTO User
-            VALUES({discord_id}, "FALSE", "{steam_id}", "{discord_name}", "{email}")
+            VALUES(
+                {discord_id},
+                "FALSE",
+                "{steam_id}",
+                "{discord_name}",
+                "{email}"
+            )
         '''
         DBMS.execute_sql(statement, write=True)
 
