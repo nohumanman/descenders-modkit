@@ -125,7 +125,7 @@
                                             <v-row justify="center">
                                                 <p style="text-align:center;">
                                                     Time in all maps:<br>[[toHours(id.total_time + timeFromTimestamp(id.time_loaded))]]
-                                                    <br><br>Time in [[id.world_name]]:<br>[[toHours(id.time_on_world + timeFromTimestamp(id.time_loaded))]]
+                                                    <br><br>Time in <span :style="{color: stringToColour(id.world_name)}">[[id.world_name]]</span>:<br>[[toHours(id.time_on_world + timeFromTimestamp(id.time_loaded))]]
                                                 </p>
                                             </v-row>
                                             <v-row justify="center">
