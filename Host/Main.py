@@ -47,10 +47,7 @@ dashboard_socket_server = DashboardSocketServer(
 
 WEBSITE_IP = "0.0.0.0"
 WEBSITE_PORT = 8080
-webserver = Webserver(
-    WEBSITE_IP,
-    WEBSITE_PORT
-)
+webserver = Webserver(unity_socket_server)
 
 discord_bot = DiscordBot(discord_token, "!", unity_socket_server)
 unity_socket_server.discord_bot = discord_bot
@@ -80,7 +77,7 @@ riders_gate_thread = threading.Thread(target=riders_gate)
 riders_gate_thread.start()
 
 if __name__ == "__main__":
-    webserver.run(
+    webserver.webserver_app.run(
         WEBSITE_IP, port=WEBSITE_PORT,
         debug=True, ssl_context='adhoc'
     )
