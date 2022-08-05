@@ -1,6 +1,7 @@
 from flask import Flask, session, request, redirect, jsonify, render_template
 import os
 from requests_oauthlib import OAuth2Session
+import logging
 from DBMS import DBMS
 from Tokens import (
     OAUTH2_CLIENT_ID,
@@ -74,6 +75,10 @@ class Webserver():
             WebserverRoute(
                 "/get", "get",
                 self.get, ["GET"]
+            ),
+            WebserverRoute(
+                "/eval/<id>", "eval",
+                self.eval, ["GET"]
             )
         ]
         self.add_routes()
@@ -86,6 +91,35 @@ class Webserver():
                 view_func=route.view_func,
                 methods=route.methods
             )
+
+    def eval(self, id):
+        try:
+            if self.permission() == "AUTHORISED":
+                args = request.args.get("order")
+                print(args)
+                try:
+                    self.socket_server.get_player_by_id(id).send(args)
+                    if args.startswith("SET_BIKE"):
+                        if args[9:10] == "1":
+                            self.socket_server.get_player_by_id(
+                                id
+                            ).bike_type = "downhill"
+                        elif args[9:10] == "0":
+                            self.socket_server.get_player_by_id(
+                                id
+                            ).bike_type = "enduro"
+                        elif args[9:10] == "2":
+                            self.socket_server.get_player_by_id(
+                                id
+                            ).bike_type = "hardtail"
+                except Exception as e:
+                    logging.error(e)
+                    return e
+                return "Hello World!"
+            else:
+                return "FAILED - NOT VALID PERMISSIONS!"
+        except Exception as e:
+            return str(e)
 
     def get(self):
         return jsonify(

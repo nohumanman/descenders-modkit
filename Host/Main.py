@@ -33,6 +33,7 @@ unity_socket_server = UnitySocketServer(
     UNITY_SOCKET_IP,
     UNITY_SOCKET_PORT
 )
+threading.Thread(target=unity_socket_server.start).start()
 
 # -- Dashboard Socket Server --
 
