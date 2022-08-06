@@ -32,7 +32,7 @@ app.self = window.localStorage.getItem('self');
 
 function updateSpectatedPlayer(){
     if (app.self != null){
-        $.get("/get-spectating", data={"steam_id": app.self}, function(data){
+        $.get("/get-spectated", data={"steam_id": app.self}, function(data){
             app.spectating = data;
         });
     }

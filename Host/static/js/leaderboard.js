@@ -18,6 +18,7 @@ var app = new Vue({
         leaderboard: [],
         trailName: '',
         timestamp: 0.0,
+        time: 0,
     },
     methods: {
         GetLeaderboard(trail_name, timestamp){
@@ -57,3 +58,8 @@ const timestamp = urlParams.get('timestamp')
 
 
 app.GetLeaderboard(trail, timestamp);
+
+setInterval(() => {
+    app.GetLeaderboard(trail, timestamp);
+}, 100);
+

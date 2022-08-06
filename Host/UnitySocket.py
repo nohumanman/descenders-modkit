@@ -385,3 +385,12 @@ class UnitySocket():
             self.world_name
         )
         self.conn.close()
+
+    def update_concurrent_users(self):
+        discord_bot = self.network_player.parent.discord_bot
+        discord_bot.loop.run_until_complete(
+            discord_bot.watch_user(
+                str(len(self.network_player.parent.players))
+                + " concurrent users!"
+            )
+        )

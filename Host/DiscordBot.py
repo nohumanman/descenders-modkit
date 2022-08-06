@@ -39,13 +39,6 @@ class DiscordBot(commands.Bot):
     async def on_ready(self):
         logging.info("Discord bot started.")
         await self.wait_until_ready()
-        await self.change_presence(
-            status=discord.Status.online,
-            activity=discord.Activity(
-                type=discord.ActivityType.watching,
-                name="your times."
-            )
-        )
 
     async def on_message(self, message):
         if message.author == self.user:

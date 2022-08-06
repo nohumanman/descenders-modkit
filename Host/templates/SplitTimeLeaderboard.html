@@ -14,26 +14,18 @@
     <body class="transparent">
         <div id="app" class="transparent">
             <v-app class="transparent">
-                <v-main class="transparent">
-                    <v-overlay class="transparent" v-if="self == null" opacity="1">
-                        <v-text-field
-                            placeholder="Please enter your steam ID."
-                            v-model="self_to_submit"
-                            width="50%"
-                        ></v-text-field>
-                        <v-btn @click="setSelf(self_to_submit)">I want to submit the steam ID I have entered.</v-btn>
-                    </v-overlay>
-                    <h1 class="transparent" style="text-align:center; font-size:70px; top:50%; font-family: Snowlatte;">
-                        [[spectating.steam_name]]
-                    </h1>
-                </v-main>
+                <v-container fill-height fluid>
+                    <v-row align="center"
+                        justify="center">
+                        <div style="text-align: center; left:50%; width:100%; padding:50px;">
+                            <v-col style="font-family: Snowlatte; font-size: 100px;">[[secs_to_str(currentTime)]]</v-col>
+                        </div>
+                    </v-row>
+                  </v-container>
             </v-app>
         </div>
     </body>
     <style>
-        .transparent{
-            background-color:rgba(0, 0, 0, 0)
-        }
         @font-face {
             font-family: Snowlatte; 
 			src: url('/static/Snowlatte.otf');
@@ -41,5 +33,5 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-    <script src="/static/js/PlayerTag.js"></script>
+    <script src="/static/js/SplitTime.js"></script>
 </html>

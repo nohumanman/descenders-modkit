@@ -19,7 +19,10 @@ class TrailTimer():
         return self.__boundaries
 
     def add_boundary(self, boundary_guid):
-        if len(self.__boundaries) == 0 and not self.network_player.being_monitored:
+        if (
+            len(self.__boundaries) == 0
+            and not self.network_player.being_monitored
+        ):
             self.invalidate_timer("No boundaries entered")
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
@@ -27,11 +30,17 @@ class TrailTimer():
     def remove_boundary(self, boundary_guid):
         if boundary_guid in self.__boundaries:
             self.__boundaries.remove(boundary_guid)
-        if len(self.__boundaries) == 0 and not self.network_player.being_monitored:
+        if (
+            len(self.__boundaries) == 0
+            and not self.network_player.being_monitored
+        ):
             self.invalidate_timer("out of bounds!")
 
     def start_timer(self, total_checkpoints: int):
-        if len(self.__boundaries) == 0 and not self.network_player.being_monitored:
+        if (
+            len(self.__boundaries) == 0
+            and not self.network_player.being_monitored
+        ):
             self.invalidate_timer("out of bounds!", always=True)
         else:
             self.started = True
@@ -40,6 +49,7 @@ class TrailTimer():
             self.times = []
 
     def checkpoint(self, client_time: str):
+        self.network_player.parent.update_concurrent_users()
         if self.started:
             # self.times.append(time.time() - self.time_started)
             self.times.append(float(client_time))
@@ -56,10 +66,6 @@ class TrailTimer():
             elif time_diff < 0:
                 mess = str(round(abs(time_diff), 4)) + " seconds slower"
             self.network_player.send(f"SPLIT_TIME|{mess}")
-            discord_bot = self.network_player.parent.discord_bot
-            discord_bot.loop.run_until_complete(
-                discord_bot.watch_user(self.network_player.steam_name)
-            )
 
     def invalidate_timer(self, reason: str, always=False):
         if (not self.started) and not always:

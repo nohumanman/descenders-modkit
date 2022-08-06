@@ -46,7 +46,7 @@ var app = new Vue({
             }
         },
         getSpectatedInfo(){
-            $.get("/get-spectated-info", function(data){
+            $.get("/get-spectated", function(data){
                 app.spectated_player = data;
             })
         },

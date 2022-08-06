@@ -79,7 +79,15 @@ class Webserver():
             WebserverRoute(
                 "/eval/<id>", "eval",
                 self.eval, ["GET"]
-            )
+            ),
+            WebserverRoute(
+                "/get-spectated", "get_spectated",
+                self.get_spectated, ["GET"]
+            ),
+            WebserverRoute(
+                "/spectate", "spectate",
+                self.spectate, ["GET"]
+            ),
         ]
         self.add_routes()
 
@@ -140,6 +148,7 @@ class Webserver():
                             player.trails[trail].get_boundaries()
                             for trail in player.trails
                         ],
+                        "spectating": player.spectating,
                         "bike_type": player.bike_type,
                         "time_loaded": player.time_started,
                     } for player in self.socket_server.players
@@ -223,6 +232,23 @@ class Webserver():
     def split_time(self):
         return render_template("SplitTime.html")
 
+    def spectate(self):
+        try:
+            self_id = request.args.get("steam_id")
+            spectating = request.args.get("player_name")
+            target_id = request.args.get("target_id")
+            for player in self.socket_server.players:
+                player.being_monitored = False
+            self.socket_server.get_player_by_id(
+                self_id
+            ).spectating = spectating
+            self.socket_server.get_player_by_id(
+                target_id
+            ).being_monitored = True
+            return "Gotcha"
+        except Exception as e:
+            return str(e)
+
     def tag(self):
         return render_template("PlayerTag.html")
 
@@ -265,3 +291,35 @@ class Webserver():
 
     def get_all_times(self):
         return jsonify({"times": DBMS.get_all_times()})
+
+    def get_spectated(self):
+        for player in self.socket_server.players:
+            if player.spectating != "":
+                spectated_player = self.socket_server.get_player_by_name(
+                    player.spectating
+                )
+                return jsonify({
+                    "trails": [
+                        {
+                            "trail_name": trail,
+                            "time_started": spectated_player.get_trail(trail)
+                            .time_started,
+                            "starting_speed": spectated_player.get_trail(trail)
+                            .starting_speed,
+                            "started": spectated_player.get_trail(trail)
+                            .started,
+                            "last_time": spectated_player.get_trail(trail)
+                            .time_ended
+                        }
+                        for trail in spectated_player.trails
+                    ],
+                    "bike_type": spectated_player.bike_type,
+                    "rep": spectated_player.reputation,
+                    "steam_name": spectated_player.steam_name
+                })
+        return jsonify({
+            "trails": [],
+            "bike_type": None,
+            "rep": None,
+            "steam_name": None
+        })
