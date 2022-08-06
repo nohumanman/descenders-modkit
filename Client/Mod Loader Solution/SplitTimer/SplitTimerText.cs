@@ -60,7 +60,7 @@ namespace SplitTimer
 		{
 			time = 0;
 			count = true;
-			SplitTimerText.Instance.text.color = Color.black;
+			SplitTimerText.Instance.text.color = new Color32(214, 214, 214, 255);
 		}
 		public void StopTimer()
 		{

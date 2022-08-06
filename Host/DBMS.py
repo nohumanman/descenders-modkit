@@ -17,6 +17,51 @@ class DBMS():
         return result
 
     @staticmethod
+    def get_id_from_name(steam_name):
+        return DBMS.execute_sql(
+            f'''
+            SELECT Player.steam_id
+            FROM Player
+            WHERE Player.steam_name = "{steam_name}"'''
+        )[0][0]
+
+    @staticmethod
+    def get_player_stats(steam_id):
+        statement = f'''
+            SELECT
+                Player.steam_id,
+                Player.steam_name,
+                Rep.rep,
+                Max(Rep.timestamp) as last_login,
+                times_logged_on,
+                trails_ridden,
+                total_time
+            FROM
+                Player,
+                (
+                    SELECT COUNT(*) as times_logged_on
+                    FROM Session
+                    WHERE Session.steam_id = {steam_id}
+                ),
+                (
+                    SELECT COUNT(*) as trails_ridden
+                    FROM Time
+                    WHERE Time.steam_id = {steam_id}
+                ),
+                (
+                    SELECT
+                        sum(Session.time_ended - Session.time_started)
+                        AS total_time
+                    FROM Session WHERE steam_id = {steam_id}
+                )
+            INNER JOIN Rep ON Rep.steam_id = Player.steam_id
+            INNER JOIN Time ON Time.steam_id = Player.steam_id
+            WHERE Player.steam_id = "{steam_id}"
+            GROUP BY Rep.steam_id
+        '''
+        return DBMS.execute_sql(statement)
+
+    @staticmethod
     def get_webhooks(trail_name):
         return DBMS.execute_sql(
             "SELECT webhook_url FROM webhooks"

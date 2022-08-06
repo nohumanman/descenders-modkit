@@ -47,8 +47,6 @@ namespace ModLoaderSolution
 
         UI_MultiplayerNotifications multiplayerNotifications;
         RigidbodyConstraints constraints;
-
-
         //void Update()
         //{
         //    if (Input.GetKeyDown(KeyCode.Numlock))

@@ -88,6 +88,28 @@ class DiscordBot(commands.Bot):
                     "Sorry - too many players to display!"
                 )
             self.queue.pop(message.author.id)
+        if message.content.startswith(self.command_prefix + "info"):
+            try:
+                player_name = message.content[
+                    len(self.command_prefix + "info "):
+                ]
+            except Exception:
+                player_name = "nohumanman"
+            stats = DBMS.get_player_stats(
+                DBMS.get_id_from_name(player_name)
+            )[0]
+            await message.channel.send(
+                f'''
+__Info for player '{stats[1]}'__
+
+ID: **{stats[0]}**
+Current Rep: **{stats[2]}**
+Times logged on: **{stats[4]}**
+No. Trails Ridden: **{stats[5]}**
+Total Time: **{stats[6]}**
+                '''
+            )
+
         if message.content.startswith(self.command_prefix + 'top'):
             try:
                 num = int(message.content.split(" ")[1])
