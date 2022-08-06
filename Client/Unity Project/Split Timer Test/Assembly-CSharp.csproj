@@ -51,29 +51,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\BoundryMaker.cs" />
-     <Compile Include="Assets\Descenders Split Timer\CameraProps.cs" />
-     <Compile Include="Assets\Descenders Split Timer\CustomRespawn\CustomRespawnJson.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Assembler.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Mod Loader\ExportedFunction.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Injector.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Mod Loader\InjectorException.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Memory.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Mod Loader\ModLoader.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Mod Loader\MonoImageOpenStatus.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Native.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Mod Loader\ProcessUtils.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Split Timer\JsonMapInfo.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Split Timer\JsonRidersGate.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Split Timer\TimerInfo.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Split Timer\TimerText.cs" />
-     <Compile Include="Assets\SpeedTrapJson.cs" />
-     <Compile Include="Assets\TeleportPad.cs" />
-     <Compile Include="Assets\TeleportPadTerrain.cs" />
-     <None Include="Assets\Speed Track\3DText.shader" />
+     <Compile Include="Assets\Descenders Split Timer\Bike Switcher\Scripts\BikeSwitcherEnabler.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Bike Switcher\Scripts\BikeSwitcherHandler.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Bike Switcher\Scripts\ButtonHack.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Camera Modification\Scripts\CameraModifier.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\Assembler.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\ExportedFunction.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\Injector.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\InjectorException.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\Memory.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\ModLoader.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\MonoImageOpenStatus.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\Native.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\ProcessUtils.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\JsonMapInfo.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\JsonRidersGate.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\TimerCopierTemp.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\TimerInfo.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\TimerText.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Teleport Pad\TeleportPad.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Teleport Pad\TeleportPadTerrain.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Utilities\SteamIntegration.cs" />
+     <None Include="Assets\Descenders Split Timer\Speed Trap\Materials\3DText.shader" />
      <None Include="Assets\ModTool\ModTool.Shared.xml" />
      <None Include="Assets\ModTool\ModTool.Interface.xml" />
-     <None Include="Assets\Descenders Split Timer\Leaderboard\Text\3DText.shader" />
+     <None Include="Assets\Descenders Split Timer\Split Timer\Leaderboard\Shaders\3DText.shader" />
      <None Include="Assets\ModTool\Mono.Cecil\LICENSE.txt" />
  <Reference Include="UnityEngine.CoreModule">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll</HintPath>
