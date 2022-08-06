@@ -91,6 +91,7 @@ class UnitySocket():
         self.time_started = time.time()
         self.send("SUCCESS")
         self.send("INVALIDATE_TIME|scripts by nohumanman")
+        self.update_concurrent_users()
 
     def set_last_trick(self, trick: str):
         self.last_trick = trick
@@ -387,10 +388,13 @@ class UnitySocket():
         self.conn.close()
 
     def update_concurrent_users(self):
-        discord_bot = self.network_player.parent.discord_bot
-        discord_bot.loop.run_until_complete(
-            discord_bot.watch_user(
-                str(len(self.network_player.parent.players))
-                + " concurrent users!"
+        discord_bot = self.parent.discord_bot
+        try:
+            discord_bot.loop.run_until_complete(
+                discord_bot.watch_user(
+                    str(len(self.parent.players))
+                    + " concurrent users!"
+                )
             )
-        )
+        except RuntimeError:
+            logging.error("Event already running")
