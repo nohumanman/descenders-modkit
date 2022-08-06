@@ -12,6 +12,7 @@ class DashboardSocketServer():
         self.clients = []
 
     def create_client(self, conn, addr):
+        
         client = DashboardSocket(conn, addr, self)
         self.clients.append(client)
         try:
@@ -23,10 +24,12 @@ class DashboardSocketServer():
 
     def start(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            logging.info(f"Socket server open on {self.host} {self.port}")
+            logging.info(
+                "DashboardSocketServer.py - "
+                f"Socket server open on {self.host} {self.port}"
+            )
             s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             s.bind((self.host, self.port))
-            logging.info("Bound, listening...")
             s.listen()
             while True:
                 print("Waiting for client...")

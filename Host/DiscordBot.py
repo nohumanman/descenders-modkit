@@ -5,6 +5,7 @@ import threading
 import asyncio
 from DBMS import DBMS
 import logging
+import datetime
 
 
 class DiscordBot(commands.Bot):
@@ -37,10 +38,11 @@ class DiscordBot(commands.Bot):
         )
 
     async def on_ready(self):
-        logging.info("Discord bot started.")
+        logging.info("DiscordBot.py - Discord bot started.")
         await self.wait_until_ready()
 
     async def on_message(self, message):
+        logging.info(f"DiscordBot.py - Message sent '{message}'")
         if message.author == self.user:
             return
         if message.author.id in [id for id in self.queue]:
@@ -99,7 +101,7 @@ ID: **{stats[0]}**
 Current Rep: **{stats[2]}**
 Times logged on: **{stats[4]}**
 No. Trails Ridden: **{stats[5]}**
-Total Time: **{stats[6]}**
+Total Time (hh:mm:ss): **{datetime.timedelta(seconds=float(round(stats[6])))}**
                 '''
             )
 

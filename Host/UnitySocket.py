@@ -91,7 +91,6 @@ class UnitySocket():
         self.time_started = time.time()
         self.send("SUCCESS")
         self.send("INVALIDATE_TIME|scripts by nohumanman")
-        self.update_concurrent_users()
 
     def set_last_trick(self, trick: str):
         self.last_trick = trick
@@ -122,6 +121,7 @@ class UnitySocket():
 
     def convert_to_unity(self, leaderboard):
         logging.info(
+            "UnitySocket.py - "
             f"id{self.steam_id} alias {self.steam_name} "
             "- converting leaderboard to Unity."
         )
@@ -138,6 +138,7 @@ class UnitySocket():
 
     def get_leaderboard(self, trail_name):
         logging.info(
+            "UnitySocket.py - "
             f"id{self.steam_id} alias {self.steam_name} - "
             f"getting speedrun.com leaderboard for {trail_name}"
         )
@@ -156,6 +157,7 @@ class UnitySocket():
 
     def get_speedrun_dot_com_leaderboard(self, trail_name):
         logging.info(
+            "UnitySocket.py - "
             f"id{self.steam_id} alias {self.steam_name} - "
             f"getting speedrun.com leaderboard for {trail_name}"
         )
@@ -228,6 +230,7 @@ class UnitySocket():
             self.send("TOGGLE_GOD")
         ban_type = DBMS().get_ban_status(self.steam_id)
         logging.info(
+            "UnitySocket.py - "
             f"id{self.steam_id} alias {self.steam_name}"
             " - Banning with {ban_type}"
         )
@@ -286,6 +289,7 @@ class UnitySocket():
         if data == "":
             return
         logging.info(
+            "UnitySocket.py - "
             f"id{self.steam_id} alias "
             f"{self.steam_name} - handling data '{data}'"
         )
@@ -303,12 +307,14 @@ class UnitySocket():
                 data = self.conn.recv(1024)
             except ConnectionResetError:
                 logging.info(
+                    "UnitySocket.py - "
                     f"id{self.steam_id} alias {self.steam_name}"
                     " - User has disconnected, breaking loop"
                 )
                 break
             if not data:
                 logging.info(
+                    "UnitySocket.py - "
                     f"id{self.steam_id} alias {self.steam_name}"
                     " - User has disconnected, breaking loop 2"
                 )
@@ -371,8 +377,10 @@ class UnitySocket():
 
     def on_map_enter(self, map_id, map_name):
         self.time_started = time.time()
+        self.update_concurrent_users()
 
     def on_map_exit(self):
+        self.update_concurrent_users()
         data = {
             "content": f"{self.steam_name} has **exited** {self.world_name}!",
             "username": "Split Timer"

@@ -49,7 +49,12 @@ class TrailTimer():
             self.times = []
 
     def checkpoint(self, client_time: str):
-        self.network_player.parent.update_concurrent_users()
+        logging.info(
+            "TrailTimer.py - "
+            f"id{self.network_player.steam_id} "
+            f"alias {self.network_player.steam_name} "
+            f"- checkpoint() with client time {client_time}"
+        )
         if self.started:
             # self.times.append(time.time() - self.time_started)
             self.times.append(float(client_time))
@@ -68,6 +73,13 @@ class TrailTimer():
             self.network_player.send(f"SPLIT_TIME|{mess}")
 
     def invalidate_timer(self, reason: str, always=False):
+        logging.info(
+            "TrailTimer.py - "
+            f"id{self.network_player.steam_id} "
+            f"alias {self.network_player.steam_name} "
+            "- invalidate_timer() with reason"
+            f"{reason}"
+        )
         if (not self.started) and not always:
             return
         logging.info(f"invalidating time of {self.network_player.steam_name}")
@@ -76,6 +88,12 @@ class TrailTimer():
         self.times = []
 
     def end_timer(self, client_time: str):
+        logging.info(
+            "TrailTimer.py - "
+            f"id{self.network_player.steam_id} "
+            f"alias {self.network_player.steam_name} "
+            f"- end_timer() with client time {client_time}"
+        )
         from DBMS import DBMS
         if self.total_checkpoints is None:
             self.invalidate_timer("Didn't go through all checkpoints.")

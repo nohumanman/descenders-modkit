@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using ModLoaderSolution;
 
 
 namespace SplitTimer
@@ -21,6 +22,10 @@ namespace SplitTimer
             if (MapInfo.Instance != null && MapInfo.Instance.debugEnabled)
             {
                 MapInfo.Instance.AddMetric("timeScale", Time.timeScale.ToString());
+            }
+            if (Utilities.instance.isInPauseMenu())
+            {
+                speed = 0f;
             }
         }
     }

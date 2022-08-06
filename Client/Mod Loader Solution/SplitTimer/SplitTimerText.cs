@@ -7,6 +7,7 @@ namespace SplitTimer
 {
 	public class SplitTimerText : MonoBehaviour
 	{
+		Color32 startingColor;
 		public static SplitTimerText Instance { get; private set; }
 		public Text text;
 		public float time;
@@ -46,6 +47,7 @@ namespace SplitTimer
 		void Start()
         {
 			text = GetComponent<Text>();
+			startingColor = text.color;
 			SetText("");
 			StartCoroutine(UpdateTime());
 		}
@@ -60,7 +62,7 @@ namespace SplitTimer
 		{
 			time = 0;
 			count = true;
-			SplitTimerText.Instance.text.color = new Color32(214, 214, 214, 255);
+			SplitTimerText.Instance.text.color = startingColor;
 		}
 		public void StopTimer()
 		{
