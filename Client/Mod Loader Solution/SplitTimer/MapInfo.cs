@@ -59,7 +59,7 @@ namespace SplitTimer{
 					debugText.text += currentMetric.id + ": " + currentMetric.value + "\n";
 					i++;
 				}
-				for (int x; i < 20; i++)
+				for (int x = 0; x < 20; x++)
                 {
 					debugText.text += "\n";
 				}

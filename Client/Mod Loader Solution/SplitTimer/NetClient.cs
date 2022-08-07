@@ -307,7 +307,7 @@ namespace SplitTimer{
 			}
 			catch (SocketException socketException)
 			{
-				// Debug.Log("NetClient | Socket exception: " + socketException);
+				Debug.Log("NetClient | Socket exception: " + socketException);
 			}
 		}
 		public void OnDestroy()
