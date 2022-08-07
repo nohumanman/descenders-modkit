@@ -18,6 +18,7 @@ var app = new Vue({
         self: null,
         self_to_submit: "",
         spectating: "",
+        players: []
     },
     methods: {
         setSelf(steam_id){
@@ -26,6 +27,10 @@ var app = new Vue({
             // window.localStorage.setItem('self', steam_id);
         },
     }
+});
+
+$.get("/get", function(data){
+    app.players = data["id"];
 });
 
 app.self = window.localStorage.getItem('self');
