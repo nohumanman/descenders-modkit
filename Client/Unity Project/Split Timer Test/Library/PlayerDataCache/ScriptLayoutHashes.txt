@@ -4,15 +4,18 @@ E:/Projects/descenders-split-timer/Client/Unity Project/Split Timer Test/Temp/Sp
 SceneListBegin?
 Assets/Split Timer Test-sample.unity
 SceneListEnd?
+49cd62a578efc0a599b810a2b66cd49c UnityEngine.UI.dll:UnityEngine.UI.Button
 0b0399c4b7b49c440fa718ace4ac585a UnityEngine.UI.dll:UnityEngine.UI.CanvasScaler
 a2313de45ed47f1a12bb2d80e8b2de54 UnityEngine.UI.dll:UnityEngine.UI.GraphicRaycaster
-b9d358490de4bfdd2595b1175db8826f UnityEngine.UI.dll:UnityEngine.UI.RawImage
+b8f057a5d96b66234b3230a0d800dcf6 UnityEngine.UI.dll:UnityEngine.UI.Image
 769e576fcd3f60fa29a2cccb9e8127d9 UnityEngine.UI.dll:UnityEngine.UI.Text
-fdf9320b51a982f48ec409a06c729bf5 SplitTimerTest-0.0.4-Assembly-CSharp.dll:.CameraProps
-e1fb3f802a4fa5f80c5f4d1d46fb1fb3 SplitTimerTest-0.0.4-Assembly-CSharp.dll:.CustomRespawnJson
-05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.4-Assembly-CSharp.dll:APILoaderScript.ModLoader
-34b64855cacc9cd75f346c84aba37ba8 SplitTimerTest-0.0.4-Assembly-CSharp.dll:.JsonMapInfo
-6731c9dcfe8b17f5c0729fd5412af4fd SplitTimerTest-0.0.4-Assembly-CSharp.dll:.JsonRidersGate
-67dee5f8b556ee08030c3d7d9299d0de SplitTimerTest-0.0.4-Assembly-CSharp.dll:.TimerInfo
-05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.4-Assembly-CSharp.dll:.TimerText
-8eb5ce00aceb9fee1eec4b1ccafb45e3 SplitTimerTest-0.0.4-Assembly-CSharp.dll:.TeleportPad
+7fd08ded144dad95834f225b8bf05403 SplitTimerTest-0.0.5-Assembly-CSharp.dll:.BikeSwitcherEnabler
+05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.5-Assembly-CSharp.dll:.BikeSwitcherHandler
+e2dd3809741e81a9714fc00110315716 SplitTimerTest-0.0.5-Assembly-CSharp.dll:.ButtonHack
+fdf9320b51a982f48ec409a06c729bf5 SplitTimerTest-0.0.5-Assembly-CSharp.dll:.CameraModifier
+05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.5-Assembly-CSharp.dll:APILoaderScript.ModLoader
+34b64855cacc9cd75f346c84aba37ba8 SplitTimerTest-0.0.5-Assembly-CSharp.dll:.JsonMapInfo
+6731c9dcfe8b17f5c0729fd5412af4fd SplitTimerTest-0.0.5-Assembly-CSharp.dll:.JsonRidersGate
+82f8b7dcae478154efc3c7e749ad6e22 SplitTimerTest-0.0.5-Assembly-CSharp.dll:.TimerCopierTemp
+67dee5f8b556ee08030c3d7d9299d0de SplitTimerTest-0.0.5-Assembly-CSharp.dll:.TimerInfo
+05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.5-Assembly-CSharp.dll:.TimerText

@@ -125,11 +125,15 @@
                                             <v-row justify="center">
                                                 <p style="text-align:center;">
                                                     Time in all maps:<br>[[toHours(id.total_time + timeFromTimestamp(id.time_loaded))]]
-                                                    <br><br>Time in [[id.world_name]]:<br>[[toHours(id.time_on_world + timeFromTimestamp(id.time_loaded))]]
+                                                    <br><br>Time in <span :style="{color: stringToColour(id.world_name)}">[[id.world_name]]</span>:<br>[[toHours(id.time_on_world + timeFromTimestamp(id.time_loaded))]]
                                                 </p>
                                             </v-row>
                                             <v-row justify="center">
                                                 Last Trick '[[id.last_trick]]'
+                                            </v-row>
+                                            <br><br>
+                                            <v-row justify="center">
+                                                Spectating '[[id.spectating]]'
                                             </v-row>
                                             <br><br>
                                             <v-row justify="center">
@@ -153,10 +157,6 @@
                                                 @click="SubmitEval(id.id, 'SET_BIKE|0')"
                                                 :color="getColourOfBikeSelect('enduro', id.bike_type)"
                                             >Enduro</v-btn>
-                                            <v-btn
-                                                @click="SubmitEval(id.id, 'SET_BIKE|3')"
-                                                :color="getColourOfBikeSelect('trail_bike', id.bike_type)"
-                                            >Trail Bike</v-btn>
                                         </v-card-actions>
                                         <br>
                                         <span v-if="streamControls">

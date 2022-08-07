@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PlayerIdentification;
+using ModLoaderSolution;
 
 namespace SplitTimer{
 	public class PlayerInfo : MonoBehaviour {
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
-		public string version = "0.1.52";
+		public string version = "0.1.54";
 		public float speed;
 		bool hasLoadedPlayer = false;
+		bool wasBailed = false;
 		public static PlayerInfo Instance { get; private set; }
 		void Awake(){
 			if (Instance != null && Instance != this) 
@@ -51,6 +53,9 @@ namespace SplitTimer{
 		void Update () {
 			if (PlayerHuman == null)
 				PlayerHuman = GameObject.Find("Player_Human");
+			if (Utilities.instance.hasBailed() && !wasBailed)
+				OnRespawn();			
+			wasBailed = Utilities.instance.hasBailed();
 			if (PlayerHuman != null){
 				if (!hasLoadedPlayer)
 					GetComponent<BikeSwitcher>().ToEnduro();

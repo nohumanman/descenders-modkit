@@ -2,27 +2,8 @@
 using UnityEngine;
 using System.IO;
 using UnityEngine.Networking;
-using System;
-using System.IO;
 using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Linq;
-using System.Linq.Expressions;
-using UnityEngine;
-using UnityEngine.UI;
-using ModTool.Interface;
-using ModTool.Shared;
-using ModTool;
-using Debug = UnityEngine.Debug;
-using Object = UnityEngine.Object;
-using TMPro;
-using InControl;
-using UnityEngine.SceneManagement;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+using ModLoaderInstaller;
 
 namespace SplitTimer
 {
@@ -83,6 +64,8 @@ namespace SplitTimer
         }
         public void Start()
         {
+            Debug.Log("modName:" + Utilities.instance.GetCurrentMap().Split('-')[0]);
+            modName = Utilities.instance.GetCurrentMap().Split('-')[0];
             StartCoroutine(UpdateMod());
         }
     }

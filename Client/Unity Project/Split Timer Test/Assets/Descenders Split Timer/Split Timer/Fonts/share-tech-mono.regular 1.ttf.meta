@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: bcd39d9f2f9361e4baeddde0e613f2be
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Share Tech Mono
+  fontNames:
+  - Share Tech Mono
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 5806e7d3ad76a5647bde0e8c0ca55cf1, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

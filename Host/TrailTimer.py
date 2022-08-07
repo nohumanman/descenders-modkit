@@ -19,7 +19,10 @@ class TrailTimer():
         return self.__boundaries
 
     def add_boundary(self, boundary_guid):
-        if len(self.__boundaries) == 0 and not self.network_player.being_monitored:
+        if (
+            len(self.__boundaries) == 0
+            and not self.network_player.being_monitored
+        ):
             self.invalidate_timer("No boundaries entered")
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
@@ -27,11 +30,17 @@ class TrailTimer():
     def remove_boundary(self, boundary_guid):
         if boundary_guid in self.__boundaries:
             self.__boundaries.remove(boundary_guid)
-        if len(self.__boundaries) == 0 and not self.network_player.being_monitored:
+        if (
+            len(self.__boundaries) == 0
+            and not self.network_player.being_monitored
+        ):
             self.invalidate_timer("out of bounds!")
 
     def start_timer(self, total_checkpoints: int):
-        if len(self.__boundaries) == 0 and not self.network_player.being_monitored:
+        if (
+            len(self.__boundaries) == 0
+            and not self.network_player.being_monitored
+        ):
             self.invalidate_timer("out of bounds!", always=True)
         else:
             self.started = True
@@ -40,6 +49,12 @@ class TrailTimer():
             self.times = []
 
     def checkpoint(self, client_time: str):
+        logging.info(
+            "TrailTimer.py - "
+            f"id{self.network_player.steam_id} "
+            f"alias {self.network_player.steam_name} "
+            f"- checkpoint() with client time {client_time}"
+        )
         if self.started:
             # self.times.append(time.time() - self.time_started)
             self.times.append(float(client_time))
@@ -56,12 +71,15 @@ class TrailTimer():
             elif time_diff < 0:
                 mess = str(round(abs(time_diff), 4)) + " seconds slower"
             self.network_player.send(f"SPLIT_TIME|{mess}")
-            discord_bot = self.network_player.parent.discord_bot
-            discord_bot.loop.run_until_complete(
-                discord_bot.watch_user(self.network_player.steam_name)
-            )
 
     def invalidate_timer(self, reason: str, always=False):
+        logging.info(
+            "TrailTimer.py - "
+            f"id{self.network_player.steam_id} "
+            f"alias {self.network_player.steam_name} "
+            "- invalidate_timer() with reason"
+            f"{reason}"
+        )
         if (not self.started) and not always:
             return
         logging.info(f"invalidating time of {self.network_player.steam_name}")
@@ -70,6 +88,12 @@ class TrailTimer():
         self.times = []
 
     def end_timer(self, client_time: str):
+        logging.info(
+            "TrailTimer.py - "
+            f"id{self.network_player.steam_id} "
+            f"alias {self.network_player.steam_name} "
+            f"- end_timer() with client time {client_time}"
+        )
         from DBMS import DBMS
         if self.total_checkpoints is None:
             self.invalidate_timer("Didn't go through all checkpoints.")
@@ -155,7 +179,6 @@ class TrailTimer():
         d_secs = int(secs % 60)
         fraction = float(secs * 1000)
         fraction = round(fraction % 1000)
-        print(fraction)
         if len(str(d_mins)) == 1:
             d_mins = "0" + str(d_mins)
         if len(str(d_secs)) == 1:
