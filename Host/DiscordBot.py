@@ -5,6 +5,7 @@ import threading
 import asyncio
 from DBMS import DBMS
 import logging
+import datetime
 
 
 class DiscordBot(commands.Bot):
@@ -37,17 +38,11 @@ class DiscordBot(commands.Bot):
         )
 
     async def on_ready(self):
-        logging.info("Discord bot started.")
+        logging.info("DiscordBot.py - Discord bot started.")
         await self.wait_until_ready()
-        await self.change_presence(
-            status=discord.Status.online,
-            activity=discord.Activity(
-                type=discord.ActivityType.watching,
-                name="your times."
-            )
-        )
 
     async def on_message(self, message):
+        logging.info(f"DiscordBot.py - Message sent '{message}'")
         if message.author == self.user:
             return
         if message.author.id in [id for id in self.queue]:
@@ -70,7 +65,8 @@ class DiscordBot(commands.Bot):
                     num = TrailTimer.ord(i + 1)
                 bike = player["bike"]
                 version = player["version"]
-                leaderboard_str += f"{num} - {name} with {time} on {bike} (v{version})"
+                leaderboard_str += f"{num} - {name} with "
+                leaderboard_str += f"{time} on {bike} (v{version})"
                 if player['starting_speed'] is not None:
                     leaderboard_str += " (starting speed of "
                     st_time = round(float(player['starting_speed']), 2)
@@ -87,6 +83,28 @@ class DiscordBot(commands.Bot):
                     "Sorry - too many players to display!"
                 )
             self.queue.pop(message.author.id)
+        if message.content.startswith(self.command_prefix + "info"):
+            try:
+                player_name = message.content[
+                    len(self.command_prefix + "info "):
+                ]
+            except Exception:
+                player_name = "nohumanman"
+            stats = DBMS.get_player_stats(
+                DBMS.get_id_from_name(player_name)
+            )[0]
+            await message.channel.send(
+                f'''
+__Info for player '{stats[1]}'__
+
+ID: **{stats[0]}**
+Current Rep: **{stats[2]}**
+Times logged on: **{stats[4]}**
+No. Trails Ridden: **{stats[5]}**
+Total Time (hh:mm:ss): **{datetime.timedelta(seconds=float(round(stats[6])))}**
+                '''
+            )
+
         if message.content.startswith(self.command_prefix + 'top'):
             try:
                 num = int(message.content.split(" ")[1])

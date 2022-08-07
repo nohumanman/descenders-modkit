@@ -34,6 +34,10 @@ namespace SplitTimer{
 		}
 		void Update()
         {
+			//foreach(GameObject q in FindObjectsOfType<GameObject>())
+            //{
+			//	Debug.Log(q.name);
+            //}
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
             {
 				Physics.IgnoreLayerCollision(8, 8, PlayerCollision);

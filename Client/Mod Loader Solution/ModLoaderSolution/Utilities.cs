@@ -47,8 +47,6 @@ namespace ModLoaderSolution
 
         UI_MultiplayerNotifications multiplayerNotifications;
         RigidbodyConstraints constraints;
-
-
         //void Update()
         //{
         //    if (Input.GetKeyDown(KeyCode.Numlock))
@@ -180,7 +178,12 @@ namespace ModLoaderSolution
             BonusLevelInfo[] bikeParks = (BonusLevelInfo[])gameData.GetType().GetField("ZIq^s|j").GetValue(gameData);
             return bikeParks;
         }
-
+        public bool isInReplayMode()
+        {
+            if (GameObject.Find("State_ReplayBrowser") != null)
+                return true;
+            return false;
+        }
         public string GetBikeParkName(string seed)
         {
             if (seed == "1009")

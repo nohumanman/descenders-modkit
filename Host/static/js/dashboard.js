@@ -171,7 +171,7 @@ var app = new Vue({
             this.SubmitEval(this.controlled_player.id, "MODIFY_SPEED|" + timeScale.toString());
         },
         Spectate(id){
-            $.get("/spectating", data={
+            $.get("/spectate", data={
                 "steam_id" : app.self,
                 "target_id": id.id,
                 "player_name" : id.name

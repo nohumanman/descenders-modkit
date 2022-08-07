@@ -28,7 +28,7 @@ namespace SplitTimer
 					x.farClipPlane = farClipPlane;
 				if (nearClipPlane >= 0)
 					x.nearClipPlane = nearClipPlane;
-			}
-        }
+			}			
+		}
     }
 }
