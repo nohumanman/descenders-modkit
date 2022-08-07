@@ -16,20 +16,16 @@
             <v-app class="transparent">
                 <v-main class="transparent">
                     <v-overlay class="transparent" v-if="self == null" opacity="1">
-                        <v-text-field
-                            placeholder="Please enter your steam ID."
-                            v-model="self_to_submit"
-                            width="50%"
-                        ></v-text-field>
-                        <v-row>
+                        <h1 style="text-align: center;">Pick your steam name</h1>
+                        <v-row style="padding:50px;" justify="center">
                             <v-col
                                 v-for="player in players"
-                                @click="setSelf(player.id)"
                             >
-                                [[player.name]]
+                                <v-btn @click="setSelf(player.id)">
+                                    [[player.name]]
+                                </v-btn>
                             </v-col>
                         </v-row>
-                        <v-btn @click="setSelf(self_to_submit)">I want to submit the steam ID I have entered.</v-btn>
                     </v-overlay>
                     <h1 class="transparent" style="text-align:center; font-size:70px; top:50%; font-family: Snowlatte;">
                         [[spectating.steam_name]]
