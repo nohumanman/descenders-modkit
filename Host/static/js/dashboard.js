@@ -107,16 +107,22 @@ var app = new Vue({
             app.self = id;
         },
         stringToColour(str) {
-            var hash = 0;
-            for (var i = 0; i < str.length; i++) {
-              hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            if (str != undefined){
+                var hash = 0;
+                for (var i = 0; i < str.length; i++) {
+                hash = str.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                var colour = '#';
+                for (var i = 0; i < 3; i++) {
+                var value = (hash >> (i * 8)) & 0xFF;
+                colour += ('00' + value.toString(16)).substr(-2);
+                }
+                return colour;
             }
-            var colour = '#';
-            for (var i = 0; i < 3; i++) {
-              var value = (hash >> (i * 8)) & 0xFF;
-              colour += ('00' + value.toString(16)).substr(-2);
-            }
-            return colour;
+            return "#000000";
+        },
+        redirect(url){
+            window.location.href = url;
         },
         Randomise(){
             $.get("/randomise");
@@ -265,11 +271,13 @@ var app = new Vue({
         },
         getSteamId(){
             $.get("/me", function(data){
-                data.connections.forEach(function(val){
-                    if (val["type"] == "steam"){
-                        app.self = val["id"];
-                    }
-                })
+                if (data.connections.code != 0){
+                    data.connections.forEach(function(val){
+                        if (val["type"] == "steam"){
+                            app.self = val["id"];
+                        }
+                    })
+                }
             })
         },
         addCommaToNum(num){
@@ -293,7 +301,7 @@ function updatePlayers() {
         
         function compare_lname( a, b )
         {
-            if (a != null && b != null){
+            if (a.name != null && b.name != null){
                 if ( a.name.toLowerCase() < b.name.toLowerCase()){
                     return -1;
                 }

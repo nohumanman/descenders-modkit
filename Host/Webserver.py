@@ -88,6 +88,10 @@ class Webserver():
                 "/spectate", "spectate",
                 self.spectate, ["GET"]
             ),
+            WebserverRoute(
+                "/login", "login",
+                self.login, ["GET"]
+            ),
         ]
         self.add_routes()
 
@@ -252,9 +256,7 @@ class Webserver():
     def tag(self):
         return render_template("PlayerTag.html")
 
-    def index(self):
-        if self.logged_in():
-            return render_template("Dashboard.html")
+    def login(self):
         scope = request.args.get(
             'scope',
             'identify email connections guilds guilds.join'
@@ -266,6 +268,9 @@ class Webserver():
         )
         session['oauth2_state'] = state
         return redirect(authorization_url)
+
+    def index(self):
+        return render_template("Dashboard.html")
 
     def leaderboard(self):
         return render_template("Leaderboard.html")

@@ -15,18 +15,25 @@
         <div id="app">
             <v-app>
                 <v-banner color="red" v-if="validated != 'AUTHORISED'">
-                    You are not permitted to modify any user because your steam account is not whitelisted.
+                    You are not permitted to modify any user because your discord account is not whitelisted - <v-btn @click="redirect('/login')">login</v-btn>
                 </v-banner>
                 <v-main>
-                    <v-overlay v-if="self == ''" opacity="1">
-                        <v-text-field
-                            placeholder="Please enter your steam ID."
-                            v-model="valee"
-                        ></v-text-field>
-                        <br><br>
-                        If you're seeing this, you haven't linked your steam account to your discord account, so we can't take your steam id automatically.
-                        <br>
-                        <v-btn @click="setSelf(valee)">SUBMIT STEAM ID</v-btn>
+                    <v-overlay v-if="self == ''" opacity="1" height="50%" width="50%">
+                        <div style="padding:200px;" v-if="validated == 'AUTHORISED'">
+                            <v-text-field
+                                placeholder="Please enter your steam ID."
+                                v-model="valee"
+                            ></v-text-field>
+                            <br><br>
+                            If you're seeing this, you haven't linked your steam account to your discord account, so we can't take your steam id automatically.
+                            <br>
+                            <v-btn @click="setSelf(valee)">SUBMIT STEAM ID</v-btn>
+                        </div>
+                        <div v-if="validated != 'AUTHORISED'" style="text-align:center;">
+                            <v-btn @click="redirect('/login')">LOGIN WITH DISCORD</v-btn>
+                            <br><br>or<br><br>
+                            <v-btn @click="setSelf('UNKNOWN')">LOGIN AS GUEST</v-btn>
+                        </div>
                     </v-overlay>
                     <v-overlay opacity="1" v-model="controlling">
                         <div style="padding:200px;">
