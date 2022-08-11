@@ -101,7 +101,19 @@ class TrailTimer():
                 return
         if (self.times[len(self.times)-1] < 0):
             self.invalidate_timer("Time was negative")
-        # self.times.append(time.time() - self.time_started)
+        if (
+            not(
+                (
+                    (time.time() - self.time_started) - float(client_time) < 1
+                )
+                and
+                (
+                    (time.time() - self.time_started) - float(client_time) > -1
+                )
+            )
+        ):
+            self.invalidate_timer("Client time did not match server time!")
+            return
         self.times.append(float(client_time))
         self.time_ended = client_time
         if (len(self.times) == self.total_checkpoints-1):
