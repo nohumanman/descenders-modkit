@@ -15,7 +15,7 @@
         <div id="app">
             <v-app>
                 <v-banner color="red" v-if="validated != 'AUTHORISED'">
-                    You are not permitted to modify any user because your discord account is not whitelisted - <v-btn @click="redirect('/login')">login</v-btn>
+                    You are not permitted to modify any user because your discord account is not whitelisted<span v-if="validated != 'UNAUTHORISED'"> - <v-btn @click="redirect('/login')">login</v-btn></span>
                 </v-banner>
                 <v-main>
                     <v-overlay v-if="self == ''" opacity="1" height="50%" width="50%">
