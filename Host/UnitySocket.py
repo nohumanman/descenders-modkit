@@ -213,6 +213,23 @@ class UnitySocket():
         if self.steam_id is not None:
             self.has_both_steam_name_and_id()
 
+    def ban(self, type: str):
+        # type - CLOSE, CRASH, ILLEGAL
+        if type == "ILLEGAL":
+            self.send("TOGGLE_GOD")
+        self.send("BANNED|" + type)
+        logging.info(
+            f"id{self.steam_id}) - alias '{self.steam_name}'"
+            f" banned with '{type}'."
+        )
+        discord_bot = self.parent.discord_bot
+        discord_bot.loop.run_until_complete(
+            discord_bot.ban_note(
+                f"Player {self.steam_name} (id{self.steam_id}) tried"
+                f" to join but was banned with '{type}'."
+            )
+        )
+
     def has_both_steam_name_and_id(self):
         DBMS.submit_alias(self.steam_id, self.steam_name)
         for player in self.parent.players:
@@ -228,39 +245,17 @@ class UnitySocket():
                 del(player)
         if self.steam_id == "OFFLINE" or self.steam_id == "":
             self.send("TOGGLE_GOD")
+        banned_names = ["descender", "goldberg", "skidrow", "player"]
+        for banned_name in banned_names:
+            if (self.steam_name.lower() == banned_name):
+                self.ban("ILLEGAL")
         ban_type = DBMS().get_ban_status(self.steam_id)
-        logging.info(
-            "UnitySocket.py - "
-            f"id{self.steam_id} alias {self.steam_name}"
-            " - Banning with {ban_type}"
-        )
         if ban_type == "CLOSE":
-            self.send("BANNED|CLOSE")
-            discord_bot = self.parent.discord_bot
-            discord_bot.loop.run_until_complete(
-                discord_bot.ban_note(
-                    f"Player {self.steam_name} (id{self.steam_id}) tried"
-                    " to join but was banned with 'close'."
-                )
-            )
+            self.ban("CLOSE")
         elif ban_type == "CRASH":
-            self.send("BANNED|CRASH")
-            discord_bot = self.parent.discord_bot
-            discord_bot.loop.run_until_complete(
-                discord_bot.ban_note(
-                    f"Player {self.steam_name} (id{self.steam_id}) tried"
-                    " to join but was banned with 'crash'."
-                )
-            )
+            self.ban("CRASH")
         elif ban_type == "ILLEGAL":
-            self.send("TOGGLE_GOD")
-            discord_bot = self.parent.discord_bot
-            discord_bot.loop.run_until_complete(
-                discord_bot.ban_note(
-                    f"Player '{self.steam_name}' (id{self.steam_id}) tried"
-                    " to join but was banned with 'illegal'."
-                )
-            )
+            self.ban("ILLEGAL")
 
     def set_steam_id(self, steam_id):
         self.steam_id = steam_id
@@ -325,9 +320,6 @@ class UnitySocket():
             for piece in data.decode().split("\n"):
                 self.handle_data(piece)
         del(self)
-
-    def ban(self, reason, method):
-        self.send("BAN|" + reason + "|" + method)
 
     def invalidate_all_trails(self, reason: str):
         for trail in self.trails:
