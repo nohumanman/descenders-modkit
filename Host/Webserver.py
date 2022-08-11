@@ -205,21 +205,23 @@ class Webserver():
             client_secret=OAUTH2_CLIENT_SECRET,
             authorization_response=request.url
         )
-        user = discord.get(API_BASE_URL + '/users/@me').json()
-
-        id = user["id"]
+        user = discord.get(
+            API_BASE_URL + '/users/@me'
+        ).json()
+        connections = discord.get(
+            API_BASE_URL + '/users/@me/connections'
+        ).json()
         try:
-            email = user["email"]
-            username = user["username"]
-            connections = discord.get(
-                API_BASE_URL + '/users/@me/connections'
-            ).json()
+            id = user['id']
+            email = user['email']
+            username = user['username']
+            steam_id = "NONE"
             for connection in connections:
-                if connection["type"] == "steam":
-                    steam_id = connection["id"]
+                if connection['type'] == "steam":
+                    steam_id = connection['id']
             DBMS.discord_login(id, username, email, steam_id)
-        except Exception:
-            pass
+        except Exception as e:
+            logging.info("User " + str(user) + " with error " + str(e))
         session['oauth2_token'] = token
         return redirect("/")
 
@@ -229,7 +231,6 @@ class Webserver():
         connections = discord.get(
             API_BASE_URL + '/users/@me/connections'
         ).json()
-        # DBMS.discord_login(id, username, email, steam_id)
         guilds = discord.get(API_BASE_URL + '/users/@me/guilds').json()
         return jsonify(user=user, guilds=guilds, connections=connections)
 
