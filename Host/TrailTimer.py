@@ -137,14 +137,14 @@ class TrailTimer():
                                 + our_time
                             )
                         )
-                    shouldNotifyAlways = False
+                    shouldNotifyAlways = True
                     if shouldNotifyAlways:
                         our_time = TrailTimer.secs_to_str(
                                 self.times[len(self.times)-1]
                             )
                         discord_bot = self.network_player.parent.discord_bot
                         discord_bot.loop.run_until_complete(
-                            discord_bot.new_fastest_time(
+                            discord_bot.ban_note(
                                 "Time on '"
                                 + self.trail_name
                                 + "' by '"
