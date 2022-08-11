@@ -211,10 +211,10 @@ class UnitySocket():
     def set_steam_name(self, steam_name):
         self.steam_name = steam_name
         if self.steam_id is not None:
-            DBMS.submit_alias(self.steam_id, self.steam_name)
+            self.has_both_steam_name_and_id()
 
-    def set_steam_id(self, steam_id):
-        self.steam_id = steam_id
+    def has_both_steam_name_and_id(self):
+        DBMS.submit_alias(self.steam_id, self.steam_name)
         for player in self.parent.players:
             if (
                 player.steam_id == self.steam_id
@@ -226,7 +226,7 @@ class UnitySocket():
                 )
                 self.parent.players.remove(player)
                 del(player)
-        if steam_id == "OFFLINE" or steam_id == "":
+        if self.steam_id == "OFFLINE" or self.steam_id == "":
             self.send("TOGGLE_GOD")
         ban_type = DBMS().get_ban_status(self.steam_id)
         logging.info(
@@ -257,12 +257,15 @@ class UnitySocket():
             discord_bot = self.parent.discord_bot
             discord_bot.loop.run_until_complete(
                 discord_bot.ban_note(
-                    f"Player {self.steam_name} (id{self.steam_id}) tried"
+                    f"Player '{self.steam_name}' (id{self.steam_id}) tried"
                     " to join but was banned with 'illegal'."
                 )
             )
+
+    def set_steam_id(self, steam_id):
+        self.steam_id = steam_id
         if self.steam_name is not None:
-            DBMS.submit_alias(self.steam_id, self.steam_name)
+            self.has_both_steam_name_and_id()
 
     def set_world_name(self, world_name):
         self.world_name = world_name
