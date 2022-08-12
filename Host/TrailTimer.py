@@ -101,6 +101,8 @@ class TrailTimer():
                 return
         if (self.times[len(self.times)-1] < 0):
             self.invalidate_timer("Time was negative")
+            if not self.network_player.being_monitored:
+                return
         if (
             not(
                 (
