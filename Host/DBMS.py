@@ -517,7 +517,7 @@ class DBMS():
             write=True
         )
 
-    def get_all_times_on_trail(self, steam_id, trail_name):
+    def get_medals(steam_id, trail_name):
         x = f'''
             SELECT
                 starting_speed,
@@ -558,6 +558,31 @@ class DBMS():
                 checkpoint_time ASC
         '''
         result = DBMS.execute_sql(x)
-        #for time in result:
-        #    if time[3] < 4:
-        #        pass
+        if len(result) == 0:
+            return [False, False, False, False]
+        y = f'''
+            SELECT medal_type, time
+            FROM TrailMedal
+            WHERE trail_name = "{trail_name}"
+        '''
+        rainbowTime = 0
+        goldTime = 0
+        silverTime = 0
+        bronzeTime = 0
+        for medal in DBMS.execute_sql(y):
+            if medal[0] == "rainbow":
+                rainbowTime = float(medal[1])
+            elif medal[0] == "gold":
+                goldTime = float(medal[1])
+            elif medal[0] == "silver":
+                silverTime = float(medal[1])
+            elif medal[0] == "bronze":
+                bronzeTime = float(medal[1])
+        # rainbow, gold, silver, bronze
+        to_return = [False, False, False, False]
+        for player_time in result:
+            to_return[0] = player_time[3] <= rainbowTime
+            to_return[1] = player_time[3] <= goldTime
+            to_return[2] = player_time[3] <= silverTime
+            to_return[3] = player_time[3] <= bronzeTime
+        return to_return

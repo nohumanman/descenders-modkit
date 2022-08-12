@@ -75,10 +75,14 @@
      <Compile Include="Assets\Descenders Split Timer\Teleport Pad\TeleportPad.cs" />
      <Compile Include="Assets\Descenders Split Timer\Teleport Pad\TeleportPadTerrain.cs" />
      <Compile Include="Assets\Descenders Split Timer\Utilities\SteamIntegration.cs" />
+     <None Include="Assets\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Emissive Diffuse.shader" />
+     <None Include="Assets\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Transparent Diffuse Bump Cutout.shader" />
      <None Include="Assets\Descenders Split Timer\Speed Trap\Materials\3DText.shader" />
      <None Include="Assets\ModTool\ModTool.Shared.xml" />
      <None Include="Assets\ModTool\ModTool.Interface.xml" />
      <None Include="Assets\Descenders Split Timer\Split Timer\Leaderboard\Shaders\3DText.shader" />
+     <None Include="Assets\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Standard Diffuse Bump.shader" />
+     <None Include="Assets\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Transparent Diffuse Bump.shader" />
      <None Include="Assets\ModTool\Mono.Cecil\LICENSE.txt" />
  <Reference Include="UnityEngine.CoreModule">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll</HintPath>

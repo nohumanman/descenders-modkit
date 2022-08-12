@@ -119,17 +119,17 @@ namespace SplitTimer{
 					medalSystem.NetStart();
 				this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
 			}
-			if (message == "SET_MEDAL")
+			if (message.StartsWith("SET_MEDAL"))
             {
 				string trailName = message.Split('|')[1];
 				foreach(MedalSystem medalSystem in FindObjectsOfType<MedalSystem>())
                 {
 					if (medalSystem.trailName == trailName)
                     {
-						bool rainbowGot = message.Split('|')[2] == "TRUE";
-						bool goldGot = message.Split('|')[3] == "TRUE";
-						bool silverGot = message.Split('|')[4] == "TRUE";
-						bool bronzeGot = message.Split('|')[5] == "TRUE";
+						bool rainbowGot = message.Split('|')[2] == "True";
+						bool goldGot = message.Split('|')[3] == "True";
+						bool silverGot = message.Split('|')[4] == "True";
+						bool bronzeGot = message.Split('|')[5] == "True";
 
 						medalSystem.rainbowMedalGot.SetActive(rainbowGot);
 						medalSystem.rainbowMedalNotGot.SetActive(!rainbowGot);
@@ -324,6 +324,7 @@ namespace SplitTimer{
 			// Debug.Log("NetClient | Message Processed: " + message);
 		}
 		public void SendData(string clientMessage) {
+			// Debug.Log("Sending message '" + clientMessage + "'");
 			clientMessage = clientMessage + "\n";
 			// Debug.Log("NetClient | Client sending message: " + clientMessage);
 			if (socketConnection == null) {

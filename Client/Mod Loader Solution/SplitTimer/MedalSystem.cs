@@ -21,8 +21,20 @@ namespace SplitTimer
         public GameObject bronzeMedalNotGot;
         [Header("Config")]
         public string trailName;
+        void Start()
+        {
+            rainbowMedalGot.SetActive(false);
+            rainbowMedalNotGot.SetActive(false);
+            goldMedalGot.SetActive(false);
+            goldMedalNotGot.SetActive(false);
+            silverMedalGot.SetActive(false);
+            silverMedalNotGot.SetActive(false);
+            bronzeMedalGot.SetActive(false);
+            bronzeMedalNotGot.SetActive(false);
+        }
         public void NetStart()
         {
+            Debug.Log("MedalSystem NetStart() called - sending GET_MEDALS");
             NetClient.Instance.SendData("GET_MEDALS|" + trailName);
         }
     }
