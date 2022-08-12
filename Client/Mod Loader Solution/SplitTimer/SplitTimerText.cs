@@ -47,9 +47,11 @@ namespace SplitTimer
 		void Start()
         {
 			text = GetComponent<Text>();
+			text.supportRichText = true;
 			startingColor = text.color;
 			SetText("");
 			StartCoroutine(UpdateTime());
+			GameObject.Find("TextShadow").GetComponent<Text>().supportRichText = true;
 		}
 		public void SetText(string textToSet)
         {

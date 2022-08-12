@@ -98,6 +98,47 @@ class DBMS():
         )
 
     @staticmethod
+    def get_personal_fastest_split_times(trail_name, steam_id):
+        statement = f'''
+            SELECT
+                SplitTime.time_id,
+                SplitTime.checkpoint_num,
+                SplitTime.checkpoint_time,
+                Time.trail_name,
+                Player.steam_name,
+                Time.timestamp
+            from
+                SplitTime
+                INNER JOIN Time ON SplitTime.time_id = Time.time_id
+                INNER JOIN Player ON Time.steam_id = Player.steam_id
+            WHERE trail_name = "{trail_name}"
+            AND (Time.ignore = "False" OR Time.ignore is NULL)
+            AND Time.steam_id = {steam_id}
+            ORDER BY checkpoint_num DESC, checkpoint_time ASC
+            LIMIT 1
+            '''
+        time_id = DBMS.execute_sql(statement)
+        try:
+            fastest_time_on_trail_id = time_id[0][0]
+        except IndexError:
+            print("No trail specified")
+            return []
+        times = DBMS.execute_sql(
+            f'''
+            SELECT
+                *
+            FROM
+                SplitTime
+            WHERE
+                time_id = "{fastest_time_on_trail_id}"
+            ORDER BY
+                checkpoint_num
+            '''
+        )
+        split_times = [time[2] for time in times]
+        return split_times
+
+    @staticmethod
     def get_fastest_split_times(
         trail_name,
         competitors_only=False,
