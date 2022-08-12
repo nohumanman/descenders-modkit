@@ -14,7 +14,7 @@ MonoBehaviour:
   _name: Split Timer Test
   _author: nohumanman
   _description: Test
-  _version: 0.0.9
+  _version: 0.0.13
   _platforms: 1
   _content: 5
   _outputDirectory: D:/SteamLibrary/steamapps/common/Descenders/Mods

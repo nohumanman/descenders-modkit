@@ -516,3 +516,48 @@ class DBMS():
             ''',
             write=True
         )
+
+    def get_all_times_on_trail(self, steam_id, trail_name):
+        x = f'''
+            SELECT
+                starting_speed,
+                steam_name,
+                bike_type,
+                MIN(checkpoint_time),
+                Time.version
+            FROM
+                Time
+                INNER JOIN
+                    SplitTime ON SplitTime.time_id = Time.time_id
+                INNER JOIN
+                    (
+                        SELECT
+                            max(checkpoint_num) AS max_checkpoint
+                        FROM
+                            SplitTime
+                            INNER JOIN
+                                Time ON Time.time_id = SplitTime.time_id
+                            WHERE LOWER(Time.trail_name) = LOWER(
+                                "{trail_name}"
+                            )
+                    ) ON SplitTime.time_id=Time.time_id
+                INNER JOIN
+                    Player ON Player.steam_id = Time.steam_id
+            WHERE
+                LOWER(trail_name) = LOWER("{trail_name}")
+                AND
+                checkpoint_num = max_checkpoint
+                AND
+                (Time.ignore = "False" OR Time.ignore is NULL)
+                AND
+                Player.steam_id = {steam_id}
+            GROUP BY
+                trail_name,
+                Player.steam_id
+            ORDER BY
+                checkpoint_time ASC
+        '''
+        result = DBMS.execute_sql(x)
+        #for time in result:
+        #    if time[3] < 4:
+        #        pass

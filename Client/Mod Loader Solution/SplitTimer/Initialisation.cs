@@ -58,6 +58,15 @@ namespace SplitTimer
                     JsonUtility.FromJsonOverwrite(jsonRespawn, customTeleporter);
                 }
 
+                string jsonMedalSystem = JsonUtility.ToJson(g.GetComponent("MedalSystemInfo"));
+                if (jsonMedalSystem != "" && jsonMedalSystem != null)
+                {
+                    Debug.Log("Initialisation | Found MedalSystemInfo");
+                    MedalSystem medalSystem = gameObject.AddComponent<MedalSystem>();
+                    JsonUtility.FromJsonOverwrite(jsonMedalSystem, medalSystem);
+                }
+
+
                 if (g.name == "SLOZONE")
                 {
                     g.AddComponent<SloMoZone>();

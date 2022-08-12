@@ -401,3 +401,6 @@ class UnitySocket():
             )
         except RuntimeError:
             logging.error("Event already running")
+
+    def get_medals(self, trail_name: str):
+        self.send(f"SET_MEDAL|{trail_name}|TRUE|TRUE|TRUE|TRUE")
