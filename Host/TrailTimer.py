@@ -67,9 +67,9 @@ class TrailTimer():
             except Exception:
                 time_diff = "unknown"
             if time_diff > 0:
-                mess = str(round(abs(time_diff), 4)) + " seconds faster"
+                mess = "-" + str(round(abs(time_diff), 3))
             elif time_diff < 0:
-                mess = str(round(abs(time_diff), 4)) + " seconds slower"
+                mess = "+" + str(round(abs(time_diff), 3))
             self.network_player.send(f"SPLIT_TIME|{mess}")
 
     def invalidate_timer(self, reason: str, always=False):
