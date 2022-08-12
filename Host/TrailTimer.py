@@ -123,6 +123,9 @@ class TrailTimer():
         self.started = False
         self.times = []
 
+    def update_medals(self):
+        self.network_player.get_medals(self.trail_name)
+
     def end_timer(self, client_time: str):
         logging.info(
             "TrailTimer.py - "
@@ -232,6 +235,7 @@ class TrailTimer():
                     self.network_player.get_leaderboard(self.trail_name)
                 )
             )
+        self.update_medals()
 
     @staticmethod
     def secs_to_str(secs):

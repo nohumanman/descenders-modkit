@@ -69,6 +69,8 @@ operations = {
         lambda netPlayer, data: netPlayer.set_version(str(data[1])),
     "BIKE_TYPE":
         lambda netPlayer, data: netPlayer.set_bike(str(data[1])),
+    "GET_MEDALS":
+        lambda netPlayer, data: netPlayer.get_medals(str(data[1]))
 }
 
 
@@ -279,7 +281,7 @@ class UnitySocket():
     def send(self, data: str):
         logging.debug(
             f"id{self.steam_id} alias {self.steam_name}"
-            " - Sending data '{data}'"
+            f" - Sending data '{data}'"
         )
         self.conn.sendall((data + "\n").encode())
 
@@ -401,3 +403,10 @@ class UnitySocket():
             )
         except RuntimeError:
             logging.error("Event already running")
+
+    def get_medals(self, trail_name: str):
+        (rainbow, gold, silver, bronze) = DBMS.get_medals(
+            self.steam_id,
+            trail_name
+        )
+        self.send(f"SET_MEDAL|{trail_name}|{rainbow}|{gold}|{silver}|{bronze}")

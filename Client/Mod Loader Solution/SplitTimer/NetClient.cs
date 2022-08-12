@@ -115,8 +115,38 @@ namespace SplitTimer{
 				return;
 			if (message == "SUCCESS") {
 				PlayerInfo.Instance.NetStart();
+				foreach (MedalSystem medalSystem in FindObjectsOfType<MedalSystem>())
+					medalSystem.NetStart();
 				this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
 			}
+			if (message.StartsWith("SET_MEDAL"))
+            {
+				string trailName = message.Split('|')[1];
+				foreach(MedalSystem medalSystem in FindObjectsOfType<MedalSystem>())
+                {
+					if (medalSystem.trailName == trailName)
+                    {
+						bool rainbowGot = message.Split('|')[2] == "True";
+						bool goldGot = message.Split('|')[3] == "True";
+						bool silverGot = message.Split('|')[4] == "True";
+						bool bronzeGot = message.Split('|')[5] == "True";
+
+						medalSystem.rainbowMedalGot.SetActive(rainbowGot);
+						medalSystem.rainbowMedalNotGot.SetActive(!rainbowGot);
+
+						medalSystem.goldMedalGot.SetActive(goldGot);
+						medalSystem.goldMedalNotGot.SetActive(!goldGot);
+
+						medalSystem.silverMedalGot.SetActive(silverGot);
+						medalSystem.silverMedalNotGot.SetActive(!silverGot);
+
+						medalSystem.bronzeMedalGot.SetActive(bronzeGot);
+						medalSystem.bronzeMedalNotGot.SetActive(!bronzeGot);
+
+
+					}
+                }
+            }
 			if (message == "PRIVATE_LOBBY")
             {
 				Utilities.instance.GoToPrivateLobby();
@@ -294,6 +324,7 @@ namespace SplitTimer{
 			// Debug.Log("NetClient | Message Processed: " + message);
 		}
 		public void SendData(string clientMessage) {
+			// Debug.Log("Sending message '" + clientMessage + "'");
 			clientMessage = clientMessage + "\n";
 			// Debug.Log("NetClient | Client sending message: " + clientMessage);
 			if (socketConnection == null) {

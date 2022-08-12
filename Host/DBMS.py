@@ -557,3 +557,73 @@ class DBMS():
             ''',
             write=True
         )
+
+    def get_medals(steam_id, trail_name):
+        x = f'''
+            SELECT
+                starting_speed,
+                steam_name,
+                bike_type,
+                MIN(checkpoint_time),
+                Time.version
+            FROM
+                Time
+                INNER JOIN
+                    SplitTime ON SplitTime.time_id = Time.time_id
+                INNER JOIN
+                    (
+                        SELECT
+                            max(checkpoint_num) AS max_checkpoint
+                        FROM
+                            SplitTime
+                            INNER JOIN
+                                Time ON Time.time_id = SplitTime.time_id
+                            WHERE LOWER(Time.trail_name) = LOWER(
+                                "{trail_name}"
+                            )
+                    ) ON SplitTime.time_id=Time.time_id
+                INNER JOIN
+                    Player ON Player.steam_id = Time.steam_id
+            WHERE
+                LOWER(trail_name) = LOWER("{trail_name}")
+                AND
+                checkpoint_num = max_checkpoint
+                AND
+                (Time.ignore = "False" OR Time.ignore is NULL)
+                AND
+                Player.steam_id = {steam_id}
+            GROUP BY
+                trail_name,
+                Player.steam_id
+            ORDER BY
+                checkpoint_time ASC
+        '''
+        result = DBMS.execute_sql(x)
+        if len(result) == 0:
+            return [False, False, False, False]
+        y = f'''
+            SELECT medal_type, time
+            FROM TrailMedal
+            WHERE trail_name = "{trail_name}"
+        '''
+        rainbowTime = 0
+        goldTime = 0
+        silverTime = 0
+        bronzeTime = 0
+        for medal in DBMS.execute_sql(y):
+            if medal[0] == "rainbow":
+                rainbowTime = float(medal[1])
+            elif medal[0] == "gold":
+                goldTime = float(medal[1])
+            elif medal[0] == "silver":
+                silverTime = float(medal[1])
+            elif medal[0] == "bronze":
+                bronzeTime = float(medal[1])
+        # rainbow, gold, silver, bronze
+        to_return = [False, False, False, False]
+        for player_time in result:
+            to_return[0] = player_time[3] <= rainbowTime
+            to_return[1] = player_time[3] <= goldTime
+            to_return[2] = player_time[3] <= silverTime
+            to_return[3] = player_time[3] <= bronzeTime
+        return to_return
