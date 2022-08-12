@@ -65,11 +65,47 @@ class TrailTimer():
                     - (time.time() - self.time_started)
                 )
             except Exception:
-                time_diff = "unknown"
+                time_diff = 0
             if time_diff > 0:
-                mess = "-" + str(round(abs(time_diff), 3))
+                mess = (
+                    "<color=lime>-"
+                    + str(round(abs(time_diff), 3))
+                    + "</color>"
+                )
             elif time_diff < 0:
-                mess = "+" + str(round(abs(time_diff), 3))
+                mess = (
+                    "<color=red>+"
+                    + str(round(abs(time_diff), 3))
+                    + "</color>"
+                )
+            if time_diff != 0:
+                mess += " TOP"
+
+            fastest = DBMS.get_personal_fastest_split_times(
+                self.trail_name,
+                self.network_player.steam_id
+            )
+            try:
+                time_diff_local = (
+                    fastest[len(self.times)-1]
+                    - (time.time() - self.time_started)
+                )
+            except Exception:
+                time_diff_local = 0
+            if time_diff_local > 0:
+                mess += (
+                    "               <color=lime>-"
+                    + str(round(abs(time_diff_local), 3))
+                    + "</color>"
+                )
+            elif time_diff_local < 0:
+                mess += (
+                    "               <color=red>+"
+                    + str(round(abs(time_diff_local), 3))
+                    + "</color>"
+                )
+            if time_diff_local != 0:
+                mess += " PB "
             self.network_player.send(f"SPLIT_TIME|{mess}")
 
     def invalidate_timer(self, reason: str, always=False):
@@ -117,7 +153,18 @@ class TrailTimer():
                 )
             )
         ):
+            logging.info("Potential Cheat")
             self.invalidate_timer("Client time did not match server time!")
+            discord_bot = self.network_player.parent.discord_bot
+            discord_bot.loop.run_until_complete(
+                discord_bot.ban_note(
+                    "**Potential cheat** from "
+                    f"{self.network_player.steam_name}"
+                    " - client time did not match server time!"
+                    f"\n\nTime submitted was '{client_time}' and "
+                    f"server time was '{(time.time() - self.time_started)}'"
+                )
+            )
             return
         self.times.append(float(client_time))
         self.time_ended = client_time
