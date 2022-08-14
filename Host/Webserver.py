@@ -213,15 +213,22 @@ class Webserver():
         ).json()
         try:
             id = user['id']
-            email = user['email']
+            try:
+                email = user['email']
+            except:
+                email = ""
             username = user['username']
             steam_id = "NONE"
-            for connection in connections:
-                if connection['type'] == "steam":
-                    steam_id = connection['id']
+            try:
+                for connection in connections:
+                    if connection['type'] == "steam":
+                        steam_id = connection['id']
+            except Exception as e:
+                logging.info("25123 - " + str(e))
             DBMS.discord_login(id, username, email, steam_id)
         except Exception as e:
             logging.info("User " + str(user) + " with error " + str(e))
+            logging.info("With connections " + str(connections))
         session['oauth2_token'] = token
         return redirect("/")
 
