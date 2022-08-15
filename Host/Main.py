@@ -11,21 +11,29 @@ import os
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 log_location = script_path + "/SplitTimer.log"
-logging.basicConfig(
-    filename=log_location,
-    filemode="a",
-    level=logging.DEBUG,
-    format='%(asctime)s - %(message)s',
-    datefmt='%d-%b-%y %H:%M:%S'
-)
 
-logging.info(
+split_timer_logger = logging.getLogger('DescendersSplitTimer')
+split_timer_logger.setLevel(logging.INFO)
+
+
+handler = logging.FileHandler(log_location)
+handler.setFormatter(
+    logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    )
+)
+handler.setLevel(logging.INFO)
+split_timer_logger.addHandler(handler)
+
+split_timer_logger.info(
     "--------------------------------"
     " Descenders Split Timer Started "
     "--------------------------------"
 )
 
 # -- Unity Socket Server --
+
+split_timer_logger.info("Main.py - instantiating UnitySocketServer()")
 
 UNITY_SOCKET_IP = "0.0.0.0"
 UNITY_SOCKET_PORT = 65432
@@ -37,6 +45,8 @@ threading.Thread(target=unity_socket_server.start).start()
 
 # -- Dashboard Socket Server --
 
+split_timer_logger.info("Main.py - instantiating DashboardSocketServer()")
+
 DASHBOARD_SOCKET_IP = "0.0.0.0"
 DASHBOARD_SOCKET_PORT = 65432
 dashboard_socket_server = DashboardSocketServer(
@@ -45,6 +55,8 @@ dashboard_socket_server = DashboardSocketServer(
 )
 
 # -- Website Server --
+
+split_timer_logger.info("Main.py - instantiating Webserver()")
 
 WEBSITE_IP = "0.0.0.0"
 WEBSITE_PORT = 8080
@@ -60,17 +72,18 @@ def riders_gate():
         time.sleep(25)
         if (shouldRandomise):
             rand = str(random.randint(0, 3000) / 1000)
-            logging.info("Sending Random Gate to all players...")
             for player in unity_socket_server.players:
                 try:
                     player.send("RIDERSGATE|" + rand)
                 except Exception:
-                    logging.warning("Failed to send random gate to player!")
                     try:
-                        logging.warning(player.steam_id)
+                        split_timer_logger.warning(
+                            "Failed to send random gate to player"
+                            f" '{player.steam_name}'!"
+                        )
                     except Exception:
-                        logging.warning(
-                            "Failed to get steam id from failed player!"
+                        split_timer_logger.warning(
+                            "Failed to send random gate to player 'UNKNOWN'!"
                         )
 
 

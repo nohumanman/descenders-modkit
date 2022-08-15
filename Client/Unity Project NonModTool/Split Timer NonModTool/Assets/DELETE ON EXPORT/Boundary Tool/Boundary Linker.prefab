@@ -792,3 +792,4 @@ MonoBehaviour:
   boundaryLinks: {fileID: 1659767364808002}
   boundaries: {fileID: 1130474116429408}
   boundary: {fileID: 1303459639250872, guid: d84b9eb2e42965a4ab8991701ad4c4b1, type: 2}
+  scaleOfBoundaryJoin: {x: 5, y: 50, z: 5}

@@ -5,13 +5,14 @@ import srcomapi.datatypes as dt
 from DBMS import DBMS
 from TrailTimer import TrailTimer
 import requests
-from Tokens import webhook
 from Tokens import steam_api_key
 import logging
 import json
 import os
 
 script_path = os.path.dirname(os.path.realpath(__file__))
+
+split_timer_logger = logging.getLogger('DescendersSplitTimer')
 
 operations = {
     "STEAM_ID":
@@ -76,6 +77,9 @@ operations = {
 
 class UnitySocket():
     def __init__(self, conn: socket, addr, parent):
+        split_timer_logger.info(
+            "UnitySocket.py - New UnitySocket instance created"
+        )
         self.addr = addr
         self.conn = conn
         self.parent = parent
@@ -95,12 +99,24 @@ class UnitySocket():
         self.send("INVALIDATE_TIME|scripts by nohumanman")
 
     def set_last_trick(self, trick: str):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" called set_last_trick('{trick}')"
+        )
         self.last_trick = trick
 
-    def set_bike(self, bike):
+    def set_bike(self, bike: str):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" called set_bike('{bike}')"
+        )
         self.bike_type = bike
 
     def set_version(self, version: str):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" called set_version('{version}')"
+        )
         self.version = version
         with open(script_path + "/current_version.json") as json_file:
             data = json.load(json_file)
@@ -112,21 +128,24 @@ class UnitySocket():
                 )
 
     def set_reputation(self, reputation):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" called set_reputation({reputation})"
+        )
         self.reputation = int(reputation)
         DBMS.log_rep(self.steam_id, self.reputation)
 
     def start_speed(self, starting_speed: float):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" called start_speed({starting_speed})"
+        )
         if starting_speed > 50:
             self.send("INVALIDATE_TIME|You went through the start too fast!")
         for trail in self.trails:
             self.trails[trail].starting_speed = starting_speed
 
     def convert_to_unity(self, leaderboard):
-        logging.info(
-            "UnitySocket.py - "
-            f"id{self.steam_id} alias {self.steam_name} "
-            "- converting leaderboard to Unity."
-        )
         if len(leaderboard) == 0:
             return {}
         keys = [key for key in leaderboard[0]]
@@ -139,10 +158,9 @@ class UnitySocket():
         return unityLeaderboard
 
     def get_leaderboard(self, trail_name):
-        logging.info(
-            "UnitySocket.py - "
-            f"id{self.steam_id} alias {self.steam_name} - "
-            f"getting speedrun.com leaderboard for {trail_name}"
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" called get_leaderboard('{trail_name}')"
         )
         return self.convert_to_unity(
             [
@@ -158,11 +176,6 @@ class UnitySocket():
             )
 
     def get_speedrun_dot_com_leaderboard(self, trail_name):
-        logging.info(
-            "UnitySocket.py - "
-            f"id{self.steam_id} alias {self.steam_name} - "
-            f"getting speedrun.com leaderboard for {trail_name}"
-        )
         api = srcomapi.SpeedrunCom()
         game = api.get_game("Descenders")
         for level in game.levels:
@@ -211,11 +224,19 @@ class UnitySocket():
         return self.__avatar_src
 
     def set_steam_name(self, steam_name):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" - set_steam_name('{steam_name}')"
+        )
         self.steam_name = steam_name
         if self.steam_id is not None:
             self.has_both_steam_name_and_id()
 
     def ban(self, type: str):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            " called ban()"
+        )
         # type - CLOSE, CRASH, ILLEGAL
         if type == "ILLEGAL":
             self.send("TOGGLE_GOD")
@@ -260,11 +281,19 @@ class UnitySocket():
             self.ban("ILLEGAL")
 
     def set_steam_id(self, steam_id):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" - set_steam_id({steam_id})"
+        )
         self.steam_id = steam_id
         if self.steam_name is not None:
             self.has_both_steam_name_and_id()
 
     def set_world_name(self, world_name):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" - set_world_name('{world_name}')"
+        )
         self.world_name = world_name
         DBMS().update_player(
             self.steam_id,
@@ -272,27 +301,21 @@ class UnitySocket():
             self.get_avatar_src()
         )
         DBMS.submit_ip(self.steam_id, self.addr[0], self.addr[1])
-        # data = {
-        #    "content": f"{self.steam_name} has **joined** {self.world_name}!",
-        #     "username": "Split Timer"
-        # }
-        # requests.post(webhook, json=data)
 
     def send(self, data: str):
-        logging.debug(
-            f"id{self.steam_id} alias {self.steam_name}"
-            f" - Sending data '{data}'"
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" called send('{data}')"
         )
         self.conn.sendall((data + "\n").encode())
 
     def handle_data(self, data: str):
         if data == "":
             return
-        logging.info(
-            "UnitySocket.py - "
-            f"id{self.steam_id} alias "
-            f"{self.steam_name} - handling data '{data}'"
-        )
+        # split_timer_logger.info(
+        #     f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+        #     f" called handle_data('{data}')"
+        # )
         data_list = data.split("|")
         for operator in operations:
             if data.startswith(operator):
@@ -306,17 +329,15 @@ class UnitySocket():
             try:
                 data = self.conn.recv(1024)
             except ConnectionResetError:
-                logging.info(
-                    "UnitySocket.py - "
-                    f"id{self.steam_id} alias {self.steam_name}"
-                    " - User has disconnected, breaking loop"
+                split_timer_logger.warn(
+                    f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+                    f" user has disconnected due to ConnectionResetError"
                 )
                 break
             if not data:
-                logging.info(
-                    "UnitySocket.py - "
-                    f"id{self.steam_id} alias {self.steam_name}"
-                    " - User has disconnected, breaking loop 2"
+                split_timer_logger.warn(
+                    f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+                    f" user has disconnected because not data"
                 )
                 break
             for piece in data.decode().split("\n"):
@@ -324,10 +345,18 @@ class UnitySocket():
         del(self)
 
     def invalidate_all_trails(self, reason: str):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" called invalidate_all_trails('{reason}')"
+        )
         for trail in self.trails:
             self.trails[trail].invalidate_timer(reason)
 
     def on_respawn(self):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" called on_respawn()"
+        )
         if not self.being_monitored:
             if str(self.steam_id) == "76561198314526424":
                 self.invalidate_all_trails("THOU HAST EATEN SHIT")
@@ -364,6 +393,11 @@ class UnitySocket():
         total_checkpoints: str,
         client_time: str
     ):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" called on_checkpoint_enter('{trail_name}', '{type}', "
+            f"'{total_checkpoints}', '{client_time}')"
+        )
         self.get_trail(trail_name).total_checkpoints = int(total_checkpoints)
         if type == "Start":
             self.get_trail(trail_name).start_timer(total_checkpoints)
@@ -378,11 +412,6 @@ class UnitySocket():
 
     def on_map_exit(self):
         self.update_concurrent_users()
-        data = {
-            "content": f"{self.steam_name} has **exited** {self.world_name}!",
-            "username": "Split Timer"
-        }
-        requests.post(webhook, json=data)
         self.trails = {}
         DBMS.end_session(
             self.steam_id,
@@ -405,8 +434,16 @@ class UnitySocket():
             logging.error("Event already running")
 
     def get_medals(self, trail_name: str):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" called get_medals('{trail_name}')"
+        )
         (rainbow, gold, silver, bronze) = DBMS.get_medals(
             self.steam_id,
             trail_name
+        )
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" medals found - ({rainbow}, {gold}, {silver}, {bronze})"
         )
         self.send(f"SET_MEDAL|{trail_name}|{rainbow}|{gold}|{silver}|{bronze}")

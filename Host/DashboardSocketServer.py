@@ -12,7 +12,6 @@ class DashboardSocketServer():
         self.clients = []
 
     def create_client(self, conn, addr):
-        
         client = DashboardSocket(conn, addr, self)
         self.clients.append(client)
         try:

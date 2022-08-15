@@ -9,7 +9,7 @@ namespace SplitTimer{
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
-		public string version = "0.1.6";
+		public string version = "0.1.62";
 		public float speed;
 		bool hasLoadedPlayer = false;
 		bool wasBailed = false;

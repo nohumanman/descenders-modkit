@@ -13,5 +13,7 @@ public class BoundaryLinkerEditor : Editor
             myScript.SpawnBoundaries();
         if(GUILayout.Button("Undo Spawn"))
             myScript.UndoBoundarySpawn();
+        if (GUILayout.Button("Reverse Links"))
+            myScript.ReverseLinks();
     }
 }

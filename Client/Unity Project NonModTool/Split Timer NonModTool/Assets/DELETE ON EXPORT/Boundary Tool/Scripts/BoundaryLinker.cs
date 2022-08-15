@@ -6,6 +6,7 @@ public class BoundaryLinker : MonoBehaviour {
     public GameObject boundaryLinks;
     public GameObject boundaries;
     public GameObject boundary;
+    public Vector3 scaleOfBoundaryJoin = new Vector3(5, 50, 5);
     List<GameObject> boundaryPoints = new List<GameObject>();
     List<GameObject> resentlySpawnedBoundaryPoints = new List<GameObject>();
     public void SpawnBoundaries(){
@@ -14,9 +15,22 @@ public class BoundaryLinker : MonoBehaviour {
         foreach(Transform child in boundaryLinks.transform)
             boundaryPoints.Add(child.gameObject);
         int i = 0;
+        
 		foreach(GameObject boundaryPoint in boundaryPoints){
             if (i+1 < boundaryPoints.Count)
                 SpawnBoundary(boundaryPoints[i], boundaryPoints[i+1]);
+            i++;
+        }
+    }
+    public void ReverseLinks(){
+        List<Transform> linksList = new List<Transform>();
+        foreach(Transform child in boundaryLinks.transform){
+            linksList.Add(child);
+        }
+        linksList.Reverse();
+        int i = 0;
+        foreach(Transform child in linksList){
+            child.SetSiblingIndex(i);
             i++;
         }
     }
@@ -40,8 +54,15 @@ public class BoundaryLinker : MonoBehaviour {
         );
         boundaryInstance.transform.LookAt(to.transform);
         GameObject boundaryInstanceAtJoin = Instantiate(boundary);
-        boundaryInstanceAtJoin.transform.position = to.transform.position;
-        boundaryInstanceAtJoin.transform.localScale = new Vector3(5, 15, 5);
+        boundaryInstanceAtJoin.transform.position = from.transform.position;
+        boundaryInstanceAtJoin.transform.localScale = scaleOfBoundaryJoin;
+        boundaryInstanceAtJoin.transform.LookAt(boundaryInstance.transform);
+        boundaryInstanceAtJoin.transform.eulerAngles = new Vector3(
+            0,
+            boundaryInstanceAtJoin.transform.eulerAngles.y,
+            0
+        );
+
         boundaryInstance.transform.SetParent(boundaries.transform);
         boundaryInstanceAtJoin.transform.SetParent(boundaries.transform);
         resentlySpawnedBoundaryPoints.Add(boundaryInstanceAtJoin);

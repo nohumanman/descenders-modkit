@@ -13,6 +13,8 @@ API_BASE_URL = os.environ.get('API_BASE_URL', 'https://discordapp.com/api')
 AUTHORIZATION_BASE_URL = API_BASE_URL + '/oauth2/authorize'
 TOKEN_URL = API_BASE_URL + '/oauth2/token'
 
+split_timer_logger = logging.getLogger('DescendersSplitTimer')
+
 
 class WebserverRoute():
     def __init__(self, route, endpoint, view_func, methods):
@@ -211,11 +213,15 @@ class Webserver():
         connections = discord.get(
             API_BASE_URL + '/users/@me/connections'
         ).json()
+        split_timer_logger.info(
+            "Webserver.py - discord login to website"
+            f" - user '{user['id']}' named '{user['username']}'"
+        )
         try:
             id = user['id']
             try:
                 email = user['email']
-            except:
+            except Exception:
                 email = ""
             username = user['username']
             steam_id = "NONE"
@@ -278,6 +284,7 @@ class Webserver():
         return redirect(authorization_url)
 
     def index(self):
+        split_timer_logger.info("Webserver.py - index() called")
         return render_template("Dashboard.html")
 
     def leaderboard(self):
