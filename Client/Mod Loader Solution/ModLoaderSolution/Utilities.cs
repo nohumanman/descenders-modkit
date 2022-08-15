@@ -543,6 +543,10 @@ namespace ModLoaderSolution
             else
                 Debug.Log("Player not found: " + name);
         }
+        public int GetBike()
+        {
+            return 0;
+        }
         public void SetBike(int bike)
         {
             UI_BikeSelection ui_BikeSelection = new UI_BikeSelection();
@@ -553,12 +557,13 @@ namespace ModLoaderSolution
             catch (Exception)
             {
             }
-            UnityEngine.Object.Destroy(ui_BikeSelection);
+            Destroy(ui_BikeSelection);
+            return;
             try
             {
-                PlayerInfoImpact[] array = UnityEngine.Object.FindObjectsOfType<PlayerInfoImpact>();
-                PlayerCustomization[] array2 = UnityEngine.Object.FindObjectsOfType<PlayerCustomization>();
-                GameData gameData = UnityEngine.Object.FindObjectOfType<GameData>();
+                PlayerInfoImpact[] array = FindObjectsOfType<PlayerInfoImpact>();
+                PlayerCustomization[] array2 = FindObjectsOfType<PlayerCustomization>();
+                GameData gameData = FindObjectOfType<GameData>();
                 BikeType[] array3 = (BikeType[])gameData.GetType().GetField("bx}n\u0080PQ").GetValue(gameData);
                 foreach (PlayerInfoImpact playerInfoImpact in array)
                 {

@@ -9,7 +9,7 @@ namespace SplitTimer{
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
-		public string version = "0.1.62";
+		public string version = "0.1.63";
 		public float speed;
 		bool hasLoadedPlayer = false;
 		bool wasBailed = false;
@@ -29,23 +29,23 @@ namespace SplitTimer{
 				MapInfo.Instance.AddMetric("steam_name", steamIntegration.getName());
 				MapInfo.Instance.AddMetric("world_name", MapInfo.Instance.MapName);
 			}
-			
+			NetClient.Instance.SendData("SET_BIKE|" + Utilities.instance.GetBike());
 			NetClient.Instance.SendData("VERSION|" + version);
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
 			NetClient.Instance.SendData("WORLD_NAME|" + MapInfo.Instance.MapName);
 			NetClient.Instance.SendData("BIKE_TYPE|" + GetComponent<BikeSwitcher>().oldBike);
-			foreach (Trail trail in GameObject.FindObjectsOfType<Trail>())
+			foreach (Trail trail in FindObjectsOfType<Trail>())
             {
-				// Debug.Log("PlayerInfo | Looking for leaderboard texts on trail '" + trail.name + "'");
+				Debug.Log("PlayerInfo | Looking for leaderboard texts on trail '" + trail.name + "'");
 				if (trail.leaderboardText != null)
                 {
-					// Debug.Log("PlayerInfo | Found Speedrun.com Leaderboard");
+					Debug.Log("PlayerInfo | Found Speedrun.com Leaderboard");
 					NetClient.Instance.SendData("SPEEDRUN_DOT_COM_LEADERBOARD|" + trail.name);
 				}
 				if (trail.autoLeaderboardText != null)
                 {
-					// Debug.Log("PlayerInfo | Found auto Leaderboard");
+					Debug.Log("PlayerInfo | Found auto Leaderboard");
 					NetClient.Instance.SendData("LEADERBOARD|" + trail.name);
 				}
             }

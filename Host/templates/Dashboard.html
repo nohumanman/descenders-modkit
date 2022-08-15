@@ -149,6 +149,12 @@
                                             <v-row justify="center">
                                                 Trail Boundaries: [[id.trails]]
                                             </v-row>
+                                            <span v-if="id.address != null">
+                                                <br><br>
+                                                <v-row justify="center">
+                                                    IP: <div class="spoiler">[[id.address]]</div>
+                                                </v-row>
+                                            </span>
                                             <br>
                                         </v-col>
                                         <v-card-actions class="justify-center">
@@ -256,6 +262,24 @@
         @import url('https://fonts.googleapis.com/css2?family=Dosis&family=Source+Code+Pro:wght@700&display=swap');
         * {
             font-family: 'Source Code Pro', monospace;
+        }
+        .spoiler{
+            filter: blur(10px);
+        }
+        .spoiler:hover{
+            animation-name: example;
+            animation-duration: 0.3s;
+            animation-delay: 0.3s;
+            animation-direction: normal;
+            animation-fill-mode: forwards;
+        }
+        @keyframes example {
+            from {
+                filter: blur(10px);
+            }
+            to {
+                filter:blur(0px);
+            }
         }
     </style>
 </html>

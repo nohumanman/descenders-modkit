@@ -142,8 +142,6 @@ namespace SplitTimer{
 
 						medalSystem.bronzeMedalGot.SetActive(bronzeGot);
 						medalSystem.bronzeMedalNotGot.SetActive(!bronzeGot);
-
-
 					}
                 }
             }

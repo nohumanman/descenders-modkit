@@ -136,31 +136,63 @@ class Webserver():
             return str(e)
 
     def get(self):
-        return jsonify(
-            {
-                'ids':
-                [
-                    {
-                        "id": player.steam_id,
-                        "name": player.steam_name,
-                        "steam_avatar_src": player.get_avatar_src(),
-                        "total_time": player.get_total_time(),
-                        "time_on_world": player.get_total_time(onWorld=True),
-                        "world_name": player.world_name,
-                        "reputation": player.reputation,
-                        "last_trick": player.last_trick,
-                        "version": player.version,
-                        "trails": [
-                            player.trails[trail].get_boundaries()
-                            for trail in player.trails
-                        ],
-                        "spectating": player.spectating,
-                        "bike_type": player.bike_type,
-                        "time_loaded": player.time_started,
-                    } for player in self.socket_server.players
-                ]
-            }
-        )
+        if self.permission() == "AUTHORISED":
+            return jsonify(
+                {
+                    'ids':
+                    [
+                        {
+                            "id": player.steam_id,
+                            "name": player.steam_name,
+                            "steam_avatar_src": player.get_avatar_src(),
+                            "total_time": player.get_total_time(),
+                            "time_on_world": player.get_total_time(
+                                onWorld=True
+                            ),
+                            "world_name": player.world_name,
+                            "reputation": player.reputation,
+                            "last_trick": player.last_trick,
+                            "version": player.version,
+                            "trails": [
+                                player.trails[trail].get_boundaries()
+                                for trail in player.trails
+                            ],
+                            "spectating": player.spectating,
+                            "bike_type": player.bike_type,
+                            "time_loaded": player.time_started,
+                            "address": player.addr
+                        } for player in self.socket_server.players
+                    ]
+                }
+            )
+        else:
+            return jsonify(
+                {
+                    'ids':
+                    [
+                        {
+                            "id": player.steam_id,
+                            "name": player.steam_name,
+                            "steam_avatar_src": player.get_avatar_src(),
+                            "total_time": player.get_total_time(),
+                            "time_on_world": player.get_total_time(
+                                onWorld=True
+                            ),
+                            "world_name": player.world_name,
+                            "reputation": player.reputation,
+                            "last_trick": player.last_trick,
+                            "version": player.version,
+                            "trails": [
+                                player.trails[trail].get_boundaries()
+                                for trail in player.trails
+                            ],
+                            "spectating": player.spectating,
+                            "bike_type": player.bike_type,
+                            "time_loaded": player.time_started,
+                        } for player in self.socket_server.players
+                    ]
+                }
+            )
 
     def permission(self):
         if session.get('oauth2_token') is None:
