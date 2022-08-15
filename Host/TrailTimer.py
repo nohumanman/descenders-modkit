@@ -79,7 +79,7 @@ class TrailTimer():
                     + "</color>"
                 )
             if time_diff != 0:
-                mess += " TOP"
+                mess += " WR"
 
             fastest = DBMS.get_personal_fastest_split_times(
                 self.trail_name,
