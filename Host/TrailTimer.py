@@ -62,7 +62,7 @@ class TrailTimer():
             try:
                 time_diff = (
                     fastest[len(self.times)-1]
-                    - (time.time() - self.time_started)
+                    - float(client_time)
                 )
             except Exception:
                 time_diff = 0
@@ -88,7 +88,7 @@ class TrailTimer():
             try:
                 time_diff_local = (
                     fastest[len(self.times)-1]
-                    - (time.time() - self.time_started)
+                    - float(client_time)
                 )
             except Exception:
                 time_diff_local = 0
@@ -105,7 +105,7 @@ class TrailTimer():
                     + "</color>"
                 )
             if time_diff_local != 0:
-                mess += " PB "
+                mess += " PB"
             self.network_player.send(f"SPLIT_TIME|{mess}")
 
     def invalidate_timer(self, reason: str, always=False):
