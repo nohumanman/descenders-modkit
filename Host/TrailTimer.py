@@ -157,7 +157,12 @@ class TrailTimer():
         self.times.append(float(client_time))
         self.time_ended = client_time
         if (len(self.times) == self.total_checkpoints-1):
-            split_timer_logger.info(f"Times submitted: {self.times}")
+            split_timer_logger.info(
+                "TrailTimer.py - "
+                f"{self.network_player.steam_id} "
+                f"'{self.network_player.steam_name}' "
+                f"Submitting times - '{self.times}'"
+            )
             fastest = DBMS.get_fastest_split_times(self.trail_name)
             try:
                 our_time = TrailTimer.secs_to_str(
