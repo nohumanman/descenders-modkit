@@ -67,6 +67,16 @@ namespace SplitTimer
                 }
 
 
+
+                string jsonAnimateOnTrailEnd = JsonUtility.ToJson(g.GetComponent("AnimateOnTrailEndInfo"));
+                if (jsonAnimateOnTrailEnd != "" && jsonAnimateOnTrailEnd != null)
+                {
+                    Debug.Log("Initialisation | Found AnimateOnTrailEndInfo");
+                    AnimateOnTrailEnd medalSystem = gameObject.AddComponent<AnimateOnTrailEnd>();
+                    JsonUtility.FromJsonOverwrite(jsonAnimateOnTrailEnd, medalSystem);
+                }
+
+
                 if (g.name == "SLOZONE")
                 {
                     g.AddComponent<SloMoZone>();
