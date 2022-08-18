@@ -132,6 +132,7 @@ class TrailTimer():
             f"'{self.network_player.steam_name}' "
             f"- end_timer({client_time})"
         )
+        self.started = False
         from DBMS import DBMS
         if self.total_checkpoints is None:
             self.invalidate_timer("Didn't go through all checkpoints.")
@@ -205,7 +206,6 @@ class TrailTimer():
             self.invalidate_timer("Didn't enter all checkpoints.", always=True)
         self.update_leaderboards()
         self.update_medals()
-        self.started = False
         self.times = []
 
     def potential_cheat(self, client_time: float):
