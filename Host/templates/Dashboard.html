@@ -275,11 +275,11 @@
                             <v-btn @click="GetTrails()">Update Trails</v-btn>
                             <br><br>
                             <v-row>
-                                <v-col v-for="trail in trails" style="padding:20px;">
+                                <v-col v-for="trail in trails" style="padding:30px;">
                                     <v-card min-height="400" width="400">
                                         <v-img :src="trail.src">
                                             <div style="background:rgba(0, 0, 0, 0.543);">
-                                                <v-col align="center">
+                                                <v-col align="center" style="text-align:center;">
                                                     <v-row align="center">
                                                         <v-card-title>[[trail.trail_name]]</v-card-title>
                                                     </v-row>
@@ -289,8 +289,7 @@
                                         <br><br>
                                         <p>Has been ridden [[trail.times_ridden]] times with an average starting time of [[Math.round(trail.average_start_speed)]].</p>
                                         <h1 style="text-decoration:underline; text-align: center;">Leaderboard</h1>
-                                        <br>
-                                        <v-col align="center">
+                                        <v-col align="center" style="padding:50px;">
                                             <v-row v-for="player in trail.leaderboard" style="text-align:center">
                                                 [[player.place]]. [[player.name]] - [[secs_to_str(player.time)]]
                                             </v-row>
