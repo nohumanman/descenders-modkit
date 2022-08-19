@@ -502,28 +502,19 @@ class DBMS():
         DBMS.execute_sql(
             f'''
             INSERT INTO Time (
-                steam_id,
-                time_id,
-                timestamp,
-                world_name,
-                trail_name,
-                was_monitored,
-                bike_type,
-                starting_speed,
-                version
+                steam_id, time_id, timestamp, world_name,
+                trail_name, was_monitored, bike_type,
+                ignore, starting_speed, version
             )
             VALUES (
-                "{steam_id}",
-                "{time_id}",
-                {time.time()},
-                "{current_world}",
-                "{trail_name}",
-                "{str(being_monitored)}",
-                "{bike_type}",
-                "{starting_speed}",
-                "{version}"
+                "{steam_id}", "{time_id}", {time.time()},
+                "{current_world}", "{trail_name}",
+                "{str(being_monitored)}", "{bike_type}",
+                "False", "{starting_speed}", "{version}"
             )
-            ''', write=True)
+            ''',
+            write=True
+        )
         for n, split_time in enumerate(split_times):
             DBMS.execute_sql(f'''
             INSERT INTO SplitTime (
