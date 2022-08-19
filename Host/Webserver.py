@@ -94,6 +94,10 @@ class Webserver():
                 "/login", "login",
                 self.login, ["GET"]
             ),
+            WebserverRoute(
+                "/concurrency", "concurrency",
+                self.concurrency, ["GET"]
+            )
         ]
         self.add_routes()
 
@@ -193,6 +197,15 @@ class Webserver():
                     ]
                 }
             )
+
+    def concurrency(self):
+        from datetime import datetime
+        return jsonify({
+            "concurrency": DBMS.get_concurrency(
+                datetime(2022, 5, 1),
+                datetime.now()
+            )
+        })
 
     def permission(self):
         if session.get('oauth2_token') is None:

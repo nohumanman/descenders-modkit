@@ -1,3 +1,13 @@
+
+function toMonthName(monthNumber) {
+    const date = new Date();
+    date.setMonth(monthNumber - 1);
+  
+    return date.toLocaleString('en-US', {
+      month: 'long',
+    });
+  }
+
 var app = new Vue({
     el: '#app',
     delimiters: ['[[', ']]'],
@@ -81,6 +91,9 @@ var app = new Vue({
         streamControls: false,
         tab: 0,
         times: [],
+        concurrency: [],
+        concurrentUsers: [],
+        concurrencyLabels: [],
     },
     methods: {
         SubmitEval(id, eval_command){
@@ -94,6 +107,29 @@ var app = new Vue({
             else{
                 $.get("/eval/" + id + "?order=" + eval_command);
             }
+        },
+        GetConcurrency(){
+            $.get("/concurrency", function(data){
+                app.concurrency = data["concurrency"];
+                app.concurrentUsers = app.concurrency.map(({ users }) => users);
+                app.concurrencyLabels = app.concurrency.map((element, index) =>
+                    {
+                        console.log("Here");
+                        if (element.day == 15){
+                            return toMonthName(element.month) + " " + element.year;
+                        }
+                        if (element.day == 1){
+                            return "|";
+                        }
+                        if (element.day == 29){
+                            return "|";
+                        }
+                        else{
+                            return " ";
+                        }
+                    }
+                );
+            })
         },
         copyText(text) {
             navigator.clipboard.writeText(text);
@@ -350,7 +386,4 @@ setInterval(updatePlayers, 1000);
 setInterval(app.CheckStatus, 1000);
 app.getSteamId();
 setInterval(app.getSteamId, 500);
-
-app.getLeaderboard();
-
-
+app.GetConcurrency();

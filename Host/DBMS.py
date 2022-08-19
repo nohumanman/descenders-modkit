@@ -1,15 +1,22 @@
 import sqlite3
 import time
 import os
+from datetime import datetime, timedelta
 
 script_path = os.path.dirname(os.path.realpath(__file__))
+
+
+def daterange(start_date, end_date):
+    for n in range(int((end_date - start_date).days)):
+        yield start_date + timedelta(n)
 
 
 class DBMS():
     @staticmethod
     def execute_sql(statement: str, write=False):
         con = sqlite3.connect(script_path + "/SplitTimer.db")
-        execution = con.execute(statement)
+        cur = con.cursor()
+        execution = cur.execute(statement)
         if write:
             con.commit()
         result = execution.fetchall()
@@ -328,6 +335,34 @@ class DBMS():
             }
             for time in result
         ]
+
+    @staticmethod
+    def get_concurrency(date_start: datetime, date_end: datetime) -> list:
+        values = []
+        for single_date in daterange(date_start, date_end):
+            now = single_date
+            then = datetime(1970, 1, 1)
+            timestamp = (now - then).total_seconds()
+            sessions = DBMS.execute_sql(
+                f'''
+                    SELECT time_started, time_ended, steam_id
+                    FROM Session
+                    WHERE (
+                        time_started < {timestamp}
+                        AND
+                        time_started > {timestamp-86400}
+                    )
+                    GROUP BY steam_id
+                '''
+            )
+            values.append({
+                "year": now.year,
+                "month": now.month,
+                "day": now.day,
+                "users": len(sessions),
+                "name": now.strftime("%m/%d/%Y")
+            })
+        return values
 
     @staticmethod
     def get_leaderboard(trail_name, num=10) -> list:

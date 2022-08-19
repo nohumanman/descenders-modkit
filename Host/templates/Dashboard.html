@@ -72,9 +72,9 @@
                     <v-tabs v-model="tab">
                         <v-tab>User Dashboard</v-tab>
                         <v-tab>Times</v-tab>
+                        <v-tab>Concurrency</v-tab>
                     </v-tabs>
                     <v-tabs-items v-model="tab" fill-height>
-                        
                         <v-tab-item>
                             <h1 style="text-align:center; font-size:50px;">
                                 D-Split Dashboard
@@ -249,8 +249,17 @@
                                 </div>
                             </v-container>
                         </v-tab-item>
+                        <v-tab-item>
+                            <v-sparkline
+                                :labels="concurrencyLabels"
+                                :value="concurrentUsers"
+                                auto-draw
+                                line-width="0.2"
+                                label-size="3"
+                                stroke-linecap="round"
+                            ></v-sparkline>
+                        </v-tab-item>
                     </v-tabs-items>
-                    
                 </v-main>
             </v-app>
         </div>
