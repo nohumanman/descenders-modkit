@@ -97,6 +97,10 @@ class Webserver():
             WebserverRoute(
                 "/concurrency", "concurrency",
                 self.concurrency, ["GET"]
+            ),
+            WebserverRoute(
+                "/get-trails", "get_trails",
+                self.get_trails, ["GET"]
             )
         ]
         self.add_routes()
@@ -198,10 +202,20 @@ class Webserver():
                 }
             )
 
+    def get_trails(self):
+        return jsonify({"trails": DBMS.get_trails()})
+
     def concurrency(self):
         from datetime import datetime
+        try:
+            map_name = request.args.get("map_name")
+            if map_name == "":
+                map_name = None
+        except:
+            map_name = None
         return jsonify({
-            "concurrency": DBMS.get_concurrency(
+            "concurrency": DBMS.get_daily_plays(
+                map_name,
                 datetime(2022, 5, 1),
                 datetime.now()
             )

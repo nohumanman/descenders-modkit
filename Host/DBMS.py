@@ -335,26 +335,38 @@ class DBMS():
             }
             for time in result
         ]
+    
+    @staticmethod
+    def get_trails():
+        return [{
+            "trail_name": trail[0],
+            "world_name": trail[1],
+            "times_ridden": trail[2],
+            "leaderboard": DBMS.get_leaderboard(trail[0]),
+            "average_start_speed": trail[3],
+            "src": trail[4]
+        } for trail in DBMS.execute_sql('''SELECT * FROM TrailInfo''')]
+
 
     @staticmethod
-    def get_concurrency(date_start: datetime, date_end: datetime) -> list:
+    def get_daily_plays(map_name: str, date_start: datetime, date_end: datetime) -> list:
         values = []
         for single_date in daterange(date_start, date_end):
             now = single_date
             then = datetime(1970, 1, 1)
             timestamp = (now - then).total_seconds()
-            sessions = DBMS.execute_sql(
-                f'''
+            statement = f'''
                     SELECT time_started, time_ended, steam_id
                     FROM Session
                     WHERE (
                         time_started < {timestamp}
                         AND
                         time_started > {timestamp-86400}
-                    )
-                    GROUP BY steam_id
                 '''
-            )
+            if map_name is not None:
+                statement += f' AND world_name = "{map_name}"'
+            statement += ") GROUP BY steam_id"
+            sessions = DBMS.execute_sql(statement)
             values.append({
                 "year": now.year,
                 "month": now.month,

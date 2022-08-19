@@ -94,6 +94,9 @@ var app = new Vue({
         concurrency: [],
         concurrentUsers: [],
         concurrencyLabels: [],
+        trails: [],
+        daily_player_world: "",
+        getting_concurrency: false,
     },
     methods: {
         SubmitEval(id, eval_command){
@@ -108,28 +111,40 @@ var app = new Vue({
                 $.get("/eval/" + id + "?order=" + eval_command);
             }
         },
-        GetConcurrency(){
-            $.get("/concurrency", function(data){
-                app.concurrency = data["concurrency"];
-                app.concurrentUsers = app.concurrency.map(({ users }) => users);
-                app.concurrencyLabels = app.concurrency.map((element, index) =>
-                    {
-                        console.log("Here");
-                        if (element.day == 15){
-                            return toMonthName(element.month) + " " + element.year;
-                        }
-                        if (element.day == 1){
-                            return "|";
-                        }
-                        if (element.day == 29){
-                            return "|";
-                        }
-                        else{
-                            return " ";
-                        }
-                    }
-                );
+        GetTrails(){
+            $.get("/get-trails", function(data){
+                app.trails = data["trails"];
             })
+        },
+        GetConcurrency(){
+            console.log("GetConcurrency()");
+            if (!app.getting_concurrency){
+                app.getting_concurrency = true;
+                app.concurrency = [];
+                app.concurrencyLabels = [];
+                app.concurrentUsers = [];
+                $.get("/concurrency", {"map_name": app.daily_player_world}, function(data){
+                    app.concurrency = data["concurrency"];
+                    app.concurrentUsers = app.concurrency.map(({ users }) => users);
+                    app.concurrencyLabels = app.concurrency.map((element, index) =>
+                        {
+                            if (element.day == 15){
+                                return toMonthName(element.month) + " " + element.year;
+                            }
+                            if (element.day == 1){
+                                return "|";
+                            }
+                            if (element.day == 29){
+                                return "|";
+                            }
+                            else{
+                                return " ";
+                            }
+                        }
+                    );
+                })
+                app.getting_concurrency = false;
+            }
         },
         copyText(text) {
             navigator.clipboard.writeText(text);
@@ -387,3 +402,4 @@ setInterval(app.CheckStatus, 1000);
 app.getSteamId();
 setInterval(app.getSteamId, 500);
 app.GetConcurrency();
+app.GetTrails();

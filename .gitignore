@@ -6,3 +6,4 @@ SplitTimer.db
 SplitTimer.log
 *.pyc
 *.pyc
+Host/static/images/trails/*
