@@ -276,7 +276,7 @@
                             <br><br>
                             <v-row>
                                 <v-col v-for="trail in trails" style="padding:30px;">
-                                    <v-card min-height="400" width="400">
+                                    <v-card width="400">
                                         <v-img :src="trail.src">
                                             <div style="background:rgba(0, 0, 0, 0.543);">
                                                 <v-col align="center" style="text-align:center;">
@@ -295,8 +295,10 @@
                                             <v-row v-for="player in trail.leaderboard" style="text-align:center">
                                                 [[player.place]]. [[player.name]] - [[secs_to_str(player.time)]]
                                             </v-row>
+                                            <v-row v-for="x in 10-trail.leaderboard.length">
+                                                [[trail.leaderboard.length+x]].
+                                            </v-row>
                                         </v-col>
-                                        <br><br><br>
                                     </v-card>
                                 </v-col>
                             </v-row>
