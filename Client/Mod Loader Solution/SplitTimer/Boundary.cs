@@ -61,6 +61,9 @@ namespace SplitTimer
                 notifiedServerOfEnter = false;
             }
             inBoundary = false;
+        }
+        void Update()
+        {
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.U))
                 this.gameObject.GetComponent<MeshRenderer>().enabled = !this.gameObject.GetComponent<MeshRenderer>().enabled;
         }
