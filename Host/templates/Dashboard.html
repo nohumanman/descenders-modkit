@@ -5,13 +5,16 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <link rel="icon" type="image/png" href="/static/images/Descenders Competitive Logo.png">
         <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-        <meta property="OG:image" content="/static/images/Descenders Competitive Logo.png">
+        <meta property="og:image" content="/static/images/Descenders Competitive Logo.png">
+        <meta property="og:title" content="Descenders Split Timer" />
+        <meta property="og:description" content="The web dashboard used to manage and control users and times of Descenders maps with the Descenders Split Timer implemented on them." />
         <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     </head>
     <body>
+        <!-- <div id="chart_div"></div> -->
         <div id="app">
             <v-app>
                 <v-banner color="red" v-if="validated != 'AUTHORISED'">
@@ -29,7 +32,7 @@
                             <br>
                             <v-btn @click="setSelf(valee)">SUBMIT STEAM ID</v-btn>
                         </div>
-                        <div v-if="validated != 'AUTHORISED'" style="text-align:center;">
+                        <div v-if="validated == 'UNKNOWN'" style="text-align:center;">
                             <v-btn @click="redirect('/login')">LOGIN WITH DISCORD</v-btn>
                             <br><br>or<br><br>
                             <v-btn @click="setSelf('UNKNOWN')">LOGIN AS GUEST</v-btn>
