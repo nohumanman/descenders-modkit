@@ -55,6 +55,7 @@ namespace SplitTimer
 		}
 		public void SetText(string textToSet)
         {
+			textToSet = textToSet.Replace("\\n", "\n");
 			if (uiEnabled)
 				text.text = textToSet;
 			else
