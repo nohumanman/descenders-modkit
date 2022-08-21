@@ -16,6 +16,9 @@ class TrailTimer():
         self.time_started = 0
         self.time_ended = 0
         self.starting_speed = None
+        self.total_running_penalty = 0.0
+        self.current_penalty = 0.0
+        self.time_of_boundary_exit = None
 
     def get_boundaries(self):
         return self.__boundaries
@@ -25,7 +28,14 @@ class TrailTimer():
             len(self.__boundaries) == 0
             and not self.network_player.being_monitored
         ):
-            self.invalidate_timer("No boundaries entered")
+            if self.time_of_boundary_exit is not None:
+                time_out_of_bounds = time.time() - self.time_of_boundary_exit
+                self.current_penalty = time_out_of_bounds * 5
+                self.total_running_penalty += self.current_penalty
+                self.network_player.send(f"SPLIT_TIME|penalty of ~{round(time_out_of_bounds * 100 * 5) / 100}")
+                self.time_of_boundary_exit = None
+            else:
+                self.invalidate_timer("No boundaries entered")
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
 
@@ -36,7 +46,8 @@ class TrailTimer():
             len(self.__boundaries) == 0
             and not self.network_player.being_monitored
         ):
-            self.invalidate_timer("OUT OF BOUNDS!")
+            self.time_of_boundary_exit = time.time()
+            #self.invalidate_timer("OUT OF BOUNDS!")
 
     def start_timer(self, total_checkpoints: int):
         if (
@@ -49,6 +60,12 @@ class TrailTimer():
             self.total_checkpoints = total_checkpoints
             self.time_started = time.time()
             self.times = []
+        discord_bot = self.network_player.parent.discord_bot
+        discord_bot.loop.run_until_complete(
+            discord_bot.ban_note(
+                f"{self.network_player.steam_name} started trail {self.trail_name}"
+            )
+        )
 
     def checkpoint(self, client_time: str):
         split_timer_logger.info(
@@ -58,7 +75,8 @@ class TrailTimer():
             f"- checkpoint({client_time})"
         )
         if self.started:
-            self.times.append(float(client_time))
+            self.times.append(float(client_time) + self.total_running_penalty)
+            self.current_penalty = 0
             fastest = DBMS.get_fastest_split_times(self.trail_name)
             try:
                 time_diff = (
@@ -155,7 +173,9 @@ class TrailTimer():
         ):
             self.potential_cheat(client_time)
             return
-        self.times.append(float(client_time))
+        self.times.append(float(client_time) + self.total_running_penalty)
+        self.total_running_penalty = 0
+        self.current_penalty = 0
         self.time_ended = client_time
         if (len(self.times) == self.total_checkpoints-1):
             split_timer_logger.info(
