@@ -287,7 +287,9 @@
                                             </div>
                                         </v-img>
                                         <br><br>
-                                        <p>Has been ridden [[trail.times_ridden]] times with an average starting time of [[Math.round(trail.average_start_speed)]].</p>
+                                        <p style="padding-left:20px; padding-right:20px;">
+                                            A trail on <b>[[trail.world_name]]</b> that has been ridden [[trail.times_ridden]] times with an average starting time of [[Math.round(trail.average_start_speed)]].
+                                        </p>
                                         <h1 style="text-decoration:underline; text-align: center;">Leaderboard</h1>
                                         <v-col align="center" style="padding:50px;">
                                             <v-row v-for="player in trail.leaderboard" style="text-align:center">
