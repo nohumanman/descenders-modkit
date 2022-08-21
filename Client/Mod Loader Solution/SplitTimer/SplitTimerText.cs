@@ -23,6 +23,7 @@ namespace SplitTimer
 		}
 		public void CheckpointTime(string message)
         {
+			StopCoroutine(DisableCheckpoint());
 			checkpointTime = message;
 			StartCoroutine(DisableCheckpoint());
 		}
@@ -63,6 +64,7 @@ namespace SplitTimer
 		public void RestartTimer()
 		{
 			time = 0;
+			checkpointTime = "";
 			count = true;
 			SplitTimerText.Instance.text.color = startingColor;
 		}
