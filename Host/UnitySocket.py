@@ -123,8 +123,7 @@ class UnitySocket():
             if version != data["latest_version"]:
                 latest_version = data["latest_version"]
                 self.send(
-                    f"INVALIDATE_TIME|You are on version {version}, "
-                    f"latest is {latest_version} - Please restart your game."
+                    f"INVALIDATE_TIME|You are on version {version}\\nThe latest is {latest_version}\\nPlease restart your game."
                 )
 
     def set_reputation(self, reputation):
