@@ -240,6 +240,14 @@ class UnitySocket():
         # type - CLOSE, CRASH, ILLEGAL
         if type == "ILLEGAL":
             self.send("TOGGLE_GOD")
+        if type == "ALERT":
+            discord_bot = self.parent.discord_bot
+            discord_bot.loop.run_until_complete(
+                discord_bot.ban_note(
+                    f"OI <@437237976347705346> - Player {self.steam_name} (id{self.steam_id}) joined"
+                    f" '{self.world_name}'."
+                )
+            )
         self.send("BANNED|" + type)
         logging.info(
             f"id{self.steam_id}) - alias '{self.steam_name}'"
