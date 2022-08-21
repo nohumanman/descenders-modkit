@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -66,7 +65,7 @@ namespace SplitTimer
 			time = 0;
 			checkpointTime = "";
 			count = true;
-			SplitTimerText.Instance.text.color = startingColor;
+			text.color = startingColor;
 		}
 		public void StopTimer()
 		{
