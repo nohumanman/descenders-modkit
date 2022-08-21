@@ -269,7 +269,7 @@ namespace SplitTimer{
 				string[] gate = message.Split('|');
 				string reason = gate[1];
 				SplitTimerText.Instance.count = false;
-				SplitTimerText.Instance.SetText(reason + "\n");
+				SplitTimerText.Instance.SetText(reason);
 				SplitTimerText.Instance.text.color = Color.red;
 				StartCoroutine(SplitTimerText.Instance.DisableTimerText(5));
 			}
