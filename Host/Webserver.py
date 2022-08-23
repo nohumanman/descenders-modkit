@@ -166,6 +166,9 @@ class Webserver():
                                 for trail in player.trails
                             ],
                             "spectating": player.spectating,
+                            "pos":
+                                f"X:{player.pos.x} Y:"
+                                f"{player.pos.y} Z:{player.pos.z}",
                             "bike_type": player.bike_type,
                             "time_loaded": player.time_started,
                             "address": player.addr
@@ -194,6 +197,9 @@ class Webserver():
                                 player.trails[trail].get_boundaries()
                                 for trail in player.trails
                             ],
+                            "pos":
+                                f"X:{player.pos.x} Y:"
+                                f"{player.pos.y} Z:{player.pos.z}",
                             "spectating": player.spectating,
                             "bike_type": player.bike_type,
                             "time_loaded": player.time_started,
@@ -211,7 +217,7 @@ class Webserver():
             map_name = request.args.get("map_name")
             if map_name == "":
                 map_name = None
-        except:
+        except Exception:
             map_name = None
         return jsonify({
             "concurrency": DBMS.get_daily_plays(

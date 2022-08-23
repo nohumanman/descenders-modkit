@@ -44,6 +44,10 @@ namespace SplitTimer
 				text.text = "";
 			}
 		}
+		public void TextColToDefault()
+        {
+			text.color = startingColor;
+        }
 		void Start()
         {
 			text = GetComponent<Text>();
