@@ -18,30 +18,15 @@ This repository contains an assortment of C# scripts that can be implemented in 
 - Note: Relies on an external server, *uptime is not guaranteed*.
 - Note II: Requires externally loaded DLL as described later.
 
-### Map Navigation
-- Player Tracking - allows both networked players and local players to be visually represented on the map, with the name displayed.
-- Player Teleportation - allows you to teleport to the players that are visually represented on the map.
-- Uses an orthographic camera to render the map, not a fixed photo or texture.
-- Fast Travel Locations - scrollable fast travel locations on the map UI.
-
 ### Bike Switcher
 - Allows you to switch between Hardtail, Downhill, and Enduro bike types via UI.
 - Note: Requires externally loaded DLL as described later.
-
-### Splash Screen
-- Allows you to load a video file of your choice and start it when the map is loaded.
-- The video will stop and dissapear when any key is pressed.
-- The video will be looped.
 
 ### Riders Gate
 - A BMX-Style start gate **that is synced with other networked players**.
 - Has audio accompaniment for auditory queues.
 - Note: Relies on an external server, *uptime is not guaranteed*.
 - Note II: Requires externally loaded DLL as described later.
-
-### Ice Mod
-- Adds the same functionality as in Bikeout, where the rider is extremely slippery.
-- Note: Requires externally loaded DLL as described later.
 
 ### Teleport Pad
 - Gives you the ability to teleport players using a box collider.
