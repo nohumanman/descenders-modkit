@@ -335,7 +335,24 @@ class DBMS():
             }
             for time in result
         ]
-    
+
+    @staticmethod
+    def submit_locations(time_id, locations):
+        for location in locations:
+            timestamp = location[0]
+            x = location[1][0]
+            y = location[1][1]
+            z = location[1][2]
+            statement = f'''
+                INSERT INTO Locations
+                VALUES(
+                    {time_id},
+                    {timestamp},
+                    {x}, {y}, {z}
+                )
+            '''
+            DBMS.execute_sql(statement, write=True)
+
     @staticmethod
     def get_trails():
         return [{
@@ -347,9 +364,12 @@ class DBMS():
             "src": trail[4]
         } for trail in DBMS.execute_sql('''SELECT * FROM TrailInfo''')]
 
-
     @staticmethod
-    def get_daily_plays(map_name: str, date_start: datetime, date_end: datetime) -> list:
+    def get_daily_plays(
+        map_name: str,
+        date_start: datetime,
+        date_end: datetime
+    ) -> list:
         values = []
         for single_date in daterange(date_start, date_end):
             now = single_date
@@ -575,6 +595,7 @@ class DBMS():
                 {split_time}
                 )
             ''', write=True)
+        return time_id
 
     @staticmethod
     def end_session(steam_id, time_started, time_ended, world_name):

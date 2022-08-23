@@ -4,6 +4,7 @@ import srcomapi
 import srcomapi.datatypes as dt
 from DBMS import DBMS
 from TrailTimer import TrailTimer
+from TrailTimer import Vector3
 import requests
 from Tokens import steam_api_key
 import logging
@@ -71,7 +72,9 @@ operations = {
     "BIKE_TYPE":
         lambda netPlayer, data: netPlayer.set_bike(str(data[1])),
     "GET_MEDALS":
-        lambda netPlayer, data: netPlayer.get_medals(str(data[1]))
+        lambda netPlayer, data: netPlayer.get_medals(str(data[1])),
+    "POS":
+        lambda netPlayer, data: netPlayer.set_pos(data[1], data[2], data[3])
 }
 
 
@@ -95,8 +98,31 @@ class UnitySocket():
         self.reputation = 0
         self.version = "OUTDATED"
         self.time_started = time.time()
+        self.pos = Vector3()
         self.send("SUCCESS")
         self.send("INVALIDATE_TIME|scripts by nohumanman")
+
+    def set_pos(self, x, y, z):
+        self.pos.x = float(x)
+        self.pos.y = float(y)
+        self.pos.z = float(z)
+        for trail in self.trails:
+            if self.trails[trail].started:
+                if len(self.trails[trail].self.__boundaries) == 0:
+                    distance = Vector3.get_distance(
+                        self.exit_position,
+                        self.network_player.pos
+                    )
+                    if distance > 30:
+                        self.trails[trail].invalidate_timer(
+                            "TOO FAR FROM BOUNDARY"
+                        )
+                self.trails[trail].player_positions.append(
+                    [
+                        time.time(),
+                        [x, y, z]
+                    ]
+                )
 
     def set_last_trick(self, trick: str):
         split_timer_logger.info(
@@ -123,8 +149,16 @@ class UnitySocket():
             if version != data["latest_version"]:
                 latest_version = data["latest_version"]
                 self.send(
-                    f"INVALIDATE_TIME|You are on version {version}\\nThe latest is {latest_version}\\nPlease restart your game."
+                    f"INVALIDATE_TIME|You are on version {version}\\n"
+                    f"The latest is {latest_version}\\n"
+                    "Please restart your game."
                 )
+
+    def set_text_colour(self, r: int, g: int, b: int):
+        self.send(f"SET_TEXT_COLOUR|{r}|{g}|{b}")
+
+    def set_text_default(self):
+        self.send("SET_TEXT_COL_DEFAULT")
 
     def set_reputation(self, reputation):
         split_timer_logger.info(
@@ -243,7 +277,8 @@ class UnitySocket():
             discord_bot = self.parent.discord_bot
             discord_bot.loop.run_until_complete(
                 discord_bot.ban_note(
-                    f"OI <@437237976347705346> - Player {self.steam_name} (id{self.steam_id}) joined"
+                    f"OI <@437237976347705346> - Player {self.steam_name}"
+                    f" (id{self.steam_id}) joined"
                     f" '{self.world_name}'."
                 )
             )

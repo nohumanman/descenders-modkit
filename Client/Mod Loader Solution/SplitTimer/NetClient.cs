@@ -119,6 +119,24 @@ namespace SplitTimer{
 					medalSystem.NetStart();
 				this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
 			}
+			if (message.StartsWith("GET_POS"))
+            {
+				Vector3 pos = Utilities.instance.GetPlayer().transform.position;
+				SendData("POS|" + pos.x + "|" + pos.y + "|" + pos.z);
+            }
+			if (message.StartsWith("SET_TEXT_COLOUR"))
+            {
+				string r = message.Split('|')[1];
+				string b = message.Split('|')[2];
+				string g = message.Split('|')[3];
+				SplitTimerText.Instance.text.color = new Color(
+					int.Parse(r),
+					int.Parse(b),
+					int.Parse(g)
+				);
+			}
+			if (message.StartsWith("SET_TEXT_COL_DEFAULT"))
+				SplitTimerText.Instance.TextColToDefault();
 			if (message.StartsWith("SET_MEDAL"))
             {
 				string trailName = message.Split('|')[1];
@@ -162,6 +180,13 @@ namespace SplitTimer{
 						trail.leaderboardText.GetComponent<TextMesh>().text = trailName + " - Speedrun.com\n" + leaderboardInfo.LeaderboardAsString();
 					}
 				}
+			}
+			if (message.StartsWith("VALIDATE_RUN"))
+            {
+				int time_id = int.Parse(message.Split('|')[1]);
+				int amount_of_locations = int.Parse(message.Split('|')[1]);
+				RunChecker runChecker = this.gameObject.AddComponent<RunChecker>();
+				runChecker.locations = new Location[amount_of_locations];
 			}
 			if (message.StartsWith("LEADERBOARD"))
 			{

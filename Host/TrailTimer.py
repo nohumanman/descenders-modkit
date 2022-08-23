@@ -5,6 +5,24 @@ import logging
 split_timer_logger = logging.getLogger('DescendersSplitTimer')
 
 
+class Vector3():
+    def __init__(self):
+        self.x = 0
+        self.y = 0
+        self.z = 0
+
+    def get_as_str(self):
+        return f"X:{self.x} Y: {self.y} Z:{self.z}"
+
+    @staticmethod
+    def get_distance(vector1, vector2):
+        return ((
+            (vector1.x - vector2.x)**2
+            + (vector1.y - vector2.y)**2
+            + (vector1.z - vector2.z)**2
+        )**(0.5))
+
+
 class TrailTimer():
     def __init__(self, trail_name, network_player):
         self.trail_name = trail_name
@@ -18,7 +36,9 @@ class TrailTimer():
         self.starting_speed = None
         self.total_running_penalty = 0.0
         self.current_penalty = 0.0
-        self.time_of_boundary_exit = None
+        self.exit_position = None
+        self.player_positions = []
+        self.exit_time = 0
 
     def get_boundaries(self):
         return self.__boundaries
@@ -28,14 +48,15 @@ class TrailTimer():
             len(self.__boundaries) == 0
             and not self.network_player.being_monitored
         ):
-            if self.time_of_boundary_exit is not None:
-                time_out_of_bounds = time.time() - self.time_of_boundary_exit
-                self.current_penalty = time_out_of_bounds * 5
-                self.total_running_penalty += self.current_penalty
-                self.network_player.send(f"SPLIT_TIME|penalty of ~{round(time_out_of_bounds * 100 * 5) / 100}")
-                self.time_of_boundary_exit = None
-            else:
-                self.invalidate_timer("No boundaries entered")
+            if self.exit_position is not None:
+                if (self.started):
+                    self.current_penalty = (time.time()-self.exit_time)*7
+                    self.total_running_penalty += self.current_penalty
+                    self.network_player.send(
+                        f"SPLIT_TIME|penalty of "
+                        f"~{round(self.current_penalty * 100) / 100}"
+                    )
+                    self.network_player.set_text_default()
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
 
@@ -46,10 +67,18 @@ class TrailTimer():
             len(self.__boundaries) == 0
             and not self.network_player.being_monitored
         ):
-            self.time_of_boundary_exit = time.time()
-            #self.invalidate_timer("OUT OF BOUNDS!")
+            if (self.started):
+                self.exit_position = Vector3()
+                self.exit_time = time.time()
+                self.exit_position.x = self.network_player.pos.x
+                self.exit_position.y = self.network_player.pos.y
+                self.exit_position.z = self.network_player.pos.z
+                self.network_player.set_text_colour(255, 0, 0)
 
     def start_timer(self, total_checkpoints: int):
+        self.total_running_penalty = 0
+        self.player_positions = []
+        self.current_penalty = 0
         if (
             len(self.__boundaries) == 0
             and not self.network_player.being_monitored
@@ -63,7 +92,8 @@ class TrailTimer():
         discord_bot = self.network_player.parent.discord_bot
         discord_bot.loop.run_until_complete(
             discord_bot.ban_note(
-                f"{self.network_player.steam_name} started trail {self.trail_name}"
+                f"{self.network_player.steam_name}"
+                f" started trail {self.trail_name}"
             )
         )
 
@@ -136,9 +166,12 @@ class TrailTimer():
         )
         if (not self.started) and not always:
             return
+        self.total_running_penalty = 0
+        self.current_penalty = 0
         self.network_player.send(f"INVALIDATE_TIME|{reason}")
         self.started = False
         self.times = []
+        self.player_positions = []
 
     def update_medals(self):
         self.network_player.get_medals(self.trail_name)
@@ -174,8 +207,6 @@ class TrailTimer():
             self.potential_cheat(client_time)
             return
         self.times.append(float(client_time) + self.total_running_penalty)
-        self.total_running_penalty = 0
-        self.current_penalty = 0
         self.time_ended = client_time
         if (len(self.times) == self.total_checkpoints-1):
             split_timer_logger.info(
@@ -204,7 +235,7 @@ class TrailTimer():
                 )
             except Exception as e:
                 logging.error(f"Fastest not found: {e}")
-            DBMS().submit_time(
+            time_id = DBMS().submit_time(
                 self.network_player.steam_id,
                 self.times,
                 self.trail_name,
@@ -214,19 +245,31 @@ class TrailTimer():
                 str(self.starting_speed),
                 str(self.network_player.version)
             )
+            DBMS.submit_locations(time_id, self.player_positions)
+            penalty_message = ""
+            if self.total_running_penalty == 0:
+                penalty_message = "\\nNo penalties :)"
+            else:
+                penalty_message = (
+                    "\\nPenalty of "
+                    + str(round(self.total_running_penalty * 100) / 100)
+                )
             self.network_player.send(
-                "TIMER_FINISH|Time - "
+                "TIMER_FINISH|"
                 + str(
                     TrailTimer.secs_to_str(
                             self.times[len(self.times)-1]
                     )
                 )
+                + penalty_message
             )
         else:
             self.invalidate_timer("Didn't enter all checkpoints.", always=True)
         self.update_leaderboards()
         self.update_medals()
         self.times = []
+        self.total_running_penalty = 0
+        self.current_penalty = 0
 
     def potential_cheat(self, client_time: float):
         split_timer_logger.info(

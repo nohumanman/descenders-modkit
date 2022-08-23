@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="SplitTimer\CameraModifier.cs" />
     <Compile Include="SplitTimer\AnimateOnTrailEnd.cs" />
+    <Compile Include="SplitTimer\RunChecker.cs" />
     <Compile Include="SplitTimer\MedalSystem.cs" />
     <Compile Include="SplitTimer\SpeedTrapInfo.cs" />
     <Compile Include="SplitTimer\SpeedTrap.cs" />
