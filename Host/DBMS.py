@@ -404,7 +404,8 @@ class DBMS():
                 steam_name,
                 bike_type,
                 MIN(checkpoint_time),
-                Time.version
+                Time.version,
+                Time.penalty
             FROM
                 Time
                 INNER JOIN
@@ -444,7 +445,8 @@ class DBMS():
                 "name": time[1],
                 "bike": time[2],
                 "starting_speed": time[0],
-                "version": time[4]
+                "version": time[4],
+                "penalty": time[5]
             }
             for i, time in enumerate(result)
         ]
@@ -559,7 +561,8 @@ class DBMS():
         current_world,
         bike_type,
         starting_speed,
-        version
+        version,
+        penalty: float
     ):
         time_id = hash(
             str(split_times[len(split_times)-1])
@@ -571,13 +574,13 @@ class DBMS():
             INSERT INTO Time (
                 steam_id, time_id, timestamp, world_name,
                 trail_name, was_monitored, bike_type,
-                ignore, starting_speed, version
+                ignore, starting_speed, version, penalty
             )
             VALUES (
                 "{steam_id}", "{time_id}", {time.time()},
                 "{current_world}", "{trail_name}",
                 "{str(being_monitored)}", "{bike_type}",
-                "False", "{starting_speed}", "{version}"
+                "False", "{starting_speed}", "{version}", {penalty}
             )
             ''',
             write=True

@@ -50,7 +50,9 @@ class TrailTimer():
         ):
             if self.exit_position is not None:
                 if (self.started):
-                    self.current_penalty = (time.time()-self.exit_time)*7
+                    self.current_penalty = (time.time()-self.exit_time)*10
+                    if self.current_penalty < 0:
+                        self.current_penalty = 2
                     self.total_running_penalty += self.current_penalty
                     self.network_player.send(
                         f"SPLIT_TIME|penalty of "
@@ -243,7 +245,8 @@ class TrailTimer():
                 self.network_player.world_name,
                 self.network_player.bike_type,
                 str(self.starting_speed),
-                str(self.network_player.version)
+                str(self.network_player.version),
+                self.total_running_penalty
             )
             DBMS.submit_locations(time_id, self.player_positions)
             penalty_message = ""
