@@ -65,8 +65,10 @@ class DiscordBot(commands.Bot):
                     num = TrailTimer.ord(i + 1)
                 bike = player["bike"]
                 version = player["version"]
+                penalty = player["penalty"]
                 leaderboard_str += f"{num} - {name} with "
                 leaderboard_str += f"{time} on {bike} (v{version})"
+                leaderboard_str += f" penalty of {penalty}"
                 if player['starting_speed'] is not None:
                     leaderboard_str += " (starting speed of "
                     st_time = round(float(player['starting_speed']), 2)
