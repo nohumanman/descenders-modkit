@@ -97,6 +97,7 @@ var app = new Vue({
         trails: [],
         daily_player_world: "",
         getting_concurrency: false,
+        lim: 10
     },
     methods: {
         SubmitEval(id, eval_command){
@@ -310,7 +311,7 @@ var app = new Vue({
         },
         getLeaderboard(){
             app.times = [];
-            $.get("/get-all-times", function(data){
+            $.get("/get-all-times", data={"lim": app.lim}, function(data){
                 app.times = data["times"];
             })
         },
@@ -403,3 +404,4 @@ app.getSteamId();
 setInterval(app.getSteamId, 500);
 app.GetConcurrency();
 app.GetTrails();
+app.getLeaderboard();

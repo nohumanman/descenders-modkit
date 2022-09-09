@@ -307,10 +307,10 @@ class DBMS():
         return result
 
     @staticmethod
-    def get_all_times():
-        statement = '''
+    def get_all_times(lim: int):
+        statement = f'''
             SELECT * FROM all_times
-            LIMIT 25
+            LIMIT {lim}
         '''
         result = DBMS.execute_sql(statement)
         return [
