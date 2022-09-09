@@ -354,6 +354,19 @@ class DBMS():
             DBMS.execute_sql(statement, write=True)
 
     @staticmethod
+    def get_start_bike(world_name: str):
+        statement = f'''
+            SELECT start_bike
+            FROM WorldInfo
+            WHERE
+                world_name="{world_name}"
+        '''
+        result = DBMS.execute_sql(statement)
+        if len(result) < 1:
+            return None
+        return result[0][0]
+
+    @staticmethod
     def get_trails():
         return [{
             "trail_name": trail[0],
@@ -689,3 +702,6 @@ class DBMS():
             to_return[2] = player_time[3] <= silverTime
             to_return[3] = player_time[3] <= bronzeTime
         return to_return
+
+
+print(DBMS.get_start_bike("Igloo Bike Park"))
