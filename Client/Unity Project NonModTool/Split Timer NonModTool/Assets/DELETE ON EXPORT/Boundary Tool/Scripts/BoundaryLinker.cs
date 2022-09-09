@@ -53,13 +53,24 @@ public class BoundaryLinker : MonoBehaviour {
             localScale.y,
             distance
         );
-        if (shouldRotate)
-            boundaryInstance.transform.LookAt(to.transform);
+        
+        boundaryInstance.transform.LookAt(to.transform);
+        if (!shouldRotate)
+            boundaryInstance.transform.eulerAngles = new Vector3(
+                0,
+                boundaryInstance.transform.eulerAngles.y,
+                boundaryInstance.transform.eulerAngles.z
+            );
         GameObject boundaryInstanceAtJoin = Instantiate(boundary);
         boundaryInstanceAtJoin.transform.position = from.transform.position;
         boundaryInstanceAtJoin.transform.localScale = scaleOfBoundaryJoin;
-        if (shouldRotate)
-            boundaryInstanceAtJoin.transform.LookAt(boundaryInstance.transform);
+        boundaryInstanceAtJoin.transform.LookAt(boundaryInstance.transform);
+        if (!shouldRotate)
+            boundaryInstanceAtJoin.transform.eulerAngles = new Vector3(
+                0,
+                boundaryInstanceAtJoin.transform.eulerAngles.y,
+                boundaryInstanceAtJoin.transform.eulerAngles.z
+            );
         boundaryInstanceAtJoin.transform.eulerAngles = new Vector3(
             0,
             boundaryInstanceAtJoin.transform.eulerAngles.y,
