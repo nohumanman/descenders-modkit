@@ -1,6 +1,6 @@
 from flask import Flask, session, request, redirect, jsonify, render_template
 import os
-from requests_oauthlib import OAuth2Session
+from authlib.integrations.requests_client import OAuth2Session
 import logging
 from DBMS import DBMS
 from Tokens import (
@@ -104,6 +104,7 @@ class Webserver():
             )
         ]
         self.add_routes()
+        self.webserver_app.register_error_handler(500, self.server_error)
 
     def add_routes(self):
         for route in self.routes:
@@ -113,6 +114,9 @@ class Webserver():
                 view_func=route.view_func,
                 methods=route.methods
             )
+
+    def server_error(self, info):
+        return render_template("500Error.html")
 
     def eval(self, id):
         try:
@@ -254,7 +258,7 @@ class Webserver():
                 'client_secret': OAUTH2_CLIENT_SECRET,
             },
             auto_refresh_url=TOKEN_URL,
-            token_updater=self.token_updater
+            refresh_token=self.token_updater
         )
 
     def token_updater(self, token):
@@ -262,55 +266,61 @@ class Webserver():
 
     # routes
     def callback(self):
-        if request.values.get('error'):
-            return request.values['error']
-        discord = self.make_session(
-            state=session.get('oauth2_state')
-        )
-        token = discord.fetch_token(
-            TOKEN_URL,
-            client_secret=OAUTH2_CLIENT_SECRET,
-            authorization_response=request.url
-        )
-        user = discord.get(
-            API_BASE_URL + '/users/@me'
-        ).json()
-        connections = discord.get(
-            API_BASE_URL + '/users/@me/connections'
-        ).json()
-        split_timer_logger.info(
-            "Webserver.py - discord login to website"
-            f" - user '{user['id']}' named '{user['username']}'"
-        )
         try:
-            id = user['id']
+            if request.values.get('error'):
+                return request.values['error']
+            discord = self.make_session(
+                state=session.get('oauth2_state')
+            )
+            token = discord.fetch_token(
+                TOKEN_URL,
+                client_secret=OAUTH2_CLIENT_SECRET,
+                authorization_response=request.url
+            )
+            session['oauth2_token'] = token
+            user = discord.get(
+                API_BASE_URL + '/users/@me'
+            ).json()
+            connections = discord.get(
+                API_BASE_URL + '/users/@me/connections'
+            ).json()
+            split_timer_logger.info(
+                "Webserver.py - discord login to website"
+                f" - user '{user['id']}' named '{user['username']}'"
+            )
             try:
-                email = user['email']
-            except Exception:
-                email = ""
-            username = user['username']
-            steam_id = "NONE"
-            try:
-                for connection in connections:
-                    if connection['type'] == "steam":
-                        steam_id = connection['id']
+                id = user['id']
+                try:
+                    email = user['email']
+                except Exception:
+                    email = ""
+                username = user['username']
+                steam_id = "NONE"
+                try:
+                    for connection in connections:
+                        if connection['type'] == "steam":
+                            steam_id = connection['id']
+                except Exception as e:
+                    logging.info("25123 - " + str(e))
+                DBMS.discord_login(id, username, email, steam_id)
             except Exception as e:
-                logging.info("25123 - " + str(e))
-            DBMS.discord_login(id, username, email, steam_id)
+                logging.info("User " + str(user) + " with error " + str(e))
+                logging.info("With connections " + str(connections))
+            return redirect("/")
         except Exception as e:
-            logging.info("User " + str(user) + " with error " + str(e))
-            logging.info("With connections " + str(connections))
-        session['oauth2_token'] = token
-        return redirect("/")
+            return str(e)
 
     def me(self):
-        discord = self.make_session(token=session.get('oauth2_token'))
-        user = discord.get(API_BASE_URL + '/users/@me').json()
-        connections = discord.get(
-            API_BASE_URL + '/users/@me/connections'
-        ).json()
-        guilds = discord.get(API_BASE_URL + '/users/@me/guilds').json()
-        return jsonify(user=user, guilds=guilds, connections=connections)
+        try:
+            discord = self.make_session(token=session.get('oauth2_token'))
+            user = discord.get(API_BASE_URL + '/users/@me').json()
+            connections = discord.get(
+                API_BASE_URL + '/users/@me/connections'
+            ).json()
+            guilds = discord.get(API_BASE_URL + '/users/@me/guilds').json()
+            return jsonify(user=user, guilds=guilds, connections=connections)
+        except Exception:
+            return jsonify({})
 
     def split_time(self):
         return render_template("SplitTime.html")
@@ -342,7 +352,7 @@ class Webserver():
         )
         scope = "identify"
         discord = self.make_session(scope=scope.split(' '))
-        authorization_url, state = discord.authorization_url(
+        authorization_url, state = discord.create_authorization_url(
             AUTHORIZATION_BASE_URL
         )
         session['oauth2_state'] = state
@@ -375,7 +385,8 @@ class Webserver():
         return jsonify(DBMS().get_leaderboard(trail))
 
     def get_all_times(self):
-        return jsonify({"times": DBMS.get_all_times()})
+        lim = int(request.args.get("lim"))
+        return jsonify({"times": DBMS.get_all_times(lim)})
 
     def get_spectated(self):
         for player in self.socket_server.players:
