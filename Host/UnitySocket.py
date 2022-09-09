@@ -69,8 +69,6 @@ operations = {
         lambda netPlayer, data: netPlayer.set_last_trick(str(data[1])),
     "VERSION":
         lambda netPlayer, data: netPlayer.set_version(str(data[1])),
-    "BIKE_TYPE":
-        lambda netPlayer, data: netPlayer.set_bike(str(data[1])),
     "GET_MEDALS":
         lambda netPlayer, data: netPlayer.get_medals(str(data[1])),
     "POS":
@@ -130,13 +128,6 @@ class UnitySocket():
             f" called set_last_trick('{trick}')"
         )
         self.last_trick = trick
-
-    def set_bike(self, bike: str):
-        split_timer_logger.info(
-            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
-            f" called set_bike('{bike}')"
-        )
-        self.bike_type = bike
 
     def set_version(self, version: str):
         split_timer_logger.info(
@@ -331,12 +322,32 @@ class UnitySocket():
         if self.steam_name is not None:
             self.has_both_steam_name_and_id()
 
+    def goto_default_bike(self):
+        time.sleep(2)
+        if self.world_name is not None:
+            start_bike = DBMS().get_start_bike(self.world_name)
+            if start_bike is not None:
+                self.on_bike_switch(self.bike_type, start_bike)
+                if start_bike == "enduro":
+                    self.send("SET_BIKE|0")
+                elif start_bike == "downhill":
+                    self.send("SET_BIKE|1")
+                elif start_bike == "hardtail":
+                    self.send("SET_BIKE|2")
+            else:
+                self.on_bike_switch(self.bike_type, start_bike)
+                self.send("SET_BIKE|0")
+        else:
+            self.on_bike_switch(self.bike_type, start_bike)
+            self.send("SET_BIKE|0")
+
     def set_world_name(self, world_name):
         split_timer_logger.info(
             f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
             f" - set_world_name('{world_name}')"
         )
         self.world_name = world_name
+        self.goto_default_bike()
         DBMS().update_player(
             self.steam_id,
             self.steam_name,
