@@ -157,6 +157,8 @@ class TrailTimer():
                 )
             if time_diff_local != 0:
                 mess += " PB"
+            if mess == "":
+                mess = self.secs_to_str(float(client_time))
             self.network_player.send(f"SPLIT_TIME|{mess}")
 
     def invalidate_timer(self, reason: str, always=False):
