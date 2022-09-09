@@ -6,6 +6,7 @@ public class BoundaryLinker : MonoBehaviour {
     public GameObject boundaryLinks;
     public GameObject boundaries;
     public GameObject boundary;
+    public bool shouldRotate;
     public Vector3 scaleOfBoundaryJoin = new Vector3(5, 50, 5);
     List<GameObject> boundaryPoints = new List<GameObject>();
     List<GameObject> resentlySpawnedBoundaryPoints = new List<GameObject>();
@@ -52,11 +53,13 @@ public class BoundaryLinker : MonoBehaviour {
             localScale.y,
             distance
         );
-        boundaryInstance.transform.LookAt(to.transform);
+        if (shouldRotate)
+            boundaryInstance.transform.LookAt(to.transform);
         GameObject boundaryInstanceAtJoin = Instantiate(boundary);
         boundaryInstanceAtJoin.transform.position = from.transform.position;
         boundaryInstanceAtJoin.transform.localScale = scaleOfBoundaryJoin;
-        boundaryInstanceAtJoin.transform.LookAt(boundaryInstance.transform);
+        if (shouldRotate)
+            boundaryInstanceAtJoin.transform.LookAt(boundaryInstance.transform);
         boundaryInstanceAtJoin.transform.eulerAngles = new Vector3(
             0,
             boundaryInstanceAtJoin.transform.eulerAngles.y,

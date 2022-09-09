@@ -53,6 +53,7 @@
   <ItemGroup>
      <Compile Include="Assets\DELETE ON EXPORT\Boundary Tool\Scripts\BoundaryLinker.cs" />
      <Compile Include="Assets\DELETE ON EXPORT\Boundary Tool\Scripts\BoundaryLinkerEditor.cs" />
+     <Compile Include="Assets\DELETE ON EXPORT\SpawnIt\SpawnIt.cs" />
  <Reference Include="UnityEngine.CoreModule">
  <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll</HintPath>
  </Reference>
