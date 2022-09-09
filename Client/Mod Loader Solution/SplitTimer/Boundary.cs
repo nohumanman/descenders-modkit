@@ -25,7 +25,7 @@ namespace SplitTimer
         public void Start()
         {
             boundaryHash = GetHash(20, 50);
-            Debug.Log("Boundary | Boundary added to " + this.gameObject.name);
+            // Debug.Log("Boundary | Boundary added to " + this.gameObject.name);
         }
         public void OnTriggerStay(Collider other)
         {

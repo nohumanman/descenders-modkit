@@ -69,7 +69,7 @@ namespace SplitTimer{
 			}
 			catch (InvalidOperationException)
             {
-				Debug.Log("NetClient | Message was recieved while messages were being read - cancelled reading.");
+				// Debug.Log("NetClient | Message was recieved while messages were being read - cancelled reading.");
             }
 		}
 		private void ConnectToTcpServer () {
