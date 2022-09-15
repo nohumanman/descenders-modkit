@@ -88,7 +88,7 @@ namespace SplitTimer
             {
 				if (count)
 					SetText(FormatTime(time).ToString() + "\n" + checkpointTime);
-				yield return new WaitForSeconds(0.01f);
+				yield return new WaitForEndOfFrame();
 			}
 		}
 		private string FormatTime(float time)
@@ -96,9 +96,9 @@ namespace SplitTimer
 			int intTime = (int)time;
 			int minutes = intTime / 60;
 			int seconds = intTime % 60;
-			float fraction = time * 1000;
-			fraction = (fraction % 1000);
-			string timeText = System.String.Format("{0:00}:{1:00}.{2:000}", minutes, seconds, fraction);
+			float fraction = time * 100;
+			fraction = (fraction % 100);
+			string timeText = System.String.Format("{0:00}:{1:00}.{2:00}", minutes, seconds, fraction);
 			return timeText;
 		}
 	}

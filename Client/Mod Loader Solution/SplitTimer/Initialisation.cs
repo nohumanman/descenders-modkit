@@ -13,76 +13,28 @@ namespace SplitTimer
                 GameObject g = (GameObject)obj;
                 string json = JsonUtility.ToJson(g.GetComponent("TimerInfo"));
                 if (json != "" && json != null)
-                {
-                    Debug.Log("Initialisation | Found TimerInfo");
-                    Trail trail = g.AddComponent<Trail>();
-                    JsonUtility.FromJsonOverwrite(json, trail);
-                }
-                
+                    JsonUtility.FromJsonOverwrite(json, g.AddComponent<Trail>());
                 string jsonMapInfo = JsonUtility.ToJson(g.GetComponent("JsonMapInfo"));
                 if (jsonMapInfo != "" && jsonMapInfo != null)
-                {
-                    Debug.Log("Initialisation | Found MapInfo");
-                    MapInfo mapInfo = this.gameObject.AddComponent<MapInfo>();
-                    JsonUtility.FromJsonOverwrite(jsonMapInfo, mapInfo);
-                }
+                    JsonUtility.FromJsonOverwrite(jsonMapInfo, this.gameObject.AddComponent<MapInfo>());
                 string timerText = JsonUtility.ToJson(g.GetComponent("TimerText"));
                 if (timerText != "" && timerText != null)
-                {
-                    Debug.Log("Initialisation | Found Timer Text");
                     g.AddComponent<SplitTimerText>();
-                }
-
                 string cameraPropsText = JsonUtility.ToJson(g.GetComponent("CameraProps"));
                 if (cameraPropsText != "" && cameraPropsText != null)
-                {
-                    Debug.Log("Initialisation | Found CameraProps");
-                    CameraModifier cameraModifier = g.AddComponent<CameraModifier>();
-                    JsonUtility.FromJsonOverwrite(cameraPropsText, cameraModifier);
-                }
-                
-
+                    JsonUtility.FromJsonOverwrite(cameraPropsText, g.AddComponent<CameraModifier>());
                 string jsonRidersGate = JsonUtility.ToJson(g.GetComponent("JsonRidersGate"));
                 if (jsonRidersGate != "" && jsonRidersGate != null)
-                {
-                    Debug.Log("Initialisation | Found RidersGate");
-                    RidersGate x = g.AddComponent<RidersGate>();
-                    JsonUtility.FromJsonOverwrite(jsonRidersGate, x);
-                }
-
+                    JsonUtility.FromJsonOverwrite(jsonRidersGate, g.AddComponent<RidersGate>());
                 string jsonRespawn = JsonUtility.ToJson(g.GetComponent("CustomRespawnJson"));
                 if (jsonRespawn != "" && jsonRespawn != null)
-                {
-                    Debug.Log("Initialisation | Found CustomRespawnJson");
-                    CustomTeleporter customTeleporter = gameObject.AddComponent<CustomTeleporter>();
-                    JsonUtility.FromJsonOverwrite(jsonRespawn, customTeleporter);
-                }
-
+                    JsonUtility.FromJsonOverwrite(jsonRespawn, gameObject.AddComponent<CustomTeleporter>());
                 string jsonMedalSystem = JsonUtility.ToJson(g.GetComponent("MedalSystemInfo"));
                 if (jsonMedalSystem != "" && jsonMedalSystem != null)
-                {
-                    Debug.Log("Initialisation | Found MedalSystemInfo");
-                    MedalSystem medalSystem = gameObject.AddComponent<MedalSystem>();
-                    JsonUtility.FromJsonOverwrite(jsonMedalSystem, medalSystem);
-                }
-
-
-
-                string jsonAnimateOnTrailEnd = JsonUtility.ToJson(g.GetComponent("AnimateOnTrailEndInfo"));
-                if (jsonAnimateOnTrailEnd != "" && jsonAnimateOnTrailEnd != null)
-                {
-                    Debug.Log("Initialisation | Found AnimateOnTrailEndInfo");
-                    AnimateOnTrailEnd medalSystem = gameObject.AddComponent<AnimateOnTrailEnd>();
-                    JsonUtility.FromJsonOverwrite(jsonAnimateOnTrailEnd, medalSystem);
-                }
-
-
+                    JsonUtility.FromJsonOverwrite(jsonMedalSystem, gameObject.AddComponent<MedalSystem>());
                 if (g.name == "SLOZONE")
-                {
                     g.AddComponent<SloMoZone>();
-                }
             }
-            
             if (this.GetComponent<MapInfo>() == null)
                 Debug.LogError("ERROR - No Map info found in scene!!");
             this.gameObject.AddComponent<PlayerInfo>();

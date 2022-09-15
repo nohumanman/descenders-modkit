@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ModTool.Interface;
-
 public class DiscordInvite : ModBehaviour {
     public string url = "https://discord.com/invite/aqwnkgSxPQ";
     public GameObject[] enableWhenOver;

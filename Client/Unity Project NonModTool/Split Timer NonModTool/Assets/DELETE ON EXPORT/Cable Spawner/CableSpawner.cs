@@ -6,7 +6,7 @@ using UnityEditor;
 public class CableSpawner : EditorWindow {
     List<GameObject> selection = new List<GameObject>();
     public Object source;
-    [MenuItem("MatthewsTools/Cable Spawner")]
+    [MenuItem("Tools/MatthewsTools/Cable Spawner")]
     static void OpenWindow()
     {
         GetWindow<CableSpawner>();

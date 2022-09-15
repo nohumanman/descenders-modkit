@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-
 namespace SplitTimer
 {
     public class Trail : MonoBehaviour
@@ -17,6 +16,7 @@ namespace SplitTimer
         public float clientTime = 0f;
         public void Start()
         {
+            Debug.Log("SplitTimer.Trail | Found Trail '" + name + "'");
             AddScripts();
         }
         public void AddScripts()
@@ -26,15 +26,14 @@ namespace SplitTimer
                 foreach (Transform boundary in boundaries.transform)
                 {
                     GameObject boundaryObj = boundary.gameObject;
-                    // Debug.Log("Trail '" + this.name + "' | Adding boundary to " + boundaryObj.name);
                     Boundary boun = boundaryObj.AddComponent<Boundary>();
                     boun.trail = this;
                     boundaryList.Add(boundaryObj);
                 }
+                Debug.Log("SplitTimer.Trail | '" + this.name + "' has " + boundaryList.Count.ToString() + " boundaries.");
                 foreach (Transform checkpoint in startCheckpoint.transform.parent)
                 {
                     GameObject checkpointObj = checkpoint.gameObject;
-                    // Debug.Log("Trail '" + this.name + "' | Adding checkpoint to " + checkpointObj.name);
                     Checkpoint check = checkpointObj.AddComponent<Checkpoint>();
                     check.trail = this;
                     if (checkpointObj == startCheckpoint)

@@ -191,13 +191,17 @@ class UnitySocket():
                 {
                     "place": leaderboard["place"],
                     "time": leaderboard["time"],
-                    "name": leaderboard["name"],
+                    "name":
+                        leaderboard["name"] + " (~"
+                        + str(round(float(leaderboard["penalty"])))
+                        + " pen)",
                     "bike": leaderboard["bike"]
-                    } for leaderboard in DBMS.get_leaderboard(
+                }
+                for leaderboard in DBMS.get_leaderboard(
                     trail_name
                 )
-                ]
-            )
+            ]
+        )
 
     def get_speedrun_dot_com_leaderboard(self, trail_name):
         api = srcomapi.SpeedrunCom()
