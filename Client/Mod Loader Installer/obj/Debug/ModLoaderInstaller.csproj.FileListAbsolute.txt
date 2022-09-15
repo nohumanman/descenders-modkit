@@ -1,0 +1,7 @@
+E:\Projects\descenders-split-timer\Client\Mod Loader Installer\bin\Debug\ModLoaderInstaller.dll
+E:\Projects\descenders-split-timer\Client\Mod Loader Installer\bin\Debug\ModLoaderInstaller.pdb
+E:\Projects\descenders-split-timer\Client\Mod Loader Installer\obj\Debug\ModLoaderInstaller.csproj.AssemblyReference.cache
+E:\Projects\descenders-split-timer\Client\Mod Loader Installer\obj\Debug\ModLoaderInstaller.csproj.CoreCompileInputs.cache
+E:\Projects\descenders-split-timer\Client\Mod Loader Installer\obj\Debug\ModLoaderInstaller.csproj.CopyComplete
+E:\Projects\descenders-split-timer\Client\Mod Loader Installer\obj\Debug\ModLoaderInstaller.dll
+E:\Projects\descenders-split-timer\Client\Mod Loader Installer\obj\Debug\ModLoaderInstaller.pdb

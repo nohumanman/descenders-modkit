@@ -34,10 +34,6 @@ namespace SplitTimer{
 		}
 		void Update()
         {
-			//foreach(GameObject q in FindObjectsOfType<GameObject>())
-            //{
-			//	Debug.Log(q.name);
-            //}
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
             {
 				Physics.IgnoreLayerCollision(8, 8, PlayerCollision);
@@ -76,6 +72,7 @@ namespace SplitTimer{
 			Debug.Log("NetClient | Connecting to TCP Server...");
 			hasStarted = Time.time;
 			try {
+				Debug.Log("NetClient | TCP Connection successful!");
 				clientReceiveThread = new Thread (new ThreadStart(ListenForData));
 				clientReceiveThread.IsBackground = true;
 				clientReceiveThread.Start();
@@ -106,7 +103,7 @@ namespace SplitTimer{
 				}
 			}
 			catch (SocketException socketException) {             
-				Debug.Log("NetClient | Socket exception - " + socketException);         
+				Debug.Log("NetClient | Socket exception in ListenForData() - " + socketException);         
 			}
 		}
 		private void MessageRecieved(string message) {
@@ -347,11 +344,10 @@ namespace SplitTimer{
 			// Debug.Log("NetClient | Message Processed: " + message);
 		}
 		public void SendData(string clientMessage) {
-			// Debug.Log("Sending message '" + clientMessage + "'");
-			clientMessage = clientMessage + "\n";
 			// Debug.Log("NetClient | Client sending message: " + clientMessage);
+			clientMessage = clientMessage + "\n";
 			if (socketConnection == null) {
-				// Debug.Log("NetClient | Socket not connected!");
+				Debug.Log("NetClient | Socket not connected!");
 				return;
 			}
 			try

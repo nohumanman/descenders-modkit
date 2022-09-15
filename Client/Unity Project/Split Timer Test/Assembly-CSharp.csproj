@@ -51,13 +51,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\AnimateOnTrailEndInfo.cs" />
      <Compile Include="Assets\Descenders Split Timer\Bike Switcher\Scripts\BikeSwitcherEnabler.cs" />
      <Compile Include="Assets\Descenders Split Timer\Bike Switcher\Scripts\BikeSwitcherHandler.cs" />
      <Compile Include="Assets\Descenders Split Timer\Bike Switcher\Scripts\ButtonHack.cs" />
      <Compile Include="Assets\Descenders Split Timer\Camera Modification\Scripts\CameraModifier.cs" />
      <Compile Include="Assets\Descenders Split Timer\Discord Invite\Scripts\DiscordInvite.cs" />
      <Compile Include="Assets\Descenders Split Timer\Discord Invite\Scripts\ShowCursorInTrigger.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Map\Scripts\EnableObjOnTab.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Map\Scripts\TeleportElement.cs" />
      <Compile Include="Assets\Descenders Split Timer\Medal System\Scripts\MedalSystemInfo.cs" />
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\Assembler.cs" />
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\ExportedFunction.cs" />
@@ -68,6 +69,7 @@
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\MonoImageOpenStatus.cs" />
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\Native.cs" />
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\ProcessUtils.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Speed Modifier\SetSpeed.cs" />
      <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\JsonMapInfo.cs" />
      <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\JsonRidersGate.cs" />
      <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\TimerCopierTemp.cs" />
@@ -75,7 +77,6 @@
      <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\TimerText.cs" />
      <Compile Include="Assets\Descenders Split Timer\Teleport Pad\TeleportPad.cs" />
      <Compile Include="Assets\Descenders Split Timer\Teleport Pad\TeleportPadTerrain.cs" />
-     <Compile Include="Assets\Descenders Split Timer\Utilities\SteamIntegration.cs" />
      <None Include="Assets\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Emissive Diffuse.shader" />
      <None Include="Assets\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Transparent Diffuse Bump Cutout.shader" />
      <None Include="Assets\Descenders Split Timer\Speed Trap\Materials\3DText.shader" />

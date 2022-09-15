@@ -9,7 +9,7 @@ namespace SplitTimer
     public class GimbalCam : MonoBehaviour
     {
         public GameObject ExistingCamera;
-        public bool ShouldLevel;
+        public bool ShouldLevel = true;
         public void Start()
         {
             StartCoroutine(UpdateCamera());
@@ -24,11 +24,11 @@ namespace SplitTimer
         public void LevelCamera()
         {
             if (ExistingCamera != null)
-                ExistingCamera.transform.eulerAngles = new Vector3(
-                    ExistingCamera.transform.eulerAngles.x,
-                    ExistingCamera.transform.eulerAngles.y,
-                    ExistingCamera.transform.eulerAngles.z * 0
-                );
+            {
+                GameObject _player = GameObject.Find("Player_Human");
+                if (_player != null)
+                    transform.eulerAngles = _player.transform.eulerAngles;
+            }
         }
         public IEnumerator UpdateCamera()
         {

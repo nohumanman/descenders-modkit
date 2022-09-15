@@ -9,7 +9,7 @@ namespace SplitTimer{
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
-		public string version = "0.1.66";
+		public string version = "0.1.69";
 		public float speed;
 		bool hasLoadedPlayer = false;
 		bool wasBailed = false;
@@ -40,12 +40,12 @@ namespace SplitTimer{
 				Debug.Log("PlayerInfo | Looking for leaderboard texts on trail '" + trail.name + "'");
 				if (trail.leaderboardText != null)
                 {
-					Debug.Log("PlayerInfo | Found Speedrun.com Leaderboard");
+					Debug.Log("PlayerInfo | Found Speedrun.com Leaderboard for '" + trail.name + "'");
 					NetClient.Instance.SendData("SPEEDRUN_DOT_COM_LEADERBOARD|" + trail.name);
 				}
 				if (trail.autoLeaderboardText != null)
                 {
-					Debug.Log("PlayerInfo | Found auto Leaderboard");
+					Debug.Log("PlayerInfo | Found auto Leaderboard for '" + trail.name + "'");
 					NetClient.Instance.SendData("LEADERBOARD|" + trail.name);
 				}
             }

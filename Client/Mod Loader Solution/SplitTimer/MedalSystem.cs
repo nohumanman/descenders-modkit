@@ -34,7 +34,7 @@ namespace SplitTimer
         }
         public void NetStart()
         {
-            Debug.Log("MedalSystem NetStart() called - sending GET_MEDALS");
+            Debug.Log("MedalSystem | NetStart() called for '" + trailName + "' sending GET_MEDALS");
             NetClient.Instance.SendData("GET_MEDALS|" + trailName);
         }
     }
