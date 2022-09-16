@@ -1,28 +1,33 @@
 # Descenders-Split-Timer
 
-This repository contains an assortment of C# scripts that can be implemented in the game "Descenders" using [Unity 2017.4.9f1 Modding](https://descenders.mod.io/guides/descenders-modding-guide).
+A timing system that counts player's times on a trail in the game "[Descenders](https://www.descendersgame.com/)" using [Unity 2017.4.9f1 Modding](https://descenders.mod.io/guides/descenders-modding-guide).
 
 
 ## Tools & Features
 Note: Most of these feature rely on an external server, *uptime is not guaranteed*.
 
 ### Split Timer
-- A timer system that has split times integrated.
-- Timer has configurable 'boundary' such that a player's time is invalidated when they exit the boundary.
-- Has a leaderboard.
-- Note: Relies on an external server, *uptime is not guaranteed*.
-- Note II: Requires externally loaded DLL as described later.
+- 
+![image](assets/Split%20Timer.png)
 
-- A physical leaderboard in the game that displays the top 10 fastest times on that trail on speedrun.com
-- Physical Leaderboard model courtesy of BBB171
-- Note: Relies on an external server, *uptime is not guaranteed*.
-- Note II: Requires externally loaded DLL as described later.
+### Speed Trap
+-
+![image](assets/Speed%20Modifier.png)
+
+### Mod Loader
+This project is packaged with JubJub's Mod Loader.
+
+![image](assets/Mod%20Loader.png)
+
+### Speed Modifier
 - When you enter the Box Collider, the speed of the player is set to that of the "speedToSet" variable you assign.
 - Doesn't kill the player.
+
 ![image](assets/Speed%20Modifier.png)
 
 ### Banners
 - Banner model courtesy of [RageSquid](https://ragesquid.com/).
+-  Banner textures are courtesy of
     - [Toy Elf](https://www.youtube.com/c/ToyElf)
     - [Ovanny](https://www.youtube.com/channel/UCd1LjvaKUITm8WXhnWy_d5A)
     - [BBB171](https://www.youtube.com/channel/UCfOIARENIJQd34lY06SCsiA)
@@ -30,10 +35,13 @@ Note: Most of these feature rely on an external server, *uptime is not guarantee
 - These banner materials use [
 Ciconia Studio](https://assetstore.unity.com/packages/vfx/shaders/free-double-sided-shaders-23087)'s double sided shaders.
 
+![image](assets/Banners.png)
 
 ### Bike Switcher
-- Allows you to switch between Hardtail, Downhill, and Enduro bike types via UI.
-- Note: Requires externally loaded DLL as described later.
+- Allows you to switch between Hardtail, Downhill, and Enduro bike types.
+- UI is enabled when you hold CAPS LOCK key.
+
+![image](assets/Bike%20Switcher.png)
 
 ### Riders Gate
 - A BMX-Style start gate.
