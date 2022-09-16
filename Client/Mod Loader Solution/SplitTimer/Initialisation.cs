@@ -43,6 +43,7 @@ namespace SplitTimer
             this.gameObject.AddComponent<TimeModifier>();
             this.gameObject.AddComponent<TrickCapturer>();
             this.gameObject.AddComponent<GimbalCam>();
+            this.gameObject.AddComponent<CustomAnim>();
             GameObject.Find("SpeedTrapTrigger").AddComponent<SpeedTrap>();
         }
     }
