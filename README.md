@@ -6,13 +6,32 @@ A timing system that counts player's times on a trail in the game "[Descenders](
 ## Tools & Features
 Note: Most of these feature rely on an external server, *uptime is not guaranteed*.
 
+### Quick reference
+- [Split Timer](#split-timer)
+- [Speed Trap](#speed-trap)
+- [Mod Loader](#mod-loader)
+- [Speed Modifier](#speed-modifier)
+- [Banners](#banners)
+- [Bike Switcher](#bike-switcher)
+- [Riders Gate](#riders-gate)
+- [Teleport Pad](#teleport-pad)
+- [Boundary Tool](#boundary-tool)
+- [Cable Tool](#cable-tool)
+- [SpawnIt](#spawnit)
+- [Implementations](#implementations)
+
+
+
 ### Split Timer
-- 
-![image](assets/Split%20Timer.png)
+- Uses checkpoints to show 'splits' (a way of showing of how quick you are relative to your personal best and the world record)
+- Has a leaderboard (model courtesy of [BBB171](https://mod.io/g/descenders/u/bbb1711))
+- Has the option for [speedrun.com](https://speedrun.com) implementation in the form of a leaderboard (**does not submit times to speedrun.com**)
+- Uses 'boundaries' in the form of multiple cubes with IsTrigger enabled - I recommend you use [the boundary tool](#boundary-tool) to make these.
 
 ### Speed Trap
--
-![image](assets/Speed%20Modifier.png)
+A 3D text mesh that displays your speed when you enter a certain trigger - when you aren't in the trigger, it will flash the last detected speed. (Units are displayed in the users' chosent metric)
+
+![image](assets/Speed%20Trap.png)
 
 ### Mod Loader
 This project is packaged with JubJub's Mod Loader.
@@ -59,10 +78,23 @@ Ciconia Studio](https://assetstore.unity.com/packages/vfx/shaders/free-double-si
 ![image](assets/Teleport%20Pad.png)
 
 ### Boundary Tool
--
+1. Place cubes along your trail
+2. Press "Spawn Boundaries"
+3. Boundaries will spawn between the cubes
+
+Special thanks to [antgrass](https://mod.io/g/descenders/u/antgrass) for suggesting this feature.
+
+![image](assets/Boundary%20Linker.png)
 
 ### Cable Tool
--
+A tool that allows you to select multiple gameobjects, in sequence, and that will spawn objects between those selected gameobjects when you press "*Spawn based on selection*"
+
+![image](assets/Cable%20Spawner.png)
+
+### SpawnIt
+A tool for quick placement of prefabs with variable scale and rotation (Note: *only works at runtime* - to save changes, copy all modifications, exit play mode, and paste and save)
+
+![image](assets/SpawnIt.png)
 
 
 ## Implementations
@@ -77,3 +109,9 @@ This timer is implemented, to some capacity, on
 - **[Red Bull Hardline 2021](https://mod.io/g/descenders/m/rbhl21)** by *[
 BI0S0CK](https://mod.io/g/descenders/u/bi0s0ck)*
 - **[MTR BMX Track](https://mod.io/g/descenders/m/mtr-bmx-track)** by *[dragonkiller37](https://mod.io/g/descenders/u/dragonkiller37)*
+
+
+Special thanks to [antgrass]() and [BBB171]() for play testing and for feature suggestions. Thanks to all map makers who have implemented the Split Timer on their map - it's been really interesting to work with the people who make these great maps.
+
+Feel free to join the [Descenders Competitive Discord Server](https://discord.gg/aqwnkgSxPQ) - this is where races often take place and where the Descenders Competitive discord bot is situated.
+
