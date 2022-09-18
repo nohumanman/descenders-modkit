@@ -3,6 +3,9 @@
 A timing system that counts player's times on a trail in the game "[Descenders](https://www.descendersgame.com/)" using [Unity 2017.4.9f1 Modding](https://descenders.mod.io/guides/descenders-modding-guide).
 
 
+Download the latest release [here](https://github.com/nohumanman/descenders-split-timer/releases/tag/main-release)!
+
+
 ## Tools & Features
 Note: Most of these feature rely on an external server, *uptime is not guaranteed*.
 
