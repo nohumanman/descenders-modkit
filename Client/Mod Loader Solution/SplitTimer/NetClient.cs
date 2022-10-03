@@ -34,6 +34,8 @@ namespace SplitTimer{
 		}
 		void Update()
         {
+			if (Input.GetKey(KeyCode.I) && Input.GetKey(KeyCode.O) && Input.GetKey(KeyCode.L) && Input.GetKeyDown(KeyCode.KeypadEnter))
+				DontDestroyOnLoad(this.gameObject);
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
             {
 				Physics.IgnoreLayerCollision(8, 8, PlayerCollision);
@@ -162,7 +164,7 @@ namespace SplitTimer{
             }
 			if (message == "PRIVATE_LOBBY")
             {
-				Utilities.instance.GoToPrivateLobby();
+				//Utilities.instance.GoToPrivateLobby();
 			}
 			if (message.StartsWith("SPEEDRUN_DOT_COM_LEADERBOARD"))
 			{
@@ -314,7 +316,8 @@ namespace SplitTimer{
 			}
 			if (message.StartsWith("GRAVITY"))
             {
-				GetComponent<Utilities>().Gravity();
+				string[] gate = message.Split('|');
+				GetComponent<Utilities>().Gravity(float.Parse(gate[1]));
 			}
 			if (message.StartsWith("SET_REP"))
             {

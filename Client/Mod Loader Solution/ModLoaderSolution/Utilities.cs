@@ -55,7 +55,11 @@ namespace ModLoaderSolution
         //        test(obj.transform.position);
         //    }
         //}
-
+        public void Update()
+        {
+            if (isFlying)
+                SetVel(20f);
+        }
         public void Start()
         {
             instance = this;
@@ -80,7 +84,17 @@ namespace ModLoaderSolution
                 return uniqueID;
             return GetUniqueID("URM.txt");
         }
-
+        public bool isFlying;
+        bool PlayerCollision;
+        public void TogglePlayerCollision()
+        {
+            Physics.IgnoreLayerCollision(8, 8, PlayerCollision);
+            PlayerCollision = !PlayerCollision;
+        }
+        public void ToggleFly()
+        {
+            isFlying = !isFlying;
+        }
         string GetUniqueID(string file)
         {
             string id = null;
@@ -111,10 +125,6 @@ namespace ModLoaderSolution
 
             uniqueID = id;
             return uniqueID;
-        }
-        public void GoToPrivateLobby()
-        {
-            
         }
         public string GetCurrentMap()
         {
@@ -803,9 +813,9 @@ namespace ModLoaderSolution
             x.y = 0;
             GetPlayer().SendMessage("SetVelocity", x * multFactor);
         }
-        public void Gravity()
+        public void Gravity(float gravity)
         {
-            Physics.gravity = Vector3.down * 3;
+            Physics.gravity = Vector3.down * gravity;
         }
         public void SwitchSpectate()
         {

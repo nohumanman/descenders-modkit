@@ -9,6 +9,10 @@ namespace SplitTimer
 	public class BikeSwitcher : MonoBehaviour
 	{
         public string oldBike;
+        public int GetBike()
+        {
+            return 404;
+        }
 		public void ToEnduro()
         {
             gameObject.GetComponent<Utilities>().SetBike(0);

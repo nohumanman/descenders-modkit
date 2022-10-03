@@ -39,23 +39,23 @@
     <None Include=".vs\Universal Race Mod\v16\.suo" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SplitTimer\CustomAnim.cs" />
-    <Compile Include="SplitTimer\GimbalCam.cs" />
-    <Compile Include="SplitTimer\CameraModifier.cs" />
-    <Compile Include="SplitTimer\AnimateOnTrailEnd.cs" />
-    <Compile Include="SplitTimer\RunChecker.cs" />
-    <Compile Include="SplitTimer\MedalSystem.cs" />
-    <Compile Include="SplitTimer\SpeedTrapInfo.cs" />
-    <Compile Include="SplitTimer\SpeedTrap.cs" />
+    <Compile Include="SplitTimer\Modifiers\SlipModifier.cs" />
+    <Compile Include="SplitTimer\Modifiers\StatsModification.cs" />
+    <Compile Include="SplitTimer\UserInterface.cs" />
+    <Compile Include="SplitTimer\Modifiers\GimbalCam.cs" />
+    <Compile Include="SplitTimer\Modifiers\CameraModifier.cs" />
+    <Compile Include="SplitTimer\Timer\MedalSystem.cs" />
+    <Compile Include="SplitTimer\Speedtrap\SpeedTrapInfo.cs" />
+    <Compile Include="SplitTimer\Speedtrap\SpeedTrap.cs" />
     <Compile Include="SplitTimer\CustomTeleporter.cs" />
     <Compile Include="SplitTimer\TrickCapturer.cs" />
     <Compile Include="SplitTimer\SloMoZone.cs" />
-    <Compile Include="SplitTimer\LeaderboardInfo.cs" />
+    <Compile Include="SplitTimer\Timer\LeaderboardInfo.cs" />
     <Compile Include="SplitTimer\BikeSwitcher.cs" />
-    <Compile Include="SplitTimer\SplitTimerText.cs" />
-    <Compile Include="SplitTimer\TimeModifier.cs" />
-    <Compile Include="SplitTimer\Boundary.cs" />
-    <Compile Include="SplitTimer\Checkpoint.cs" />
+    <Compile Include="SplitTimer\Timer\SplitTimerText.cs" />
+    <Compile Include="SplitTimer\Modifiers\TimeModifier.cs" />
+    <Compile Include="SplitTimer\Timer\Boundary.cs" />
+    <Compile Include="SplitTimer\Modifiers\Checkpoint.cs" />
     <Compile Include="SplitTimer\Initialisation.cs" />
     <Compile Include="ModLoaderSolution\Loader.cs" />
     <Compile Include="SplitTimer\MapInfo.cs" />
@@ -63,7 +63,7 @@
     <Compile Include="SplitTimer\PlayerInfo.cs" />
     <Compile Include="SplitTimer\RidersGate.cs" />
     <Compile Include="Utilities\SteamIntegration.cs" />
-    <Compile Include="SplitTimer\Trail.cs" />
+    <Compile Include="SplitTimer\Timer\Trail.cs" />
     <Compile Include="ModLoaderSolution\Utilities.cs" />
   </ItemGroup>
   <ItemGroup>

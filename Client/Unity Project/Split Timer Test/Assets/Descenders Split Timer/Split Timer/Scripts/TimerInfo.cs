@@ -28,8 +28,22 @@ public class TimerInfo : ModBehaviour {
         int errors = 0;
         int warnings = 0;
         if (FindObjectOfType<APILoaderScript.ModLoader>() == null){
-            Debug.LogWarning("APILoaderScript.ModLoader is not present!");
-            warnings += 1;
+            Debug.LogError("APILoaderScript.ModLoader is not present!");
+            errors += 1;
+        }
+        if (FindObjectOfType<JsonMapInfo>() == null){
+            Debug.LogError("JsonMapInfo is not present!");
+            errors += 1;
+        }
+        if (FindObjectOfType<TimerText>() == null){
+            Debug.LogError("TimerText is not present!");
+            errors += 1;
+        }
+        foreach(TeleportPad tp in FindObjectsOfType<TeleportPad>()){
+            if (tp.TeleportPoint == null){
+                Debug.LogWarning("TeleportPoint on TeleportPad is null!", tp.TeleportPoint);
+                warnings += 1;
+            }
         }
         foreach(TimerInfo timerInf in FindObjectsOfType<TimerInfo>()){
             if (timerInf.startCheckpoint == null){

@@ -16,7 +16,7 @@ namespace SplitTimer
                     JsonUtility.FromJsonOverwrite(json, g.AddComponent<Trail>());
                 string jsonMapInfo = JsonUtility.ToJson(g.GetComponent("JsonMapInfo"));
                 if (jsonMapInfo != "" && jsonMapInfo != null)
-                    JsonUtility.FromJsonOverwrite(jsonMapInfo, this.gameObject.AddComponent<MapInfo>());
+                    JsonUtility.FromJsonOverwrite(jsonMapInfo, g.AddComponent<MapInfo>());
                 string timerText = JsonUtility.ToJson(g.GetComponent("TimerText"));
                 if (timerText != "" && timerText != null)
                     g.AddComponent<SplitTimerText>();
@@ -28,12 +28,15 @@ namespace SplitTimer
                     JsonUtility.FromJsonOverwrite(jsonRidersGate, g.AddComponent<RidersGate>());
                 string jsonRespawn = JsonUtility.ToJson(g.GetComponent("CustomRespawnJson"));
                 if (jsonRespawn != "" && jsonRespawn != null)
-                    JsonUtility.FromJsonOverwrite(jsonRespawn, gameObject.AddComponent<CustomTeleporter>());
+                    JsonUtility.FromJsonOverwrite(jsonRespawn, g.AddComponent<CustomTeleporter>());
                 string jsonMedalSystem = JsonUtility.ToJson(g.GetComponent("MedalSystemInfo"));
                 if (jsonMedalSystem != "" && jsonMedalSystem != null)
-                    JsonUtility.FromJsonOverwrite(jsonMedalSystem, gameObject.AddComponent<MedalSystem>());
+                    JsonUtility.FromJsonOverwrite(jsonMedalSystem, g.AddComponent<MedalSystem>());
                 if (g.name == "SLOZONE")
                     g.AddComponent<SloMoZone>();
+                string jsonSlipModInfo = JsonUtility.ToJson(g.GetComponent("SlipModInfo"));
+                if (jsonSlipModInfo != "" && jsonSlipModInfo != null)
+                    JsonUtility.FromJsonOverwrite(jsonSlipModInfo, g.AddComponent<SlipModifier>());
             }
             if (this.GetComponent<MapInfo>() == null)
                 Debug.LogError("ERROR - No Map info found in scene!!");
@@ -42,9 +45,11 @@ namespace SplitTimer
             this.gameObject.AddComponent<BikeSwitcher>();
             this.gameObject.AddComponent<TimeModifier>();
             this.gameObject.AddComponent<TrickCapturer>();
-            this.gameObject.AddComponent<GimbalCam>();
-            this.gameObject.AddComponent<CustomAnim>();
-            GameObject.Find("SpeedTrapTrigger").AddComponent<SpeedTrap>();
+            // this.gameObject.AddComponent<GimbalCam>();
+            this.gameObject.AddComponent<UserInterface>();
+            this.gameObject.AddComponent<StatsModification>();
+            if (GameObject.Find("SpeedTrapTrigger") != null)
+                GameObject.Find("SpeedTrapTrigger").AddComponent<SpeedTrap>();
         }
     }
 }

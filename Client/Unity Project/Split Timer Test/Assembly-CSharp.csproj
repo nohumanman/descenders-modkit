@@ -69,6 +69,7 @@
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\MonoImageOpenStatus.cs" />
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\Native.cs" />
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\ProcessUtils.cs" />
+     <Compile Include="Assets\Descenders Split Timer\SlipModifier\SlipModInfo.cs" />
      <Compile Include="Assets\Descenders Split Timer\Speed Modifier\SetSpeed.cs" />
      <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\JsonMapInfo.cs" />
      <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\JsonRidersGate.cs" />
