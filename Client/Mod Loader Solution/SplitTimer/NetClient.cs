@@ -180,13 +180,6 @@ namespace SplitTimer{
 					}
 				}
 			}
-			if (message.StartsWith("VALIDATE_RUN"))
-            {
-				int time_id = int.Parse(message.Split('|')[1]);
-				int amount_of_locations = int.Parse(message.Split('|')[1]);
-				RunChecker runChecker = this.gameObject.AddComponent<RunChecker>();
-				runChecker.locations = new Location[amount_of_locations];
-			}
 			if (message.StartsWith("LEADERBOARD"))
 			{
 				string[] leaderboard = message.Split('|');

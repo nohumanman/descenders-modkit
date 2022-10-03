@@ -31,11 +31,6 @@ namespace SplitTimer
                 }
                 else if (this.checkpointType == CheckpointType.Finish)
                 {
-                    foreach(AnimateOnTrailEnd x in FindObjectsOfType<AnimateOnTrailEnd>())
-                    {
-                        if (x.trailName == trail.name)
-                            x.TrailEnd();
-                    }
                     // SplitTimerText.Instance.StopTimer();
                 }
             }
