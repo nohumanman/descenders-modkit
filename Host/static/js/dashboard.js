@@ -117,6 +117,11 @@ var app = new Vue({
                 app.trails = data["trails"];
             })
         },
+        GetWorlds(){
+            $.get("/get-worlds", function(data){
+                app.worlds = data["worlds"];
+            })
+        },
         GetConcurrency(){
             console.log("GetConcurrency()");
             if (!app.getting_concurrency){
@@ -404,4 +409,5 @@ app.getSteamId();
 setInterval(app.getSteamId, 500);
 app.GetConcurrency();
 app.GetTrails();
+app.GetWorlds();
 app.getLeaderboard();

@@ -101,6 +101,10 @@ class Webserver():
             WebserverRoute(
                 "/get-trails", "get_trails",
                 self.get_trails, ["GET"]
+            ),
+            WebserverRoute(
+                "/get-worlds", "get_worlds",
+                self.get_worlds, ["GET"]
             )
         ]
         self.add_routes()
@@ -214,6 +218,9 @@ class Webserver():
 
     def get_trails(self):
         return jsonify({"trails": DBMS.get_trails()})
+
+    def get_worlds(self):
+        return jsonify({"worlds": DBMS.get_worlds()})
 
     def concurrency(self):
         from datetime import datetime

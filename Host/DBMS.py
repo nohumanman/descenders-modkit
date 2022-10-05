@@ -378,6 +378,12 @@ class DBMS():
         } for trail in DBMS.execute_sql('''SELECT * FROM TrailInfo''')]
 
     @staticmethod
+    def get_worlds():
+        return [world[0] for world in DBMS.execute_sql(
+            '''SELECT world_name FROM Session GROUP BY world_name'''
+        )]
+
+    @staticmethod
     def get_daily_plays(
         map_name: str,
         date_start: datetime,
