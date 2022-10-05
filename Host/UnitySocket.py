@@ -8,7 +8,6 @@ from TrailTimer import Vector3
 import requests
 from Tokens import steam_api_key
 import logging
-import json
 import os
 
 script_path = os.path.dirname(os.path.realpath(__file__))
@@ -135,15 +134,6 @@ class UnitySocket():
             f" called set_version('{version}')"
         )
         self.version = version
-        with open(script_path + "/current_version.json") as json_file:
-            data = json.load(json_file)
-            if version != data["latest_version"]:
-                latest_version = data["latest_version"]
-                self.send(
-                    f"INVALIDATE_TIME|You are on version {version}\\n"
-                    f"The latest is {latest_version}\\n"
-                    "Please restart your game."
-                )
 
     def set_text_colour(self, r: int, g: int, b: int):
         self.send(f"SET_TEXT_COLOUR|{r}|{g}|{b}")
