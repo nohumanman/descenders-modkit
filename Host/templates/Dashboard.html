@@ -1,12 +1,11 @@
 <html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-        <title>Descenders Competitive</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <title>Desc Comp Tools</title>
         <link rel="icon" type="image/png" href="/static/images/Descenders Competitive Logo.png">
         <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <meta property="og:image" content="/static/images/Descenders Competitive Logo.png">
-        <meta property="og:title" content="Descenders Split Timer" />
+        <meta property="og:title" content="Descenders Split Timer"/>
         <meta property="og:description" content="The web dashboard used to manage and control users and times of Descenders maps with the Descenders Split Timer implemented on them." />
         <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
@@ -14,15 +13,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     </head>
     <body>
-        <!-- <div id="chart_div"></div> -->
         <div id="app">
             <v-app>
-                <v-banner color="red" v-if="validated != 'AUTHORISED'">
-                    You are not permitted to modify any user because your discord account is not whitelisted<span v-if="validated != 'UNAUTHORISED'"> - <v-btn @click="redirect('/login')">login</v-btn></span>
-                </v-banner>
                 <v-main>
-                    <v-overlay v-if="self == ''" opacity="1" height="50%" width="50%">
-                        <div style="padding:200px;" v-if="validated == 'AUTHORISED'">
+                    <!-- Validation Warning -->
+                    <v-banner color="red" v-if="validated != 'AUTHORISED'">
+                        You are not permitted to modify any user because your discord account is not whitelisted<span v-if="validated != 'UNAUTHORISED'"> - <v-btn @click="redirect('/login')">login</v-btn></span>
+                    </v-banner>
+                    <!-- Steam ID Manual Input Backup -->
+                    <v-overlay
+                        v-if="self == ''" opacity="1"
+                        height="50%" width="50%"
+                    >
+                        <div
+                            style="padding:200px;"
+                            v-if="validated == 'AUTHORISED'"
+                        >
                             <v-text-field
                                 placeholder="Please enter your steam ID."
                                 v-model="valee"
@@ -30,21 +36,33 @@
                             <br><br>
                             If you're seeing this, you haven't linked your steam account to your discord account, so we can't take your steam id automatically.
                             <br>
-                            <v-btn @click="setSelf(valee)">SUBMIT STEAM ID</v-btn>
+                            <v-btn @click="setSelf(valee)">
+                                SUBMIT STEAM ID
+                            </v-btn>
                         </div>
                         <div v-if="validated == 'UNKNOWN'" style="text-align:center;">
-                            <v-btn @click="redirect('/login')">LOGIN WITH DISCORD</v-btn>
+                            <v-btn @click="redirect('/login')">
+                                LOGIN WITH DISCORD
+                            </v-btn>
                             <br><br>or<br><br>
-                            <v-btn @click="setSelf('UNKNOWN')">LOGIN AS GUEST</v-btn>
+                            <v-btn @click="setSelf('UNKNOWN')">
+                                LOGIN AS GUEST
+                            </v-btn>
                         </div>
                     </v-overlay>
                     <v-overlay opacity="1" v-model="controlling">
                         <div style="padding:200px;">
-                        <v-btn @click="controlling = false;"><v-icon>mdi-exit-to-app</v-icon></v-btn>
+                        <v-btn @click="controlling = false;">
+                            <v-icon>mdi-exit-to-app</v-icon>
+                        </v-btn>
                         <br><br>
-                        <h1 style="text-align:center; font-size:50px;">Controlling [[controlled_player.name]]</h1>
+                        <h1 style="text-align:center; font-size:50px;">
+                            Controlling [[controlled_player.name]]
+                        </h1>
                         <br><br>
-                        <h1 style="text-align:center;">Commands</h1>
+                        <h1 style="text-align:center;">
+                            Commands
+                        </h1>
                         <br>
                         <v-row>
                             <v-col class="d-flex justify-center" v-for="command in commands">
@@ -81,7 +99,7 @@
                     <v-tabs-items v-model="tab" fill-height>
                         <v-tab-item>
                             <h1 style="text-align:center; font-size:50px;">
-                                D-Split Dashboard
+                                Descenders Competitive Toolkit
                             </h1>
                             <h2 style="text-align:center;">Your Steam ID: [[self]] <v-btn @click="copyText(self);"><v-icon>mdi-content-copy</v-icon></v-btn></h2>
                             <h2 style="text-align:center;">Current Concurrent Users: [[ids.length-1]]</h2>
