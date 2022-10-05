@@ -336,6 +336,17 @@ namespace SplitTimer{
             {
 				Utilities.instance.ToggleGod();
 			}
+			if (message.StartsWith("UNLOCK_ITEM"))
+            {
+				string code = message.Split('|')[1];
+				CustomizationItem itemFromID = Singleton<CustomizationManager>.SP.GetItemFromID(int.Parse(code));
+				Singleton<CustomizationManager>.SP.UnlockItem(itemFromID, addToNewlyUnlocked: true, silent: false);
+			}
+			if (message.StartsWith("LOCK_ITEM"))
+			{
+				string code = message.Split('|')[1];
+				DevCommandsGameplay.LockItem(int.Parse(code));
+			}
 			SendData("pong");
 			// Debug.Log("NetClient | Message Processed: " + message);
 		}
