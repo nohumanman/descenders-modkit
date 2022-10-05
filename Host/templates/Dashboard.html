@@ -35,7 +35,7 @@
                             ></v-text-field>
                             <br><br>
                             If you're seeing this, you haven't linked your steam account to your discord account, so we can't take your steam id automatically.
-                            <br>
+                            <br><br>
                             <v-btn @click="setSelf(valee)">
                                 SUBMIT STEAM ID
                             </v-btn>
@@ -310,8 +310,8 @@
                             ></v-sparkline>
                         </v-tab-item>
                         <v-tab-item>
-                            <v-btn @click="GetTrails()">Update Trails</v-btn>
-                            <br><br>
+                            <!-- <v-btn @click="GetTrails()">Update Trails</v-btn> !-->
+                            <br>
                             <v-row>
                                 <v-col v-for="trail in trails" style="padding:30px;">
                                     <v-card width="400" color="teal">
@@ -328,7 +328,6 @@
                                         <p style="padding-left:20px; padding-right:20px;">
                                             A trail on <b :style="{color: stringToColour(trail.world_name)}">[[trail.world_name]]</b> that has been ridden <i>[[trail.times_ridden]]</i> times with an average starting time of [[Math.round(trail.average_start_speed)]].
                                         </p>
-                                        <h1 style="text-decoration:underline; text-align: center;">Leaderboard</h1>
                                         <v-col align="center" style="padding:50px;">
                                             <v-row v-for="player in trail.leaderboard" style="text-align:center">
                                                 [[player.place]]. [[player.name]] - [[secs_to_str(player.time)]]
