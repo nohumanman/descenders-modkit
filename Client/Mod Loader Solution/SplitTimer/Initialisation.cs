@@ -40,15 +40,15 @@ namespace SplitTimer
             }
             if (this.GetComponent<MapInfo>() == null)
                 Debug.LogError("ERROR - No Map info found in scene!!");
-            this.gameObject.AddComponent<PlayerInfo>();
-            this.gameObject.AddComponent<NetClient>();
-            this.gameObject.AddComponent<BikeSwitcher>();
-            this.gameObject.AddComponent<TimeModifier>();
-            this.gameObject.AddComponent<TrickCapturer>();
-            // this.gameObject.AddComponent<GimbalCam>();
-            this.gameObject.AddComponent<RainbowLight>();
-            this.gameObject.AddComponent<UserInterface>();
-            this.gameObject.AddComponent<StatsModification>();
+            gameObject.AddComponent<PlayerInfo>();
+            gameObject.AddComponent<NetClient>();
+            gameObject.AddComponent<BikeSwitcher>();
+            gameObject.AddComponent<TimeModifier>();
+            gameObject.AddComponent<TrickCapturer>();
+            gameObject.AddComponent<GimbalCam>();
+            gameObject.AddComponent<MovableCam>();
+            gameObject.AddComponent<RainbowLight>();
+            gameObject.AddComponent<UserInterface>();
             if (GameObject.Find("SpeedTrapTrigger") != null)
                 GameObject.Find("SpeedTrapTrigger").AddComponent<SpeedTrap>();
         }
