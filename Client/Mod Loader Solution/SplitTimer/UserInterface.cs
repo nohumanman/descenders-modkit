@@ -54,7 +54,7 @@ namespace SplitTimer
         }
         public void Update()
         {
-            if (Input.GetKey(KeyCode.U) && Input.GetKeyDown(KeyCode.I))
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.I))
                 isActive = !isActive;
             if (hasBeenActive)
             {
