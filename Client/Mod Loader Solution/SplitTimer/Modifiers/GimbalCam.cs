@@ -10,8 +10,6 @@ namespace SplitTimer
         public bool ShouldLevel = false;
         public void Update()
         {
-            Debug.Log(ExistingCamera);
-            Debug.Log(ShouldLevel);
             if (ExistingCamera == null)
                 ExistingCamera = Camera.main.gameObject;
             if (Input.GetKey(KeyCode.G) && Input.GetKeyDown(KeyCode.C))
