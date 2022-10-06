@@ -5,35 +5,28 @@ namespace SplitTimer
 {
     public class GimbalCam : MonoBehaviour
     {
+        GameObject _player;
         public GameObject ExistingCamera;
         public bool ShouldLevel = false;
-        public void Start()
-        {
-            StartCoroutine(UpdateCamera());
-        }
         public void Update()
         {
+            Debug.Log(ExistingCamera);
+            Debug.Log(ShouldLevel);
             if (ExistingCamera == null)
                 ExistingCamera = Camera.main.gameObject;
             if (Input.GetKey(KeyCode.G) && Input.GetKeyDown(KeyCode.C))
                 ShouldLevel = !ShouldLevel;
+            if (ShouldLevel)
+                LevelCamera();
         }
         public void LevelCamera()
         {
             if (ExistingCamera != null)
             {
-                GameObject _player = GameObject.Find("Player_Human");
+                if (_player == null)
+                    _player = GameObject.Find("Player_Human");
                 if (_player != null)
                     transform.eulerAngles = _player.transform.eulerAngles;
-            }
-        }
-        public IEnumerator UpdateCamera()
-        {
-            while (true)
-            {
-                if (ShouldLevel)
-                    LevelCamera();
-                yield return null;
             }
         }
     }
