@@ -33,3 +33,10 @@ E:\Projects\descenders-split-timer\Client\Mod Loader Solution\obj\Debug\ModLoade
 E:\Projects\descenders-split-timer\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.CopyComplete
 E:\Projects\descenders-split-timer\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.dll
 E:\Projects\descenders-split-timer\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.pdb
+E:\Projects\desc-comp-toolkit\Client\Mod Loader Solution\bin\Debug\ModLoaderSolution.dll
+E:\Projects\desc-comp-toolkit\Client\Mod Loader Solution\bin\Debug\ModLoaderSolution.pdb
+E:\Projects\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.AssemblyReference.cache
+E:\Projects\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.CoreCompileInputs.cache
+E:\Projects\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.CopyComplete
+E:\Projects\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.dll
+E:\Projects\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.pdb
