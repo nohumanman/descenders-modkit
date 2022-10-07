@@ -7,18 +7,12 @@ public class MovableCam : ModBehaviour
     public float posIncrement = 0.1f;
     public float rotIncrement = 5f;
     bool UseCustomCam = false;
-    public bool DontDestroy = true;
     GameObject ExistingCamera;
     GameObject PlayerHuman;
     bool rotating;
     Transform prevParent;
     Vector3 DisplacementOfCam = Vector3.zero;
     Vector3 RotDisplacementOfCam = Vector3.zero;
-    void Start()
-    {
-        if (DontDestroy)
-            DontDestroyOnLoad(this.gameObject);
-    }
     public void ToggleCustomCam()
     {
         UseCustomCam = !UseCustomCam;
@@ -32,12 +26,13 @@ public class MovableCam : ModBehaviour
     }
     void Update()
     {
-        FindCam();
-        FindPlayer();
-        if (ExistingCamera != null && PlayerHuman != null)
+        if (UseCustomCam)
         {
-            if (UseCustomCam)
+            FindCam();
+            FindPlayer();
+            if (ExistingCamera != null && PlayerHuman != null)
             {
+
                 ExistingCamera.transform.localPosition = DisplacementOfCam;
                 ExistingCamera.transform.eulerAngles = PlayerHuman.transform.eulerAngles + RotDisplacementOfCam;
             }
