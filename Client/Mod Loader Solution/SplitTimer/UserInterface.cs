@@ -55,7 +55,10 @@ namespace SplitTimer
         public void Update()
         {
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.I))
+            {
                 isActive = !isActive;
+                Cursor.visible = isActive;
+            }
             if (hasBeenActive)
             {
                 foreach (Checkpoint x in FindObjectsOfType<Checkpoint>())
