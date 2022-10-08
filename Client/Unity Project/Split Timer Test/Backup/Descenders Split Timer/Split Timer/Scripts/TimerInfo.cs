@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using ModTool.Interface;
+using UnityEngine.SceneManagement;
+using ModTool.Shared;
+
 public class TimerInfo : ModBehaviour {
     public GameObject boundaries;
     public GameObject startCheckpoint;
     public GameObject endCheckpoint;
     public GameObject leaderboardText;
     public GameObject autoLeaderboardText;
-    [MenuItem("Tools/MatthewsTools/Split Timer/Disable MeshRenderer on boundaries")]
+    [MenuItem("Tools/DescCompTools/Boundaries/DisableMeshRenderer")]
     public static void GlobalDisableMeshRenderer(){
         foreach(TimerInfo timerInf in FindObjectsOfType<TimerInfo>()){
             foreach(Transform boundary in timerInf.boundaries.transform){
@@ -17,19 +20,33 @@ public class TimerInfo : ModBehaviour {
             }
         }
     }
-    [MenuItem("Tools/MatthewsTools/Split Timer/Enable MeshRenderer on boundaries")]
+    [MenuItem("Tools/DescCompTools/Boundaries/EnableMeshRenderers")]
     public static void GlobalEnableMeshRenderer(){
         foreach(TimerInfo timerInf in FindObjectsOfType<TimerInfo>())
             foreach(Transform boundary in timerInf.boundaries.transform)
                 boundary.gameObject.GetComponent<MeshRenderer>().enabled = true;
     }
-    [MenuItem("Tools/MatthewsTools/Split Timer/Verify Script Config")]
+    [MenuItem("Tools/DescCompTools/Verify")]
     public static void VerifyScriptConfig(){
         int errors = 0;
         int warnings = 0;
         if (FindObjectOfType<APILoaderScript.ModLoader>() == null){
-            Debug.LogWarning("APILoaderScript.ModLoader is not present!");
-            warnings += 1;
+            Debug.LogError("APILoaderScript.ModLoader is not present!");
+            errors += 1;
+        }
+        if (FindObjectOfType<JsonMapInfo>() == null){
+            Debug.LogError("JsonMapInfo is not present!");
+            errors += 1;
+        }
+        if (FindObjectOfType<TimerText>() == null){
+            Debug.LogError("TimerText is not present!");
+            errors += 1;
+        }
+        foreach(TeleportPad tp in FindObjectsOfType<TeleportPad>()){
+            if (tp.TeleportPoint == null){
+                Debug.LogWarning("TeleportPoint on TeleportPad is null!", tp.TeleportPoint);
+                warnings += 1;
+            }
         }
         foreach(TimerInfo timerInf in FindObjectsOfType<TimerInfo>()){
             if (timerInf.startCheckpoint == null){
@@ -96,7 +113,7 @@ public class TimerInfo : ModBehaviour {
         else
             Debug.LogError("Scripts not verified!");
     }
-    [MenuItem("Tools/MatthewsTools/Split Timer/Attempt auto-assign boundaries")]
+    [MenuItem("Tools/DescCompTools/Boundaries/AutoAssignBoundaries")]
     public static void AttemptBoundaryAutoAssign(){
         foreach(TimerInfo timerInf in FindObjectsOfType<TimerInfo>())
             if (timerInf.boundaries == null)
@@ -104,7 +121,7 @@ public class TimerInfo : ModBehaviour {
                     if (obj.name == "Boundaries")
                         timerInf.boundaries = obj.gameObject;
     }
-    [MenuItem("Tools/MatthewsTools/Split Timer/Select all boundaries")]
+    [MenuItem("Tools/DescCompTools/Boundaries/SelectBoundaries")]
     public static void SelectAllBoundaries(){
         List<GameObject> boundaries = new List<GameObject>();
         foreach(TimerInfo timerInf in FindObjectsOfType<TimerInfo>())
