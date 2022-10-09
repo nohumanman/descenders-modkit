@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="SplitTimer\Modifiers\MovableCam.cs" />
     <Compile Include="SplitTimer\Modifiers\RainbowLight.cs" />
+    <Compile Include="SplitTimer\Modifiers\RemoveTerrainBoundaries.cs" />
     <Compile Include="SplitTimer\Modifiers\SlipModifier.cs" />
     <Compile Include="SplitTimer\Modifiers\StatsModification.cs" />
     <Compile Include="SplitTimer\UserInterface.cs" />
@@ -385,4 +386,9 @@
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "D:\SteamLibrary\steamapps\common\Descenders\Mods\Split Timer Test\ModLoaderSolution.bin"
+
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

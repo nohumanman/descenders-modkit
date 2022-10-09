@@ -51,6 +51,7 @@ namespace SplitTimer
             gameObject.AddComponent<GimbalCam>();
             gameObject.AddComponent<MovableCam>();
             //gameObject.AddComponent<RainbowLight>();
+            gameObject.AddComponent<StatsModification>();
             gameObject.AddComponent<UserInterface>();
             if (GameObject.Find("SpeedTrapTrigger") != null)
                 GameObject.Find("SpeedTrapTrigger").AddComponent<SpeedTrap>();
