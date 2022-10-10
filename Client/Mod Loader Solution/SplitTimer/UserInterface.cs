@@ -19,22 +19,6 @@ namespace SplitTimer
         bool isActive;
         bool hasBeenActive = false;
         public PlayerInfoImpact[] players;
-        public Texture2D btnTexture;
-        void Start()
-        {
-            GUI.backgroundColor = Color.blue;
-            StartCoroutine(StartEnum());
-        }
-        IEnumerator StartEnum()
-        {
-            Debug.Log("StartEnum -------------");
-            using (UnityWebRequest uwr = UnityWebRequestTexture.GetTexture("https://t4.ftcdn.net/jpg/03/21/86/27/360_F_321862768_UkKvWBv7XUhgeCtBx3mW1829qGnrqanB.jpg"))
-            {
-                yield return uwr.SendWebRequest();
-                btnTexture = DownloadHandlerTexture.GetContent(uwr);
-            }
-            yield return null;
-        }
         void OnGUI()
         {
             if (isActive)
@@ -67,6 +51,8 @@ namespace SplitTimer
                     Utilities.instance.EnableStats();
                 if (GUI.Button(new Rect(10, 345, 150, 25), "SpawnAtCursor()"))
                     Utilities.instance.SpawnAtCursor();
+                if (GUI.Button(new Rect(10, 370, 150, 25), "ToggleCustomCam()") && FindObjectOfType<MovableCam>() != null)
+                    FindObjectOfType<MovableCam>().ToggleCustomCam();
                 // GUI.BeginGroup(new Rect(160, 10, 500, 500));
                 int yPos = 10;
                 GUI.Button(new Rect(160, yPos, 150, 25), "__CHECKPOINTS__");
@@ -97,8 +83,12 @@ namespace SplitTimer
                 yPos = 10;
                 GUI.Button(new Rect(460, yPos, 220, 25), "__STATS__");
                 yPos += 40;
-                GUI.Button(new Rect(460, yPos, 110, 25), "Reset");
-                GUI.Button(new Rect(570, yPos, 110, 25), "Load");
+                if (GUI.Button(new Rect(460, yPos, 110, 25), "Reset"))
+                    FindObjectOfType<StatsModification>().ResetStats();
+                if (GUI.Button(new Rect(570, yPos, 55, 25), "Save"))
+                    FindObjectOfType<StatsModification>().SaveStats();
+                if (GUI.Button(new Rect(625, yPos, 55, 25), "Load"))
+                    FindObjectOfType<StatsModification>().LoadStats();
                 yPos += 30;
                 GUI.Box(new Rect(460, yPos, 220, FindObjectOfType<StatsModification>().stats.Count * 25), "");
                 foreach (Stat stat in FindObjectOfType<StatsModification>().stats)
@@ -112,10 +102,6 @@ namespace SplitTimer
                     yPos += 25;
                 }
             }
-        }
-        string PickFirstLine(string text)
-        {
-            return (text + "\n").Split('\n')[0];
         }
         void GetAllPlayers()
         {

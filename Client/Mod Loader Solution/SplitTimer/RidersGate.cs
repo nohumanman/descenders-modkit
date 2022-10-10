@@ -11,16 +11,12 @@ namespace SplitTimer{
 		public bool gateEnabled = true;
 		public void TriggerGate(float randomTime){
 			if (gateEnabled)
-            {
 				StartCoroutine(TriggerGateCoro(randomTime));
-			}
 		}
 		public void Update()
         {
 			if (Input.GetKeyDown(KeyCode.G))
-            {
 				ToggleGate();
-			}
         }
 		public void ToggleGate()
         {

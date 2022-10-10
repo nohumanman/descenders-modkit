@@ -8,8 +8,6 @@ using UnityEngine;
 using ModLoaderSolution;
 
 namespace SplitTimer{
-	[RequireComponent(typeof(PlayerInfo))]
-	[RequireComponent(typeof(MapInfo))]
 	public class NetClient : MonoBehaviour {
 		public static NetClient Instance { get; private set; }
 		public RidersGate[] ridersGates;
@@ -28,9 +26,9 @@ namespace SplitTimer{
 			this.gameObject.AddComponent<Utilities>();
 		}
 		void Start () {
-			Debug.Log("NetClient | Connecting to tcp server port " + port.ToString() + " with ip " + ip);
+			Debug.Log("NetClient | Connecting to tcp server port " + port.ToString() + " with ip '" + ip + "'");
 			ConnectToTcpServer();
-			ridersGates = GameObject.FindObjectsOfType<RidersGate>();
+			ridersGates = FindObjectsOfType<RidersGate>();
 		}
 		void Update()
         {
@@ -41,12 +39,12 @@ namespace SplitTimer{
 				Physics.IgnoreLayerCollision(8, 8, PlayerCollision);
 				PlayerCollision = !PlayerCollision;
 			}
-			if (Time.time - hasStarted > 30 && !socketConnection.Connected)
+			if (Time.time - hasStarted > 30 && (socketConnection == null || !socketConnection.Connected))
             {
 				Debug.Log("NetClient | Disconnected! Reconecting now...");
-                SplitTimerText.Instance.count = false;
+                // SplitTimerText.Instance.count = false;
                 SplitTimerText.Instance.text.color = Color.red;
-				SplitTimerText.Instance.SetText("Server Disconnected.\n");
+				SplitTimerText.Instance.checkpointTime = "Server Disconnected :(";
 				ConnectToTcpServer();
             }
             try
@@ -71,10 +69,9 @@ namespace SplitTimer{
             }
 		}
 		private void ConnectToTcpServer () {
-			Debug.Log("NetClient | Connecting to TCP Server...");
+			Debug.Log("NetClient | Connecting to TCP Server");
 			hasStarted = Time.time;
 			try {
-				Debug.Log("NetClient | TCP Connection successful!");
 				clientReceiveThread = new Thread (new ThreadStart(ListenForData));
 				clientReceiveThread.IsBackground = true;
 				clientReceiveThread.Start();
@@ -86,7 +83,9 @@ namespace SplitTimer{
 		}
 		private void ListenForData() {
 			try {
+				Debug.Log("NetClient | Creating TcpClient()");
 				socketConnection = new TcpClient(ip, port);
+				Debug.Log("NetClient | TcpClient created!");
 				Byte[] bytes = new Byte[1024];
 				while (true) {
 					using (NetworkStream stream = socketConnection.GetStream()) { 					
@@ -97,15 +96,13 @@ namespace SplitTimer{
 							string serverMessage = Encoding.ASCII.GetString(incommingData);
 							string[] serverMessages = serverMessage.Split('\n');
 							foreach(string message in serverMessages)
-							{
 								messages.Add(message);
-							}
 						}
 					}
 				}
 			}
-			catch (SocketException socketException) {             
-				Debug.Log("NetClient | Socket exception in ListenForData() - " + socketException);         
+			catch {             
+				Debug.Log("NetClient | Socket exception in ListenForData()");         
 			}
 		}
 		private void MessageRecieved(string message) {
@@ -354,7 +351,7 @@ namespace SplitTimer{
 			// Debug.Log("NetClient | Client sending message: " + clientMessage);
 			clientMessage = clientMessage + "\n";
 			if (socketConnection == null) {
-				Debug.Log("NetClient | Socket not connected!");
+				Debug.Log("NetClient | SendData cancelled, socket not connected!");
 				return;
 			}
 			try

@@ -2,7 +2,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-
 namespace SplitTimer
 {
     [System.Serializable]

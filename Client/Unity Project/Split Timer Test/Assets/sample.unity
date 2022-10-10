@@ -4714,7 +4714,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpeedToSet: {x: 0, y: 0, z: -5}
-  isAdditive: 0
   isRelative: 1
 --- !u!33 &1185591141
 MeshFilter:
@@ -7464,7 +7463,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2065735115
 MonoBehaviour:
   m_ObjectHideFlags: 0

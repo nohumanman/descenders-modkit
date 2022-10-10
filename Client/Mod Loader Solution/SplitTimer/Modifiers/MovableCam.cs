@@ -15,14 +15,17 @@ public class MovableCam : ModBehaviour
     Vector3 RotDisplacementOfCam = Vector3.zero;
     public void ToggleCustomCam()
     {
-        UseCustomCam = !UseCustomCam;
-        if (UseCustomCam)
+        if (ExistingCamera != null && PlayerHuman != null)
         {
-            prevParent = ExistingCamera.transform.parent;
-            ExistingCamera.transform.SetParent(PlayerHuman.transform);
+            UseCustomCam = !UseCustomCam;
+            if (UseCustomCam)
+            {
+                prevParent = ExistingCamera.transform.parent;
+                ExistingCamera.transform.SetParent(PlayerHuman.transform);
+            }
+            else
+                ExistingCamera.transform.SetParent(prevParent);
         }
-        else
-            ExistingCamera.transform.SetParent(prevParent);
     }
     void Update()
     {
@@ -37,15 +40,8 @@ public class MovableCam : ModBehaviour
                 ExistingCamera.transform.eulerAngles = PlayerHuman.transform.eulerAngles + RotDisplacementOfCam;
             }
         }
-        if (Input.GetKeyDown(KeyCode.P))
-            ToggleCustomCam();
         if (Input.GetKeyDown(KeyCode.Tab))
             rotating = !rotating;
-        if (Input.GetKey(KeyCode.O))
-        {
-            DisplacementOfCam = Vector3.zero;
-            RotDisplacementOfCam = Vector3.zero;
-        }
         if (Input.GetKey(KeyCode.Y) && Input.GetKey(KeyCode.Equals))
             if (!rotating)
                 DisplacementOfCam.y += posIncrement * Time.deltaTime;

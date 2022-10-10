@@ -78,6 +78,7 @@
      <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\TimerText.cs" />
      <Compile Include="Assets\Descenders Split Timer\Teleport Pad\TeleportPad.cs" />
      <Compile Include="Assets\Descenders Split Timer\Teleport Pad\TeleportPadTerrain.cs" />
+     <Compile Include="Assets\Descenders Split Timer\TerrainBoundryRemover\RemoveTerrainBoundary.cs" />
      <None Include="Assets\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Emissive Diffuse.shader" />
      <None Include="Assets\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Transparent Diffuse Bump Cutout.shader" />
      <None Include="Assets\Descenders Split Timer\Speed Trap\Materials\3DText.shader" />
@@ -253,13 +254,13 @@
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
  </Reference>
  <Reference Include="ModTool.Interface">
- <HintPath>E:/Projects/descenders-split-timer/Client/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Interface.dll</HintPath>
+ <HintPath>E:/Projects/desc-comp-toolkit/Client/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Interface.dll</HintPath>
  </Reference>
  <Reference Include="ModTool.Shared">
- <HintPath>E:/Projects/descenders-split-timer/Client/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Shared.dll</HintPath>
+ <HintPath>E:/Projects/desc-comp-toolkit/Client/Unity Project/Split Timer Test/Assets/ModTool/ModTool.Shared.dll</HintPath>
  </Reference>
  <Reference Include="Mono.Cecil">
- <HintPath>E:/Projects/descenders-split-timer/Client/Unity Project/Split Timer Test/Assets/ModTool/Mono.Cecil/Mono.Cecil.dll</HintPath>
+ <HintPath>E:/Projects/desc-comp-toolkit/Client/Unity Project/Split Timer Test/Assets/ModTool/Mono.Cecil/Mono.Cecil.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.Analytics">
  <HintPath>C:/Users/point/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.analytics@2.0.13/UnityEngine.Analytics.dll</HintPath>

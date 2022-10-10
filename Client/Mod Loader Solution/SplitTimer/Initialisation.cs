@@ -41,7 +41,7 @@ namespace SplitTimer
                 if (jsonSlipModInfo != "" && jsonSlipModInfo != null)
                     JsonUtility.FromJsonOverwrite(jsonSlipModInfo, g.AddComponent<SlipModifier>());
             }
-            if (this.GetComponent<MapInfo>() == null)
+            if (FindObjectOfType<MapInfo>() == null)
                 Debug.LogError("ERROR - No Map info found in scene!!");
             gameObject.AddComponent<PlayerInfo>();
             gameObject.AddComponent<NetClient>();

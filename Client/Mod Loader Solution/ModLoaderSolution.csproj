@@ -58,7 +58,7 @@
     <Compile Include="SplitTimer\Timer\SplitTimerText.cs" />
     <Compile Include="SplitTimer\Modifiers\TimeModifier.cs" />
     <Compile Include="SplitTimer\Timer\Boundary.cs" />
-    <Compile Include="SplitTimer\Modifiers\Checkpoint.cs" />
+    <Compile Include="SplitTimer\Timer\Checkpoint.cs" />
     <Compile Include="SplitTimer\Initialisation.cs" />
     <Compile Include="ModLoaderSolution\Loader.cs" />
     <Compile Include="SplitTimer\MapInfo.cs" />
