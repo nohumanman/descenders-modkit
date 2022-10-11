@@ -109,7 +109,10 @@
                             <br>
                             <v-row align="center" justify="center" class="d-flex justify-center">
                                 <v-col class="d-flex justify-center">
-                                    <v-btn @click="Randomise();">Disable Gates</v-btn>
+                                    <v-switch
+                                        v-model="showAvatars"
+                                        label="Show Avatars"
+                                    ></v-switch>
                                 </v-col>
                                 <v-col class="d-flex justify-center">
                                     <v-autocomplete
@@ -138,7 +141,7 @@
                                             <v-row justify="center">
                                                 <p style="text-align:center;">v[[id.version]]</p>
                                             </v-row>
-                                            <v-row justify="center">
+                                            <v-row justify="center" v-if="showAvatars">
                                                 <v-avatar size="200">
                                                     <img alt="user" :src="id.steam_avatar_src">
                                                 </v-avatar>
@@ -170,9 +173,6 @@
                                             <br><br>
                                             <v-row justify="center">
                                                 <p>Reputation: [[addCommaToNum(id.reputation)]]</p><br>
-                                            </v-row>
-                                            <v-row justify="center">
-                                                Trail Boundaries: [[id.trails]]
                                             </v-row>
                                             <span v-if="id.address != null">
                                                 <br><br>

@@ -15,6 +15,7 @@ var app = new Vue({
         theme: { dark: true },
     }),
     data : {
+        showAvatars: false,
         ids : [{"name":"nohumanman", "id" : "123123", "command" : "", "steam_avatar_src" : "https://images.unsplash.com/photo-1566275529824-cca6d008f3da?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGhvdG98ZW58MHx8MHx8&w=1000&q=80", version:"23"}],
         suggested : ["SPECTATE|nohumanman", "SET_BIKE|1", "FREEZE_PLAYER", "UNFREEZE_PLAYER", "TOGGLE_CONTROL|true", "CLEAR_SESSION_MARKER", "RESET_PLAYER", "ADD_MODIFIER|FAKIEBALANCE", "ADD_MODIFIER|PUMPSTRENGTH", "RESPAWN_ON_TRACK", "RESPAWN_AT_START"],
         controlling : false,
@@ -401,6 +402,7 @@ function updatePlayers() {
     })
 }
 
+app.setSelf('UNKNOWN');
 updatePlayers();
 app.CheckStatus();
 setInterval(updatePlayers, 1000);
