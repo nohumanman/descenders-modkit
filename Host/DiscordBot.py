@@ -6,6 +6,9 @@ import asyncio
 from DBMS import DBMS
 import logging
 import datetime
+import time
+
+split_timer_logger = logging.getLogger('DescendersSplitTimer')
 
 
 class DiscordBot(commands.Bot):
@@ -16,6 +19,7 @@ class DiscordBot(commands.Bot):
         self.socket_server = socket_server
         self.loop = asyncio.get_event_loop()
         self.loop.create_task(self.start(discord_token))
+        self.time_of_last_lux_request = 0
         threading.Thread(target=self.loop.run_forever).start()
 
     async def new_fastest_time(self, time):
@@ -38,13 +42,22 @@ class DiscordBot(commands.Bot):
         )
 
     async def on_ready(self):
-        logging.info("DiscordBot.py - Discord bot started.")
+        split_timer_logger.info("DiscordBot.py - Discord bot started.")
         await self.wait_until_ready()
 
     async def on_message(self, message):
-        logging.info(f"DiscordBot.py - Message sent '{message}'")
+        split_timer_logger.info(f"DiscordBot.py - Message sent '{message}'")
         if message.author == self.user:
             return
+        if (
+            ("how" in message.content and "lux" in message.content)
+            and (time.time() - self.time_of_last_lux_request) > 60
+        ):
+            await message.channel.send(
+                f"oi <@!{message.author.id}> look at "
+                "https://youtu.be/NZ9qHsONS20"
+            )
+            self.time_of_last_lux_request = time.time()
         if message.author.id in [id for id in self.queue]:
             leaderboard = DBMS.get_leaderboard(
                 message.content,
@@ -53,7 +66,7 @@ class DiscordBot(commands.Bot):
             leaderboard_str = ""
             for i, player in enumerate(leaderboard):
                 name = player["name"]
-                time = TrailTimer.secs_to_str(float(player["time"]))
+                time1 = TrailTimer.secs_to_str(float(player["time"]))
                 num = ""
                 if i == 0:
                     num = "🥇"
@@ -67,7 +80,7 @@ class DiscordBot(commands.Bot):
                 version = player["version"]
                 penalty = player["penalty"]
                 leaderboard_str += f"{num} - {name} with "
-                leaderboard_str += f"{time} on {bike} (v{version})"
+                leaderboard_str += f"{time1} on {bike} (v{version})"
                 leaderboard_str += f" penalty of {penalty}"
                 if player['starting_speed'] is not None:
                     leaderboard_str += " (starting speed of "
