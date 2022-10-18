@@ -50,7 +50,16 @@ class DiscordBot(commands.Bot):
         if message.author == self.user:
             return
         if (
-            ("how" in message.content and "lux" in message.content)
+            (
+                (
+                    "get" in message.content.lower()
+                    or "how" in message.content.lower()
+                )
+                and (
+                    "lux" in message.content.lower()
+                    or "tron" in message.content.lower()
+                )
+            )
             and (time.time() - self.time_of_last_lux_request) > 60
         ):
             await message.channel.send(
