@@ -60,6 +60,19 @@ namespace ModLoaderSolution
             if (isFlying)
                 SetVel(20f);
         }
+        public void ReleaseAllLimbsOnTrick()
+        {
+            string gesturesField = "EL\u0080\u007f\u0084\u0080o";
+            Gesture[] gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(GetPlayer().GetComponent<Cyclist>());
+            foreach (Gesture x in gestures)
+            {
+                x.oneShotTrick = false;
+                x.releaseLeftHand = true;
+                x.releaseLeftFoot = true;
+                x.releaseRightHand = true;
+                x.releaseRightFoot = true;
+            }
+        }
         public void Start()
         {
             instance = this;
