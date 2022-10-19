@@ -64,6 +64,16 @@ namespace ModLoaderSolution
         {
             instance = this;
         }
+        AudioSource[] audioSources;
+        public bool MapAudioActive = true;
+        public void ToggleMapAudio()
+        {
+            if (audioSources == null)
+                audioSources = FindObjectsOfType<AudioSource>();
+            foreach (AudioSource audioSource in audioSources)
+                audioSource.enabled = !audioSource.enabled;
+            MapAudioActive = !MapAudioActive;
+        }
         GameObject cyclist;
         public bool hasBailed()
         {

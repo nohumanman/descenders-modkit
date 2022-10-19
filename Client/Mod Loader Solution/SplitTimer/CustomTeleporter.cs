@@ -30,6 +30,7 @@ namespace SplitTimer
         }
         public void Update()
         {
+
             if (Input.GetKey(KeyCode.N) && Input.GetKeyDown(KeyCode.D))
                 shouldUtilise = !shouldUtilise;
 
