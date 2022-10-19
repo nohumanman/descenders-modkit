@@ -60,10 +60,16 @@ namespace ModLoaderSolution
             if (isFlying)
                 SetVel(20f);
         }
+        public Gesture[] gestures;
+        public void GetGestures()
+        {
+            string gesturesField = "EL\u0080\u007f\u0084\u0080o";
+            gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(GetPlayer().GetComponent<Cyclist>());
+        }
         public void ReleaseAllLimbsOnTrick()
         {
             string gesturesField = "EL\u0080\u007f\u0084\u0080o";
-            Gesture[] gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(GetPlayer().GetComponent<Cyclist>());
+            gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(GetPlayer().GetComponent<Cyclist>());
             foreach (Gesture x in gestures)
             {
                 x.oneShotTrick = false;

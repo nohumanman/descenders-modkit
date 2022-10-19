@@ -25,6 +25,20 @@ namespace SplitTimer
         bool __PLAYERS__ = false;
         bool __STATS__ = false;
         bool __QoL__ = false;
+        bool __TRICKS__ = false;
+        Vector2 scrollPosition = Vector2.zero;
+        static Texture2D MakeTex(int width, int height, Color col)
+        {
+            Color[] pix = new Color[width * height];
+            for (int i = 0; i < pix.Length; ++i)
+            {
+                pix[i] = col;
+            }
+            Texture2D result = new Texture2D(width, height);
+            result.SetPixels(pix);
+            result.Apply();
+            return result;
+        }
         void OnGUI()
         {
             if (isActive)
@@ -132,6 +146,42 @@ namespace SplitTimer
                 {
                     if (GUI.Button(new Rect(680, yPos, 150, 25), "Toggle Map Audio"))
                         Utilities.instance.ToggleMapAudio();
+                }
+                yPos = 10;
+                if (GUI.Button(new Rect(830, yPos, 180, 25), " \\/ GESTURE MODS \\/"))
+                {
+                    __TRICKS__ = !__TRICKS__;
+                    Utilities.instance.GetGestures();
+                }
+                yPos += 30;
+                if (__TRICKS__)
+                {
+                    float yHeight = 180 * Utilities.instance.gestures.Length;
+                    scrollPosition = GUI.BeginScrollView(new Rect(830, 40, 180, 500), scrollPosition, new Rect(0, 0, 180, yHeight));
+                    yPos = 0;
+                    GUIStyle background = new GUIStyle();
+                    background.normal.background = MakeTex(2, 2, new Color(0, 0, 0, 0.5f));
+                    GUI.Box(new Rect(0, 0, 160, yHeight), "", background);
+                    foreach (Gesture gesture in Utilities.instance.gestures)
+                    {
+                        GUI.Label(new Rect(0, yPos, 140, 25), "  --- ");
+                        yPos += 25;
+                        string temp = GUI.TextArea(new Rect(10, yPos, 140, 25), gesture.trickName);
+                        yPos += 25;
+                        gesture.trickName = temp;
+                        gesture.releaseLeftFoot = GUI.Toggle(new Rect(10, yPos, 140, 25), gesture.releaseLeftFoot, "releaseLeftFoot");
+                        yPos += 25;
+                        gesture.releaseLeftHand = GUI.Toggle(new Rect(10, yPos, 140, 25), gesture.releaseLeftHand, "releaseLeftHand");
+                        yPos += 25;
+                        gesture.releaseRightFoot = GUI.Toggle(new Rect(10, yPos, 140, 25), gesture.releaseRightFoot, "releaseRightFoot");
+                        yPos += 25;
+                        gesture.releaseRightHand = GUI.Toggle(new Rect(10, yPos, 140, 25), gesture.releaseRightHand, "releaseRightHand");
+                        yPos += 25;
+                        string tweakAmountModif = GUI.TextArea(new Rect(10, yPos, 140, 25), gesture.tweakAmount.ToString());
+                        try { gesture.tweakAmount = float.Parse(tweakAmountModif); } catch { }
+                        yPos += 25;
+                    }
+                    GUI.EndScrollView();
                 }
             }
         }
