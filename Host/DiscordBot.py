@@ -74,7 +74,7 @@ class DiscordBot(commands.Bot):
             )
             leaderboard_str = ""
             for i, player in enumerate(leaderboard):
-                name = player["name"]
+                name = "**" + player["name"] + "**"
                 time1 = TrailTimer.secs_to_str(float(player["time"]))
                 num = ""
                 if i == 0:
