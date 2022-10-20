@@ -11,7 +11,7 @@ namespace SplitTimer
         public int[] place;
         public float[] time;
         public float[] pen;
-        int nameMaxLen = 20;
+        int nameMaxLen = 15;
         string MakeLengthOf(string text, int lengthAim)
         {
             if (text.Length < lengthAim)
@@ -36,7 +36,7 @@ namespace SplitTimer
             for (int i = 0; i < name.Length && i < 10; i++)
                 if (name[i].Length > maxNameLength)
                     maxNameLength = name[i].Length;
-            if (maxNameLength < nameMaxLen)
+            if (maxNameLength > nameMaxLen)
                 maxNameLength = nameMaxLen;
             for (int i = 0; i < name.Length && i < 10; i++)
             {
