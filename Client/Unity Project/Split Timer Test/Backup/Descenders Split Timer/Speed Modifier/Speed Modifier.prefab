@@ -108,5 +108,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpeedToSet: {x: 5, y: 5, z: 5}
-  isAdditive: 0
   isRelative: 1
+  onlyApplyBoostOnSpawn: 0

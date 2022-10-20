@@ -898,7 +898,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1112606128129118}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -54.10767, y: 64.95656, z: -70.98}
+  m_LocalPosition: {x: -36.08297, y: 64.95656, z: -82.19773}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4759781762193258}
@@ -2258,7 +2258,7 @@ TextMesh:
   m_FontSize: 500
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 20a5905799ce8a34ab0961c3834ff6fa, type: 3}
+  m_Font: {fileID: 12800000, guid: c6c63aba9f3a3e74e8b0c99894b38515, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4281348312
@@ -2279,7 +2279,7 @@ TextMesh:
   m_FontSize: 500
   m_FontStyle: 0
   m_RichText: 1
-  m_Font: {fileID: 12800000, guid: 20a5905799ce8a34ab0961c3834ff6fa, type: 3}
+  m_Font: {fileID: 12800000, guid: c6c63aba9f3a3e74e8b0c99894b38515, type: 3}
   m_Color:
     serializedVersion: 2
     rgba: 4281348312

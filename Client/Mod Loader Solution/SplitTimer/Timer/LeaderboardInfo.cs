@@ -10,14 +10,37 @@ namespace SplitTimer
         public string[] name;
         public int[] place;
         public float[] time;
+        public float[] pen;
+        int nameMaxLen = 20;
+        string MakeLengthOf(string text, int lengthAim)
+        {
+            if (text.Length < lengthAim)
+            {
+                text += " ";
+                return MakeLengthOf(text, lengthAim);
+            }
+            return text;
+        }
+        string TruncateText(string text, int maxLen)
+        {
+            if (text.Length > maxLen)
+                return text.Substring(0, maxLen) + "...";
+            return text;
+        }
         public string LeaderboardAsString()
         {
             if (name == null || name.Length == 0)
                 return "";
             string leaderboardString = "";
+            int maxNameLength = 0;
+            for (int i = 0; i < name.Length && i < 10; i++)
+                if (name[i].Length > maxNameLength)
+                    maxNameLength = name[i].Length;
+            if (maxNameLength < nameMaxLen)
+                maxNameLength = nameMaxLen;
             for (int i = 0; i < name.Length && i < 10; i++)
             {
-                leaderboardString += place[i] + ". " + name[i] + " - " + FormatTime(time[i]) + "\n";
+                leaderboardString += place[i] + ". " + MakeLengthOf(TruncateText(name[i], nameMaxLen), maxNameLength) + " | " + FormatTime(time[i]) + "   ~" + (Mathf.Round(pen[i] * 10) / 10) + " pen\n";
             }
             return leaderboardString;
         }

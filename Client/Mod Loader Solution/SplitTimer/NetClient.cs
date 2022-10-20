@@ -173,7 +173,7 @@ namespace SplitTimer{
 					{
 						string leaderboardJson = leaderboard[2];
 						LeaderboardInfo leaderboardInfo = JsonUtility.FromJson<LeaderboardInfo>(leaderboardJson.Replace("'", "\""));
-						trail.leaderboardText.GetComponent<TextMesh>().text = trailName + " - Speedrun.com\n" + leaderboardInfo.LeaderboardAsString();
+						trail.leaderboardText.GetComponent<TextMesh>().text = trailName + " (from speedrun.com)\n" + leaderboardInfo.LeaderboardAsString();
 					}
 				}
 			}
@@ -187,7 +187,7 @@ namespace SplitTimer{
 					{
 						string leaderboardJson = leaderboard[2];
 						LeaderboardInfo leaderboardInfo = JsonUtility.FromJson<LeaderboardInfo>(leaderboardJson.Replace("'", "\""));
-						trail.autoLeaderboardText.GetComponent<TextMesh>().text = trailName + " - Automatic\n" + leaderboardInfo.LeaderboardAsString();
+						trail.autoLeaderboardText.GetComponent<TextMesh>().text = trailName + "\n" + leaderboardInfo.LeaderboardAsString();
 					}
 				}
 			}

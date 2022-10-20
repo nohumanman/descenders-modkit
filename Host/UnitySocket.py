@@ -97,7 +97,7 @@ class UnitySocket():
         self.time_started = time.time()
         self.pos = Vector3()
         self.send("SUCCESS")
-        self.send("INVALIDATE_TIME|scripts by nohumanman")
+        self.send("INVALIDATE_TIME|scripts by nohumanman :)")
 
     def set_pos(self, x, y, z):
         self.pos.x = float(x)
@@ -181,10 +181,8 @@ class UnitySocket():
                 {
                     "place": leaderboard["place"],
                     "time": leaderboard["time"],
-                    "name":
-                        leaderboard["name"] + " (~"
-                        + str(round(float(leaderboard["penalty"])))
-                        + " pen)",
+                    "name": leaderboard["name"],
+                    "pen": float(leaderboard["penalty"]),
                     "bike": leaderboard["bike"]
                 }
                 for leaderboard in DBMS.get_leaderboard(
