@@ -20,20 +20,18 @@ namespace SplitTimer
         bool hasBeenActive = false;
         public PlayerInfoImpact[] players;
 
-        bool __COMMANDS__ = false;
-        bool __CHECKPOINTS__ = false;
-        bool __PLAYERS__ = false;
-        bool __STATS__ = false;
-        bool __QoL__ = false;
+        bool __COMMANDS__ = true;
+        bool __CHECKPOINTS__ = true;
+        bool __PLAYERS__ = true;
+        bool __STATS__ = true;
+        bool __QoL__ = true;
         bool __TRICKS__ = false;
         Vector2 scrollPosition = Vector2.zero;
         static Texture2D MakeTex(int width, int height, Color col)
         {
             Color[] pix = new Color[width * height];
             for (int i = 0; i < pix.Length; ++i)
-            {
                 pix[i] = col;
-            }
             Texture2D result = new Texture2D(width, height);
             result.SetPixels(pix);
             result.Apply();
@@ -41,45 +39,59 @@ namespace SplitTimer
         }
         void OnGUI()
         {
+            if (!StatsModification.instance.IfStatsAreDefault())
+            {
+                GUIStyle myButtonStyle2 = new GUIStyle(GUI.skin.button);
+                myButtonStyle2.normal.textColor = Color.white;
+                myButtonStyle2.normal.background = MakeTex(2, 2, new Color(255, 0, 0));
+                GUI.Label(new Rect(0, 0, 150, 25), "STATS MODIFIED", myButtonStyle2);
+                GUI.Label(new Rect(Screen.width - 150, Screen.height - 25, 150, 25), "STATS MODIFIED", myButtonStyle2);
+                GUI.Label(new Rect(Screen.width - 150, 0, 150, 25), "STATS MODIFIED", myButtonStyle2);
+                GUI.Label(new Rect(0, Screen.height - 25, 150, 25), "STATS MODIFIED", myButtonStyle2);
+            }
+            else
+            {
+
+            }
             if (isActive)
             {
                 hasBeenActive = true;
                 GUIStyle myButtonStyle = new GUIStyle(GUI.skin.button);
-                GUI.skin.font = Font.CreateDynamicFontFromOSFont("Rockwell", 12);
+                // GUI.skin.font = Font.CreateDynamicFontFromOSFont("Rockwell", 12);
                 if (GUI.Button(new Rect(10, 10, 150, 25), " \\/ COMMANDS \\/", myButtonStyle))
                     __COMMANDS__ = !__COMMANDS__;
                 if (__COMMANDS__)
                 {
                     if (GUI.Button(new Rect(10, 45, 150, 25), "Bail()", myButtonStyle))
                         Utilities.instance.Bail();
-                    if (GUI.Button(new Rect(10, 70, 150, 25), "ApplyStupidModifiers()", myButtonStyle))
-                        FindObjectOfType<StatsModification>().ApplyStupidModifiers();
-                    if (GUI.Button(new Rect(10, 95, 150, 25), "ToggleFly()", myButtonStyle))
-                        Utilities.instance.ToggleFly();
-                    if (GUI.Button(new Rect(10, 120, 150, 25), "Dissapear()", myButtonStyle))
-                        Utilities.instance.ToggleSpectator();
-                    if (GUI.Button(new Rect(10, 145, 150, 25), "CutBrakes()", myButtonStyle))
+                    //if (GUI.Button(new Rect(10, 70, 150, 25), "ApplyStupidModifiers()", myButtonStyle))
+                    //    FindObjectOfType<StatsModification>().ApplyStupidModifiers();
+                    //if (GUI.Button(new Rect(10, 95, 150, 25), "ToggleFly()", myButtonStyle))
+                    //    Utilities.instance.ToggleFly();
+                    //if (GUI.Button(new Rect(10, 120, 150, 25), "Dissapear()", myButtonStyle))
+                    //    Utilities.instance.ToggleSpectator();
+                    if (GUI.Button(new Rect(10, 70, 150, 25), "CutBrakes()", myButtonStyle))
                         Utilities.instance.CutBrakes();
-                    if (GUI.Button(new Rect(10, 170, 150, 25), "TogglePlayerCollision()", myButtonStyle))
+                    if (GUI.Button(new Rect(10, 95, 150, 25), "TogglePlayerCollision()", myButtonStyle))
                         Utilities.instance.TogglePlayerCollision();
-                    if (GUI.Button(new Rect(10, 195, 150, 25), "Gravity(4.4f)", myButtonStyle))
-                        Utilities.instance.Gravity(4.4f);
-                    if (GUI.Button(new Rect(10, 220, 150, 25), "Gravity(9.81f)"))
-                        Utilities.instance.Gravity(9.81f);
-                    if (GUI.Button(new Rect(10, 245, 150, 25), "Gravity(16f)"))
-                        Utilities.instance.Gravity(16f);
-                    if (GUI.Button(new Rect(10, 270, 150, 25), "Gravity(20f)"))
-                        Utilities.instance.Gravity(20f);
-                    if (GUI.Button(new Rect(10, 295, 150, 25), "ToggleGod()"))
-                        Utilities.instance.ToggleGod();
-                    if (GUI.Button(new Rect(10, 320, 150, 25), "EnableStats()"))
-                        Utilities.instance.EnableStats();
-                    if (GUI.Button(new Rect(10, 345, 150, 25), "SpawnAtCursor()"))
-                        Utilities.instance.SpawnAtCursor();
-                    if (GUI.Button(new Rect(10, 370, 150, 25), "ToggleCustomCam()") && FindObjectOfType<MovableCam>() != null)
+                    //if (GUI.Button(new Rect(10, 195, 150, 25), "Gravity(4.4f)", myButtonStyle))
+                    //    Utilities.instance.Gravity(4.4f);
+                    //if (GUI.Button(new Rect(10, 220, 150, 25), "Gravity(9.81f)"))
+                    //    Utilities.instance.Gravity(9.81f);
+                    //if (GUI.Button(new Rect(10, 245, 150, 25), "Gravity(16f)"))
+                    //    Utilities.instance.Gravity(16f);
+                    //if (GUI.Button(new Rect(10, 270, 150, 25), "Gravity(20f)"))
+                    //    Utilities.instance.Gravity(20f);
+                    //if (GUI.Button(new Rect(10, 295, 150, 25), "ToggleGod()"))
+                    //    Utilities.instance.ToggleGod();
+                    //if (GUI.Button(new Rect(10, 320, 150, 25), "EnableStats()"))
+                    //    Utilities.instance.EnableStats();
+                    //if (GUI.Button(new Rect(10, 345, 150, 25), "SpawnAtCursor()"))
+                    //    Utilities.instance.SpawnAtCursor();
+                    if (GUI.Button(new Rect(10, 120, 150, 25), "ToggleCustomCam()") && FindObjectOfType<MovableCam>() != null)
                         FindObjectOfType<MovableCam>().ToggleCustomCam();
-                    if (GUI.Button(new Rect(10, 395, 150, 25), "ReleaseAllLimbsOnTrick()"))
-                        Utilities.instance.ReleaseAllLimbsOnTrick();
+                    //if (GUI.Button(new Rect(10, 395, 150, 25), "ReleaseAllLimbsOnTrick()"))
+                    //    Utilities.instance.ReleaseAllLimbsOnTrick();
                 }
                 int yPos = 10;
                 if (GUI.Button(new Rect(160, yPos, 150, 25), "\\/ CHECKPOINTS  \\/"))
@@ -192,9 +204,10 @@ namespace SplitTimer
                 playersList.Add(playerBehaviour);
             players = playersList.ToArray();
         }
+        Checkpoint[] allCheckpoints;
         public void Update()
         {
-            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.I))
+            if ((Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.I)))
             {
                 GetAllPlayers();
                 isActive = !isActive;
@@ -202,11 +215,14 @@ namespace SplitTimer
             }
             if (hasBeenActive)
             {
-                foreach (Checkpoint x in FindObjectsOfType<Checkpoint>())
-                    x.doesWork = false;
+                if (allCheckpoints == null)
+                    allCheckpoints = FindObjectsOfType<Checkpoint>();
+                else
+                    foreach (Checkpoint x in allCheckpoints)
+                        x.doesWork = false;
             }
             if (Input.GetKey(KeyCode.P) && Input.GetKey(KeyCode.Alpha0) && Input.GetKeyDown(KeyCode.V))
-                foreach (Checkpoint x in FindObjectsOfType<Checkpoint>())
+                foreach (Checkpoint x in allCheckpoints)
                     x.doesWork = true;
         }
     }

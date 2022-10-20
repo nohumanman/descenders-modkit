@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 8}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -70,7 +70,7 @@ MonoBehaviour:
   m_MinSize: {x: 302, y: 357}
   m_MaxSize: {x: 4002, y: 4307}
   vertical: 1
-  controlID: 11
+  controlID: 118
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -94,7 +94,7 @@ MonoBehaviour:
   m_MinSize: {x: 708, y: 492}
   m_MaxSize: {x: 14004, y: 14042}
   vertical: 0
-  controlID: 124
+  controlID: 148
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -260,7 +260,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
-  controlID: 125
+  controlID: 149
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -284,7 +284,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 221}
   m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 26
+  controlID: 150
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -494,20 +494,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Descenders Split Timer/Speed Modifier
+    - Assets
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Descenders Split Timer/Speed Modifier
+  - Assets
   m_LastFoldersGridSize: -1
   m_LastProjectPath: E:\Projects\desc-comp-toolkit\Client\Unity Project\Split Timer
     Test
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 530}
-    m_SelectedIDs: 16280000
-    m_LastClickedID: 10262
-    m_ExpandedIDs: 00000000f4270000fe270000962800000229000078290000822a00007a2b00009e2b0000022c0000722c0000a42d0000ea2d0000f62d00000c2e0000c22e0000d8360000da360000dc360000de360000e0360000e2360000e4360000e636000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 79}
+    m_SelectedIDs: f4270000
+    m_LastClickedID: 10228
+    m_ExpandedIDs: 00000000f4270000fe270000962800000229000078290000822a00007a2b00009e2b0000022c0000722c0000a62d0000ec2d0000f82d00000e2e0000c42e00000437000006370000083700000a3700000c3700000e370000103700001237000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -535,7 +535,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000f4270000fe270000962800000229000078290000822a00007a2b00009e2b0000022c0000722c0000a42d0000ea2d0000f62d00000c2e0000c22e0000d8360000da360000dc360000de360000e0360000e2360000e4360000e6360000
+    m_ExpandedIDs: 00000000f4270000fe270000962800000229000078290000822a00007a2b00009e2b0000022c0000722c0000a62d0000ec2d0000f82d00000e2e0000c42e00000437000006370000083700000a3700000c3700000e3700001037000012370000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -562,22 +562,22 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c6230000000000006c280000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Speed Modifier
-      m_OriginalName: Speed Modifier
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 11008
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 7}
     m_CreateAssetUtility:
@@ -655,21 +655,21 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: f04bffffae65ffff6466ffff246bffffa674ffff9289ffff50a3ffff06a4ffffc6a8ffff4eb2ffff9efbffff00000000
+    m_ExpandedIDs: 9efbffff00000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Speed Modifier (3)
-      m_OriginalName: Speed Modifier (3)
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: -54912
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 4
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 6}
     m_SearchString: 
@@ -739,7 +739,7 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: -0.17696677, y: 0.48963892, z: -0.10222466, w: -0.8476358}
     speed: 2
-    m_Value: {x: -0.17696679, y: 0.48963895, z: -0.10222467, w: -0.84763587}
+    m_Value: {x: -0.17696677, y: 0.48963892, z: -0.10222466, w: -0.8476358}
   m_Size:
     m_Target: 16.343885
     speed: 2

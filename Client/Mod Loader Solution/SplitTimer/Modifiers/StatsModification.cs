@@ -35,10 +35,12 @@ namespace SplitTimer
     }
     class StatsModification : MonoBehaviour
     {
+        public static StatsModification instance;
         string savePath = Environment.CurrentDirectory;
         public List<Stat> stats = new List<Stat>();
         void Start()
         {
+            instance = this;
             stats.Add(new Stat("acceleration", typeof(float), "\u0084DUt\u0084vi"));
             stats.Add(new Stat("startupAcceleration", typeof(float), "cPkCE^\u0081"));
             stats.Add(new Stat("airFriction", typeof(float), "ei[frnu"));
@@ -62,6 +64,13 @@ namespace SplitTimer
         {
             public string[] obfuscatedNames;
             public string[] currentVals;
+        }
+        public bool IfStatsAreDefault()
+        {
+            foreach (Stat stat in stats)
+                if (stat.currentVal != stat.StartingValue)
+                    return false;
+            return true;
         }
         public void SaveStats()
         {
