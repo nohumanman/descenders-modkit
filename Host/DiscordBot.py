@@ -117,17 +117,22 @@ class DiscordBot(commands.Bot):
             stats = DBMS.get_player_stats(
                 DBMS.get_id_from_name(player_name)
             )[0]
-            await message.channel.send(
-                f'''
-__Info for player '{stats[1]}'__
-
-ID: **{stats[0]}**
-Current Rep: **{stats[2]}**
-Times logged on: **{stats[4]}**
-No. Trails Ridden: **{stats[5]}**
-Total Time (hh:mm:ss): **{datetime.timedelta(seconds=float(round(stats[6])))}**
-                '''
+            embed = discord.Embed()
+            embed.add_field(name="Current rep", value=stats[2])
+            embed.add_field(name="Times logged on", value=stats[4])
+            embed.add_field(name="No. Trails Ridden", value=stats[5])
+            embed.add_field(
+                name="Total Time (hh:mm:ss)",
+                value=datetime.timedelta(seconds=float(round(stats[6])))
             )
+            embed.add_field(name="Total Top Places", value="0 lol")
+            embed.set_footer(text="Stats for " + str(stats[0]))
+            embed.set_author(
+                name=f"Stats for {stats[1]}",
+                url=f"https://steamcommunity.com/profiles/{stats[0]}/",
+                icon_url=stats[7]
+            )
+            await message.channel.send(embed=embed)
 
         if message.content.startswith(self.command_prefix + 'top'):
             try:

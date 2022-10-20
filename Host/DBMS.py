@@ -42,7 +42,8 @@ class DBMS():
                 Max(Rep.timestamp) as last_login,
                 times_logged_on,
                 trails_ridden,
-                total_time
+                total_time,
+                Player.avatar_src
             FROM
                 Player,
                 (
