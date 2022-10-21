@@ -120,9 +120,9 @@ class DiscordBot(commands.Bot):
             embed = discord.Embed()
             embed.add_field(name="Current rep", value=stats[2])
             embed.add_field(name="Times logged on", value=stats[4])
-            embed.add_field(name="No. Trails Ridden", value=stats[5])
+            embed.add_field(name="Trails Ridden", value=stats[5])
             embed.add_field(
-                name="Total Time (hh:mm:ss)",
+                name="Total Time",
                 value=datetime.timedelta(seconds=float(round(stats[6])))
             )
             embed.add_field(name="Total Top Places", value="0 lol")
