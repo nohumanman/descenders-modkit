@@ -183,7 +183,8 @@ class UnitySocket():
                     "time": leaderboard["time"],
                     "name": leaderboard["name"],
                     "pen": float(leaderboard["penalty"]),
-                    "bike": leaderboard["bike"]
+                    "bike": leaderboard["bike"],
+                    "verified": leaderboard["verified"],
                 }
                 for leaderboard in DBMS.get_leaderboard(
                     trail_name

@@ -105,6 +105,12 @@ class Webserver():
             WebserverRoute(
                 "/get-worlds", "get_worlds",
                 self.get_worlds, ["GET"]
+            ),
+            WebserverRoute(
+                "/upload-replay",
+                "upload_replay",
+                self.upload_replay,
+                ["POST"]
             )
         ]
         self.add_routes()
@@ -218,6 +224,13 @@ class Webserver():
 
     def get_trails(self):
         return jsonify({"trails": DBMS.get_trails()})
+
+    def upload_replay(self):
+        logging.error(request.data)
+        request.files["replay"].save(
+            "/home/admin/desc-comp-toolkit/static/replays/"
+            f"{request.form['time_id']}.replay"
+        )
 
     def get_worlds(self):
         return jsonify({"worlds": DBMS.get_worlds()})

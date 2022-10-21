@@ -262,6 +262,7 @@ class TrailTimer():
                     "\\nPenalty of "
                     + str(round(self.total_running_penalty * 100) / 100)
                 )
+            self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
             self.network_player.send(
                 "TIMER_FINISH|"
                 + str(

@@ -107,6 +107,17 @@ namespace ModLoaderSolution
         {
 
         }
+        public void SaveReplayToFile(string path)
+        {
+            string replayObfuscatedName = "Ym}\u0084upr";
+            Debug.Log("113");
+            Assembly a = Assembly.Load("Assembly-CSharp");
+            Type replayType = a.GetType("l\u0080KRMtV");
+            MethodInfo magicMethod = replayType.GetMethod("I\u0083tz]jk");
+            object replayClassObject = typeof(VehicleReplay).GetField(replayObfuscatedName).GetValue(FindObjectOfType<VehicleReplay>());
+            magicMethod.Invoke(replayClassObject, new object[] { path });
+            // replay.SaveReplay(path);
+        }
         public float AngleFromGround()
         {
             return Vector3.Angle(GetPlayer().transform.up, Vector3.up);

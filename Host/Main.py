@@ -13,7 +13,7 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 log_location = script_path + "/SplitTimer.log"
 
 split_timer_logger = logging.getLogger('DescendersSplitTimer')
-split_timer_logger.setLevel(logging.INFO)
+split_timer_logger.setLevel(logging.DEBUG)
 
 
 handler = logging.FileHandler(log_location)

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using ModLoaderSolution;
+using UnityEngine.Networking;
 
 namespace SplitTimer{
 	public class NetClient : MonoBehaviour {
@@ -81,6 +82,33 @@ namespace SplitTimer{
 				Debug.Log("NetClient | On client connect exception " + e); 		
 			}
 		}
+
+		public IEnumerator UploadReplay(string replay, string time_id)
+        {
+			Byte[] bytes = System.IO.File.ReadAllBytes(replay);
+			System.IO.File.Delete(replay);
+
+			WWWForm form = new WWWForm();
+			form.AddField("time_id", time_id);
+			form.AddBinaryData("replay", bytes, "replay");
+
+			using (UnityWebRequest www = UnityWebRequest.Post(
+				"https://split-timer.nohumanman.com/upload-replay",
+				form
+			))
+			{
+				yield return www.SendWebRequest();
+
+				if (www.isNetworkError || www.isHttpError)
+				{
+					Debug.Log(www.error);
+				}
+				else
+				{
+					Debug.Log("Upload complete!");
+				}
+			}
+        }
 		private void ListenForData() {
 			try {
 				Debug.Log("NetClient | Creating TcpClient()");
@@ -114,6 +142,16 @@ namespace SplitTimer{
 				foreach (MedalSystem medalSystem in FindObjectsOfType<MedalSystem>())
 					medalSystem.NetStart();
 				this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
+			}
+			if (message.StartsWith("UPLOAD_REPLAY"))
+            {
+				string time_id = message.Split('|')[1];
+				Utilities.instance.SaveReplayToFile("TEMP");
+				string replayLocation = (
+					Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+					+ "Low\\RageSquid\\Descenders\\Replays\\TEMP.replay"
+				);
+				StartCoroutine(UploadReplay(replayLocation, time_id));
 			}
 			if (message.StartsWith("GET_POS"))
             {
@@ -187,7 +225,7 @@ namespace SplitTimer{
 					{
 						string leaderboardJson = leaderboard[2];
 						LeaderboardInfo leaderboardInfo = JsonUtility.FromJson<LeaderboardInfo>(leaderboardJson.Replace("'", "\""));
-						trail.autoLeaderboardText.GetComponent<TextMesh>().text = trailName + "\n" + leaderboardInfo.LeaderboardAsString();
+						trail.autoLeaderboardText.GetComponent<TextMesh>().text = trailName + " (₸ is verified)\n" + leaderboardInfo.LeaderboardAsString();
 					}
 				}
 			}

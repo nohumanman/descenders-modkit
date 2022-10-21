@@ -11,6 +11,7 @@ namespace SplitTimer
         public int[] place;
         public float[] time;
         public float[] pen;
+        public string[] verified;
         int nameMaxLen = 15;
         string MakeLengthOf(string text, int lengthAim)
         {
@@ -24,7 +25,7 @@ namespace SplitTimer
         string TruncateText(string text, int maxLen)
         {
             if (text.Length > maxLen)
-                return text.Substring(0, maxLen) + "...";
+                return text.Substring(0, maxLen-3) + "...";
             return text;
         }
         public string LeaderboardAsString()
@@ -40,7 +41,10 @@ namespace SplitTimer
                 maxNameLength = nameMaxLen;
             for (int i = 0; i < name.Length && i < 10; i++)
             {
-                leaderboardString += place[i] + ". " + MakeLengthOf(TruncateText(name[i], nameMaxLen), maxNameLength) + " | " + FormatTime(time[i]) + "   ~" + (Mathf.Round(pen[i] * 10) / 10) + " pen\n";
+                if (verified[i] == "1")
+                    leaderboardString += place[i] + ". " + MakeLengthOf(TruncateText(name[i], nameMaxLen), maxNameLength) + " ₸ " + FormatTime(time[i]) + "   ~" + (Mathf.Round(pen[i] * 10) / 10) + " pen\n";
+                else
+                    leaderboardString += place[i] + ". " + MakeLengthOf(TruncateText(name[i], nameMaxLen), maxNameLength) + " | " + FormatTime(time[i]) + "   ~" + (Mathf.Round(pen[i] * 10) / 10) + " pen\n";
             }
             return leaderboardString;
         }

@@ -90,8 +90,6 @@ namespace SplitTimer
                     //    Utilities.instance.SpawnAtCursor();
                     if (GUI.Button(new Rect(10, 120, 150, 25), "ToggleCustomCam()") && FindObjectOfType<MovableCam>() != null)
                         FindObjectOfType<MovableCam>().ToggleCustomCam();
-                    //if (GUI.Button(new Rect(10, 395, 150, 25), "ReleaseAllLimbsOnTrick()"))
-                    //    Utilities.instance.ReleaseAllLimbsOnTrick();
                 }
                 int yPos = 10;
                 if (GUI.Button(new Rect(160, yPos, 150, 25), "\\/ CHECKPOINTS  \\/"))
