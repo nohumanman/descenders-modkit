@@ -247,44 +247,37 @@
                                     </v-col>
                                 </v-row>
                                 <div v-if="times.length != 0">
-                                    <v-col>
-                                        <table style="color:white; border:white;">
+                                        <table style="color:white; border:white; padding: 0; margin: 0;">
                                             <tr>
                                                 <th style="padding:10px;">pfp</th>
                                                 <th style="padding:10px;">Steam Name</th>
+                                                <th style="padding:10px; color:rgb(138, 138, 255)">Time</th>
                                                 <th style="padding:10px;">Steam ID</th>
                                                 <th style="padding:10px;">Time ID</th>
                                                 <th style="padding:10px;">World Name</th>
                                                 <th style="padding:10px;">Trail Name</th>
-                                                <th style="padding:10px; color:rgb(138, 138, 255)">Time</th>
-                                                <th style="padding:10px;">Should Ignore Time</th>
-                                                <th style="padding:10px;">Was Monitored</th>
-                                                <th style="padding:10px;">Starting Speed</th>
+                                                <th style="padding:10px;">ignore</th>
+                                                <th style="padding:10px;">Start Speed</th>
                                                 <th style="padding:10px;">Version</th>
-                                                <th style="padding:10px;">Ignore Time</th>
-                                                <th style="padding:10px;">Toggle Monitored</th>
+                                                <th style="padding:10px;">Replays</th>
                                             </tr>
                                             <tr v-for="time, x in times">
                                                 <td style="padding:10px;"><img height="50" width="50" :src="time.avatar_src"></td>
                                                 <td style="padding:10px;">[[time.steam_name]]</td>
+                                                <td style="padding:10px; color:rgb(138, 138, 255)">[[secs_to_str(time.total_time)]]</td>
                                                 <td style="padding:10px;">[[time.steam_id]]</td>
                                                 <td style="padding:10px;">[[time.time_id]]</td>
                                                 <td style="padding:10px;">[[time.world_name]]</td>
                                                 <td style="padding:10px;">[[time.trail_name]]</td>
-                                                <td style="padding:10px; color:rgb(138, 138, 255)">[[secs_to_str(time.total_time)]]</td>
-                                                <td style="padding:10px;">[[time.ignore]]</td>
-                                                <td style="padding:10px;">[[time.was_monitored]]</td>
+                                                <td style="padding:10px;">
+                                                    <v-switch v-model="time.ignore" :false-value="'False'" :true-value="'True'"></v-switch>
+                                                </td>
                                                 <td style="padding:10px;">[[time.starting_speed]]</td>
                                                 <td style="padding:10px;">[[time.version]]</td>
-                                                <td style="padding:10px;"><v-btn
-                                                    @click="ignr(time)"
-                                                >Ignore Time</v-btn></td>
-                                                <td style="padding:10px;"><v-btn
-                                                    @click="tgglmntb(time)"
-                                                >Toggle Monitored</v-btn></td>
+                                                <td style="padding:10px;"><v-btn :href="'/static/replays/' + time.time_id + '.replay'">replay</v-btn></td>
                                             </tr>
                                         </table>
-                                    </v-col>
+                                    
                                 </div>
                             </v-container>
                         </v-tab-item>

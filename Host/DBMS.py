@@ -474,6 +474,18 @@ class DBMS():
         ]
 
     @staticmethod
+    def max_start_time(trail_time: str) -> float:
+        statement = f'''
+            SELECT max_starting_time FROM TrailStartTime
+            WHERE trail_name = "{trail_time}"
+        '''
+        result = DBMS.execute_sql(statement)
+        try:
+            return float(result[0][0])
+        except IndexError:
+            return 50
+
+    @staticmethod
     def set_ignore_time(time_id, val):
         statement = f'''
             UPDATE Time

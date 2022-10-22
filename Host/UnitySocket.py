@@ -154,10 +154,12 @@ class UnitySocket():
             f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
             f" called start_speed({starting_speed})"
         )
-        if starting_speed > 50:
-            self.send("INVALIDATE_TIME|You went through the start too fast!")
         for trail in self.trails:
             self.trails[trail].starting_speed = starting_speed
+            if starting_speed > DBMS.max_start_time(trail):
+                self.trails[trail].invalidate_timer(
+                    "You went through the start too fast!"
+                )
 
     def convert_to_unity(self, leaderboard):
         if len(leaderboard) == 0:

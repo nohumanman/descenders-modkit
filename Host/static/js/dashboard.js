@@ -99,7 +99,9 @@ var app = new Vue({
         trails: [],
         daily_player_world: "",
         getting_concurrency: false,
-        lim: 10
+        lim: 30,
+        showAvatars: false,
+        worlds: [],
     },
     methods: {
         SubmitEval(id, eval_command){
@@ -191,6 +193,11 @@ var app = new Vue({
             app.ids.forEach(function(id){
                 $.get("/eval/" + id.id + "?order=RIDERSGATE|" + num.toString());
             });
+        },
+        StrToBool(text){
+            if (text == "True")
+                return true
+            return false;
         },
         toHours(value){
             const sec = parseInt(value, 10); // convert value to number if it's string

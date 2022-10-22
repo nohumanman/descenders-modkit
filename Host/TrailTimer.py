@@ -53,8 +53,8 @@ class TrailTimer():
                     self.current_penalty = (time.time()-self.exit_time)*100
                     if self.current_penalty < 2:
                         self.current_penalty = 2
-                    if self.current_penalty < 0.5:
-                        self.current_penalty = 0
+                    # if self.current_penalty < 0.5:
+                    #     self.current_penalty = 0
                     self.total_running_penalty += self.current_penalty
                     self.network_player.send(
                         f"SPLIT_TIME|penalty of "
