@@ -565,6 +565,15 @@ class DBMS():
         DBMS.execute_sql(statement, write=True)
 
     @staticmethod
+    def get_total_times(limit=10):
+        statement = f'''
+            SELECT * FROM TotalTime
+            LIMIT {limit}
+        '''
+        result = DBMS.execute_sql(statement)
+        return result
+
+    @staticmethod
     def get_time_on_world(steam_id, world="none"):
         statement = f'''
             SELECT sum(time_ended - time_started) AS total_time FROM Session

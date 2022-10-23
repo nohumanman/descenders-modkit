@@ -5,10 +5,17 @@ import threading
 import asyncio
 from DBMS import DBMS
 import logging
-import datetime
 import time
 
 split_timer_logger = logging.getLogger('DescendersSplitTimer')
+
+
+def posh_time(seconds):
+    days = int(round(seconds / 86400))
+    hours = int(round((seconds % 86400) / 3600))
+    minutes = int(round((seconds % 3600) / 60))
+    seconds = int(round(seconds % 60))
+    return f"{days} days, {hours}h, {minutes}m, {seconds}s"
 
 
 class DiscordBot(commands.Bot):
@@ -67,6 +74,23 @@ class DiscordBot(commands.Bot):
                 "https://youtu.be/NZ9qHsONS20"
             )
             self.time_of_last_lux_request = time.time()
+        if message.content.startswith(self.command_prefix + "totaltime"):
+            total_times = DBMS.get_total_times()
+            text = ""
+            i = 1
+            for total_time in total_times:
+                steam_name = total_time[1]
+                act_time = float(round(total_time[2]))
+                text += (
+                    f"{i}. **{steam_name}** has "
+                    f"spent {posh_time(act_time)} racing\n")
+                i += 1
+            try:
+                await message.channel.send(text)
+            except Exception:
+                await message.channel.send(
+                    "Sorry - too many players to display!"
+                )
         if message.author.id in [id for id in self.queue]:
             leaderboard = DBMS.get_leaderboard(
                 message.content,
@@ -123,7 +147,7 @@ class DiscordBot(commands.Bot):
             embed.add_field(name="Trails Ridden", value=stats[5])
             embed.add_field(
                 name="Total Time",
-                value=datetime.timedelta(seconds=float(round(stats[6])))
+                value=posh_time(float(round(stats[6])))
             )
             embed.add_field(name="Total Top Places", value="0 lol")
             embed.set_footer(text="Stats for " + str(stats[0]))
