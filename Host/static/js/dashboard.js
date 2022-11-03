@@ -100,7 +100,7 @@ var app = new Vue({
         daily_player_world: "",
         getting_concurrency: false,
         lim: 30,
-        showAvatars: false,
+        showAvatars: true,
         worlds: [],
     },
     methods: {

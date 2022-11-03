@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using PlayerIdentification;
 using ModLoaderSolution;
+using UnityEngine.SceneManagement;
 
 namespace SplitTimer{
 	public class PlayerInfo : MonoBehaviour {
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
-		public string version = "0.1.80";
+		public string version = "0.1.81";
 		public float speed;
 		bool hasLoadedPlayer = false;
 		bool wasBailed = false;
@@ -22,19 +23,19 @@ namespace SplitTimer{
 				Instance = this; 
 		}
 		public void NetStart(){
-			OnMapEnter(MapInfo.Instance.MapId, MapInfo.Instance.MapName);
+			OnMapEnter("IDHERE", MapInfo.Instance.ModName);
 			if (MapInfo.Instance != null)
             {
 				MapInfo.Instance.AddMetric("version", version);
 				MapInfo.Instance.AddMetric("steam_id", steamIntegration.getSteamId());
 				MapInfo.Instance.AddMetric("steam_name", steamIntegration.getName());
-				MapInfo.Instance.AddMetric("world_name", MapInfo.Instance.MapName);
+				MapInfo.Instance.AddMetric("world_name", MapInfo.Instance.ModName);
 			}
 			NetClient.Instance.SendData("SET_BIKE|" + Utilities.instance.GetBike());
 			NetClient.Instance.SendData("VERSION|" + version);
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
-			NetClient.Instance.SendData("WORLD_NAME|" + MapInfo.Instance.MapName);
+			NetClient.Instance.SendData("WORLD_NAME|" + MapInfo.Instance.ModName);
 			NetClient.Instance.SendData("BIKE_TYPE|" + GetComponent<BikeSwitcher>().oldBike);
 			foreach (Trail trail in FindObjectsOfType<Trail>())
             {

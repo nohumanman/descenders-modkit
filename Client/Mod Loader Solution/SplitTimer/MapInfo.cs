@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace SplitTimer{
 	public class Metric
@@ -10,8 +11,7 @@ namespace SplitTimer{
 		public string value;
     }
 	public class MapInfo : MonoBehaviour {
-		public string MapId;
-		public string MapName;
+		public string ModName;
 		public Text debugText;
 		public bool debugEnabled = false;
 		SplitTimerText disabledText;
@@ -25,6 +25,7 @@ namespace SplitTimer{
 			if (debugText != null)
 				debugText.gameObject.SetActive(false);
 			metrics = new List<Metric>();
+			ModName = SceneManager.GetActiveScene().name.Split('-')[0];
 		}
 		public void AddMetric(string id, string value)
         {
