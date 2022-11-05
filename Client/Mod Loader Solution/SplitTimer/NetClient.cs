@@ -30,6 +30,10 @@ namespace SplitTimer{
 			Debug.Log("NetClient | Connecting to tcp server port " + port.ToString() + " with ip '" + ip + "'");
 			ConnectToTcpServer();
 			ridersGates = FindObjectsOfType<RidersGate>();
+			if (new PlayerIdentification.SteamIntegration().getName() == "Descender")
+            {
+				Utilities.instance.ToggleGod();
+            }
 		}
 		void Update()
         {
