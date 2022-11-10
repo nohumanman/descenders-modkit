@@ -64,32 +64,14 @@ namespace SplitTimer
                 {
                     if (GUI.Button(new Rect(10, 45, 150, 25), "Bail()", myButtonStyle))
                         Utilities.instance.Bail();
-                    //if (GUI.Button(new Rect(10, 70, 150, 25), "ApplyStupidModifiers()", myButtonStyle))
-                    //    FindObjectOfType<StatsModification>().ApplyStupidModifiers();
-                    //if (GUI.Button(new Rect(10, 95, 150, 25), "ToggleFly()", myButtonStyle))
-                    //    Utilities.instance.ToggleFly();
-                    //if (GUI.Button(new Rect(10, 120, 150, 25), "Dissapear()", myButtonStyle))
-                    //    Utilities.instance.ToggleSpectator();
                     if (GUI.Button(new Rect(10, 70, 150, 25), "CutBrakes()", myButtonStyle))
                         Utilities.instance.CutBrakes();
                     if (GUI.Button(new Rect(10, 95, 150, 25), "TogglePlayerCollision()", myButtonStyle))
                         Utilities.instance.TogglePlayerCollision();
-                    //if (GUI.Button(new Rect(10, 195, 150, 25), "Gravity(4.4f)", myButtonStyle))
-                    //    Utilities.instance.Gravity(4.4f);
-                    //if (GUI.Button(new Rect(10, 220, 150, 25), "Gravity(9.81f)"))
-                    //    Utilities.instance.Gravity(9.81f);
-                    //if (GUI.Button(new Rect(10, 245, 150, 25), "Gravity(16f)"))
-                    //    Utilities.instance.Gravity(16f);
-                    //if (GUI.Button(new Rect(10, 270, 150, 25), "Gravity(20f)"))
-                    //    Utilities.instance.Gravity(20f);
-                    //if (GUI.Button(new Rect(10, 295, 150, 25), "ToggleGod()"))
-                    //    Utilities.instance.ToggleGod();
-                    //if (GUI.Button(new Rect(10, 320, 150, 25), "EnableStats()"))
-                    //    Utilities.instance.EnableStats();
-                    //if (GUI.Button(new Rect(10, 345, 150, 25), "SpawnAtCursor()"))
-                    //    Utilities.instance.SpawnAtCursor();
                     if (GUI.Button(new Rect(10, 120, 150, 25), "ToggleCustomCam()") && FindObjectOfType<MovableCam>() != null)
                         FindObjectOfType<MovableCam>().ToggleCustomCam();
+                    if (GUI.Button(new Rect(10, 145, 150, 25), "DisableAllBendGoals()", myButtonStyle))
+                        Utilities.instance.DisableAllBendGoals();
                 }
                 int yPos = 10;
                 if (GUI.Button(new Rect(160, yPos, 150, 25), "\\/ CHECKPOINTS  \\/"))

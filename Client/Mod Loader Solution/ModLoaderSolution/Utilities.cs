@@ -723,7 +723,11 @@ namespace ModLoaderSolution
             GameObject player = GetPlayer();
             player.GetComponent<Rigidbody>().constraints = constraints;
         }
-
+        public void DisableAllBendGoals()
+        {
+            GameObject.Find("BendGoal_Left").SetActive(false);
+            GameObject.Find("BendGoal_Right").SetActive(false);
+        }
         public void ForceBail(Transform transform)
         {
             //GetCyclist(transform).SendMessage("Bail");
