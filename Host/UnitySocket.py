@@ -71,7 +71,9 @@ operations = {
     "GET_MEDALS":
         lambda netPlayer, data: netPlayer.get_medals(str(data[1])),
     "POS":
-        lambda netPlayer, data: netPlayer.set_pos(data[1], data[2], data[3])
+        lambda netPlayer, data: netPlayer.set_pos(data[1], data[2], data[3]),
+    "LOG_LINE":
+        lambda netPlayer, data: netPlayer.log_line(data[1:]),
 }
 
 
@@ -98,6 +100,11 @@ class UnitySocket():
         self.pos = Vector3()
         self.send("SUCCESS")
         self.send("INVALIDATE_TIME|scripts by nohumanman :)")
+
+    def log_line(self, line):
+        line = "|".join(line)
+        with open(f"/home/admin/desc-comp-toolkit/output_logs/{self.steam_id}.txt", "a+") as my_file:
+            my_file.write(f"{round(time.time())} - {line}\n")
 
     def set_pos(self, x, y, z):
         self.pos.x = float(x)

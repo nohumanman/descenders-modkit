@@ -4,18 +4,20 @@ using UnityEngine;
 using PlayerIdentification;
 using ModLoaderSolution;
 using UnityEngine.SceneManagement;
+using System;
 
 namespace SplitTimer{
 	public class PlayerInfo : MonoBehaviour {
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
-		public string version = "0.1.82";
+		public string version = "0.2.10";
 		public float speed;
 		bool hasLoadedPlayer = false;
 		bool wasBailed = false;
 		public static PlayerInfo Instance { get; private set; }
 		void Awake(){
+			Debug.Log("PlayerInfo | LocalApplicationData '" + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "'");
 			Debug.Log("PlayerInfo | Version number " + version);
 			if (Instance != null && Instance != this) 
 				Destroy(this); 

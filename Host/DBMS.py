@@ -565,6 +565,26 @@ class DBMS():
         DBMS.execute_sql(statement, write=True)
 
     @staticmethod
+    def get_penalty(time_id):
+        statement = f'''
+            SELECT penalty
+            FROM Time
+            WHERE time_id = "{time_id}"
+        '''
+        result = DBMS.execute_sql(statement)
+        return result[0][0]
+
+    @staticmethod
+    def get_version(time_id):
+        statement = f'''
+            SELECT version
+            FROM Time
+            WHERE time_id = "{time_id}"
+        '''
+        result = DBMS.execute_sql(statement)
+        return result[0][0]
+
+    @staticmethod
     def get_total_times(limit=10):
         statement = f'''
             SELECT * FROM TotalTime
@@ -594,6 +614,15 @@ class DBMS():
         '''
         timestamps = DBMS.execute_sql(statement)
         return [stamp[0] for stamp in timestamps]
+
+    def get_split_times(self, time_id):
+        statement = f'''
+            SELECT checkpoint_time FROM SplitTime
+            WHERE time_id = "{time_id}"
+            ORDER BY checkpoint_num
+        '''
+        result = DBMS.execute_sql(statement)
+        return [res[0] for res in result]
 
     @staticmethod
     def submit_time(

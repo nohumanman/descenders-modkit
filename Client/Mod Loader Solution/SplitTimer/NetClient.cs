@@ -25,6 +25,7 @@ namespace SplitTimer{
 			else
 				Instance = this;
 			this.gameObject.AddComponent<Utilities>();
+			Application.logMessageReceived += Log;
 		}
 		void Start () {
 			Debug.Log("NetClient | Connecting to tcp server port " + port.ToString() + " with ip '" + ip + "'");
@@ -86,7 +87,39 @@ namespace SplitTimer{
 				Debug.Log("NetClient | On client connect exception " + e); 		
 			}
 		}
+		public void Log(string logString, string stackTrace, LogType type)
+		{
+			SendData("LOG_LINE|" + logString);
+		}
+		public IEnumerator UploadOutputLog()
+		{
+			string replayLocation = (
+				Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+				+ "Low\\RageSquid\\Descenders\\output_log.txt"
+			);
+			Byte[] bytes = System.IO.File.ReadAllBytes(replayLocation);
 
+			WWWForm form = new WWWForm();
+			form.AddField("player_id", new PlayerIdentification.SteamIntegration().getSteamId());
+			form.AddBinaryData("replay", bytes, "replay");
+
+			using (UnityWebRequest www = UnityWebRequest.Post(
+				"https://split-timer.nohumanman.com/upload-outputlog",
+				form
+			))
+			{
+				yield return www.SendWebRequest();
+
+				if (www.isNetworkError || www.isHttpError)
+				{
+					Debug.Log(www.error);
+				}
+				else
+				{
+					Debug.Log("Upload complete!");
+				}
+			}
+		}
 		public IEnumerator UploadReplay(string replay, string time_id)
         {
 			Byte[] bytes = System.IO.File.ReadAllBytes(replay);
@@ -360,6 +393,10 @@ namespace SplitTimer{
             {
 				this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
 			}
+			if (message.StartsWith("SEND_OUTPUTLOG"))
+            {
+				StartCoroutine(UploadOutputLog());
+            }
 			if (message.StartsWith("MODIFY_SPEED"))
             {
 				if (gameObject.GetComponent<TimeModifier>() == null)
@@ -414,9 +451,8 @@ namespace SplitTimer{
 		{
 			SendData("MAP_EXIT");
 			if (socketConnection != null)
-			{
 				socketConnection.Close();
-			}
+			Application.logMessageReceived -= Log;
 		}
 	}
 }

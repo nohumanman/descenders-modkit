@@ -56,6 +56,16 @@ class DiscordBot(commands.Bot):
         split_timer_logger.info(f"DiscordBot.py - Message sent '{message}'")
         if message.author == self.user:
             return
+        if message.content.startswith(self.command_prefix + "help"):
+            hp = '''
+__commands__
+`!help` - this message
+`!inspect <time_id>` - shows details of a particular run
+`!top <number>` - shows the top <number> of runs on a trail entered after !top is called
+`!totaltime` - shows the total time spent on a trail entered
+`!info <player_name>` - shows info about a player
+            '''
+            await message.channel.send(hp)
         if (
             (
                 (
@@ -74,6 +84,19 @@ class DiscordBot(commands.Bot):
                 "https://youtu.be/NZ9qHsONS20"
             )
             self.time_of_last_lux_request = time.time()
+        if message.content.startswith(self.command_prefix + "inspect"):
+            time_id = message.content.split(" ")[1]
+            split_times = DBMS().get_split_times(time_id)
+            out = "__Inspection of " + time_id + "__\n\n"
+            for i, split_time in enumerate(split_times):
+                out += f"Checkpoint {i+1}: {str(split_time)}\n"
+            await message.channel.send(out)
+            out = f"{time_id} had a penalty of {DBMS.get_penalty(time_id)}\n"
+            await message.channel.send(out)
+            out = f"{time_id} was on version {DBMS.get_version(time_id)}\n"
+            await message.channel.send(out)
+            out = f"Replay should be found at https://split-timer.nohumanman.com/static/replays/{time_id}.replay\n"
+            await message.channel.send(out)
         if message.content.startswith(self.command_prefix + "totaltime"):
             total_times = DBMS.get_total_times()
             text = ""
