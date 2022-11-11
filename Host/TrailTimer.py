@@ -36,7 +36,6 @@ class TrailTimer():
         self.starting_speed = None
         self.total_running_penalty = 0.0
         self.current_penalty = 0.0
-        self.exit_position = None
         self.player_positions = []
         self.exit_time = 0
 
@@ -48,19 +47,18 @@ class TrailTimer():
             len(self.__boundaries) == 0
             and not self.network_player.being_monitored
         ):
-            if self.exit_position is not None:
-                if (self.started):
-                    self.current_penalty = (time.time()-self.exit_time)*100
-                    if self.current_penalty < 2:
-                        self.current_penalty = 2
-                    # if self.current_penalty < 0.5:
-                    #     self.current_penalty = 0
-                    self.total_running_penalty += self.current_penalty
-                    self.network_player.send(
-                        f"SPLIT_TIME|penalty of "
-                        f"~{round(self.current_penalty * 100) / 100}"
-                    )
-                    self.network_player.set_text_default()
+            if (self.started):
+                self.current_penalty = (time.time()-self.exit_time)*100
+                if self.current_penalty < 2:
+                    self.current_penalty = 2
+                # if self.current_penalty < 0.5:
+                #     self.current_penalty = 0
+                self.total_running_penalty += self.current_penalty
+                self.network_player.send(
+                    f"SPLIT_TIME|penalty of "
+                    f"~{round(self.current_penalty * 100) / 100}"
+                )
+                self.network_player.set_text_default()
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
 
@@ -72,11 +70,7 @@ class TrailTimer():
             and not self.network_player.being_monitored
         ):
             if (self.started):
-                self.exit_position = Vector3()
                 self.exit_time = time.time()
-                self.exit_position.x = self.network_player.pos.x
-                self.exit_position.y = self.network_player.pos.y
-                self.exit_position.z = self.network_player.pos.z
                 self.network_player.set_text_colour(255, 0, 0)
 
     def start_timer(self, total_checkpoints: int):
@@ -192,6 +186,9 @@ class TrailTimer():
         )
         self.started = False
         from DBMS import DBMS
+        if len(self.__boundaries) == 0:
+            self.invalidate_timer("OUT OF BOUNDS ON FINISH!!!")
+            return
         if self.total_checkpoints is None:
             self.invalidate_timer("Didn't go through all checkpoints.")
             if not self.network_player.being_monitored:
