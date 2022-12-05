@@ -121,6 +121,19 @@ var app = new Vue({
                 app.trails = data["trails"];
             })
         },
+        UpdateTimeIgnore(time){
+            $.get("/ignore-time/" + time.time_id + "/" + time.ignore, function(text){
+                // if failed, revert to previous time ignore.
+                if (text != "success")
+                    time.ignore = app.InverseStringBool(time.ignore);
+            });
+        },
+        InverseStringBool(value){
+            if (value == "True")
+                return "False";
+            else
+                return "True";
+        },
         GetWorlds(){
             $.get("/get-worlds", function(data){
                 app.worlds = data["worlds"];

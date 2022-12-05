@@ -87,13 +87,6 @@ class TrailTimer():
             self.total_checkpoints = total_checkpoints
             self.time_started = time.time()
             self.times = []
-        discord_bot = self.network_player.parent.discord_bot
-        discord_bot.loop.run_until_complete(
-            discord_bot.ban_note(
-                f"{self.network_player.steam_name}"
-                f" started trail {self.trail_name}"
-            )
-        )
 
     def checkpoint(self, client_time: str):
         split_timer_logger.info(

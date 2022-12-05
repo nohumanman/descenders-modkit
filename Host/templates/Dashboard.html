@@ -168,10 +168,6 @@
                                             </v-row>
                                             <br><br>
                                             <v-row justify="center">
-                                                Pos: '[[id.pos]]'
-                                            </v-row>
-                                            <br><br>
-                                            <v-row justify="center">
                                                 <p>Reputation: [[addCommaToNum(id.reputation)]]</p><br>
                                             </v-row>
                                             <span v-if="id.address != null">
@@ -270,7 +266,7 @@
                                                 <td style="padding:10px;">[[time.world_name]]</td>
                                                 <td style="padding:10px;">[[time.trail_name]]</td>
                                                 <td style="padding:10px;">
-                                                    <v-switch v-model="time.ignore" :false-value="'False'" :true-value="'True'"></v-switch>
+                                                    <v-switch v-model="time.ignore" @click="UpdateTimeIgnore(time)" :false-value="'False'" :true-value="'True'"></v-switch>
                                                 </td>
                                                 <td style="padding:10px;">[[time.starting_speed]]</td>
                                                 <td style="padding:10px;">[[time.version]]</td>

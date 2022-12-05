@@ -112,6 +112,12 @@ class Webserver():
                 "upload_replay",
                 self.upload_replay,
                 ["POST"]
+            ),
+            WebserverRoute(
+                "/ignore-time/<time_id>/<value>",
+                "ignore_time",
+                self.ignore_time,
+                ["GET"]
             )
         ]
         self.add_routes()
@@ -225,6 +231,14 @@ class Webserver():
 
     def get_trails(self):
         return jsonify({"trails": DBMS.get_trails()})
+
+    def ignore_time(self, time_id : int, value: str):
+        if self.permission() == "AUTHORISED":
+            # value should be 'False' or 'True
+            DBMS.set_ignore_time(time_id, value)
+            return "success"
+        else:
+            return "INVALID_PERMS"
 
     def upload_replay(self):
         logging.error(request.data)
