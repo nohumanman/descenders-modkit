@@ -159,7 +159,7 @@ var app = new Vue({
         },
         getLeaderboard(){
             app.times = [];
-            $.get("/get-all-times", data={"lim": app.lim}, function(data){
+            $.get("/get-all-times", data={"lim": 100}, function(data){
                 app.times = data["times"];
             })
         },
@@ -239,6 +239,6 @@ setInterval(app.CheckStatus, 1000);
 app.getSteamId();
 setInterval(app.getSteamId, 500);
 //app.GetConcurrency();
-//app.GetTrails();
+app.GetTrails();
 //app.GetWorlds();
-//app.getLeaderboard();
+app.getLeaderboard();

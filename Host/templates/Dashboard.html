@@ -104,7 +104,6 @@
                     <v-tabs v-model="tab">
                         <v-tab>User Dashboard</v-tab>
                         <v-tab>Times</v-tab>
-                        <v-tab>Worlds</v-tab>
                         <v-tab>Trails</v-tab>
                     </v-tabs>
                     <v-tabs-items v-model="tab" fill-height>
@@ -248,7 +247,7 @@
                                         </v-img>
                                         <br><br>
                                         <p style="padding-left:20px; padding-right:20px;">
-                                            A trail on <b :style="{color: stringToColour(trail.world_name)}">[[trail.world_name]]</b> that has been ridden <i>[[trail.times_ridden]]</i> times with an average starting time of [[Math.round(trail.average_start_speed)]].
+                                            A trail on <b>[[trail.world_name]]</b> that has been ridden <i>[[trail.times_ridden]]</i> times with an average starting time of [[Math.round(trail.average_start_speed)]].
                                         </p>
                                         <v-col align="center" style="padding:50px;">
                                             <v-row v-for="player in trail.leaderboard" style="text-align:center">
