@@ -11,6 +11,10 @@ namespace SplitTimer
             foreach (object obj in objects)
             {
                 GameObject g = (GameObject)obj;
+                string replaceBikeJson = JsonUtility.ToJson(g.GetComponent("ReplaceBike"));
+                if (replaceBikeJson != "" && replaceBikeJson != null)
+                    JsonUtility.FromJsonOverwrite(replaceBikeJson, g.AddComponent<ReplaceBikeAttempt>());
+
                 string removeTerrainjson = JsonUtility.ToJson(g.GetComponent("RemoveTerrainBoundary"));
                 if (removeTerrainjson != "" && removeTerrainjson != null)
                     JsonUtility.FromJsonOverwrite(removeTerrainjson, g.AddComponent<RemoveTerrainBoundaries>());

@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using System.Collections.Generic;
+using ModLoaderSolution;
 
 namespace SplitTimer
 {
@@ -46,9 +47,26 @@ namespace SplitTimer
                 }
             }
         }
+        int framesSinceBoundaryCheck;
         public void Update()
         {
+            if (Utilities.instance.isInReplayMode())
+                return;
             clientTime += Time.deltaTime;
+            framesSinceBoundaryCheck += 1;
+            if (framesSinceBoundaryCheck > 60){
+                framesSinceBoundaryCheck = 0;
+                //if (InAllBoundaries())
+               //     
+                //);
+            }
+        }
+        bool InAllBoundaries()
+        {
+            foreach(GameObject bound in boundaryList)
+                if (bound.GetComponent<Boundary>().inBoundary)
+                    return false;
+            return true;
         }
     }
 }

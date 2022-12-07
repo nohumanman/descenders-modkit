@@ -79,6 +79,7 @@
      <Compile Include="Assets\Descenders Split Timer\Teleport Pad\TeleportPad.cs" />
      <Compile Include="Assets\Descenders Split Timer\Teleport Pad\TeleportPadTerrain.cs" />
      <Compile Include="Assets\Descenders Split Timer\TerrainBoundryRemover\RemoveTerrainBoundary.cs" />
+     <Compile Include="Assets\ReplaceBikeAttempt\ReplaceBike.cs" />
      <None Include="Assets\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Emissive Diffuse.shader" />
      <None Include="Assets\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Transparent Diffuse Bump Cutout.shader" />
      <None Include="Assets\Descenders Split Timer\Speed Trap\Materials\3DText.shader" />

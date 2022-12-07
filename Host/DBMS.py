@@ -338,6 +338,17 @@ class DBMS():
         ]
 
     @staticmethod
+    def get_all_players():
+        statement = f'''
+            SELECT Player.steam_id, Player.steam_name, Player.avatar_src, Rep.rep, max(Rep.timestamp) as rep_timestamp FROM Player
+            INNER JOIN Rep on Rep.steam_id = Player.steam_id
+            GROUP BY Player.steam_id
+            ORDER BY Player.steam_name ASC
+        '''
+        result = DBMS.execute_sql(statement)
+        return result
+
+    @staticmethod
     def submit_locations(time_id, locations):
         for location in locations:
             timestamp = location[0]

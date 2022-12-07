@@ -8,7 +8,7 @@ namespace SplitTimer
     {
         string boundaryHash;
         public Trail trail;
-        bool inBoundary = false;
+        public bool inBoundary = false;
         bool notifiedServerOfExit = true;
         bool notifiedServerOfEnter = false;
         public string GetHash(int minCharAmount, int maxCharAmount)

@@ -18,9 +18,10 @@ namespace SplitTimer
         }
         void Update()
         {
-            
-            if (MapInfo.Instance != null && MapInfo.Instance.debugEnabled)
-                MapInfo.Instance.AddMetric("timeScale", Time.timeScale.ToString());
+            if (Input.GetKeyDown("joystick button 8"))
+                speed = 0.5f;
+            if (Input.GetKeyUp("joystick button 8"))
+                speed = 1f;
             if (Utilities.instance.isInReplayMode())
                 return;
             if (!Utilities.instance.isInPauseMenu())

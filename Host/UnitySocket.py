@@ -70,8 +70,6 @@ operations = {
         lambda netPlayer, data: netPlayer.set_version(str(data[1])),
     "GET_MEDALS":
         lambda netPlayer, data: netPlayer.get_medals(str(data[1])),
-    "POS":
-        lambda netPlayer, data: netPlayer.set_pos(data[1], data[2], data[3]),
     "LOG_LINE":
         lambda netPlayer, data: netPlayer.log_line(data[1:]),
 }
@@ -103,30 +101,11 @@ class UnitySocket():
 
     def log_line(self, line):
         line = "|".join(line)
-        with open(f"/home/admin/desc-comp-toolkit/output_logs/{self.steam_id}.txt", "a+") as my_file:
+        with open(
+            f"/home/admin/desc-comp-toolkit/output_logs/{self.steam_id}.txt",
+            "a+"
+        ) as my_file:
             my_file.write(f"{round(time.time())} - {line}\n")
-
-    def set_pos(self, x, y, z):
-        self.pos.x = float(x)
-        self.pos.y = float(y)
-        self.pos.z = float(z)
-        for trail in self.trails:
-            if self.trails[trail].started:
-                if len(self.trails[trail].self.__boundaries) == 0:
-                    distance = Vector3.get_distance(
-                        self.exit_position,
-                        self.network_player.pos
-                    )
-                    if distance > 30:
-                        self.trails[trail].invalidate_timer(
-                            "TOO FAR FROM BOUNDARY"
-                        )
-                self.trails[trail].player_positions.append(
-                    [
-                        time.time(),
-                        [x, y, z]
-                    ]
-                )
 
     def set_last_trick(self, trick: str):
         split_timer_logger.info(

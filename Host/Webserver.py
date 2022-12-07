@@ -2,6 +2,7 @@ from flask import Flask, session, request, redirect, jsonify, render_template
 import os
 from authlib.integrations.requests_client import OAuth2Session
 import logging
+import UnitySocketServer
 from DBMS import DBMS
 from Tokens import (
     OAUTH2_CLIENT_ID,
@@ -26,7 +27,7 @@ class WebserverRoute():
 
 
 class Webserver():
-    def __init__(self, socket_server):
+    def __init__(self, socket_server: UnitySocketServer):
         self.webserver_app = Flask(__name__)
         self.webserver_app.config['SECRET_KEY'] = OAUTH2_CLIENT_SECRET
         self.socket_server = socket_server
@@ -118,7 +119,13 @@ class Webserver():
                 "ignore_time",
                 self.ignore_time,
                 ["GET"]
-            )
+            ),
+            WebserverRoute(
+                "/get-output-log/<id>",
+                "get_output_log",
+                self.get_output_log,
+                ["GET"]
+            ),
         ]
         self.add_routes()
         self.webserver_app.register_error_handler(500, self.server_error)
@@ -160,74 +167,42 @@ class Webserver():
                     return e
                 return "Hello World!"
             else:
-                return "FAILED - NOT VALID PERMISSIONS!"
+                return "FAILED - NOT VALID PERMISSIONS!", 401
         except Exception as e:
             return str(e)
 
+    def get_output_log(self, id):
+        lines = ""
+        try:
+            with open(
+                f"/home/admin/desc-comp-toolkit/output_logs/{id}.txt",
+                "rt"
+            ) as my_file:
+                file_lines = my_file.read().splitlines()
+                file_lines = file_lines[-50:]
+                for line in file_lines:
+                    lines += f"> {line}<br>"
+        except Exception as e:
+            lines = f"failed to get output log! (error {e})"
+        return lines
+
     def get(self):
-        if self.permission() == "AUTHORISED":
-            return jsonify(
-                {
-                    'ids':
-                    [
-                        {
-                            "id": player.steam_id,
-                            "name": player.steam_name,
-                            "steam_avatar_src": player.get_avatar_src(),
-                            "total_time": player.get_total_time(),
-                            "time_on_world": player.get_total_time(
-                                onWorld=True
-                            ),
-                            "world_name": player.world_name,
-                            "reputation": player.reputation,
-                            "last_trick": player.last_trick,
-                            "version": player.version,
-                            "trails": [
-                                player.trails[trail].get_boundaries()
-                                for trail in player.trails
-                            ],
-                            "spectating": player.spectating,
-                            "pos":
-                                f"X:{player.pos.x} Y:"
-                                f"{player.pos.y} Z:{player.pos.z}",
-                            "bike_type": player.bike_type,
-                            "time_loaded": player.time_started,
-                            "address": player.addr
-                        } for player in self.socket_server.players
-                    ]
-                }
-            )
-        else:
-            return jsonify(
-                {
-                    'ids':
-                    [
-                        {
-                            "id": player.steam_id,
-                            "name": player.steam_name,
-                            "steam_avatar_src": player.get_avatar_src(),
-                            "total_time": player.get_total_time(),
-                            "time_on_world": player.get_total_time(
-                                onWorld=True
-                            ),
-                            "world_name": player.world_name,
-                            "reputation": player.reputation,
-                            "last_trick": player.last_trick,
-                            "version": player.version,
-                            "trails": [
-                                player.trails[trail].get_boundaries()
-                                for trail in player.trails
-                            ],
-                            "pos":
-                                f"X:{player.pos.x} Y:"
-                                f"{player.pos.y} Z:{player.pos.z}",
-                            "spectating": player.spectating,
-                            "bike_type": player.bike_type,
-                            "time_loaded": player.time_started,
-                        } for player in self.socket_server.players
-                    ]
-                }
-            )
+        player_json = [
+            {
+                "id": player.steam_id,
+                "name": player.steam_name,
+                "steam_avatar_src": player.get_avatar_src(),
+                "reputation": player.reputation,
+                "total_time": player.get_total_time(),
+                "time_on_world": player.get_total_time(onWorld=True),
+                "world_name": player.world_name,
+                "last_trick": player.last_trick,
+                "version": player.version,
+                "bike_type": player.bike_type,
+                "address": (lambda: player.addr if self.permission() == "AUTHORISED" else "")()
+            } for player in self.socket_server.players
+        ]
+        return jsonify({"players": player_json})
 
     def get_trails(self):
         return jsonify({"trails": DBMS.get_trails()})

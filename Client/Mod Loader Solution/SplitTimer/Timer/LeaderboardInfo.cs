@@ -41,11 +41,15 @@ namespace SplitTimer
                 maxNameLength = nameMaxLen;
             for (int i = 0; i < name.Length && i < 10; i++)
             {
+                string placeNum = place[i].ToString();
+                if (placeNum.Length == 1)
+                    placeNum = " " + placeNum;
                 if (verified[i] == "1")
-                    leaderboardString += place[i] + ". " + MakeLengthOf(TruncateText(name[i], nameMaxLen), maxNameLength) + " ₸ " + FormatTime(time[i]) + "   ~" + (Mathf.Round(pen[i] * 10) / 10) + " pen\n";
+                    leaderboardString += placeNum + ". " + MakeLengthOf(TruncateText(name[i], nameMaxLen), maxNameLength) + " ₸ " + FormatTime(time[i]) + "   ~" + (Mathf.Round(pen[i] * 10) / 10) + " pen\n";
                 else
-                    leaderboardString += place[i] + ". " + MakeLengthOf(TruncateText(name[i], nameMaxLen), maxNameLength) + " | " + FormatTime(time[i]) + "   ~" + (Mathf.Round(pen[i] * 10) / 10) + " pen\n";
+                    leaderboardString += placeNum + ". " + MakeLengthOf(TruncateText(name[i], nameMaxLen), maxNameLength) + " | " + FormatTime(time[i]) + "   ~" + (Mathf.Round(pen[i] * 10) / 10) + " pen\n";
             }
+            Debug.Log("'" + leaderboardString + "'");
             return leaderboardString;
         }
         private string FormatTime(float time)
