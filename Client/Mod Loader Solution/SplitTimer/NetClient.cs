@@ -295,9 +295,8 @@ namespace SplitTimer{
 			if (message.StartsWith("RIDERSGATE")) {
 				string[] gate = message.Split('|');
 				float randomTime = float.Parse(gate[1]);
-				foreach (RidersGate ridersGate in ridersGates) {
+				foreach (RidersGate ridersGate in ridersGates)
 					ridersGate.TriggerGate(randomTime);
-				}
 			}
 			if (message.StartsWith("TOGGLE_SPECTATOR"))
             {
