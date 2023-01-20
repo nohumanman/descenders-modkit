@@ -180,6 +180,12 @@ namespace SplitTimer{
 					medalSystem.NetStart();
 				this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
 			}
+			if (message.StartsWith("ROTATE|"))
+            {
+				string rotate = message.Split('|')[1];
+				int rotateInt = int.Parse(rotate);
+				GameObject.Find("Player_Human").transform.Rotate(new Vector3(0, rotateInt, 0));
+			}
 			if (message.StartsWith("UPLOAD_REPLAY"))
             {
 				string time_id = message.Split('|')[1];
@@ -193,6 +199,7 @@ namespace SplitTimer{
 			if (message.StartsWith("GET_POS"))
             {
 				Vector3 pos = Utilities.instance.GetPlayer().transform.position;
+				Debug.Log("Current Position: " + pos.ToString());
 				SendData("POS|" + pos.x + "|" + pos.y + "|" + pos.z);
             }
 			if (message.StartsWith("SET_TEXT_COLOUR"))

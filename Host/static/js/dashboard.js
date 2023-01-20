@@ -18,27 +18,29 @@ var app = new Vue({
         players : [],
         bike_types : [{"name" : "Enduro", "val" : 0},  {"name" : "Hardtail", "val" : 2}, {"name" : "Downhill", "val" : 1}],
         commands: [
-            {"eval" : "RESPAWN_AT_START", "name": "Respawn at Start", "risk": "high"},
-            {"eval": "RESPAWN_ON_TRACK", "name": "Respawn on Track", "risk": "high"},
-            {"eval": "CUT_BRAKES", "name": "Cut Brakes", "risk": "medium"},
-            {"eval": "BANNED|CRASH", "name": "Crash Game", "risk": "extreme"},
-            {"eval": "BANNED|CLOSE", "name": "Close Game", "risk": "extreme"},
-            {"eval": "TOGGLE_SPECTATOR", "name": "Make 'em dissapear", "risk": "high"},
-            {"eval": "CLEAR_SESSION_MARKER", "name": "Clear Session Marker", "risk": "low"},
-            {"eval": "RESET_PLAYER",  "name": "Reset Player", "risk": "high"},
-            {"eval": "TOGGLE_COLLISION", "name": "Toggle Collision", "risk": "low"},
-            {"eval": "SET_VEL|500", "name": "Into Orbit", "risk": "high"},
-            {"eval": "ENABLE_STATS", "name": "Enable Stats", "risk": "low"},
-            {"eval": "TOGGLE_GOD", "name": "Activate Anticheat", "risk": "extreme"},
-            {"eval": "BAIL", "name": "Kill.", "risk": "high"},
-            {"eval": "SET_BIKE_SIZE|0.5", "name": "half player&bike size", "risk": "high"},
-            {"eval": "SET_BIKE_SIZE|2", "name": "double player&bike size", "risk": "high"},
-            {"eval": "RIDERSGATE|0.5", "name": "Trigger BMX Gate", "risk": "low"},
-            {"eval": "RIDERSGATE|0.5", "name": "Trigger BMX Gate", "risk": "low"},
-            {"eval": "SET_FAR_CLIP|0.5", "name": "bind 'em", "risk": "low"},
-            {"eval": "SET_FAR_CLIP|500", "name": "carrot 'em", "risk": "low"},
-            {"eval": "INVALIDATE_TIME", "name": "invalidate time", "risk": "low"},
-            {"eval": "SET_VEL|0", "name": "stop 'em", "risk": "low"},
+            {"evals" : ["RESPAWN_AT_START"], "name": "Respawn at Start", "risk": "high"},
+            {"evals": ["RESPAWN_ON_TRACK"], "name": "Respawn on Track", "risk": "high"},
+            {"evals": ["CUT_BRAKES"], "name": "Cut Brakes", "risk": "medium"},
+            {"evals": ["BANNED|CRASH"], "name": "Crash Game", "risk": "extreme"},
+            {"evals": ["BANNED|CLOSE"], "name": "Close Game", "risk": "extreme"},
+            {"evals": ["TOGGLE_SPECTATOR"], "name": "Make 'em dissapear", "risk": "high"},
+            {"evals": ["CLEAR_SESSION_MARKER"], "name": "Clear Session Marker", "risk": "low"},
+            {"evals": ["RESET_PLAYER"],  "name": "Reset Player", "risk": "high"},
+            {"evals": ["TOGGLE_COLLISION"], "name": "Toggle Collision", "risk": "low"},
+            {"evals": ["SET_VEL|500"], "name": "Into Orbit", "risk": "high"},
+            {"evals": ["ENABLE_STATS"], "name": "Enable Stats", "risk": "low"},
+            {"evals": ["TOGGLE_GOD"], "name": "Activate Anticheat", "risk": "extreme"},
+            {"evals": ["BAIL"], "name": "Kill.", "risk": "high"},
+            {"evals": ["SET_BIKE_SIZE|0.5"], "name": "half player&bike size", "risk": "high"},
+            {"evals": ["SET_BIKE_SIZE|2"], "name": "double player&bike size", "risk": "high"},
+            {"evals": ["RIDERSGATE|0.5"], "name": "Trigger BMX Gate", "risk": "low"},
+            {"evals": ["RIDERSGATE|0.5"], "name": "Trigger BMX Gate", "risk": "low"},
+            {"evals": ["SET_FAR_CLIP|0.5"], "name": "bind 'em", "risk": "low"},
+            {"evals": ["SET_FAR_CLIP|500"], "name": "carrot 'em", "risk": "low"},
+            {"evals": ["INVALIDATE_TIME"], "name": "invalidate time", "risk": "low"},
+            {"evals": ["SET_VEL|0"], "name": "stop 'em", "risk": "low"},
+            {"evals": ["ROTATE|180"], "name": "Rotate 180", "risk": "low"},
+            {"evals": ["ROTATE|180", "SET_VEL|-1"], "name": "Rotate and Push", "risk": "low"}
         ],
         controlled_player : null,
         validated: "UNAUTHORISED",
@@ -59,18 +61,23 @@ var app = new Vue({
             if (player == "ALL"){
                 this.players.forEach(id => {
                     if (id.id != "ALL")
-                        this.RunCommand(player.id, command.eval);
+                        command.evals.forEach(function(command_eval){
+                            this.RunCommand(player.id, command_eval);
+                        });
                 });
             }
-            else
-                $.ajax({
-                    url: "/eval/" + player.id + "?order=" + command.eval,
-                    type: "GET",
-                    success: function(data){},
-                    error: function(data){
-                        alert("RunCommand(); failed - are you sure you're logged in?");
-                    }
+            else{
+                command.evals.forEach(function(command_eval){
+                    $.ajax({
+                        url: "/eval/" + player.id + "?order=" + command_eval,
+                        type: "GET",
+                        success: function(data){},
+                        error: function(data){
+                            alert("RunCommand(); failed - are you sure you're logged in?");
+                        }
+                    });
                 });
+            }
         },
         GetPlayerOutputLog(player){
             $.get("/get-output-log/" + player.id, function(data){
@@ -132,7 +139,7 @@ var app = new Vue({
                 "player_name" : id.name
             });
 
-            app.SubmitEval(app.self, "SPECTATE|" + id.name);
+            app.SubmitEval(app.self, ["SPECTATE|" + id.name]);
         },
         secs_to_str(secs){
             secs = parseFloat(secs);

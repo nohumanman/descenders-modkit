@@ -40,3 +40,10 @@ E:\Projects\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolu
 E:\Projects\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.CopyComplete
 E:\Projects\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.dll
 E:\Projects\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.pdb
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Loader Solution\bin\Debug\ModLoaderSolution.dll
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Loader Solution\bin\Debug\ModLoaderSolution.pdb
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.AssemblyReference.cache
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.CoreCompileInputs.cache
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.csproj.CopyComplete
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.dll
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Loader Solution\obj\Debug\ModLoaderSolution.pdb
