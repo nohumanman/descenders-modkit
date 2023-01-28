@@ -44,6 +44,7 @@ var app = new Vue({
         ],
         controlled_player : null,
         validated: "UNAUTHORISED",
+        display_pfps: false,
         times: [],
         trails: [],
         self: {}, // the object of the player currently logged in
