@@ -128,7 +128,12 @@
                             </h1>
                             <h2 style="text-align:center;">Your Steam ID [[self]]</h2>
                             <h2 style="text-align:center;">Currently [[players.length-1]] Concurrent Users</h2>
-                            <v-switch v-model="display_pfps" label="Show Profile Pictures"></v-switch>
+                            <v-col align="center" justify="center">
+                                <v-row align="center" justify="center">
+                                    <v-switch inset v-model="display_pfps" label="Show Profile Pictures"></v-switch>
+                                </v-row>
+                            </v-col>
+                            
                             <v-row>
                                 <v-col
                                     class="fill-height"
@@ -146,8 +151,17 @@
                                                 <v-row justify="center">
                                                     on [[player.world_name]]
                                                 </v-row>
+                                                <v-row justify="center">
+                                                    with [[player.reputation]] rep
+                                                </v-row>
+                                                <v-row justify="center">
+                                                    on a '[[player.bike_type]]' bike
+                                                </v-row>
                                                 <v-row v-if="display_pfps">
                                                     <v-img :src="player.steam_avatar_src"></v-img>
+                                                </v-row>
+                                                <v-row v-if="!display_pfps">
+                                                    <v-img src="/static/images/hidden.jpg"></v-img>
                                                 </v-row>
                                                 <v-row justify="center">
                                                     [[player.id]] v[[player.version]]
