@@ -15,7 +15,7 @@
     <body>
         <div id="app">
             <v-app>
-                <v-footer height="80" transparent app bottom fixed padless>
+                <v-footer color="black" height="80" transparent app bottom fixed padless>
                     <v-row align="center" justify="center">
                         <v-col align="center" justify="center">
                             <v-btn icon @click="redirect('https://github.com/nohumanman/desc-comp-toolkit')"><v-icon size="60">mdi-github-circle</v-icon></v-btn>
@@ -83,7 +83,7 @@
                 </v-main>
                 <v-main v-if="controlled_player == null">
                     <!-- Validation Warning -->
-                    <v-banner color="#ff443b" v-if="validated != 'AUTHORISED'">
+                    <v-banner color="black" v-if="validated != 'AUTHORISED'" style="text-align:center;">
                         You are not permitted to modify any user because your discord account is not whitelisted<span v-if="validated != 'UNAUTHORISED'"> - <v-btn @click="redirect('/login')">login</v-btn></span>
                     </v-banner>
                     <!-- Steam ID Manual Input Backup -->
@@ -121,37 +121,16 @@
                         <v-tab>Times</v-tab>
                         <v-tab>Trails</v-tab>
                     </v-tabs>
-                    <v-tabs-items v-model="tab" fill-height>
+                    <v-tabs-items v-model="tab" fill-height style="height:100%;">
                         <v-tab-item>
                             <h1 style="text-align:center; font-size:50px;">
                                 Descenders Competitive Toolkit
                             </h1>
                             <h2 style="text-align:center;">Your Steam ID [[self]]</h2>
                             <h2 style="text-align:center;">Currently [[players.length-1]] Concurrent Users</h2>
-                            <br>
-                            <v-divider color="#4287f5"></v-divider>
-                            <br>
-                            <v-col>
-                                <v-switch @click="display_pfps = !display_pfps"></v-switch>Show Profile Pictures
-                            </v-col>
-                            <v-row align="center" justify="center" class="d-flex justify-center" style="padding-left:50px; padding-right: 50px;;">
-                                <v-col class="d-flex justify-center">
-                                    <v-autocomplete
-                                        v-model="search"
-                                        :items="players"
-                                        item-text="name"
-                                        item-value="id"
-                                        clearable
-                                        label="Search for a player"
-                                    ></v-autocomplete>
-                                </v-col>
-                            </v-row>
-                            <br>
-                            <v-divider color="#4287f5"></v-divider>
+                            <v-switch v-model="display_pfps" label="Show Profile Pictures"></v-switch>
                             <v-row>
-                                
                                 <v-col
-                                    v-if="SearchMatch(search, player.name)"
                                     class="fill-height"
                                     :key="player.id"
                                     v-for="player in players"
