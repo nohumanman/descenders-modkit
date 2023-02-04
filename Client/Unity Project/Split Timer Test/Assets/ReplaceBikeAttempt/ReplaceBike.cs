@@ -5,6 +5,7 @@ using ModTool.Interface;
 
 public class ReplaceBike : ModBehaviour {
     public SkinnedMeshRenderer newSkinnedMeshRenderer;
-    SkinnedMeshRenderer oldSkinnedMeshRenderer;
+    public SkinnedMeshRenderer cachedPrevMeshRenderer;
     public Animation ourClips;
+    public Animation copiedClips;
 }

@@ -1,6 +1,6 @@
 WindowsStandalone
 PlayerPath?
-E:/Projects/desc-comp-toolkit/Client/Unity Project/Split Timer Test/Temp/Split Timer Test/Windows/split timer test.scenes
+C:/Users/point/Documents/GitHub/desc-comp-toolkit/Client/Unity Project/Split Timer Test/Temp/Split Timer Test/Windows/split timer test.scenes
 SceneListBegin?
 Assets/Split Timer Test-sample.unity
 SceneListEnd?
@@ -17,20 +17,20 @@ a4ef7c59ab7201ab109de36901ceb49b UnityEngine.UI.dll:UnityEngine.EventSystems.Sta
 a2313de45ed47f1a12bb2d80e8b2de54 UnityEngine.UI.dll:UnityEngine.UI.GraphicRaycaster
 b8f057a5d96b66234b3230a0d800dcf6 UnityEngine.UI.dll:UnityEngine.UI.Image
 769e576fcd3f60fa29a2cccb9e8127d9 UnityEngine.UI.dll:UnityEngine.UI.Text
-7fd08ded144dad95834f225b8bf05403 SplitTimerTest-0.0.46-Assembly-CSharp.dll:.BikeSwitcherEnabler
-05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.46-Assembly-CSharp.dll:.BikeSwitcherHandler
-e2dd3809741e81a9714fc00110315716 SplitTimerTest-0.0.46-Assembly-CSharp.dll:.ButtonHack
-fdf9320b51a982f48ec409a06c729bf5 SplitTimerTest-0.0.46-Assembly-CSharp.dll:.CameraModifier
-05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.46-Assembly-CSharp.dll:.ShowCursorInTrigger
-7fd08ded144dad95834f225b8bf05403 SplitTimerTest-0.0.46-Assembly-CSharp.dll:.EnableObjOnTab
-ff58db6aa015d8656c799db889412920 SplitTimerTest-0.0.46-Assembly-CSharp.dll:.TeleportElement
-b77145c37fc6b987f6c5aded5f5ce042 SplitTimerTest-0.0.46-Assembly-CSharp.dll:.MedalSystemInfo
-05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.46-Assembly-CSharp.dll:APILoaderScript.ModLoader
-6828056010137fd047688e3fa7df458a SplitTimerTest-0.0.46-Assembly-CSharp.dll:.SetSpeed
-34b64855cacc9cd75f346c84aba37ba8 SplitTimerTest-0.0.46-Assembly-CSharp.dll:.JsonMapInfo
-6731c9dcfe8b17f5c0729fd5412af4fd SplitTimerTest-0.0.46-Assembly-CSharp.dll:.JsonRidersGate
-82f8b7dcae478154efc3c7e749ad6e22 SplitTimerTest-0.0.46-Assembly-CSharp.dll:.TimerCopierTemp
-67dee5f8b556ee08030c3d7d9299d0de SplitTimerTest-0.0.46-Assembly-CSharp.dll:.TimerInfo
-05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.46-Assembly-CSharp.dll:.TimerText
-8eb5ce00aceb9fee1eec4b1ccafb45e3 SplitTimerTest-0.0.46-Assembly-CSharp.dll:.TeleportPad
-0e5fd6d3e061c777192e2dd5fad4f82b SplitTimerTest-0.0.46-Assembly-CSharp.dll:.ReplaceBike
+7fd08ded144dad95834f225b8bf05403 SplitTimerTest-0.0.49-Assembly-CSharp.dll:.BikeSwitcherEnabler
+05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.49-Assembly-CSharp.dll:.BikeSwitcherHandler
+e2dd3809741e81a9714fc00110315716 SplitTimerTest-0.0.49-Assembly-CSharp.dll:.ButtonHack
+fdf9320b51a982f48ec409a06c729bf5 SplitTimerTest-0.0.49-Assembly-CSharp.dll:.CameraModifier
+05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.49-Assembly-CSharp.dll:.ShowCursorInTrigger
+7fd08ded144dad95834f225b8bf05403 SplitTimerTest-0.0.49-Assembly-CSharp.dll:.EnableObjOnTab
+ff58db6aa015d8656c799db889412920 SplitTimerTest-0.0.49-Assembly-CSharp.dll:.TeleportElement
+b77145c37fc6b987f6c5aded5f5ce042 SplitTimerTest-0.0.49-Assembly-CSharp.dll:.MedalSystemInfo
+05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.49-Assembly-CSharp.dll:APILoaderScript.ModLoader
+6828056010137fd047688e3fa7df458a SplitTimerTest-0.0.49-Assembly-CSharp.dll:.SetSpeed
+34b64855cacc9cd75f346c84aba37ba8 SplitTimerTest-0.0.49-Assembly-CSharp.dll:.JsonMapInfo
+6731c9dcfe8b17f5c0729fd5412af4fd SplitTimerTest-0.0.49-Assembly-CSharp.dll:.JsonRidersGate
+82f8b7dcae478154efc3c7e749ad6e22 SplitTimerTest-0.0.49-Assembly-CSharp.dll:.TimerCopierTemp
+67dee5f8b556ee08030c3d7d9299d0de SplitTimerTest-0.0.49-Assembly-CSharp.dll:.TimerInfo
+05524b8f659e7bfe5756d1335fec24ba SplitTimerTest-0.0.49-Assembly-CSharp.dll:.TimerText
+8eb5ce00aceb9fee1eec4b1ccafb45e3 SplitTimerTest-0.0.49-Assembly-CSharp.dll:.TeleportPad
+1b2968b6628ff7cde63d43299f29c4b9 SplitTimerTest-0.0.49-Assembly-CSharp.dll:.ReplaceBike

@@ -13,15 +13,23 @@ public class ReplaceBikeAttempt : MonoBehaviour
     }
     public List<BikeReplacement> bikeReplacements = new List<BikeReplacement>();
     public SkinnedMeshRenderer newSkinnedMeshRenderer;
+    public SkinnedMeshRenderer cachedPrevMeshRenderer;
     public Animation ourClips;
+    public Animation copiedClips;
     int currentBike = 0;
     int frm = 0;
+    void Start()
+    {
+        UnityEngine.Object[] x = Resources.LoadAll("Prefabs", typeof(GameObject));
+        foreach(UnityEngine.Object obj in x)
+            Debug.Log(obj.name);
+    }
     void Update()
     {
         if (bikeReplacements.Count == 0 && GetBikeObject() != null && GetBikeModelAnim() != null)
         {
             frm++;
-            if (frm > 60)
+            if (frm > 200)
             {
                 Debug.Log("GETTING ALL BIKEREPLACEMENTS!!");
                 bikeReplacements = new List<BikeReplacement>();
@@ -30,9 +38,16 @@ public class ReplaceBikeAttempt : MonoBehaviour
                 bikeReplacement.animationClips = animToAnimStates(ourClips);
                 bikeReplacement.nm = "bike replacement";
                 bikeReplacements.Add(bikeReplacement);
+
                 BikeReplacement currentBike = new BikeReplacement();
-                currentBike.skinnedMeshRenderer = GetBikeObject().GetComponent<SkinnedMeshRenderer>().sharedMesh;
-                currentBike.animationClips = animToAnimStates(GetBikeModelAnim());
+                cachedPrevMeshRenderer.sharedMesh = Instantiate(GetBikeObject().GetComponent<SkinnedMeshRenderer>().sharedMesh);
+                currentBike.skinnedMeshRenderer = cachedPrevMeshRenderer.sharedMesh;
+                //currentBike.skinnedMeshRenderer = Instantiate(GetBikeObject().GetComponent<SkinnedMeshRenderer>().sharedMesh);
+                Debug.Log("40");
+                foreach(AnimationClip q in animToAnimStates(GetBikeModelAnim()))
+                    copiedClips.AddClip(q, q.name);
+                Debug.Log("43");
+                currentBike.animationClips = animToAnimStates(copiedClips);
                 currentBike.nm = "existing bike";
                 bikeReplacements.Add(currentBike);
             }
@@ -45,19 +60,6 @@ public class ReplaceBikeAttempt : MonoBehaviour
             SwitchBikeModel(bikeReplacements[currentBike]);
             currentBike++;
         }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            
-            foreach(BikeReplacement bikeReplacement in bikeReplacements)
-            {
-                Debug.Log("\nFrom bike '" + bikeReplacement.nm + "':");
-                foreach (AnimationClip x in bikeReplacement.animationClips)
-                {
-                    Debug.Log(x.name);
-                    Debug.Log(x.empty);
-                }
-            }
-        }
     }
     Animation GetBikeModelAnim()
     {
@@ -66,30 +68,25 @@ public class ReplaceBikeAttempt : MonoBehaviour
                 return a;
         return null;
     }
+    
     void SwitchBikeModel(BikeReplacement bikeReplacement)
     {
+        Debug.Log("SwitchBikeModel('" + bikeReplacement.nm + "');");
+        Debug.Log("Replacing with sharedMesh '" + bikeReplacement.skinnedMeshRenderer.name + "'");
+        // replace bike mesh with mesh of bikeReplacement.
         GetBikeObject().GetComponent<SkinnedMeshRenderer>().sharedMesh = bikeReplacement.skinnedMeshRenderer;
-        foreach (Animation a in FindObjectsOfType<Animation>())
+        // get the current bike Animation component
+        Animation currentBikeAnim = GetBikeModelAnim();
+        currentBikeAnim.Stop();
+        foreach (AnimationClip q in bikeReplacement.animationClips)
         {
-            if (a.name == "BikeModel")
-            {
-                Debug.Log("Switching animations up!");
-                GameObject BikeModel = a.gameObject;
-                Animation anim = BikeModel.GetComponent<Animation>();
-                anim.Stop();
-                foreach (AnimationClip q in bikeReplacement.animationClips)
-                    anim.RemoveClip(q.name);
-                foreach (AnimationClip q in bikeReplacement.animationClips)
-                {
-                    Debug.Log("Switching anim '" + q.name + "'");
-                    if (q.name == "base")
-                        anim.clip = q;
-                    anim.RemoveClip(q.name);
-                    anim.AddClip(q, q.name);
-                }
-                anim.Play();
-            }
+            Debug.Log("Switching anim '" + q.name + "'");
+            if (q.name == "base")
+                currentBikeAnim.clip = q;
+            currentBikeAnim.RemoveClip(q.name);
+            currentBikeAnim.AddClip(q, q.name);
         }
+        currentBikeAnim.Play();
         foreach (BikeAnimation x in FindObjectsOfType<BikeAnimation>())
         {
             Debug.Log("Copying and destroying componenet!");
@@ -101,7 +98,11 @@ public class ReplaceBikeAttempt : MonoBehaviour
     {
         List<AnimationClip> animStateList = new List<AnimationClip>();
         foreach (AnimationState x in anim)
-            animStateList.Add(x.clip);
+        {
+            AnimationClip clone = Instantiate(x.clip);
+            clone.name = x.name;
+            animStateList.Add(clone);
+        }
         return animStateList.ToArray();
     }
     // stolen from https://answers.unity.com/questions/458207/copy-a-component-at-runtime.html
