@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="SplitTimer\AssetBundling.cs" />
+    <Compile Include="SplitTimer\Flags.cs" />
     <Compile Include="SplitTimer\Modifiers\MovableCam.cs" />
     <Compile Include="SplitTimer\Modifiers\RainbowLight.cs" />
     <Compile Include="SplitTimer\Modifiers\RemoveTerrainBoundaries.cs" />

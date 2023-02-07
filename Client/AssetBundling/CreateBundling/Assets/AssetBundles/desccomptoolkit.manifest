@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3502784066
+CRC: 2367557941
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: f9802a2750d05b92dfc3e69857b30ba7
+    Hash: 21cdd423dcc2a3cb2d057bd3f5bd3f27
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 8aa98b31cecb042ab3495932d6a22eb6
+    Hash: 6f9a9a87b782bc3ebea0ad61bed94325
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -14,6 +14,12 @@ ClassTypes:
 - Class: 4
   Script: {instanceID: 0}
 - Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
   Script: {instanceID: 0}
 - Class: 43
   Script: {instanceID: 0}
@@ -30,10 +36,12 @@ ClassTypes:
 - Class: 137
   Script: {instanceID: 0}
 Assets:
-- Assets/BMX/BMX.prefab
-- Assets/Canyon Spectral/Canyon_Spectral.prefab
-- Assets/Fish/Fish.prefab
-- Assets/Specialised_Demo/Specialized_Demo.prefab
-- Assets/Coffee Bike/Coffee_Bike.prefab
-- Assets/Intense M16/Intense_M16.prefab
+- Assets/Banners/desc_comp_banner.prefab
+- Assets/Bikes/BMX/BMX.prefab
+- Assets/Banners/nohumanman_banner.prefab
+- Assets/Bikes/Canyon Spectral/Canyon_Spectral.prefab
+- Assets/Bikes/Fish/Fish.prefab
+- Assets/Bikes/Specialised_Demo/Specialized_Demo.prefab
+- Assets/Bikes/Coffee Bike/Coffee_Bike.prefab
+- Assets/Bikes/Intense M16/Intense_M16.prefab
 Dependencies: []

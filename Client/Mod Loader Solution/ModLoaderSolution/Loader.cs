@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using ModTool.Interface;
+using SplitTimer;
 
 namespace ModLoaderSolution
 {
@@ -25,9 +26,9 @@ namespace ModLoaderSolution
             gameObject.name = "DescendersSplitTimerModLoaded";
             Debug.Log("ModLoaderSolution | GameObject Instantiated");
             gameObject.AddComponent<ModLoaderSolution.Utilities>();
-            gameObject.AddComponent<SplitTimer.AssetBundling>();
+            gameObject.AddComponent<AssetBundling>();
             Debug.Log("ModLoaderSolution | ModLoaderSolution.Utilities added");
-            gameObject.AddComponent<SplitTimer.Initialisation>();
+            gameObject.AddComponent<Initialisation>();
             Debug.Log("ModLoaderSolution | SplitTimer.Initialisation added");
         }
         public static void Unload()

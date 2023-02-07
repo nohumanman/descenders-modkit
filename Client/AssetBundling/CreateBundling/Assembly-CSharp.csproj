@@ -51,7 +51,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Bike Switcher\Scripts\BikeSwitcherEnabler.cs" />
+     <Compile Include="Assets\Bike Switcher\Scripts\BikeSwitcherHandler.cs" />
+     <Compile Include="Assets\Bike Switcher\Scripts\ButtonHack.cs" />
      <Compile Include="Assets\CreateAssetBundle.cs" />
+     <None Include="Assets\Banners\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Standard Diffuse Bump.shader" />
  <Reference Include="UnityEngine.CoreModule">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.25f1/Editor/Data/Managed/UnityEngine/UnityEngine.CoreModule.dll</HintPath>
  </Reference>

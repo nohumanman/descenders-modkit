@@ -75,6 +75,11 @@ namespace SplitTimer{
 		void Update () {
 			if (PlayerHuman == null)
 				PlayerHuman = GameObject.Find("Player_Human");
+            else
+            {
+				Debug.Log(PlayerHuman.transform.position);
+				Debug.Log(PlayerHuman.transform.eulerAngles);
+			}
 			if (Utilities.instance.hasBailed() && !wasBailed)
 				OnRespawn();			
 			wasBailed = Utilities.instance.hasBailed();
