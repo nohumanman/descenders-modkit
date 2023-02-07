@@ -15,6 +15,7 @@ namespace SplitTimer
 		bool uiEnabled = true;
 		void Awake()
 		{
+			DontDestroyOnLoad(gameObject.transform.root);
 			if (Instance != null && Instance != this)
 				Destroy(this);
 			else

@@ -8,28 +8,38 @@ namespace SplitTimer
 {
 	public class BikeSwitcher : MonoBehaviour
 	{
-        public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-                ToSpecialisedDemo();
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-                StartCoroutine(ToEnduro());
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-                StartCoroutine(ToDownhill());
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-                StartCoroutine(ToHardtail());
-            if (Input.GetKeyDown(KeyCode.Alpha5))
-                ToBMX();
-            if (Input.GetKeyDown(KeyCode.Alpha6))
-                ToCoffee();
-            if (Input.GetKeyDown(KeyCode.Alpha7))
-                ToCanyonSpectral();
-            if (Input.GetKeyDown(KeyCode.Alpha8))
-                ToFish();
-            if (Input.GetKeyDown(KeyCode.Alpha9))
-                ToIntenseM16();
-        }
         public string oldBike;
+        public void ToBike(string bike)
+        {
+            Debug.Log("ToBike(" + bike + ")");
+            StartCoroutine(_ToBike(bike));
+        }
+        IEnumerator _ToBike(string bike)
+        {
+            if (!IsDescBike(oldBike) && IsDescBike(bike))
+                yield return DelicatePlayerRespawn();
+            if (bike == "enduro")
+                gameObject.GetComponent<Utilities>().SetBike(0);
+            else if (bike == "downhill")
+                gameObject.GetComponent<Utilities>().SetBike(1);
+            else if (bike == "hardtail")
+                gameObject.GetComponent<Utilities>().SetBike(2);
+            else
+            {
+                if (AssetBundling.Instance.bundle != null)
+                {
+                    GameObject bikeReplacement = AssetBundling.Instance.bundle.LoadAsset<GameObject>(bike);
+                    ReplaceBike(
+                        bikeReplacement.GetComponentInChildren<SkinnedMeshRenderer>(),
+                        bikeReplacement.GetComponent<Animation>()
+                    );
+                }
+                else
+                    throw new System.Exception("AssetBundle not loaded! Can't load into specialised demo!!");
+            }
+            PlayerInf.Instance.OnBikeSwitch(oldBike, bike);
+            oldBike = bike;
+        }
         public void ReplaceBike(SkinnedMeshRenderer newSkinnedMeshRenderer, Animation newAnimation)
         {
             GetBikeObject().GetComponent<SkinnedMeshRenderer>().sharedMesh = newSkinnedMeshRenderer.sharedMesh;
@@ -49,96 +59,6 @@ namespace SplitTimer
                 Destroy(x);
             }
         }
-        public void ToIntenseM16()
-        {
-            if (AssetBundling.Instance.bundle != null)
-            {
-                GameObject bikeReplacement = AssetBundling.Instance.bundle.LoadAsset<GameObject>("Intense_M16");
-                ReplaceBike(
-                    bikeReplacement.GetComponentInChildren<SkinnedMeshRenderer>(),
-                    bikeReplacement.GetComponent<Animation>()
-                );
-                PlayerInf.Instance.OnBikeSwitch(oldBike, "Intense_M16");
-                oldBike = "Intense_M16";
-            }
-            else
-                Debug.LogError("AssetBundle not loaded! Can't load into specialised demo!!");
-        }
-        public void ToCanyonSpectral()
-        {
-            if (AssetBundling.Instance.bundle != null)
-            {
-                GameObject bikeReplacement = AssetBundling.Instance.bundle.LoadAsset<GameObject>("Canyon_Spectral");
-                ReplaceBike(
-                    bikeReplacement.GetComponentInChildren<SkinnedMeshRenderer>(),
-                    bikeReplacement.GetComponent<Animation>()
-                );
-                PlayerInf.Instance.OnBikeSwitch(oldBike, "Canyon_Spectral");
-                oldBike = "Canyon_Spectral";
-            }
-            else
-                Debug.LogError("AssetBundle not loaded! Can't load into specialised demo!!");
-        }
-        public void ToFish()
-        {
-            if (AssetBundling.Instance.bundle != null)
-            {
-                GameObject bikeReplacement = AssetBundling.Instance.bundle.LoadAsset<GameObject>("Fish");
-                ReplaceBike(
-                    bikeReplacement.GetComponentInChildren<SkinnedMeshRenderer>(),
-                    bikeReplacement.GetComponent<Animation>()
-                );
-                PlayerInf.Instance.OnBikeSwitch(oldBike, "Fish");
-                oldBike = "Fish";
-            }
-            else
-                Debug.LogError("AssetBundle not loaded! Can't load into specialised demo!!");
-        }
-        public void ToCoffee()
-        {
-            if (AssetBundling.Instance.bundle != null)
-            {
-                GameObject bikeReplacement = AssetBundling.Instance.bundle.LoadAsset<GameObject>("Coffee_Bike");
-                ReplaceBike(
-                    bikeReplacement.GetComponentInChildren<SkinnedMeshRenderer>(),
-                    bikeReplacement.GetComponent<Animation>()
-                );
-                PlayerInf.Instance.OnBikeSwitch(oldBike, "Coffee_Bike");
-                oldBike = "Coffee_Bike";
-            }
-            else
-                Debug.LogError("AssetBundle not loaded! Can't load into specialised demo!!");
-        }
-        public void ToBMX()
-        {
-            if (AssetBundling.Instance.bundle != null)
-            {
-                GameObject bikeReplacement = AssetBundling.Instance.bundle.LoadAsset<GameObject>("BMX");
-                ReplaceBike(
-                    bikeReplacement.GetComponentInChildren<SkinnedMeshRenderer>(),
-                    bikeReplacement.GetComponent<Animation>()
-                );
-                PlayerInf.Instance.OnBikeSwitch(oldBike, "BMX");
-                oldBike = "BMX";
-            }
-            else
-                Debug.LogError("AssetBundle not loaded! Can't load into specialised demo!!");
-        }
-        public void ToSpecialisedDemo()
-        {
-            if (AssetBundling.Instance.bundle != null)
-            {
-                GameObject bikeReplacement = AssetBundling.Instance.bundle.LoadAsset<GameObject>("Specialized_Demo");
-                ReplaceBike(
-                    bikeReplacement.GetComponentInChildren<SkinnedMeshRenderer>(),
-                    bikeReplacement.GetComponent<Animation>()
-                );
-                PlayerInf.Instance.OnBikeSwitch(oldBike, "specialised_demo");
-                oldBike = "specialised_demo";
-            }
-            else
-                Debug.LogError("AssetBundle not loaded! Can't load into specialised demo!!");
-        }
         IEnumerator DelicatePlayerRespawn()
         {
             Vector3 pos = Utilities.instance.GetPlayer().transform.position;
@@ -151,34 +71,10 @@ namespace SplitTimer
             Utilities.instance.GetPlayer().transform.eulerAngles = rot;
             yield return new WaitForSeconds(0.2f);
         }
-        bool WasOnDescBike()
+        bool IsDescBike(string bike)
         {
             // returns true if player was previously on a descenders-own bike
-            return oldBike == "enduro" || oldBike == "hardtail" || oldBike == "downhill";
-        }
-		public IEnumerator ToEnduro()
-        {
-            if (!WasOnDescBike())
-                yield return DelicatePlayerRespawn();
-            gameObject.GetComponent<Utilities>().SetBike(0);
-            PlayerInf.Instance.OnBikeSwitch(oldBike, "enduro");
-            oldBike = "enduro";
-        }
-		public IEnumerator ToDownhill()
-        {
-            if (!WasOnDescBike())
-                yield return DelicatePlayerRespawn();
-            gameObject.GetComponent<Utilities>().SetBike(1);
-            PlayerInf.Instance.OnBikeSwitch(oldBike, "downhill");
-            oldBike = "downhill";
-        }
-		public IEnumerator ToHardtail()
-        {
-            if (!WasOnDescBike())
-                yield return DelicatePlayerRespawn();
-            gameObject.GetComponent<Utilities>().SetBike(2);
-            PlayerInf.Instance.OnBikeSwitch(oldBike, "hardtail");
-            oldBike = "hardtail";
+            return bike == "enduro" || bike == "hardtail" || bike == "downhill";
         }
         GameObject GetBikeObject()
         {

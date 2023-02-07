@@ -11,10 +11,13 @@ namespace SplitTimer
             foreach (object obj in objects)
             {
                 GameObject g = (GameObject)obj;
-                string replaceBikeJson = JsonUtility.ToJson(g.GetComponent("ReplaceBike"));
-                //if (replaceBikeJson != "" && replaceBikeJson != null)
-                //    JsonUtility.FromJsonOverwrite(replaceBikeJson, g.AddComponent<ReplaceBikeAttempt>());
-
+                string bikeswitcherenablerjson = JsonUtility.ToJson(g.GetComponent("BikeSwitcherEnabler"));
+                if (bikeswitcherenablerjson != "" && bikeswitcherenablerjson != null)
+                    Destroy((GameObject)obj);
+                if (((GameObject)obj).name.Contains("BikeSwitcherCanvas"))
+                {
+                    Destroy((GameObject)obj);
+                }
                 string removeTerrainjson = JsonUtility.ToJson(g.GetComponent("RemoveTerrainBoundary"));
                 if (removeTerrainjson != "" && removeTerrainjson != null)
                     JsonUtility.FromJsonOverwrite(removeTerrainjson, g.AddComponent<RemoveTerrainBoundaries>());
@@ -25,8 +28,10 @@ namespace SplitTimer
                 if (jsonMapInfo != "" && jsonMapInfo != null)
                     JsonUtility.FromJsonOverwrite(jsonMapInfo, g.AddComponent<MapInfo>());
                 string timerText = JsonUtility.ToJson(g.GetComponent("TimerText"));
-                if (timerText != "" && timerText != null)
-                    g.AddComponent<SplitTimerText>();
+                if (timerText != "" && timerText != null) {
+                    Destroy(g);
+                    g.GetComponent<UnityEngine.UI.Text>().text = "";
+                }
                 string cameraPropsText = JsonUtility.ToJson(g.GetComponent("CameraProps"));
                 if (cameraPropsText != "" && cameraPropsText != null)
                     JsonUtility.FromJsonOverwrite(cameraPropsText, g.AddComponent<CameraModifier>());

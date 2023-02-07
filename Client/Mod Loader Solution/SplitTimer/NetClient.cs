@@ -20,6 +20,7 @@ namespace SplitTimer{
 		public int port = 65432;
 		public string ip = "18.132.81.187";
 		void Awake(){
+			DontDestroyOnLoad(this.gameObject.transform.root);
 			if (Instance != null && Instance != this) 
 				Destroy(this); 
 			else
@@ -171,7 +172,7 @@ namespace SplitTimer{
 			}
 		}
 		private void MessageRecieved(string message) {
-			// Debug.Log("NetClient | Message Recieved: " + message);
+			Debug.Log("NetClient | Message Recieved: " + message);
 			if (message == "")
 				return;
 			if (message == "SUCCESS") {

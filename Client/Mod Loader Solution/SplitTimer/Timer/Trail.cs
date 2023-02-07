@@ -54,7 +54,7 @@ namespace SplitTimer
                 return;
             clientTime += Time.deltaTime;
             framesSinceBoundaryCheck += 1;
-            if (framesSinceBoundaryCheck > 60){
+            if (framesSinceBoundaryCheck > 20){
                 framesSinceBoundaryCheck = 0;
                 //if (InAllBoundaries())
                //     

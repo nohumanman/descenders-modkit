@@ -26,9 +26,13 @@ namespace SplitTimer
         }
         void Update()
         {
-            foreach(GameObject obj in spawned)
-                if (obj == null)
-                    spawned.Remove(obj);
+            try
+            {
+                foreach (GameObject obj in spawned)
+                    if (obj == null)
+                        spawned.Remove(obj);
+            }
+            catch (InvalidOperationException){ }
             if (spawned.Count == 0 && Utilities.instance.GetCurrentMap() == "0")
                 SpawnFlags();
         }

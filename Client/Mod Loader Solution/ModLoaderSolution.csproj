@@ -31,15 +31,10 @@
     <RootNamespace>ModLoaderSolution</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <None Include=".vs\Universal Race Mod\v15\.suo" />
-    <None Include=".vs\Universal Race Mod\v15\Server\sqlite3\db.lock" />
-    <None Include=".vs\Universal Race Mod\v15\Server\sqlite3\storage.ide" />
-    <None Include=".vs\Universal Race Mod\v15\Server\sqlite3\storage.ide-shm" />
-    <None Include=".vs\Universal Race Mod\v15\Server\sqlite3\storage.ide-wal" />
-    <None Include=".vs\Universal Race Mod\v16\.suo" />
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Include="SplitTimer\BikeSwitcherEnabler.cs" />
+    <Compile Include="ModLoaderSolution\TimerCopier.cs" />
     <Compile Include="SplitTimer\AssetBundling.cs" />
+    <Compile Include="SplitTimer\ButtonHack.cs" />
     <Compile Include="SplitTimer\Flags.cs" />
     <Compile Include="SplitTimer\Modifiers\MovableCam.cs" />
     <Compile Include="SplitTimer\Modifiers\RainbowLight.cs" />
@@ -71,12 +66,7 @@
     <Compile Include="SplitTimer\Timer\Trail.cs" />
     <Compile Include="ModLoaderSolution\Utilities.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include=".vs\ExampleMod_fixed\v15\Server\sqlite3\" />
-    <Folder Include=".vs\GameOfBike\v15\Server\sqlite3\" />
-    <Folder Include=".vs\RaceMod\v15\Server\sqlite3\" />
-    <Folder Include=".vs\Ultimate Race Mod\v15\Server\sqlite3\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\ExampleMod_fixed\ExampleMod_fixed\bin\Debug\Assembly-CSharp.dll</HintPath>

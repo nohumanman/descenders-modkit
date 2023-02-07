@@ -53,33 +53,10 @@ namespace SplitTimer{
 					NetClient.Instance.SendData("LEADERBOARD|" + trail.name);
 				}
             }
-			StopCoroutine(SendPos());
-			StartCoroutine(SendPos());
-		}
-		public IEnumerator SendPos()
-        {
-			while (true)
-            {
-				if (Utilities.instance.GetPlayer() != null)
-                {
-					try
-					{
-						Vector3 pos = Utilities.instance.GetPlayer().transform.position;
-						NetClient.Instance.SendData("POS|" + pos.x + "|" + pos.y + "|" + pos.z);
-					}
-					catch { }
-				}
-				yield return new WaitForSeconds(0.2f);
-			}
 		}
 		void Update () {
 			if (PlayerHuman == null)
 				PlayerHuman = GameObject.Find("Player_Human");
-            else
-            {
-				Debug.Log(PlayerHuman.transform.position);
-				Debug.Log(PlayerHuman.transform.eulerAngles);
-			}
 			if (Utilities.instance.hasBailed() && !wasBailed)
 				OnRespawn();			
 			wasBailed = Utilities.instance.hasBailed();

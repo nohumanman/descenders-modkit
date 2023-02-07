@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using ModLoaderSolution;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.IO;
 
@@ -38,6 +39,39 @@ namespace SplitTimer
         public void LoadBundle(string bundlePath)
         {
             bundle = AssetBundle.LoadFromFile(bundlePath);
+            OnBundleLoad();
+        }
+        public void OnBundleLoad()
+        {
+            GameObject asst = bundle.LoadAsset<GameObject>("BikeSwitcherRadial");
+            GameObject bikeSwitcherRadial = Instantiate(asst);
+            DontDestroyOnLoad(bikeSwitcherRadial);
+            bikeSwitcherRadial.AddComponent<BikeSwitcherEnabler>();
+            foreach (Transform chil in bikeSwitcherRadial.transform.GetComponentsInChildren<Transform>())
+                if (chil.parent == bikeSwitcherRadial.transform)
+                    bikeSwitcherRadial.GetComponent<BikeSwitcherEnabler>().obj = chil.gameObject;
+            foreach (Button btn in bikeSwitcherRadial.GetComponent<BikeSwitcherEnabler>().obj.GetComponentsInChildren<Button>())
+            {
+                btn.gameObject.AddComponent<ButtonHack>();
+                string bike = "";
+                foreach (Transform chil in btn.transform)
+                    bike = chil.GetComponent<Text>().text;
+                btn.onClick.AddListener(() => { FindObjectOfType<BikeSwitcher>().ToBike(bike); });
+            }
+            bikeSwitcherRadial.GetComponent<BikeSwitcherEnabler>().obj.SetActive(false);
+
+            GameObject TimerCanvasAsset = bundle.LoadAsset<GameObject>("TimerCanvas");
+            GameObject TimerCanvas = Instantiate(TimerCanvasAsset);
+            foreach(Transform child in TimerCanvas.transform)
+            {
+                foreach(Transform childs_child in child)
+                {
+                    if (childs_child.gameObject.name == "TimerText")
+                        childs_child.gameObject.AddComponent<SplitTimerText>();
+                    if (childs_child.gameObject.name == "TextShadow")
+                        childs_child.gameObject.AddComponent<TimerCopier>();
+                }
+            }
         }
         void Start()
         {

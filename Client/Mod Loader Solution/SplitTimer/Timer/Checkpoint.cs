@@ -22,6 +22,7 @@ namespace SplitTimer
         {
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human" && doesWork)
             {
+                Debug.Log("SplitTimer.Checkpoint | Checkpoint '" + this.name + "' Entered");
                 if (Utilities.instance.isInReplayMode())
                     PlayerInf.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, SplitTimerText.Instance.time.ToString());
                 

@@ -46,6 +46,12 @@
                         </v-col>
                         <v-col>
                             <v-card>
+                                <v-text-field v-model="manual_eval"></v-text-field>
+                                <v-btn @click="RunCommand(controlled_player, {'evals': [manual_eval]})">Submit Eval</v-btn>
+                            </v-card>
+                        </v-col>
+                        <v-col>
+                            <v-card>
                                 <v-card-title>Player Statistics</v-card-title>
                                 <v-col v-for="value, key in controlled_player">
                                     <v-row>

@@ -46,6 +46,7 @@ var app = new Vue({
         validated: "UNAUTHORISED",
         display_pfps: false,
         times: [],
+        manual_eval: "",
         trails: [],
         self: {}, // the object of the player currently logged in
         tab: 0, // the current tab selected
