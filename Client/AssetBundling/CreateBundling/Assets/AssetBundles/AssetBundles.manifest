@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 3656487060
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: desccomptoolkit
+      Dependencies: {}

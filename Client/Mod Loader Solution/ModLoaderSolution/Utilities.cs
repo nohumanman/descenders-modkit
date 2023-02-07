@@ -565,6 +565,11 @@ namespace ModLoaderSolution
             return (string)pi.GetType().GetField("a^sXf\u0083Y").GetValue(pi);
             //return pi.playerName;
         }
+        public string GetIdFromPlayerInfo(PlayerInfo pi)
+        {
+            return (string)pi.GetType().GetField("r~x\u007fs{n").GetValue(pi);
+            //return pi.playerName;
+        }
 
         public List<string> GetSpectateTargets()
         {

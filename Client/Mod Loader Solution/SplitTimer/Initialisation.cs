@@ -12,8 +12,8 @@ namespace SplitTimer
             {
                 GameObject g = (GameObject)obj;
                 string replaceBikeJson = JsonUtility.ToJson(g.GetComponent("ReplaceBike"));
-                if (replaceBikeJson != "" && replaceBikeJson != null)
-                    JsonUtility.FromJsonOverwrite(replaceBikeJson, g.AddComponent<ReplaceBikeAttempt>());
+                //if (replaceBikeJson != "" && replaceBikeJson != null)
+                //    JsonUtility.FromJsonOverwrite(replaceBikeJson, g.AddComponent<ReplaceBikeAttempt>());
 
                 string removeTerrainjson = JsonUtility.ToJson(g.GetComponent("RemoveTerrainBoundary"));
                 if (removeTerrainjson != "" && removeTerrainjson != null)
@@ -47,7 +47,7 @@ namespace SplitTimer
             }
             if (FindObjectOfType<MapInfo>() == null)
                 Debug.LogError("ERROR - No Map info found in scene!!");
-            gameObject.AddComponent<PlayerInfo>();
+            gameObject.AddComponent<PlayerInf>();
             gameObject.AddComponent<NetClient>();
             gameObject.AddComponent<BikeSwitcher>();
             gameObject.AddComponent<TimeModifier>();

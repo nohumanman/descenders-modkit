@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\CreateAssetBundle.cs" />
      <Compile Include="Assets\Descenders Split Timer\Bike Switcher\Scripts\BikeSwitcherEnabler.cs" />
      <Compile Include="Assets\Descenders Split Timer\Bike Switcher\Scripts\BikeSwitcherHandler.cs" />
      <Compile Include="Assets\Descenders Split Timer\Bike Switcher\Scripts\ButtonHack.cs" />

@@ -23,11 +23,11 @@ namespace SplitTimer
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human" && doesWork)
             {
                 if (Utilities.instance.isInReplayMode())
-                    PlayerInfo.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, SplitTimerText.Instance.time.ToString());
+                    PlayerInf.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, SplitTimerText.Instance.time.ToString());
                 
                 if (this.checkpointType == CheckpointType.Start)
                 {
-                    NetClient.Instance.SendData("START_SPEED|" + PlayerInfo.Instance.speed);
+                    NetClient.Instance.SendData("START_SPEED|" + PlayerInf.Instance.speed);
                     SplitTimerText.Instance.RestartTimer();
                     //NetClient.Instance.gameObject.GetComponent<Utilities>().SetVel(5);
                 }

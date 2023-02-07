@@ -175,7 +175,7 @@ namespace SplitTimer{
 			if (message == "")
 				return;
 			if (message == "SUCCESS") {
-				PlayerInfo.Instance.NetStart();
+				PlayerInf.Instance.NetStart();
 				foreach (MedalSystem medalSystem in FindObjectsOfType<MedalSystem>())
 					medalSystem.NetStart();
 				this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());

@@ -21,20 +21,22 @@ namespace ModLoaderSolution
             }
             Debug.Log("ModLoaderSolution | Finished Mod Check");
             gameObject = new GameObject();
+            DontDestroyOnLoad(gameObject);
             gameObject.name = "DescendersSplitTimerModLoaded";
             Debug.Log("ModLoaderSolution | GameObject Instantiated");
             gameObject.AddComponent<ModLoaderSolution.Utilities>();
+            gameObject.AddComponent<SplitTimer.AssetBundling>();
             Debug.Log("ModLoaderSolution | ModLoaderSolution.Utilities added");
             gameObject.AddComponent<SplitTimer.Initialisation>();
             Debug.Log("ModLoaderSolution | SplitTimer.Initialisation added");
         }
         public static void Unload()
         {
-            MonoBehaviour.Destroy(gameObject);
+            //MonoBehaviour.Destroy(gameObject);
         }
         public static void _unload()
         {
-            MonoBehaviour.Destroy(gameObject);
+            //MonoBehaviour.Destroy(gameObject);
         }
     }
 }
