@@ -60,6 +60,7 @@ namespace SplitTimer
                 GameObject.Find("SpeedTrapTrigger").AddComponent<SpeedTrap>();
             if (firstStart)
             {
+                DontDestroyOnLoad(gameObject.transform.root);
                 gameObject.AddComponent<PlayerInf>();
                 gameObject.AddComponent<NetClient>();
                 gameObject.AddComponent<BikeSwitcher>();

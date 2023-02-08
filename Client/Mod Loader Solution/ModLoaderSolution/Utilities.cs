@@ -60,7 +60,7 @@ namespace ModLoaderSolution
             if (isFlying)
                 SetVel(20f);
         }
-        public Gesture[] gestures;
+        public Gesture[] gestures = new Gesture[0] {};
         public void GetGestures()
         {
             string gesturesField = "EL\u0080\u007f\u0084\u0080o";

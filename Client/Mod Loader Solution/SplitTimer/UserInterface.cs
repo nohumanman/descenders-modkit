@@ -59,12 +59,9 @@ namespace SplitTimer
                 GUI.Label(new Rect((Screen.width/2)-750, Screen.height- 80, 1500, 80), "scripts made with love by nohumanman :D", myButtonStyle2);
                 hasBeenActive = true;
                 GUIStyle myButtonStyle = new GUIStyle(GUI.skin.button);
-                Debug.Log("line 62");
                 myButtonStyle.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");
                 GUI.skin.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");
-                Debug.Log("Line 65");
                 myButtonStyle.fontSize = 13;
-                Debug.Log("Line 67");
                 if (GUI.Button(new Rect(10, 10, 150, 25), " \\/ COMMANDS \\/", myButtonStyle))
                     __COMMANDS__ = !__COMMANDS__;
                 if (__COMMANDS__)
@@ -127,7 +124,7 @@ namespace SplitTimer
                     foreach (Stat stat in FindObjectOfType<StatsModification>().stats)
                     {
                         GUI.Label(new Rect(460, yPos, 180, 25), "  " + stat.Name + ":", myButtonStyle);
-                        string temp = (GUI.TextArea(new Rect(640, yPos, 40, 25), stat.currentVal, myButtonStyle) + "\n").Split('\n')[0];
+                        string temp = (GUI.TextArea(new Rect(640, yPos, 40, 25), stat.currentVal) + "\n").Split('\n')[0];
                         try
                         {
                             float.Parse(temp);
@@ -197,6 +194,7 @@ namespace SplitTimer
             if ((Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.I)))
             {
                 GetAllPlayers();
+                Utilities.instance.GetGestures();
                 isActive = !isActive;
                 Cursor.visible = isActive;
             }

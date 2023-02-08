@@ -179,7 +179,7 @@ namespace SplitTimer{
 			this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
 		}
 		private void MessageRecieved(string message) {
-			Debug.Log("NetClient | Message Recieved: " + message);
+			//Debug.Log("NetClient | Message Recieved: " + message);
 			if (message == "")
 				return;
 			if (message == "SUCCESS") {
@@ -438,7 +438,7 @@ namespace SplitTimer{
 			// Debug.Log("NetClient | Message Processed: " + message);
 		}
 		public void SendData(string clientMessage) {
-			Debug.Log("NetClient | Client sending message: " + clientMessage);
+			//Debug.Log("NetClient | Client sending message: " + clientMessage);
 			clientMessage = clientMessage + "\n";
 			if (socketConnection == null) {
 				Debug.Log("NetClient | SendData cancelled, socket not connected!");
