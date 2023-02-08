@@ -74,6 +74,12 @@ class TrailTimer():
                 self.network_player.set_text_colour(255, 0, 0)
 
     def start_timer(self, total_checkpoints: int):
+        split_timer_logger.info(
+            "TrailTimer.py - "
+            f"{self.network_player.steam_id} "
+            f"'{self.network_player.steam_name}' "
+            f"- start_timer({total_checkpoints})"
+        )
         self.total_running_penalty = 0
         self.player_positions = []
         self.current_penalty = 0

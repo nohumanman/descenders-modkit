@@ -46,11 +46,11 @@ namespace SplitTimer
             GameObject asst = bundle.LoadAsset<GameObject>("BikeSwitcherRadial");
             GameObject bikeSwitcherRadial = Instantiate(asst);
             DontDestroyOnLoad(bikeSwitcherRadial);
-            bikeSwitcherRadial.AddComponent<BikeSwitcherEnabler>();
+            bikeSwitcherRadial.AddComponent<ObjEnabler>();
             foreach (Transform chil in bikeSwitcherRadial.transform.GetComponentsInChildren<Transform>())
                 if (chil.parent == bikeSwitcherRadial.transform)
-                    bikeSwitcherRadial.GetComponent<BikeSwitcherEnabler>().obj = chil.gameObject;
-            foreach (Button btn in bikeSwitcherRadial.GetComponent<BikeSwitcherEnabler>().obj.GetComponentsInChildren<Button>())
+                    bikeSwitcherRadial.GetComponent<ObjEnabler>().obj = chil.gameObject;
+            foreach (Button btn in bikeSwitcherRadial.GetComponent<ObjEnabler>().obj.GetComponentsInChildren<Button>())
             {
                 btn.gameObject.AddComponent<ButtonHack>();
                 string bike = "";
@@ -58,7 +58,7 @@ namespace SplitTimer
                     bike = chil.GetComponent<Text>().text;
                 btn.onClick.AddListener(() => { FindObjectOfType<BikeSwitcher>().ToBike(bike); });
             }
-            bikeSwitcherRadial.GetComponent<BikeSwitcherEnabler>().obj.SetActive(false);
+            bikeSwitcherRadial.GetComponent<ObjEnabler>().obj.SetActive(false);
 
             GameObject TimerCanvasAsset = bundle.LoadAsset<GameObject>("TimerCanvas");
             GameObject TimerCanvas = Instantiate(TimerCanvasAsset);

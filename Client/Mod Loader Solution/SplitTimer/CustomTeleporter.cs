@@ -75,15 +75,6 @@ namespace SplitTimer
                     StartCoroutine(coroutine);
                 }
             }
-
-            if (MapInfo.Instance != null && MapInfo.Instance.debugEnabled)
-            {
-                MapInfo.Instance.AddMetric("hasPressedB", hasPressedB.ToString());
-                MapInfo.Instance.AddMetric("respawning", respawning.ToString());
-                MapInfo.Instance.AddMetric("hasBailed:", Utilities.instance.hasBailed().ToString());
-                MapInfo.Instance.AddMetric("bailedPrev", bailedPreviously.ToString());
-                MapInfo.Instance.AddMetric("inAir", Utilities.instance.isInAir().ToString());
-            }
         }
         IEnumerator bailedPrev()
         {

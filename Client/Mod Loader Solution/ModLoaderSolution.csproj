@@ -31,7 +31,7 @@
     <RootNamespace>ModLoaderSolution</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="SplitTimer\BikeSwitcherEnabler.cs" />
+    <Compile Include="SplitTimer\ObjEnabler.cs" />
     <Compile Include="ModLoaderSolution\TimerCopier.cs" />
     <Compile Include="SplitTimer\AssetBundling.cs" />
     <Compile Include="SplitTimer\ButtonHack.cs" />
@@ -58,7 +58,6 @@
     <Compile Include="SplitTimer\Timer\Checkpoint.cs" />
     <Compile Include="SplitTimer\Initialisation.cs" />
     <Compile Include="ModLoaderSolution\Loader.cs" />
-    <Compile Include="SplitTimer\MapInfo.cs" />
     <Compile Include="SplitTimer\NetClient.cs" />
     <Compile Include="SplitTimer\PlayerInf.cs" />
     <Compile Include="SplitTimer\RidersGate.cs" />

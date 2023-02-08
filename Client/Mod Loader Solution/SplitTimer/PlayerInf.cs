@@ -27,22 +27,15 @@ namespace SplitTimer{
 		public void NetStart(){
 			OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
 			//OnMapEnter("IDHERE", MapInfo.Instance.ModName);
-			if (MapInfo.Instance != null)
-            {
-				MapInfo.Instance.AddMetric("version", version);
-				MapInfo.Instance.AddMetric("steam_id", steamIntegration.getSteamId());
-				MapInfo.Instance.AddMetric("steam_name", steamIntegration.getName());
-				MapInfo.Instance.AddMetric("world_name", MapInfo.Instance.ModName);
-			}
 			NetClient.Instance.SendData("SET_BIKE|" + Utilities.instance.GetBike());
 			NetClient.Instance.SendData("VERSION|" + version);
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
-			NetClient.Instance.SendData("WORLD_NAME|" + MapInfo.Instance.ModName);
 			NetClient.Instance.SendData("BIKE_TYPE|" + GetComponent<BikeSwitcher>().oldBike);
 			foreach (Trail trail in FindObjectsOfType<Trail>())
             {
 				Debug.Log("PlayerInfo | Looking for leaderboard texts on trail '" + trail.name + "'");
+				//trail.leaderboardText.GetComponent<TextMesh>().font = AssetBundling.Instance.bundle.LoadAsset<UnityEngine.UI.Text>("");
 				if (trail.leaderboardText != null)
                 {
 					Debug.Log("PlayerInfo | Found Speedrun.com Leaderboard for '" + trail.name + "'");

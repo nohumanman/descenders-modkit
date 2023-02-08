@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 8}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -91,10 +91,10 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 947
-  m_MinSize: {x: 708, y: 492}
+  m_MinSize: {x: 706, y: 492}
   m_MaxSize: {x: 14004, y: 14042}
   vertical: 0
-  controlID: 41
+  controlID: 10
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -138,8 +138,8 @@ MonoBehaviour:
     y: 0
     width: 345
     height: 501
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 20}
   m_Panes:
   - {fileID: 20}
@@ -194,7 +194,7 @@ MonoBehaviour:
     y: 0
     width: 1920
     height: 997
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &9
 MonoBehaviour:
@@ -257,10 +257,10 @@ MonoBehaviour:
     y: 0
     width: 1394
     height: 947
-  m_MinSize: {x: 406, y: 492}
+  m_MinSize: {x: 404, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
-  controlID: 42
+  controlID: 107
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -281,10 +281,10 @@ MonoBehaviour:
     y: 0
     width: 1394
     height: 501
-  m_MinSize: {x: 406, y: 221}
-  m_MaxSize: {x: 8006, y: 4021}
+  m_MinSize: {x: 404, y: 221}
+  m_MaxSize: {x: 8004, y: 4021}
   vertical: 0
-  controlID: 43
+  controlID: 26
 --- !u!114 &13
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -494,20 +494,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Descenders Split Timer/Split Timer/Scripts
+    - Assets/Descenders Split Timer/Split Timer/Fonts
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Descenders Split Timer/Split Timer/Scripts
+  - Assets/Descenders Split Timer/Split Timer/Fonts
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Unity
     Project\Split Timer Test
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 744}
-    m_SelectedIDs: b62b0000
-    m_LastClickedID: 11190
-    m_ExpandedIDs: 00000000f4270000fe2700009c280000082900001a290000802900006e2a00008c2a00008e2b0000b22b0000202c0000902c00003a2d0000ca2d0000102e00001e2e0000342e0000f02e000036370000383700003a3700003c3700003e37000040370000423700004437000000ca9a3bffffff7f
+    m_SelectedIDs: 4e2b0000
+    m_LastClickedID: 11086
+    m_ExpandedIDs: 00000000f4270000fe2700009c280000082900001a290000802900006e2a00008c2a00008e2b0000b22b0000202c0000902c0000402d0000d02d0000162e0000242e00003a2e0000f62e00003c3700003e37000040370000423700004437000046370000483700004a37000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -535,7 +535,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000f4270000fe2700009c280000082900001a290000802900006e2a00008c2a00008e2b0000b22b0000202c0000902c00003a2d0000ca2d0000102e00001e2e0000342e0000f02e000036370000383700003a3700003c3700003e370000403700004237000044370000
+    m_ExpandedIDs: 00000000f4270000fe2700009c280000082900001a290000802900006e2a00008c2a00008e2b0000b22b0000202c0000902c0000402d0000d02d0000162e0000242e00003a2e0000f62e00003c3700003e37000040370000423700004437000046370000483700004a370000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -563,7 +563,7 @@ MonoBehaviour:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
-    m_ExpandedInstanceIDs: c6230000000000006c280000303a0000
+    m_ExpandedInstanceIDs: c6230000000000006c280000303a0000d22c00008a2d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -617,7 +617,7 @@ MonoBehaviour:
     width: 524
     height: 455
   m_PersistentViewDataDictionary: {fileID: 0}
-  m_ScrollPosition: {x: 0, y: 275.95508}
+  m_ScrollPosition: {x: 0, y: 0}
   m_InspectorMode: 0
   m_PreviewResizer:
     m_CachedPref: 149
@@ -652,10 +652,10 @@ MonoBehaviour:
     height: 480
   m_PersistentViewDataDictionary: {fileID: 0}
   m_TreeViewState:
-    scrollPos: {x: 0, y: 16}
-    m_SelectedIDs: 40300000
-    m_LastClickedID: 12352
-    m_ExpandedIDs: a8f7ffff9efbffff000000009a2f0000
+    scrollPos: {x: 0, y: 64}
+    m_SelectedIDs: d6faffff
+    m_LastClickedID: -1322
+    m_ExpandedIDs: d6faffff30fbffff32fbffff9efbffff0000000074310000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -711,9 +711,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 278.56137, y: 232.61087, z: 44.04839}
+    m_Target: {x: 1.4996262, y: 49.736946, z: -173.20697}
     speed: 2
-    m_Value: {x: 278.56137, y: 232.61087, z: 44.04839}
+    m_Value: {x: 1.4996262, y: 49.736946, z: -173.20697}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -737,13 +737,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: -0.015000351, y: 0.0024004765, z: -0.000035830486, w: -0.9998846}
+    m_Target: {x: -0.015798248, y: -0.9721054, z: 0.0686484, w: -0.22371611}
     speed: 2
-    m_Value: {x: -0.015000351, y: 0.0024004765, z: -0.000035830486, w: -0.9998846}
+    m_Value: {x: -0.01579825, y: -0.97210544, z: 0.068648405, w: -0.22371612}
   m_Size:
-    m_Target: 580.65765
+    m_Target: 118.57987
     speed: 2
-    m_Value: 580.65765
+    m_Value: 118.57987
   m_Ortho:
     m_Target: 0
     speed: 2
