@@ -441,6 +441,7 @@ class UnitySocket():
             self.get_trail(trail_name).end_timer(client_time)
 
     def on_map_enter(self, map_id, map_name):
+        self.world_name = map_name
         self.time_started = time.time()
         self.update_concurrent_users()
 

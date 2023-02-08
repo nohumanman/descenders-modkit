@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 2282622820
+CRC: 3320563609
 Hashes:
   AssetFileHash:
     serializedVersion: 2
@@ -63,6 +63,7 @@ Assets:
 - Assets/Banners/desc_comp_banner.prefab
 - Assets/Bikes/BMX/BMX.prefab
 - Assets/Timer Canvas/TimerCanvas.prefab
+- Assets/Bike Switcher/share-tech-mono.regular.ttf
 - Assets/Banners/nohumanman_banner.prefab
 - Assets/Bikes/Canyon Spectral/Canyon_Spectral.prefab
 - Assets/Bikes/Fish/Fish.prefab

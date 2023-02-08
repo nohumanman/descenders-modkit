@@ -25,7 +25,8 @@ namespace SplitTimer{
 				Instance = this; 
 		}
 		public void NetStart(){
-			OnMapEnter("IDHERE", MapInfo.Instance.ModName);
+			OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
+			//OnMapEnter("IDHERE", MapInfo.Instance.ModName);
 			if (MapInfo.Instance != null)
             {
 				MapInfo.Instance.AddMetric("version", version);
@@ -54,7 +55,14 @@ namespace SplitTimer{
 				}
             }
 		}
+		string prevMap = "";
 		void Update () {
+			if (Utilities.instance.GetCurrentMap() != prevMap)
+            {
+				Debug.Log("MAP CHANGED!");
+				OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
+				prevMap = Utilities.instance.GetCurrentMap();
+			}
 			if (PlayerHuman == null)
 				PlayerHuman = GameObject.Find("Player_Human");
 			if (Utilities.instance.hasBailed() && !wasBailed)

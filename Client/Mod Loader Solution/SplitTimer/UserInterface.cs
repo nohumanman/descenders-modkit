@@ -25,7 +25,7 @@ namespace SplitTimer
         bool __PLAYERS__ = true;
         bool __STATS__ = true;
         bool __QoL__ = true;
-        bool __TRICKS__ = false;
+        bool __TRICKS__ = true;
         Vector2 scrollPosition = Vector2.zero;
         static Texture2D MakeTex(int width, int height, Color col)
         {
@@ -43,15 +43,12 @@ namespace SplitTimer
             {
                 GUIStyle myButtonStyle2 = new GUIStyle(GUI.skin.button);
                 myButtonStyle2.normal.textColor = Color.white;
+                //myButtonStyle2.font = 
                 myButtonStyle2.normal.background = MakeTex(2, 2, new Color(255, 0, 0));
                 GUI.Label(new Rect(0, 0, 150, 25), "STATS MODIFIED", myButtonStyle2);
                 GUI.Label(new Rect(Screen.width - 150, Screen.height - 25, 150, 25), "STATS MODIFIED", myButtonStyle2);
                 GUI.Label(new Rect(Screen.width - 150, 0, 150, 25), "STATS MODIFIED", myButtonStyle2);
                 GUI.Label(new Rect(0, Screen.height - 25, 150, 25), "STATS MODIFIED", myButtonStyle2);
-            }
-            else
-            {
-
             }
             if (isActive)
             {
@@ -59,10 +56,15 @@ namespace SplitTimer
                 myButtonStyle2.normal.textColor = Color.white;
                 myButtonStyle2.normal.background = MakeTex(5, 5, new Color(0.2f, 0.06f, 0.12f));
                 myButtonStyle2.fontSize = 60;
-                GUI.Label(new Rect((Screen.width/2)-750, Screen.height- 80, 1500, 80), "scripts made with love by nohumanman", myButtonStyle2);
+                GUI.Label(new Rect((Screen.width/2)-750, Screen.height- 80, 1500, 80), "scripts made with love by nohumanman :D", myButtonStyle2);
                 hasBeenActive = true;
                 GUIStyle myButtonStyle = new GUIStyle(GUI.skin.button);
-                // GUI.skin.font = Font.CreateDynamicFontFromOSFont("Rockwell", 12);
+                Debug.Log("line 62");
+                myButtonStyle.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");
+                GUI.skin.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");
+                Debug.Log("Line 65");
+                myButtonStyle.fontSize = 13;
+                Debug.Log("Line 67");
                 if (GUI.Button(new Rect(10, 10, 150, 25), " \\/ COMMANDS \\/", myButtonStyle))
                     __COMMANDS__ = !__COMMANDS__;
                 if (__COMMANDS__)
@@ -73,7 +75,7 @@ namespace SplitTimer
                         Utilities.instance.CutBrakes();
                     if (GUI.Button(new Rect(10, 95, 150, 25), "TogglePlayerCollision()", myButtonStyle))
                         Utilities.instance.TogglePlayerCollision();
-                    if (GUI.Button(new Rect(10, 120, 150, 25), "ToggleCustomCam()") && FindObjectOfType<MovableCam>() != null)
+                    if (GUI.Button(new Rect(10, 120, 150, 25), "ToggleCustomCam()", myButtonStyle) && FindObjectOfType<MovableCam>() != null)
                         FindObjectOfType<MovableCam>().ToggleCustomCam();
                     if (GUI.Button(new Rect(10, 145, 150, 25), "DisableAllBendGoals()", myButtonStyle))
                         Utilities.instance.DisableAllBendGoals();
@@ -86,20 +88,20 @@ namespace SplitTimer
                 {
                     foreach (GameObject point in Utilities.instance.GetCheckpointObjects())
                     {
-                        if (GUI.Button(new Rect(160, yPos, 150, 25), point.name))
+                        if (GUI.Button(new Rect(160, yPos, 150, 25), point.name, myButtonStyle))
                             Utilities.instance.GetPlayer().transform.position = point.transform.position;
                         yPos += 25;
                     }
                 }
                 yPos = 10;
-                if (GUI.Button(new Rect(310, yPos, 150, 25), "\\/ Players \\/"))
+                if (GUI.Button(new Rect(310, yPos, 150, 25), "\\/ Players \\/", myButtonStyle))
                     __PLAYERS__ = !__PLAYERS__;
                 yPos += 40;
                 if (__PLAYERS__)
                 {
                     foreach (PlayerInfoImpact x in players)
                     {
-                        if (GUI.Button(new Rect(310, yPos, 150, 25), (string)typeof(PlayerInfoImpact).GetField("a^sXfY").GetValue(x)))
+                        if (GUI.Button(new Rect(310, yPos, 150, 25), (string)typeof(PlayerInfoImpact).GetField("a^sXfY").GetValue(x), myButtonStyle))
                         {
                             Transform bikeTransform = ((GameObject)typeof(PlayerInfoImpact).GetField("W\u0082oQHKm").GetValue(x)).transform;
                             GameObject.Find("Player_Human").transform.position = bikeTransform.position;
@@ -109,23 +111,23 @@ namespace SplitTimer
                     }
                 }
                 yPos = 10;
-                if (GUI.Button(new Rect(460, yPos, 220, 25), " \\/ STATS \\/"))
+                if (GUI.Button(new Rect(460, yPos, 220, 25), " \\/ STATS \\/", myButtonStyle))
                     __STATS__ = !__STATS__;
                 yPos += 40;
                 if (__STATS__)
                 {
-                    if (GUI.Button(new Rect(460, yPos, 110, 25), "Reset"))
+                    if (GUI.Button(new Rect(460, yPos, 110, 25), "Reset", myButtonStyle))
                         FindObjectOfType<StatsModification>().ResetStats();
-                    if (GUI.Button(new Rect(570, yPos, 55, 25), "Save"))
+                    if (GUI.Button(new Rect(570, yPos, 55, 25), "Save", myButtonStyle))
                         FindObjectOfType<StatsModification>().SaveStats();
-                    if (GUI.Button(new Rect(625, yPos, 55, 25), "Load"))
+                    if (GUI.Button(new Rect(625, yPos, 55, 25), "Load", myButtonStyle))
                         FindObjectOfType<StatsModification>().LoadStats();
                     yPos += 30;
                     GUI.Box(new Rect(460, yPos, 220, FindObjectOfType<StatsModification>().stats.Count * 25), "");
                     foreach (Stat stat in FindObjectOfType<StatsModification>().stats)
                     {
-                        GUI.Label(new Rect(460, yPos, 180, 25), "  " + stat.Name + ":");
-                        string temp = (GUI.TextArea(new Rect(640, yPos, 40, 25), stat.currentVal) + "\n").Split('\n')[0];
+                        GUI.Label(new Rect(460, yPos, 180, 25), "  " + stat.Name + ":", myButtonStyle);
+                        string temp = (GUI.TextArea(new Rect(640, yPos, 40, 25), stat.currentVal, myButtonStyle) + "\n").Split('\n')[0];
                         try
                         {
                             float.Parse(temp);
@@ -136,16 +138,16 @@ namespace SplitTimer
                     }
                 }
                 yPos = 10;
-                if (GUI.Button(new Rect(680, yPos, 150, 25), " \\/ Quality of Life \\/"))
+                if (GUI.Button(new Rect(680, yPos, 150, 25), " \\/ Quality of Life \\/", myButtonStyle))
                     __QoL__ = !__QoL__;
                 yPos += 25;
                 if (__QoL__)
                 {
-                    if (GUI.Button(new Rect(680, yPos, 150, 25), "Toggle Map Audio"))
+                    if (GUI.Button(new Rect(680, yPos, 150, 25), "Toggle Map Audio", myButtonStyle))
                         Utilities.instance.ToggleMapAudio();
                 }
                 yPos = 10;
-                if (GUI.Button(new Rect(830, yPos, 180, 25), " \\/ GESTURE MODS \\/"))
+                if (GUI.Button(new Rect(830, yPos, 180, 25), " \\/ GESTURE MODS \\/", myButtonStyle))
                 {
                     __TRICKS__ = !__TRICKS__;
                     Utilities.instance.GetGestures();
