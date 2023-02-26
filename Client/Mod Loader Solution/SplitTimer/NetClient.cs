@@ -179,7 +179,7 @@ namespace SplitTimer{
 			this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
 		}
 		private void MessageRecieved(string message) {
-			//Debug.Log("NetClient | Message Recieved: " + message);
+			Debug.Log("NetClient | Message Recieved: " + message);
 			if (message == "")
 				return;
 			if (message == "SUCCESS") {
@@ -321,8 +321,9 @@ namespace SplitTimer{
             }
 			if (message.StartsWith("SET_BIKE"))
             {
-				int num = int.Parse(message.Split('|')[1]);
-				Utilities.instance.SetBike(num);
+				string new_bike = message.Split('|')[1];
+				// string steam_id = message.Split('|')[2]; // for multiplayer use
+				FindObjectOfType<BikeSwitcher>().ToBike(new_bike);
 			}
 			if (message.StartsWith("FREEZE_PLAYER"))
             {

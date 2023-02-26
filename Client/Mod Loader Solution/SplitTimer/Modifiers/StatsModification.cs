@@ -35,6 +35,7 @@ namespace SplitTimer
     }
     class StatsModification : MonoBehaviour
     {
+        public bool permitted = true;
         public static StatsModification instance;
         string savePath = Environment.CurrentDirectory;
         public List<Stat> stats = new List<Stat>();

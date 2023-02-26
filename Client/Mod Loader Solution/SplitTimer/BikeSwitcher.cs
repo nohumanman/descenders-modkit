@@ -11,11 +11,15 @@ namespace SplitTimer
         public string oldBike;
         public void ToBike(string bike)
         {
-            Debug.Log("ToBike(" + bike + ")");
+            Debug.Log("ToBike('" + bike + "')");
             StartCoroutine(_ToBike(bike));
         }
         IEnumerator _ToBike(string bike)
         {
+            while (GetBikeObject() == false)
+            {
+                yield return new WaitForEndOfFrame();
+            }
             if (!IsDescBike(oldBike) && IsDescBike(bike))
                 yield return DelicatePlayerRespawn();
             if (bike == "enduro")

@@ -25,13 +25,13 @@ namespace SplitTimer{
 				Instance = this; 
 		}
 		public void NetStart(){
+			NetClient.Instance.SendData("BIKE_TYPE|" + GetComponent<BikeSwitcher>().oldBike);
 			OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
 			//OnMapEnter("IDHERE", MapInfo.Instance.ModName);
-			NetClient.Instance.SendData("SET_BIKE|" + Utilities.instance.GetBike());
+			//NetClient.Instance.SendData("SET_BIKE|" + Utilities.instance.GetBike());
 			NetClient.Instance.SendData("VERSION|" + version);
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
-			NetClient.Instance.SendData("BIKE_TYPE|" + GetComponent<BikeSwitcher>().oldBike);
 			foreach (Trail trail in FindObjectsOfType<Trail>())
             {
 				Debug.Log("PlayerInfo | Looking for leaderboard texts on trail '" + trail.name + "'");
@@ -54,6 +54,27 @@ namespace SplitTimer{
             {
 				Debug.Log("MAP CHANGED!");
 				OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
+                try
+                {
+					Debug.Log("in try");
+					// if map is a number (seed)
+					// and isn't a bike park.
+					int map_as_int = int.Parse(Utilities.instance.GetCurrentMap());
+					Debug.Log("map_as_int:" + map_as_int.ToString());
+					if (map_as_int > 1 && !Utilities.instance.isBikePark())
+					{
+						Debug.Log("Calling resetstats!");
+						StatsModification.instance.ResetStats();
+						StatsModification.instance.permitted = false;
+					}
+                    else
+                    {
+						StatsModification.instance.permitted = true;
+					}
+				}
+                catch {
+					StatsModification.instance.permitted = true;
+				}
 				prevMap = Utilities.instance.GetCurrentMap();
 			}
 			if (PlayerHuman == null)

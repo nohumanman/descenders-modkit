@@ -303,24 +303,14 @@ class UnitySocket():
         if self.steam_name is not None:
             self.has_both_steam_name_and_id()
 
-    def goto_default_bike(self):
-        time.sleep(2)
+    def get_default_bike(self):
         if self.world_name is not None:
             start_bike = DBMS().get_start_bike(self.world_name)
-            if start_bike is not None:
-                self.on_bike_switch(self.bike_type, start_bike)
-                if start_bike == "enduro":
-                    self.send("SET_BIKE|0")
-                elif start_bike == "downhill":
-                    self.send("SET_BIKE|1")
-                elif start_bike == "hardtail":
-                    self.send("SET_BIKE|2")
-            else:
-                self.on_bike_switch(self.bike_type, start_bike)
-                self.send("SET_BIKE|0")
+            if (start_bike is None):
+                return "enduro"
+            return start_bike
         else:
-            self.on_bike_switch(self.bike_type, start_bike)
-            self.send("SET_BIKE|0")
+            return "enduro"
 
     def set_world_name(self, world_name):
         split_timer_logger.info(
@@ -328,7 +318,6 @@ class UnitySocket():
             f" - set_world_name('{world_name}')"
         )
         self.world_name = world_name
-        self.goto_default_bike()
         DBMS().update_player(
             self.steam_id,
             self.steam_name,
@@ -444,6 +433,11 @@ class UnitySocket():
         self.world_name = map_name
         self.time_started = time.time()
         self.update_concurrent_users()
+        print("in map_enter!")
+        if (self.bike_type == ""):
+            self.bike_type = self.get_default_bike()
+            print("Setting bike to " + self.bike_type)
+        self.send("SET_BIKE|" + self.bike_type)
 
     def on_map_exit(self):
         self.update_concurrent_users()
