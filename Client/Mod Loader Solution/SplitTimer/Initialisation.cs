@@ -72,6 +72,7 @@ namespace SplitTimer
                 gameObject.AddComponent<StatsModification>();
                 gameObject.AddComponent<UserInterface>();
                 gameObject.AddComponent<Flags>();
+                gameObject.AddComponent<ChaosMod>();
             }
         }
         public void Start()

@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3320563609
+CRC: 2994848947
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 0bec65ffb2fce825f5eb31039ee5741c
+    Hash: 3ad0dcda96dd99bf83b4ad72152e2e38
   TypeTreeHash:
     serializedVersion: 2
-    Hash: aa6f009b446c1a00d520a20f572bdecb
+    Hash: 4cdc64c480db50f9db890d4c08808ee2
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -25,7 +25,13 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
+- Class: 54
+  Script: {instanceID: 0}
 - Class: 74
+  Script: {instanceID: 0}
+- Class: 82
+  Script: {instanceID: 0}
+- Class: 83
   Script: {instanceID: 0}
 - Class: 90
   Script: {instanceID: 0}
@@ -49,6 +55,8 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 128
   Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
 - Class: 137
   Script: {instanceID: 0}
 - Class: 213
@@ -60,6 +68,7 @@ ClassTypes:
 - Class: 224
   Script: {instanceID: 0}
 Assets:
+- Assets/ChaosBegin.mp3
 - Assets/Banners/desc_comp_banner.prefab
 - Assets/Bikes/BMX/BMX.prefab
 - Assets/Timer Canvas/TimerCanvas.prefab
@@ -69,6 +78,7 @@ Assets:
 - Assets/Bikes/Fish/Fish.prefab
 - Assets/Bikes/Specialised_Demo/Specialized_Demo.prefab
 - Assets/Bikes/Coffee Bike/Coffee_Bike.prefab
+- Assets/Capsule_W_Rbody.prefab
 - Assets/Bike Switcher/BikeSwitcherRadial.prefab
 - Assets/Bikes/Intense M16/Intense_M16.prefab
 Dependencies: []

@@ -332,6 +332,14 @@ class UnitySocket():
         )
         self.conn.sendall((data + "\n").encode())
 
+    def send_all(self, data: str):
+        split_timer_logger.info(
+            f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
+            f" called send_all('{data}')"
+        )
+        for player in self.parent.players:
+            player.send(data)
+
     def handle_data(self, data: str):
         if data == "":
             return
@@ -437,7 +445,7 @@ class UnitySocket():
         if (self.bike_type == ""):
             self.bike_type = self.get_default_bike()
             print("Setting bike to " + self.bike_type)
-        self.send("SET_BIKE|" + self.bike_type)
+        self.send_all("SET_BIKE|" + self.bike_type + "|" + self.steam_id)
 
     def on_map_exit(self):
         self.update_concurrent_users()

@@ -27,7 +27,7 @@ namespace SplitTimer
         bool __QoL__ = true;
         bool __TRICKS__ = true;
         Vector2 scrollPosition = Vector2.zero;
-        static Texture2D MakeTex(int width, int height, Color col)
+        public static Texture2D MakeTex(int width, int height, Color col)
         {
             Color[] pix = new Color[width * height];
             for (int i = 0; i < pix.Length; ++i)
@@ -179,6 +179,8 @@ namespace SplitTimer
                     }
                     GUI.EndScrollView();
                 }
+                if (GUI.Button(new Rect(1010, 20, 180, 25), "-- CHAOS MOD --"))
+                    FindObjectOfType<ChaosMod>().StartChaos();
             }
         }
         void GetAllPlayers()

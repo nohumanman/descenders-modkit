@@ -9,45 +9,63 @@ namespace SplitTimer
 	public class BikeSwitcher : MonoBehaviour
 	{
         public string oldBike;
-        public void ToBike(string bike)
+        public void ToBike(string bike, string id)
         {
             Debug.Log("ToBike('" + bike + "')");
-            StartCoroutine(_ToBike(bike));
+            StartCoroutine(_ToBike(bike, id));
         }
-        IEnumerator _ToBike(string bike)
+        IEnumerator _ToBike(string bike, string id)
         {
-            while (GetBikeObject() == false)
+            GameObject PlayerObject = Utilities.GetPlayerFromId(id);
+            if (PlayerObject != null)
             {
-                yield return new WaitForEndOfFrame();
-            }
-            if (!IsDescBike(oldBike) && IsDescBike(bike))
-                yield return DelicatePlayerRespawn();
-            if (bike == "enduro")
-                gameObject.GetComponent<Utilities>().SetBike(0);
-            else if (bike == "downhill")
-                gameObject.GetComponent<Utilities>().SetBike(1);
-            else if (bike == "hardtail")
-                gameObject.GetComponent<Utilities>().SetBike(2);
-            else
-            {
-                if (AssetBundling.Instance.bundle != null)
+                GameObject BikeObject = GetBikeObject(PlayerObject);
+                while (BikeObject == null)
                 {
-                    GameObject bikeReplacement = AssetBundling.Instance.bundle.LoadAsset<GameObject>(bike);
-                    ReplaceBike(
-                        bikeReplacement.GetComponentInChildren<SkinnedMeshRenderer>(),
-                        bikeReplacement.GetComponent<Animation>()
-                    );
+                    if (id == (new PlayerIdentification.SteamIntegration()).id.steamID)
+                    {
+                        BikeObject = GetBikeObject(PlayerObject);
+                    }
+                    yield return new WaitForEndOfFrame();
                 }
+                if (!IsDescBike(oldBike) && IsDescBike(bike))
+                    yield return DelicatePlayerRespawn(id, PlayerObject, Utilities.GetPlayerInfoImpactFromId(id));
+                if (bike == "enduro")
+                    gameObject.GetComponent<Utilities>().SetBike(0);
+                else if (bike == "downhill")
+                    gameObject.GetComponent<Utilities>().SetBike(1);
+                else if (bike == "hardtail")
+                    gameObject.GetComponent<Utilities>().SetBike(2);
                 else
-                    throw new System.Exception("AssetBundle not loaded! Can't load into specialised demo!!");
+                {
+                    if (AssetBundling.Instance.bundle != null)
+                    {
+                        GameObject bikeReplacement = AssetBundling.Instance.bundle.LoadAsset<GameObject>(bike);
+                        ReplaceBike(
+                            bikeReplacement.GetComponentInChildren<SkinnedMeshRenderer>(),
+                            bikeReplacement.GetComponent<Animation>(),
+                            BikeObject,
+                            PlayerObject
+                        );
+                    }
+                    else
+                        throw new System.Exception("AssetBundle not loaded! Can't load into specialised demo!!");
+                }
+                PlayerInf.Instance.OnBikeSwitch(oldBike, bike);
+                oldBike = bike;
             }
-            PlayerInf.Instance.OnBikeSwitch(oldBike, bike);
-            oldBike = bike;
+            
         }
-        public void ReplaceBike(SkinnedMeshRenderer newSkinnedMeshRenderer, Animation newAnimation)
+        public void ReplaceBike(SkinnedMeshRenderer newSkinnedMeshRenderer, Animation newAnimation, GameObject BikeObject, GameObject PlayerObject)
         {
-            GetBikeObject().GetComponent<SkinnedMeshRenderer>().sharedMesh = newSkinnedMeshRenderer.sharedMesh;
-            Animation currentBikeAnim = GetBikeModelAnim();
+            BikeObject.GetComponent<SkinnedMeshRenderer>().sharedMesh = newSkinnedMeshRenderer.sharedMesh;
+            
+            Animation currentBikeAnim = GetBikeModelAnim(PlayerObject);
+            if (currentBikeAnim == null)
+            {
+                Debug.Log("Aaiosjdopiasjdpoajsdopjaspodjaposdjpoasjd==123=1-23=1-293=-1203=-102=3-012=3");
+            }
+            Debug.Log("bikeObject:" + BikeObject);
             currentBikeAnim.Stop();
             foreach (AnimationClip q in animToAnimStates(newAnimation))
             {
@@ -63,16 +81,17 @@ namespace SplitTimer
                 Destroy(x);
             }
         }
-        IEnumerator DelicatePlayerRespawn()
+        IEnumerator DelicatePlayerRespawn(string id, GameObject Player, PlayerInfoImpact playerInfoImpact)
         {
-            Vector3 pos = Utilities.instance.GetPlayer().transform.position;
-            Vector3 rot = Utilities.instance.GetPlayer().transform.eulerAngles;
-            Destroy(Utilities.instance.GetPlayer());
+            // Player = Utilities.instance.GetPlayer()
+            Vector3 pos = Player.transform.position;
+            Vector3 rot = Player.transform.eulerAngles;
+            Destroy(Player);
             yield return new WaitForSeconds(0.1f);
-            FindObjectOfType<PlayerManager>().SpawnPlayerObject(Utilities.instance.GetPlayerInfoImpact());
+            FindObjectOfType<PlayerManager>().SpawnPlayerObject(playerInfoImpact);
             yield return new WaitForSeconds(0.1f);
-            Utilities.instance.GetPlayer().transform.position = pos;
-            Utilities.instance.GetPlayer().transform.eulerAngles = rot;
+            Utilities.GetPlayerFromId(id).transform.position = pos;
+            Utilities.GetPlayerFromId(id).transform.eulerAngles = rot;
             yield return new WaitForSeconds(0.2f);
         }
         bool IsDescBike(string bike)
@@ -80,10 +99,11 @@ namespace SplitTimer
             // returns true if player was previously on a descenders-own bike
             return bike == "enduro" || bike == "hardtail" || bike == "downhill";
         }
-        GameObject GetBikeObject()
+        GameObject GetBikeObject(GameObject PlayerObject)
         {
             foreach (SkinnedMeshRenderer x in FindObjectsOfType<SkinnedMeshRenderer>())
-                if (x.gameObject.name == "bike_downhill_LOD0" && x.gameObject.transform.root.name == "Player_Human")
+                //if (x.gameObject.name == "bike_downhill_LOD0" && x.gameObject.transform.root.name == "Player_Human")
+                if (x.gameObject.name == "bike_downhill_LOD0" && x.gameObject.transform.root == PlayerObject.transform)
                     return x.gameObject;
             return null;
         }
@@ -106,17 +126,15 @@ namespace SplitTimer
             // Copied fields can be restricted with BindingFlags
             System.Reflection.FieldInfo[] fields = type.GetFields();
             foreach (System.Reflection.FieldInfo field in fields)
-            {
                 field.SetValue(copy, field.GetValue(original));
-            }
             return copy;
         }
-        Animation GetBikeModelAnim()
+        Animation GetBikeModelAnim(GameObject PlayerObject)
         {
             foreach (Animation a in FindObjectsOfType<Animation>())
             {
                 Debug.Log("Anim Root: " + a.transform.root.name);
-                if (a.name == "BikeModel" && a.transform.root.name == "Player_Human")
+                if (a.name == "BikeModel" && a.transform.root == PlayerObject.transform)
                     return a;
             }
             return null;

@@ -365,6 +365,36 @@ namespace ModLoaderSolution
             //Log("isInPauseMenu false");
             return false;
         }
+        public struct CustomPlayerInf
+        {
+            public string playerName;
+            public string steamID;
+            public GameObject playerObject;
+        }
+        public static CustomPlayerInf FromPlayerInfo(PlayerInfo inf)
+        {
+            string json = JsonUtility.ToJson(inf);
+            json = json.Replace("a^sXfY", "playerName");
+            json = json.Replace("r~xs{n", "steamID");
+            json = json.Replace("W\u0082oQHKm", "playerObject");
+            CustomPlayerInf id = JsonUtility.FromJson<CustomPlayerInf>(json);
+            return id;
+        }
+        public static GameObject GetPlayerFromId(string steam_id)
+        {
+            foreach (PlayerInfo inf in Singleton<PlayerManager>.SP.GetAllPlayers())
+                if (FromPlayerInfo(inf).steamID == steam_id)
+                    return FromPlayerInfo(inf).playerObject;
+            return null;
+        }
+        public static PlayerInfoImpact GetPlayerInfoImpactFromId(string steam_id)
+        {
+
+            foreach (PlayerInfo inf in Singleton<PlayerManager>.SP.GetAllPlayers())
+                if (FromPlayerInfo(inf).steamID == steam_id)
+                    return (PlayerInfoImpact)inf;
+            return null;
+        }
 
         public GameObject GetPlayer()
         {

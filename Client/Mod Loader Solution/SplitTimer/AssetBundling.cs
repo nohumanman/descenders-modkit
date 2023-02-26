@@ -56,7 +56,7 @@ namespace SplitTimer
                 string bike = "";
                 foreach (Transform chil in btn.transform)
                     bike = chil.GetComponent<Text>().text;
-                btn.onClick.AddListener(() => { FindObjectOfType<BikeSwitcher>().ToBike(bike); });
+                btn.onClick.AddListener(() => { FindObjectOfType<BikeSwitcher>().ToBike(bike, (new PlayerIdentification.SteamIntegration()).getSteamId()); });
             }
             bikeSwitcherRadial.GetComponent<ObjEnabler>().obj.SetActive(false);
 

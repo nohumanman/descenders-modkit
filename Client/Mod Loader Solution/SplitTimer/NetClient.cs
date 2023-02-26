@@ -322,8 +322,15 @@ namespace SplitTimer{
 			if (message.StartsWith("SET_BIKE"))
             {
 				string new_bike = message.Split('|')[1];
-				// string steam_id = message.Split('|')[2]; // for multiplayer use
-				FindObjectOfType<BikeSwitcher>().ToBike(new_bike);
+				string steam_id;
+				try { steam_id = message.Split('|')[2]; }
+                catch{ steam_id = (new PlayerIdentification.SteamIntegration().id).ToString(); }
+				FindObjectOfType<BikeSwitcher>().ToBike(new_bike, steam_id);
+			}
+			if (message.StartsWith("GET_IDS"))
+            {
+				foreach (PlayerInfo inf in Singleton<PlayerManager>.SP.GetAllPlayers())
+					Debug.Log(Utilities.FromPlayerInfo(inf).steamID);
 			}
 			if (message.StartsWith("FREEZE_PLAYER"))
             {

@@ -31,6 +31,8 @@
     <RootNamespace>ModLoaderSolution</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="SplitTimer\ChaosMod.cs" />
+    <Compile Include="SplitTimer\TwitchTv.cs" />
     <Compile Include="SplitTimer\ObjEnabler.cs" />
     <Compile Include="ModLoaderSolution\TimerCopier.cs" />
     <Compile Include="SplitTimer\AssetBundling.cs" />
