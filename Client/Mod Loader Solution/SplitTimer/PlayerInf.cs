@@ -54,27 +54,17 @@ namespace SplitTimer{
             {
 				Debug.Log("MAP CHANGED!");
 				OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
-                try
-                {
-					Debug.Log("in try");
-					// if map is a number (seed)
-					// and isn't a bike park.
-					int map_as_int = int.Parse(Utilities.instance.GetCurrentMap());
-					Debug.Log("map_as_int:" + map_as_int.ToString());
-					if (map_as_int > 1 && !Utilities.instance.isBikePark())
-					{
-						Debug.Log("Calling resetstats!");
-						StatsModification.instance.ResetStats();
-						StatsModification.instance.permitted = false;
-					}
-                    else
-                    {
-						StatsModification.instance.permitted = true;
-					}
+
+				// if not a bike park or a mod
+				if (!Utilities.instance.isBikePark() && !Utilities.instance.isMod() && !(Utilities.instance.GetCurrentMap() == "0"))
+				{
+					StatsModification.instance.ResetStats();
+					StatsModification.instance.permitted = false;
 				}
-                catch {
+				else
 					StatsModification.instance.permitted = true;
-				}
+				
+				StatsModification.instance.DirtyStats();
 				prevMap = Utilities.instance.GetCurrentMap();
 			}
 			if (PlayerHuman == null)

@@ -191,6 +191,8 @@ namespace ModLoaderSolution
         public bool isMod()
         {
             string currentMap = GetCurrentMap();
+            return currentMap.Contains("-");
+
             List<Mod> mods = GetAllMods();
             foreach (Mod mod in mods)
             {

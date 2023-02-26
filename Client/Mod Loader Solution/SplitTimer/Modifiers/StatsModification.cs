@@ -117,6 +117,14 @@ namespace SplitTimer
                 stat.currentVal = stat.StartingValue;
             }
         }
+        public void DirtyStats()
+        {
+            // forces all stats to update themselves
+            foreach (Stat stat in stats)
+            {
+                stat.prevVal = null;
+            }
+        }
         public void Update()
         {
             foreach (Stat stat in stats)
@@ -132,15 +140,18 @@ namespace SplitTimer
                 }
                 if (stat.currentVal != stat.prevVal)
                 {
-                    //if (stat.type == typeof(float))
-                        ModifyVehicle(stat.ObfuscatedName, float.Parse(stat.currentVal));
-                    //if (stat.type == typeof(int))
-                    //    ModifyVehicle(stat.ObfuscatedName, int.Parse(stat.currentVal));
-                    stat.prevVal = stat.currentVal;
+                    if (!permitted && stat.currentVal != stat.StartingValue)
+                        return;
+                    try
+                    {
+                        if (ModifyVehicle(stat.ObfuscatedName, float.Parse(stat.currentVal)))
+                            stat.prevVal = stat.currentVal;
+                    }
+                    catch{}
                 }
             }
         }
-        public void ModifyVehicle(string field, object value)
+        public bool ModifyVehicle(string field, object value)
         {
             Utilities.instance.GetPlayer()
                 .GetComponent<Vehicle>()
@@ -148,6 +159,7 @@ namespace SplitTimer
                 .SetValue(
                     Utilities.instance.GetPlayer().GetComponent<Vehicle>(), value
                 );
+            return true;
         }
         public object GetVehicleMod(string field)
         {
