@@ -24,6 +24,7 @@ namespace SplitTimer
         bool __CHECKPOINTS__ = true;
         bool __PLAYERS__ = true;
         bool __STATS__ = true;
+        bool __STATS__FRONT = true;
         bool __QoL__ = true;
         bool __TRICKS__ = true;
         Vector2 scrollPosition = Vector2.zero;
@@ -76,6 +77,8 @@ namespace SplitTimer
                         FindObjectOfType<MovableCam>().ToggleCustomCam();
                     if (GUI.Button(new Rect(10, 145, 150, 25), "DisableAllBendGoals()", myButtonStyle))
                         Utilities.instance.DisableAllBendGoals();
+                    if (GUI.Button(new Rect(10, 170, 150, 25), "SpawnAtCursor()", myButtonStyle))
+                        FindObjectOfType<TeleportAtCursor>().TeleportToggle();
                 }
                 int yPos = 10;
                 if (GUI.Button(new Rect(160, yPos, 150, 25), "\\/ CHECKPOINTS  \\/"))
@@ -179,8 +182,6 @@ namespace SplitTimer
                     }
                     GUI.EndScrollView();
                 }
-                if (GUI.Button(new Rect(1010, 20, 180, 25), "-- CHAOS MOD --"))
-                    FindObjectOfType<ChaosMod>().StartChaos();
             }
         }
         void GetAllPlayers()

@@ -407,6 +407,7 @@ class UnitySocket():
 
     def on_bike_switch(self, old_bike: str, new_bike: str):
         self.bike_type = new_bike
+        #self.send_all(f"SET_BIKE|{self.bike_type}|{self.steam_id}")
         self.invalidate_all_trails("You switched bikes!")
 
     def on_boundry_enter(self, trail_name: str, boundry_guid: str):

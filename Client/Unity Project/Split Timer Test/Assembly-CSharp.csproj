@@ -54,6 +54,7 @@
      <Compile Include="Assets\Descenders Split Timer\Bike Switcher\Scripts\BikeSwitcherEnabler.cs" />
      <Compile Include="Assets\Descenders Split Timer\Bike Switcher\Scripts\BikeSwitcherHandler.cs" />
      <Compile Include="Assets\Descenders Split Timer\Bike Switcher\Scripts\ButtonHack.cs" />
+     <Compile Include="Assets\Descenders Split Timer\BikeSwitchTrig\SwitchBikeOnEnterMdTl.cs" />
      <Compile Include="Assets\Descenders Split Timer\Camera Modification\Scripts\CameraModifier.cs" />
      <Compile Include="Assets\Descenders Split Timer\Discord Invite\Scripts\DiscordInvite.cs" />
      <Compile Include="Assets\Descenders Split Timer\Discord Invite\Scripts\ShowCursorInTrigger.cs" />
@@ -69,6 +70,7 @@
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\MonoImageOpenStatus.cs" />
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\Native.cs" />
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\ProcessUtils.cs" />
+     <Compile Include="Assets\Descenders Split Timer\OrderedSpawn.cs" />
      <Compile Include="Assets\Descenders Split Timer\SlipModifier\SlipModInfo.cs" />
      <Compile Include="Assets\Descenders Split Timer\Speed Modifier\SetSpeed.cs" />
      <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\JsonMapInfo.cs" />

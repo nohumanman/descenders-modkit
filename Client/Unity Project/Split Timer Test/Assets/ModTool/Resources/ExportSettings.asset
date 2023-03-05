@@ -11,10 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: -1672532349, guid: ea3df2c1fc806954da2f04daa808034d, type: 3}
   m_Name: ExportSettings
   m_EditorClassIdentifier: 
-  _name: Split Timer Test
+  _name: The Ultimate Mod
   _author: nohumanman
-  _description: Test
-  _version: 0.0.49
+  _description: Stats Modification, Bike Switcher, Trick Mods, Custom Teleport, etc
+    ALL IN ONE MOD
+  _version: 0.1.44
   _platforms: 1
   _content: 5
   _outputDirectory: D:/SteamLibrary/steamapps/common/Descenders/Mods

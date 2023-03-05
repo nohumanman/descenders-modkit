@@ -37,6 +37,9 @@ namespace SplitTimer
                     string timerText = JsonUtility.ToJson(g.GetComponent("TimerText"));
                     if (timerText != "" && timerText != null)
                         Destroy(g);
+                    string switchBikeOnEnterJson = JsonUtility.ToJson(g.GetComponent("SwitchBikeOnEnterMdTl"));
+                    if (switchBikeOnEnterJson != "" && switchBikeOnEnterJson != null)
+                        JsonUtility.FromJsonOverwrite(switchBikeOnEnterJson, g.AddComponent<SwitchBikeOnEnter>());
                     string cameraPropsText = JsonUtility.ToJson(g.GetComponent("CameraProps"));
                     if (cameraPropsText != "" && cameraPropsText != null)
                         JsonUtility.FromJsonOverwrite(cameraPropsText, g.AddComponent<CameraModifier>());
@@ -68,6 +71,7 @@ namespace SplitTimer
                 gameObject.AddComponent<TrickCapturer>();
                 gameObject.AddComponent<GimbalCam>();
                 gameObject.AddComponent<MovableCam>();
+                gameObject.AddComponent<TeleportAtCursor>();
                 //gameObject.AddComponent<RainbowLight>();
                 gameObject.AddComponent<StatsModification>();
                 gameObject.AddComponent<UserInterface>();

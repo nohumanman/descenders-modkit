@@ -12,21 +12,29 @@ namespace SplitTimer
     {
         public string Name;
     }
+    public enum StatType
+    {
+        Vehicle, Wheel
+    }
     [Serializable]
     public class Stat
     {
         public string Name;
         public Type type;
+        public StatType statType;
         public string ObfuscatedName;
         public string currentVal;
         public string prevVal;
         public string StartingValue;
+        public int wheelNo;
         [SerializeField]
-        public Stat(string aName, Type aType, string aObfuscatedName)
+        public Stat(string aName, Type aType, string aObfuscatedName, StatType _statType, int wheelNum = -1)
         {
             Name = aName;
             type = aType;
             ObfuscatedName = aObfuscatedName;
+            statType = _statType;
+            wheelNo = wheelNum;
         }
     }
     public struct deez
@@ -42,23 +50,36 @@ namespace SplitTimer
         void Start()
         {
             instance = this;
-            stats.Add(new Stat("acceleration", typeof(float), "\u0084DUt\u0084vi"));
-            stats.Add(new Stat("startupAcceleration", typeof(float), "cPkCE^\u0081"));
-            stats.Add(new Stat("airFriction", typeof(float), "ei[frnu"));
-            stats.Add(new Stat("rollResistance", typeof(float), "~Sz\u0082Mf["));
-            stats.Add(new Stat("maxSteering", typeof(float), "i[^xbRc"));
-            stats.Add(new Stat("steeringTime", typeof(float), "\u0083gpT]rZ"));
-            stats.Add(new Stat("steeringReductionForSpeed", typeof(float), "FeXucWp"));
-            stats.Add(new Stat("minSpeedForSteerReduction", typeof(float), "~L|\u007fVHv"));
-            stats.Add(new Stat("velocityLossInCorners", typeof(float), "EiKXn\u0080W"));
-            stats.Add(new Stat("steeringShake", typeof(float), "eVPs~\u0082h"));
-            stats.Add(new Stat("baseSlip", typeof(float), "gY\u007f\u0083VF\u0084"));
-            stats.Add(new Stat("speedToLoseGrip", typeof(float), "Z`sU}qp"));
-            stats.Add(new Stat("skiddingSlip", typeof(float), "[JmOrvR"));
-            stats.Add(new Stat("speedForFullSkid", typeof(float), "\u0084Se{\u0084[Q"));
-            stats.Add(new Stat("slipSmoothing", typeof(float), "yg^Qx|w"));
-            stats.Add(new Stat("scaledFrictionFactor", typeof(float), "rKH}Gur"));
-            stats.Add(new Stat("tweakingGripLoss", typeof(float), "z\u0082q|kdz"));
+            stats.Add(new Stat("acceleration", typeof(float), "\u0084DUt\u0084vi", StatType.Vehicle));
+            stats.Add(new Stat("startupAcceleration", typeof(float), "cPkCE^\u0081", StatType.Vehicle));
+            stats.Add(new Stat("airFriction", typeof(float), "ei[frnu", StatType.Vehicle));
+            stats.Add(new Stat("rollResistance", typeof(float), "~Sz\u0082Mf[", StatType.Vehicle));
+            stats.Add(new Stat("maxSteering", typeof(float), "i[^xbRc", StatType.Vehicle));
+            stats.Add(new Stat("steeringTime", typeof(float), "\u0083gpT]rZ", StatType.Vehicle));
+            stats.Add(new Stat("steeringReductionForSpeed", typeof(float), "FeXucWp", StatType.Vehicle));
+            stats.Add(new Stat("minSpeedForSteerReduction", typeof(float), "~L|\u007fVHv", StatType.Vehicle));
+            stats.Add(new Stat("velocityLossInCorners", typeof(float), "EiKXn\u0080W", StatType.Vehicle));
+            stats.Add(new Stat("steeringShake", typeof(float), "eVPs~\u0082h", StatType.Vehicle));
+            stats.Add(new Stat("baseSlip", typeof(float), "gY\u007f\u0083VF\u0084", StatType.Vehicle));
+            stats.Add(new Stat("speedToLoseGrip", typeof(float), "Z`sU}qp", StatType.Vehicle));
+            stats.Add(new Stat("skiddingSlip", typeof(float), "[JmOrvR", StatType.Vehicle));
+            stats.Add(new Stat("speedForFullSkid", typeof(float), "\u0084Se{\u0084[Q", StatType.Vehicle));
+            stats.Add(new Stat("slipSmoothing", typeof(float), "yg^Qx|w", StatType.Vehicle));
+            stats.Add(new Stat("scaledFrictionFactor", typeof(float), "rKH}Gur", StatType.Vehicle));
+            stats.Add(new Stat("tweakingGripLoss", typeof(float), "z\u0082q|kdz", StatType.Vehicle));
+            // wheels
+            stats.Add(new Stat("xL{gJGT", typeof(float), "xL{gJGT", StatType.Wheel, 0)); // default 0.5
+            //stats.Add(new Stat("xL{gJGT", typeof(float), "xL{gJGT", StatType.Wheel, 1)); // default 0.5
+            stats.Add(new Stat("p~mkyX{", typeof(float), "p~mkyX{", StatType.Wheel, 0)); // default 50
+            stats.Add(new Stat("YrKDSPL", typeof(float), "YrKDSPL", StatType.Wheel, 0)); // default 5
+            stats.Add(new Stat("HqsqNkJ", typeof(float), "HqsqNkJ", StatType.Wheel, 0)); // default 0.5
+            stats.Add(new Stat("[z\u0082FoKi", typeof(float), "[z\u0082FoKi", StatType.Wheel, 0)); // default 0.1
+            stats.Add(new Stat("kISVipu", typeof(bool), "kISVipu", StatType.Wheel, 0)); // default true
+            stats.Add(new Stat("L\u0084fpN}[", typeof(bool), "L\u0084fpN}[", StatType.Wheel, 0)); // default true
+            stats.Add(new Stat("EI`qFti", typeof(bool), "EI`qFti", StatType.Wheel, 0)); // default true
+            stats.Add(new Stat("^X`UpQn", typeof(bool), "^X`UpQn", StatType.Wheel, 0)); // default true
+            stats.Add(new Stat("H\u007fywOFs", typeof(float), "H\u007fywOFs", StatType.Wheel, 0)); // default 0.5
+            stats.Add(new Stat("V\u007f}eqT\u0084", typeof(float), "V\u007f}eqT\u0084", StatType.Wheel)); // default 0.5
         }
         [Serializable]
         public class This
@@ -113,17 +134,13 @@ namespace SplitTimer
         public void ResetStats()
         {
             foreach (Stat stat in stats)
-            {
                 stat.currentVal = stat.StartingValue;
-            }
         }
         public void DirtyStats()
         {
             // forces all stats to update themselves
             foreach (Stat stat in stats)
-            {
                 stat.prevVal = null;
-            }
         }
         public void Update()
         {
@@ -133,9 +150,16 @@ namespace SplitTimer
                 {
                     try
                     {
-                        stat.currentVal = GetVehicleMod(stat.ObfuscatedName).ToString();
-                        stat.StartingValue = stat.currentVal;
-                        stat.prevVal = stat.currentVal;
+                        if (stat.statType == StatType.Vehicle)
+                        {
+                            stat.currentVal = GetVehicleMod(stat.ObfuscatedName).ToString();
+                            stat.StartingValue = stat.currentVal;
+                            stat.prevVal = stat.currentVal;
+                        }
+                        else
+                            stat.currentVal = GetWheelMod(stat.ObfuscatedName, stat.wheelNo).ToString();
+                            stat.StartingValue = stat.currentVal;
+                            stat.prevVal = stat.currentVal;
                     } catch { }
                 }
                 if (stat.currentVal != stat.prevVal)
@@ -160,6 +184,24 @@ namespace SplitTimer
                     Utilities.instance.GetPlayer().GetComponent<Vehicle>(), value
                 );
             return true;
+        }
+        public bool ModifyWheel(string field, object value, int wheelNum)
+        {
+            Utilities.instance.GetPlayer()
+                .GetComponentsInChildren<Wheel>()[wheelNum]
+                .GetType().GetField(field)
+                .SetValue(
+                    Utilities.instance.GetPlayer().GetComponentsInChildren<Wheel>()[wheelNum], value
+                );
+            return true;
+        }
+        public object GetWheelMod(string field, int wheelNum)
+        {
+            return Utilities.instance.GetPlayer()
+                .GetComponentsInChildren<Wheel>()[wheelNum]
+                .GetType().GetField(field).GetValue(
+                Utilities.instance.GetPlayer().GetComponentsInChildren<Wheel>()[wheelNum]
+            );
         }
         public object GetVehicleMod(string field)
         {

@@ -32,6 +32,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="SplitTimer\ChaosMod.cs" />
+    <Compile Include="SplitTimer\SwitchBikeOnEnter.cs" />
+    <Compile Include="SplitTimer\TeleportAtCursor.cs" />
     <Compile Include="SplitTimer\TwitchTv.cs" />
     <Compile Include="SplitTimer\ObjEnabler.cs" />
     <Compile Include="ModLoaderSolution\TimerCopier.cs" />
