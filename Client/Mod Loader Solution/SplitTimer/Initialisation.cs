@@ -78,6 +78,12 @@ namespace SplitTimer
                 gameObject.AddComponent<Flags>();
                 gameObject.AddComponent<ChaosMod>();
             }
+            if (AssetBundling.Instance != null && AssetBundling.Instance.bundle != null && ModLoaderSolution.Utilities.instance.isMod() && GameObject.Find("Map_Name") == null)
+            {
+                GameObject IntroSeq = AssetBundling.Instance.bundle.LoadAsset<GameObject>("IntroSequence");
+                Instantiate(IntroSeq).AddComponent<DisableOnAny>();
+                GameObject.Find("Map_Name").GetComponent<UnityEngine.UI.Text>().text = ModLoaderSolution.Utilities.instance.GetCurrentMap();
+            }
         }
         public void Start()
         {

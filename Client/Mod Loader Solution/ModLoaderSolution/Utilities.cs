@@ -354,15 +354,20 @@ namespace ModLoaderSolution
         //    //sessionManager.StartNewSession(seed, global::GameMode.Sandbox);
         //}
 
+        public void LogAllGameobjects()
+        {
+            string loc = "gameobjects.txt";
+            string allobjs = "";
+            foreach (GameObject x in FindObjectsOfType<GameObject>())
+                allobjs += x.name + "\n";
+            File.WriteAllText(loc, allobjs);
+        }
         public bool isInPauseMenu()
         {
-            GameObject pause_menu = GameObject.Find("UI_Pause");
-            if (pause_menu != null)
-            {
-                //Log("isInPauseMenu true");
-                return true;
-            }
-            //Log("isInPauseMenu false");
+            string[] menus = { "UI_Pause", "UI_Options", "UI_OptionsGameplay", "UI_OptionsVideo", "UI_OptionsAudio", "UI_OptionsKeyBindings", "UI_OptionsLanguages" };
+            foreach(string menu in menus)
+                if (GameObject.Find(menu) != null)
+                    return true;
             return false;
         }
         public struct CustomPlayerInf

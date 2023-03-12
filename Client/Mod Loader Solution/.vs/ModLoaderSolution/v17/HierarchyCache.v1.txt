@@ -33,10 +33,6 @@ i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-co
 i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\modifiers\timemodifier.cs
 ++Speedtrap
 i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\speedtrap\
-++SpeedTrap.cs
-i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\speedtrap\speedtrap.cs
-++SpeedTrapInfo.cs
-i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\speedtrap\speedtrapinfo.cs
 ++Timer
 i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\timer\
 ++Boundary.cs
@@ -57,6 +53,8 @@ i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-co
 i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\bikeswitcher.cs
 ++ButtonHack.cs
 i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\buttonhack.cs
+++ChaosMod.cs
+i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\chaosmod.cs
 ++CustomTeleporter.cs
 i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\customteleporter.cs
 ++Flags.cs
@@ -73,8 +71,14 @@ i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-co
 i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\ridersgate.cs
 ++SloMoZone.cs
 i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\slomozone.cs
+++SwitchBikeOnEnter.cs
+i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\switchbikeonenter.cs
+++TeleportAtCursor.cs
+i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\teleportatcursor.cs
 ++TrickCapturer.cs
 i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\trickcapturer.cs
+++TwitchTv.cs
+i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\twitchtv.cs
 ++UserInterface.cs
 i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\userinterface.cs
 ++Utilities
@@ -287,3 +291,9 @@ i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:
 i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:
 ++XIMImport
 i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:
+++SpeedTrap.cs
+i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\speedtrap\speedtrap.cs
+++SpeedTrapInfo.cs
+i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\speedtrap\speedtrapinfo.cs
+++DisableOnAny.cs
+i:{3c589a29-cc8a-424c-bc36-a06882bc1911}:c:\users\point\documents\github\desc-comp-toolkit\client\mod loader solution\splittimer\disableonany.cs

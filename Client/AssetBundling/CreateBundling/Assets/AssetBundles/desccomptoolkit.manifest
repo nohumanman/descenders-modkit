@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 4256996835
+CRC: 1105807829
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 12bfc558b3acac0812a893a19e3ba660
+    Hash: 1f1b8754e94667ef26604e51eea0e7fb
   TypeTreeHash:
     serializedVersion: 2
     Hash: 4cdc64c480db50f9db890d4c08808ee2
@@ -80,6 +80,7 @@ Assets:
 - Assets/Bikes/Specialised_Demo/Specialized_Demo.prefab
 - Assets/Bikes/Coffee Bike/Coffee_Bike.prefab
 - Assets/Capsule_W_Rbody.prefab
+- Assets/IntroSequence.prefab
 - Assets/Bike Switcher/BikeSwitcherRadial.prefab
 - Assets/Bikes/Intense M16/Intense_M16.prefab
 Dependencies: []

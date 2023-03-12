@@ -72,6 +72,10 @@ namespace SplitTimer
                         childs_child.gameObject.AddComponent<TimerCopier>();
                 }
             }
+
+            GameObject IntroSeq = bundle.LoadAsset<GameObject>("IntroSequence");
+            Instantiate(IntroSeq).AddComponent<DisableOnAny>();
+            GameObject.Find("Map_Name").GetComponent<Text>().text = Utilities.instance.GetCurrentMap();
         }
         void Start()
         {

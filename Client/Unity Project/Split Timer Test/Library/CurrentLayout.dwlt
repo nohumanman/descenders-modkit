@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 8}
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -67,10 +67,10 @@ MonoBehaviour:
     y: 0
     width: 701
     height: 1307
-  m_MinSize: {x: 302, y: 357}
-  m_MaxSize: {x: 4002, y: 4307}
+  m_MinSize: {x: 300, y: 336}
+  m_MaxSize: {x: 4002, y: 4286}
   vertical: 1
-  controlID: 162
+  controlID: 168
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -91,10 +91,10 @@ MonoBehaviour:
     y: 30
     width: 2560
     height: 1307
-  m_MinSize: {x: 708, y: 492}
+  m_MinSize: {x: 706, y: 492}
   m_MaxSize: {x: 14004, y: 14042}
   vertical: 0
-  controlID: 71
+  controlID: 96
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -113,8 +113,8 @@ MonoBehaviour:
     y: 0
     width: 701
     height: 658
-  m_MinSize: {x: 275, y: 50}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 277, y: 71}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 19}
   m_Panes:
   - {fileID: 19}
@@ -138,8 +138,8 @@ MonoBehaviour:
     y: 0
     width: 460
     height: 692
-  m_MinSize: {x: 200, y: 200}
-  m_MaxSize: {x: 4000, y: 4000}
+  m_MinSize: {x: 202, y: 221}
+  m_MaxSize: {x: 4002, y: 4021}
   m_ActualView: {fileID: 20}
   m_Panes:
   - {fileID: 20}
@@ -194,7 +194,7 @@ MonoBehaviour:
     y: 0
     width: 2560
     height: 1357
-  m_MinSize: {x: 950, y: 300}
+  m_MinSize: {x: 950, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &9
 MonoBehaviour:
@@ -260,7 +260,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
-  controlID: 72
+  controlID: 97
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -494,20 +494,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets
+    - Assets/Descenders Split Timer/Split Timer/Leaderboard/Fonts
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/Descenders Split Timer/Split Timer/Leaderboard/Fonts
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Unity
     Project\Split Timer Test
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 63}
-    m_SelectedIDs: f6270000
-    m_LastClickedID: 10230
-    m_ExpandedIDs: 00000000f6270000002800009e2800000a2900001c29000084290000722a0000902a0000922b0000b62b0000262c0000962c0000462d0000d62d00001c2e00002a2e0000402e0000fc2e000060370000623700006437000066370000683700006a3700006c3700006e37000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 575}
+    m_SelectedIDs: a02a0000
+    m_LastClickedID: 10912
+    m_ExpandedIDs: 00000000f827000002280000a22800000e2900002029000088290000782a0000962a00003c2b0000982b0000bc2b00002c2c00009c2c00004c2d0000dc2d0000222e0000302e0000462e0000022f0000683700006a3700006c3700006e3700007037000072370000743700007637000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -535,7 +535,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000f6270000002800009e2800000a2900001c29000084290000722a0000902a0000922b0000b62b0000262c0000962c0000462d0000d62d00001c2e00002a2e0000402e0000fc2e000060370000623700006437000066370000683700006a3700006c3700006e370000
+    m_ExpandedIDs: 00000000f827000002280000a22800000e2900002029000088290000782a0000962a00003c2b0000982b0000bc2b00002c2c00009c2c00004c2d0000dc2d0000222e0000302e0000462e0000022f0000683700006a3700006c3700006e37000070370000723700007437000076370000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -562,7 +562,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c6230000000000006c280000303a0000d22c0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -711,9 +711,9 @@ MonoBehaviour:
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 329.8162, y: 345.46155, z: -354.31577}
+    m_Target: {x: 633.9856, y: 285.55515, z: -622.6061}
     speed: 2
-    m_Value: {x: 329.8162, y: 345.46155, z: -354.31577}
+    m_Value: {x: 633.9856, y: 285.55515, z: -622.6061}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -737,13 +737,13 @@ MonoBehaviour:
       speed: 2
       m_Value: 0
   m_Rotation:
-    m_Target: {x: 0.035902493, y: 0.07099303, z: -0.0025571215, w: 0.9968272}
+    m_Target: {x: -0.05471918, y: -0.6812541, z: 0.051191337, w: -0.72820204}
     speed: 2
-    m_Value: {x: -0.035902493, y: -0.07099303, z: 0.0025571212, w: -0.9968271}
+    m_Value: {x: 0.05471918, y: 0.6812541, z: -0.051191337, w: 0.72820204}
   m_Size:
-    m_Target: 224.55713
+    m_Target: 349.47476
     speed: 2
-    m_Value: 224.55713
+    m_Value: 349.47476
   m_Ortho:
     m_Target: 0
     speed: 2
