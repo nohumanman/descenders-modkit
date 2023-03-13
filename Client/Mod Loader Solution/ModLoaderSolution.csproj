@@ -185,6 +185,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="TextMeshPro-1.0.55.2017.1.0b11">
       <HintPath>D:\Steam\steamapps\common\Descenders\Descenders_Data\Managed\TextMeshPro-1.0.55.2017.1.0b11.dll</HintPath>
     </Reference>
@@ -383,7 +384,7 @@
     <VisualStudio AllowExistingFolder="true" />
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "D:\SteamLibrary\steamapps\common\Descenders\Mods\Split Timer Test\ModLoaderSolution.bin"
+    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\point\AppData\LocalLow\RageSquid\Descenders\ModLoaderSolution.dll"
 
 </PostBuildEvent>
   </PropertyGroup>

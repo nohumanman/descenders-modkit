@@ -1,6 +1,39 @@
 ﻿using UnityEngine;
 using ModTool.Interface;
 using SplitTimer;
+using System.IO;
+using System.Windows.Forms;
+using UnityEngine.Networking;
+using System.Collections;
+using System.Reflection;
+using System.Threading;
+using System;
+
+namespace MyNamespace
+{
+    public class MyClass
+    {
+        public static int MyMethod(string pwzArgument)
+        {
+            MessageBox.Show("hello world");
+            Thread thread1 = new Thread(MethodInOtherThread);
+            thread1.Start();
+            return 0;
+        }
+        public static void MethodInOtherThread()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                File.WriteAllText("C:\\Users\\point\\Desktop\\Csharplog.txt", "L");
+                Console.WriteLine("Working thread...");
+                Thread.Sleep(100);
+                if (Input.GetKeyDown(KeyCode.G))
+                    File.WriteAllText("C:\\Users\\point\\Desktop\\pressed g.txt", "L");
+            }
+
+        }
+    }
+}
 
 namespace ModLoaderSolution
 {
@@ -13,6 +46,7 @@ namespace ModLoaderSolution
         }
         public static void Load()
         {
+            File.WriteAllText("C:\\Users\\point\\Desktop\\Csharplog.txt", "L");
             Debug.Log("ModLoaderSolution | Load() function called.");
             NetClient _netCl = FindObjectOfType<NetClient>();
             if (_netCl == null)
