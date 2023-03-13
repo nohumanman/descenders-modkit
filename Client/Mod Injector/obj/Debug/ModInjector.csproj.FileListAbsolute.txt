@@ -1,0 +1,7 @@
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Injector\obj\Debug\ModInjector.csproj.AssemblyReference.cache
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Injector\obj\Debug\ModInjector.csproj.CoreCompileInputs.cache
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Injector\obj\Debug\ModInjector.csproj.CopyComplete
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Injector\bin\Debug\ModInjector.dll
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Injector\bin\Debug\ModInjector.pdb
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Injector\obj\Debug\ModInjector.dll
+C:\Users\point\Documents\GitHub\desc-comp-toolkit\Client\Mod Injector\obj\Debug\ModInjector.pdb

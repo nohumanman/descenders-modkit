@@ -9,32 +9,6 @@ using System.Reflection;
 using System.Threading;
 using System;
 
-namespace MyNamespace
-{
-    public class MyClass
-    {
-        public static int MyMethod(string pwzArgument)
-        {
-            MessageBox.Show("hello world");
-            Thread thread1 = new Thread(MethodInOtherThread);
-            thread1.Start();
-            return 0;
-        }
-        public static void MethodInOtherThread()
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                File.WriteAllText("C:\\Users\\point\\Desktop\\Csharplog.txt", "L");
-                Console.WriteLine("Working thread...");
-                Thread.Sleep(100);
-                if (Input.GetKeyDown(KeyCode.G))
-                    File.WriteAllText("C:\\Users\\point\\Desktop\\pressed g.txt", "L");
-            }
-
-        }
-    }
-}
-
 namespace ModLoaderSolution
 {
     public class Loader : ModBehaviour
@@ -44,10 +18,8 @@ namespace ModLoaderSolution
         {
             Load();
         }
-        public static void Load()
+        private static void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode)
         {
-            File.WriteAllText("C:\\Users\\point\\Desktop\\Csharplog.txt", "L");
-            Debug.Log("ModLoaderSolution | Load() function called.");
             NetClient _netCl = FindObjectOfType<NetClient>();
             if (_netCl == null)
             {
@@ -55,11 +27,37 @@ namespace ModLoaderSolution
                 DontDestroyOnLoad(gameObject);
                 gameObject.name = "DescendersSplitTimerModLoaded";
                 Debug.Log("ModLoaderSolution | GameObject Instantiated");
-                gameObject.AddComponent<ModLoaderSolution.Utilities>();
+                gameObject.AddComponent<Utilities>();
                 gameObject.AddComponent<AssetBundling>();
                 Debug.Log("ModLoaderSolution | ModLoaderSolution.Utilities added");
                 gameObject.AddComponent<Initialisation>();
                 Debug.Log("ModLoaderSolution | SplitTimer.Initialisation added");
+            }
+        }
+
+        public static void Load()
+        {
+            // ModLoaderSolution.bin already downloaded into LocalLow/RageSquid/Descenders
+            // so load version.dll into same folder as .exe file
+            if (UnityEngine.SceneManagement.SceneManager.sceneCount > 0)
+            {
+                NetClient _netCl = FindObjectOfType<NetClient>();
+                if (_netCl == null)
+                {
+                    gameObject = new GameObject();
+                    DontDestroyOnLoad(gameObject);
+                    gameObject.name = "DescendersSplitTimerModLoaded";
+                    Debug.Log("ModLoaderSolution | GameObject Instantiated");
+                    gameObject.AddComponent<Utilities>();
+                    gameObject.AddComponent<AssetBundling>();
+                    Debug.Log("ModLoaderSolution | ModLoaderSolution.Utilities added");
+                    gameObject.AddComponent<Initialisation>();
+                    Debug.Log("ModLoaderSolution | SplitTimer.Initialisation added");
+                }
+            }
+            else
+            {
+                UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
             }
         }
         public static void Unload()

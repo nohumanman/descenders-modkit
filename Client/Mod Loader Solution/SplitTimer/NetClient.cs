@@ -63,10 +63,7 @@ namespace SplitTimer{
 						MessageRecieved(message);
 						messages.Remove(message);
 					}
-					catch (Exception ex)
-					{
-						Debug.Log("NetClient | MessageRecieved failed! Error '" + ex + "'");
-					}
+					catch (Exception ex){ }
 				}
 				messages.Clear();
 			}

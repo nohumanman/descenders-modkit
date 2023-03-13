@@ -33,7 +33,7 @@ namespace SplitTimer
                         spawned.Remove(obj);
             }
             catch (InvalidOperationException){ }
-            if (spawned.Count == 0 && Utilities.instance.GetCurrentMap() == "0")
+            if (spawned.Count == 0 && Utilities.instance.GetCurrentMap() == "0" && AssetBundling.Instance.bundle != null)
                 SpawnFlags();
         }
     }

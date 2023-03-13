@@ -204,23 +204,30 @@ namespace ModLoaderSolution
 
         public bool isBikePark()
         {
-            string currentMap = GetCurrentMap();
-            //ZIq^s|j bikeParks
-            //FqVmLOT bonusLevels
-            GameData gameData = FindObjectOfType<GameData>();
-            BonusLevelInfo[] bikeParks = (BonusLevelInfo[])gameData.GetType().GetField("ZIq^s|j").GetValue(gameData);
-            BonusLevelInfo[] bonusLevels = (BonusLevelInfo[])gameData.GetType().GetField("FqVmLOT").GetValue(gameData);
-            foreach (BonusLevelInfo level in bikeParks)
+            try
             {
-                if (level.customSeed.ToString() == currentMap)
-                    return true;
+                string currentMap = GetCurrentMap();
+                //ZIq^s|j bikeParks
+                //FqVmLOT bonusLevels
+                GameData gameData = FindObjectOfType<GameData>();
+                BonusLevelInfo[] bikeParks = (BonusLevelInfo[])gameData.GetType().GetField("ZIq^s|j").GetValue(gameData);
+                BonusLevelInfo[] bonusLevels = (BonusLevelInfo[])gameData.GetType().GetField("FqVmLOT").GetValue(gameData);
+                foreach (BonusLevelInfo level in bikeParks)
+                {
+                    if (level.customSeed.ToString() == currentMap)
+                        return true;
+                }
+                foreach (BonusLevelInfo level in bonusLevels)
+                {
+                    if (level.customSeed.ToString() == currentMap)
+                        return true;
+                }
+                return false;
             }
-            foreach (BonusLevelInfo level in bonusLevels)
+            catch (NullReferenceException)
             {
-                if (level.customSeed.ToString() == currentMap)
-                    return true;
+                return false;
             }
-            return false;
         }
 
         public bool isSeed()

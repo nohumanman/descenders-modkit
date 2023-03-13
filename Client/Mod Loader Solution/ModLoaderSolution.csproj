@@ -384,7 +384,7 @@
     <VisualStudio AllowExistingFolder="true" />
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\point\AppData\LocalLow\RageSquid\Descenders\ModLoaderSolution.dll"
+    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\point\AppData\LocalLow\RageSquid\Descenders\ModLoaderSolution.bin"
 
 </PostBuildEvent>
   </PropertyGroup>

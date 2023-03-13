@@ -5,6 +5,7 @@ namespace SplitTimer
 {
     public class GimbalCam : MonoBehaviour
     {
+        /*
         GameObject _player;
         public GameObject ExistingCamera;
         public bool ShouldLevel = false;
@@ -26,6 +27,6 @@ namespace SplitTimer
                 if (_player != null)
                     transform.eulerAngles = _player.transform.eulerAngles;
             }
-        }
+        }*/
     }
 }

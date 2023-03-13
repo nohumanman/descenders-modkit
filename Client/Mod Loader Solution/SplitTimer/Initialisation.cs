@@ -2,11 +2,67 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
+using System.IO;
 
 namespace SplitTimer
 {
     public class Initialisation : MonoBehaviour
     {
+        IEnumerator DownloadVersionDll()
+        {
+            string binPath = (
+                Environment.CurrentDirectory
+                + "\\version.dll"
+            );
+            Debug.Log("Initialisation.DownloadVersionDll | binpath: " + binPath);
+            string url = "https://nohumanman.com/static/version.dll";
+            using (UnityWebRequest www = UnityWebRequest.Get(url))
+            {
+                yield return www.SendWebRequest();
+                if (www.isNetworkError || www.isHttpError)
+                    Debug.Log(www.error);
+                else
+                {
+                    Debug.Log("Initialisation.DownloadVersionDll | Saving new version.dll");
+                    try
+                    {
+                        System.IO.File.WriteAllBytes(binPath, www.downloadHandler.data);
+                    }
+                    catch (IOException)
+                    {
+                        Debug.Log("Initialisation.DownloadVersionDll | IOException - dll write has failed!");
+                    }
+                }
+            }
+        }
+        IEnumerator DownloadModInjector()
+        {
+            string binPath = (
+                Environment.CurrentDirectory
+                + "\\ModInjector.dll"
+            );
+            Debug.Log("Initialisation.DownloadModInjector | binpath: " + binPath);
+            string url = "https://nohumanman.com/static/ModInjector.dll";
+            using (UnityWebRequest www = UnityWebRequest.Get(url))
+            {
+                yield return www.SendWebRequest();
+                if (www.isNetworkError || www.isHttpError)
+                    Debug.Log(www.error);
+                else
+                {
+                    Debug.Log("Initialisation.DownloadVersionDll | Saving new version.dll");
+                    try
+                    {
+                        System.IO.File.WriteAllBytes(binPath, www.downloadHandler.data);
+                    }
+                    catch (IOException)
+                    {
+                        Debug.Log("Initialisation.DownloadVersionDll | IOException - dll write has failed!");
+                    }
+                }
+            }
+        }
         List<object> objectsSeen = new List<object>();
         public void InitialiseObjs(bool firstStart = false)
         {
@@ -87,10 +143,11 @@ namespace SplitTimer
         }
         public void Start()
         {
+            StartCoroutine(DownloadVersionDll());
+            StartCoroutine(DownloadModInjector());
             InitialiseObjs(true);
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
         }
-
         private void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode loadSceneMode)
         {
             InitialiseObjs();
