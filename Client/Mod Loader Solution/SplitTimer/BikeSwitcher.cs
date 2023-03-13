@@ -41,6 +41,43 @@ namespace SplitTimer
                     if (AssetBundling.Instance.bundle != null)
                     {
                         GameObject bikeReplacement = AssetBundling.Instance.bundle.LoadAsset<GameObject>(bike);
+                        if (bike == "BMX")
+                        {
+                            // rider animations on character_clothed_ragdoll
+ 
+                            Debug.Log("Replacing runtimeAnimatorController");
+                            GetPlayerAnim(PlayerObject).runtimeAnimatorController = bikeReplacement.GetComponentInChildren<Animator>().runtimeAnimatorController;
+
+                            foreach (AnimationClip q in GetPlayerAnim(PlayerObject).runtimeAnimatorController.animationClips)
+                            {
+                                
+                            }
+
+                            Animation rider_anims = new Animation();
+                            Debug.Log("x12");
+                            rider_anims.Stop();
+                            Debug.Log("x13");
+                            // new rider animations
+                            Animation newAnimation = bikeReplacement.GetComponentInChildren<Animation>();
+                            Debug.Log("x14");
+                            foreach (AnimationClip q in animToAnimStates(newAnimation))
+                            {
+                                if (q.name == "base")
+                                    rider_anims.clip = q;
+                                rider_anims.RemoveClip(q.name);
+                                rider_anims.AddClip(q, q.name);
+                            }
+                            rider_anims.Play();
+                            /*foreach (BikeAnimation x in FindObjectsOfType<>())
+                            {
+                                CopyComponent(x, x.gameObject);
+                                Destroy(x);
+                            }*/
+                            // tricsk
+                            //Gesture[] gestures = new Gesture[0] { };
+                            //string gesturesField = "EL\u0080\u007f\u0084\u0080o";
+                            //gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(Utilities.instance.GetPlayer().GetComponent<Cyclist>());
+                        }
                         ReplaceBike(
                             bikeReplacement.GetComponentInChildren<SkinnedMeshRenderer>(),
                             bikeReplacement.GetComponent<Animation>(),
@@ -55,6 +92,17 @@ namespace SplitTimer
                 oldBike = bike;
             }
             
+        }
+        public Animator GetPlayerAnim(GameObject PlayerObject)
+        {
+            foreach (Animator a in FindObjectsOfType<Animator>())
+            {
+                Debug.Log("Anim Root: " + a.transform.root.name);
+                Debug.Log("a: " + a.name);
+                if (a.name == "character_clothed_ragdoll" && a.transform.root == PlayerObject.transform)
+                    return a;
+            }
+            return null;
         }
         public void ReplaceBike(SkinnedMeshRenderer newSkinnedMeshRenderer, Animation newAnimation, GameObject BikeObject, GameObject PlayerObject)
         {
