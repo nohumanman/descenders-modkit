@@ -52,7 +52,7 @@ namespace SplitTimer
                     bikeSwitcherRadial.GetComponent<ObjEnabler>().obj = chil.gameObject;
             foreach (Button btn in bikeSwitcherRadial.GetComponent<ObjEnabler>().obj.GetComponentsInChildren<Button>())
             {
-                btn.gameObject.AddComponent<ButtonHack>();
+                //btn.gameObject.AddComponent<ButtonHack>();
                 string bike = "";
                 foreach (Transform chil in btn.transform)
                     bike = chil.GetComponent<Text>().text;

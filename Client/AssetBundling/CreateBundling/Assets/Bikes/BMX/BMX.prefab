@@ -124,7 +124,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4637812742121166}
-  - component: {fileID: 95579386064646102}
   - component: {fileID: 111297726994883714}
   m_Layer: 0
   m_Name: BMX
@@ -1939,23 +1938,6 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 2ff7da0e363ccf641ad45e6e5f5592b6, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
---- !u!95 &95579386064646102
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1186147471641046}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: a0f2cc3525fb24a4f8f967f055aac90e, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
