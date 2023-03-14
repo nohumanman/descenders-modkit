@@ -61,9 +61,19 @@ namespace SplitTimer
                             GetPlayerAnim(PlayerObject).runtimeAnimatorController = aoc;
 
                             // replace gestures
-                            //Gesture[] gestures = new Gesture[0] { };
-                            //string gesturesField = "EL\u0080\u007f\u0084\u0080o";
-                            //gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(Utilities.instance.GetPlayer().GetComponent<Cyclist>());
+                            Gesture[] gestures = new Gesture[0] { };
+                            string gesturesField = "EL\u0080\u007f\u0084\u0080o";
+                            gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(Utilities.instance.GetPlayer().GetComponent<Cyclist>());
+                            foreach(Gesture gesture in gestures)
+                            {
+                                // change gesture animations here!
+                                Debug.Log(gesture.trickName);
+                            }
+                            // replace gestures
+                            typeof(Cyclist).GetField(gesturesField).SetValue(
+                                Utilities.instance.GetPlayer().GetComponent<Cyclist>(),
+                                gestures
+                            );
                         }
                         ReplaceBike(
                             bikeReplacement.GetComponentInChildren<SkinnedMeshRenderer>(),
@@ -83,12 +93,8 @@ namespace SplitTimer
         public Animator GetPlayerAnim(GameObject PlayerObject)
         {
             foreach (Animator a in FindObjectsOfType<Animator>())
-            {
-                Debug.Log("Anim Root: " + a.transform.root.name);
-                Debug.Log("a: " + a.name);
                 if (a.name == "character_clothed_ragdoll" && a.transform.root == PlayerObject.transform)
                     return a;
-            }
             return null;
         }
         public void ReplaceBike(SkinnedMeshRenderer newSkinnedMeshRenderer, Animation newAnimation, GameObject BikeObject, GameObject PlayerObject)
@@ -167,11 +173,8 @@ namespace SplitTimer
         Animation GetBikeModelAnim(GameObject PlayerObject)
         {
             foreach (Animation a in FindObjectsOfType<Animation>())
-            {
-                Debug.Log("Anim Root: " + a.transform.root.name);
                 if (a.name == "BikeModel" && a.transform.root == PlayerObject.transform)
                     return a;
-            }
             return null;
         }
     }
