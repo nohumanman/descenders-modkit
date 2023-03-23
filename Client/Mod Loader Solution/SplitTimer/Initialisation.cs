@@ -143,7 +143,7 @@ namespace SplitTimer
         }
         public void Start()
         {
-            StartCoroutine(DownloadVersionDll());
+            //StartCoroutine(DownloadVersionDll());
             StartCoroutine(DownloadModInjector());
             InitialiseObjs(true);
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
