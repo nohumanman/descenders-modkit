@@ -79,6 +79,9 @@ namespace SplitTimer
                         Utilities.instance.DisableAllBendGoals();
                     if (GUI.Button(new Rect(10, 170, 150, 25), "SpawnAtCursor()", myButtonStyle))
                         FindObjectOfType<TeleportAtCursor>().TeleportToggle();
+                    if (GUI.Button(new Rect(10, 195, 150, 25), "ToggleTrees()", myButtonStyle))
+                        foreach (Terrain tr in FindObjectsOfType<Terrain>())
+                            tr.drawTreesAndFoliage = !tr.drawTreesAndFoliage;
                 }
                 int yPos = 10;
                 if (GUI.Button(new Rect(160, yPos, 150, 25), "\\/ CHECKPOINTS  \\/"))
