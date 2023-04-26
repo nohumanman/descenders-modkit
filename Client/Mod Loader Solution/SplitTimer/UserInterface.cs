@@ -20,13 +20,13 @@ namespace SplitTimer
         bool hasBeenActive = false;
         public PlayerInfoImpact[] players;
 
-        bool __COMMANDS__ = true;
-        bool __CHECKPOINTS__ = true;
-        bool __PLAYERS__ = true;
-        bool __STATS__ = true;
-        bool __STATS__FRONT = true;
-        bool __QoL__ = true;
-        bool __TRICKS__ = true;
+        bool __COMMANDS__ = false;
+        bool __CHECKPOINTS__ = false;
+        bool __PLAYERS__ = false;
+        bool __STATS__ = false;
+        bool __STATS__FRONT = false;
+        bool __QoL__ = false;
+        bool __TRICKS__ = false;
         Vector2 scrollPosition = Vector2.zero;
         public static Texture2D MakeTex(int width, int height, Color col)
         {
@@ -184,6 +184,15 @@ namespace SplitTimer
                         yPos += 25;
                     }
                     GUI.EndScrollView();
+                }
+                // display in-game chat
+                int width = 800;
+                yPos = 5;
+                GUI.TextArea(new Rect(1010, yPos, width, 400), Chat.instance.GetMessages());
+                yPos += 400;
+                Chat.instance.currentMessage = GUI.TextField(new Rect(1010, yPos, 3*(width/4), 25), Chat.instance.currentMessage);
+                if (GUI.Button(new Rect(1010+(3*(width/4)), yPos, width/4, 25), "SEND")) {
+                    Chat.instance.SendMessage();
                 }
             }
         }

@@ -204,6 +204,13 @@ namespace SplitTimer{
 				Debug.Log("Current Position: " + pos.ToString());
 				SendData("POS|" + pos.x + "|" + pos.y + "|" + pos.z);
             }
+			if (message.StartsWith("CHAT_MESSAGE"))
+            {
+				string user = message.Split('|')[1];
+				string map = message.Split('|')[2];
+				string mess = message.Split('|')[3];
+				Chat.instance.GetMessage(user, map, mess);
+			}
 			if (message.StartsWith("SET_TEXT_COLOUR"))
             {
 				string r = message.Split('|')[1];

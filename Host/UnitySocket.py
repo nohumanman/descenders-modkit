@@ -62,6 +62,8 @@ operations = {
                 )
             )
         ),
+    "CHAT_MESSAGE":
+        lambda netPlayer, data: netPlayer.send_chat_message(data[1]),
     "START_SPEED":
         lambda netPlayer, data: netPlayer.start_speed(float(data[1])),
     "TRICK":
@@ -106,6 +108,11 @@ class UnitySocket():
             "a+"
         ) as my_file:
             my_file.write(f"{round(time.time())} - {line}\n")
+
+    def send_chat_message(self, mess: str):
+        split_timer_logger.info("UnitySocket.py - Sending chat message '" + mess + "'")
+        for player in self.parent.players:
+            player.send(f"CHAT_MESSAGE|{self.steam_name}|{self.world_name}|{mess}")
 
     def set_last_trick(self, trick: str):
         split_timer_logger.info(

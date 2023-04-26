@@ -133,6 +133,7 @@ namespace SplitTimer
                 gameObject.AddComponent<UserInterface>();
                 gameObject.AddComponent<Flags>();
                 gameObject.AddComponent<ChaosMod>();
+                gameObject.AddComponent<Chat>();
             }
             if (AssetBundling.Instance != null && AssetBundling.Instance.bundle != null && ModLoaderSolution.Utilities.instance.isMod() && GameObject.Find("Map_Name") == null)
             {
