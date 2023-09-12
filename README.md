@@ -1,7 +1,6 @@
-# Descenders-Split-Timer
+# Descenders Competitive Toolkit
 
-A timing system that counts player's times on a trail in the game "[Descenders](https://www.descendersgame.com/)" using [Unity 2017.4.9f1 Modding](https://descenders.mod.io/guides/descenders-modding-guide).
-
+This repository contains many useful scripts as well as a split timer for the game [Descenders](https://store.steampowered.com/app/681280/Descenders/).
 
 Download the latest release [here](https://github.com/nohumanman/descenders-split-timer/releases/tag/main-release)!
 
