@@ -1,7 +1,0 @@
-WindowsStandalone
-PlayerPath?
-C:/Users/point/Documents/GitHub/desc-comp-toolkit/Client/Unity Project/Split Timer Test/Temp/Descenders Competitive/Windows/descenders competitive.scenes
-SceneListBegin?
-Assets/Descenders Competitive-sample.unity
-SceneListEnd?
-c4616ca574975ed92b8a262847f04702 DescendersCompetitive-0.1.44-Assembly-CSharp.dll:DescendersCompetitive.SpawnPoint
