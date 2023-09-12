@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: -1672532349, guid: ea3df2c1fc806954da2f04daa808034d, type: 3}
   m_Name: ExportSettings
   m_EditorClassIdentifier: 
-  _name: The Ultimate Mod
+  _name: Descenders Competitive
   _author: nohumanman
   _description: Stats Modification, Bike Switcher, Trick Mods, Custom Teleport, etc
     ALL IN ONE MOD
