@@ -72,6 +72,7 @@
      <Compile Include="Assets\Descenders Split Timer\Mod Loader\Scripts\ProcessUtils.cs" />
      <Compile Include="Assets\Descenders Split Timer\OrderedSpawn.cs" />
      <Compile Include="Assets\Descenders Split Timer\SlipModifier\SlipModInfo.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Spawn Points\SpawnPoint.cs" />
      <Compile Include="Assets\Descenders Split Timer\Speed Modifier\SetSpeed.cs" />
      <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\JsonMapInfo.cs" />
      <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\JsonRidersGate.cs" />
@@ -80,6 +81,7 @@
      <Compile Include="Assets\Descenders Split Timer\Split Timer\Scripts\TimerText.cs" />
      <Compile Include="Assets\Descenders Split Timer\Teleport Pad\TeleportPad.cs" />
      <Compile Include="Assets\Descenders Split Timer\Teleport Pad\TeleportPadTerrain.cs" />
+     <Compile Include="Assets\Descenders Split Timer\Teleport Pads\TeleportPad.cs" />
      <Compile Include="Assets\Descenders Split Timer\TerrainBoundryRemover\RemoveTerrainBoundary.cs" />
      <None Include="Assets\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Emissive Diffuse.shader" />
      <None Include="Assets\Ciconia Studio\Shaders\Double Sided Shaders\Double Sided Transparent Diffuse Bump Cutout.shader" />
