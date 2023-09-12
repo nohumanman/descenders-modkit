@@ -247,3 +247,4 @@ cython_debug/
 
 
 *.db
+*.vscode
