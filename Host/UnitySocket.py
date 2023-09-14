@@ -99,7 +99,7 @@ class UnitySocket():
         self.time_started = time.time()
         self.pos = Vector3()
         self.send("SUCCESS")
-        self.send("INVALIDATE_TIME|scripts by nohumanman")
+        #self.send("INVALIDATE_TIME|scripts by nohumanman")
 
     def log_line(self, line):
         line = "|".join(line)
