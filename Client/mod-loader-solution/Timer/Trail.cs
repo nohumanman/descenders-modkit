@@ -17,7 +17,7 @@ namespace ModLoaderSolution
         public float clientTime = 0f;
         public void Start()
         {
-            Debug.Log("SplitTimer.Trail | Found Trail '" + name + "'");
+            Debug.Log("ModLoaderSolution.Trail | Found Trail '" + name + "'");
             AddScripts();
         }
         public void AddScripts()
@@ -31,7 +31,7 @@ namespace ModLoaderSolution
                     boun.trail = this;
                     boundaryList.Add(boundaryObj);
                 }
-                Debug.Log("SplitTimer.Trail | '" + this.name + "' has " + boundaryList.Count.ToString() + " boundaries.");
+                Debug.Log("ModLoaderSolution.Trail | '" + this.name + "' has " + boundaryList.Count.ToString() + " boundaries.");
                 foreach (Transform checkpoint in startCheckpoint.transform.parent)
                 {
                     GameObject checkpointObj = checkpoint.gameObject;
