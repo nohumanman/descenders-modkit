@@ -44,6 +44,22 @@
                                 </v-row>
                             </v-card>
                         </v-col>
+                        <v-col v-if="validated == 'AUTHORISED'">
+                            <v-card>
+                                <v-card-title>Items</v-card-title>
+                                <v-row style="padding: 20px;">
+                                    <v-select
+                                        v-model="item_to_gift"
+                                        :items="items"
+                                        label="Items to gift"
+                                        single-line
+                                        item-text="name"
+                                        item-value="id"
+                                    ></v-select>
+                                    <v-btn @click="RunCommand(controlled_player, {'evals': ['UNLOCK_ITEM|' + item_to_gift]})">Unlock Item</v-btn>
+                                </v-row>
+                            </v-card>
+                        </v-col>
                         <v-col>
                             <v-card>
                                 <v-text-field v-model="manual_eval"></v-text-field>
