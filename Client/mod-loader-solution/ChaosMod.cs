@@ -38,7 +38,7 @@ namespace SplitTimer
             {
                 foreach (string bike in bikes)
                 {
-                    foreach (PlayerInfo inf in Singleton<PlayerManager>.SP.GetAllPlayers())
+                    foreach (global::PlayerInfo inf in Singleton<PlayerManager>.SP.GetAllPlayers())
                         FindObjectOfType<BikeSwitcher>().ToBike(bike, Utilities.FromPlayerInfo(inf).steamID);
                     yield return new WaitForSeconds(5);
                 }

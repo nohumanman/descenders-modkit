@@ -30,7 +30,7 @@ namespace ModLoaderSolution
                 gameObject.AddComponent<Utilities>();
                 gameObject.AddComponent<AssetBundling>();
                 Debug.Log("ModLoaderSolution | ModLoaderSolution.Utilities added");
-                gameObject.AddComponent<Initialisation>();
+                gameObject.AddComponent<Init>();
                 Debug.Log("ModLoaderSolution | SplitTimer.Initialisation added");
             }
         }
@@ -47,11 +47,11 @@ namespace ModLoaderSolution
                     gameObject = new GameObject();
                     DontDestroyOnLoad(gameObject);
                     gameObject.name = "DescendersSplitTimerModLoaded";
-                    Debug.Log("ModLoaderSolution | GameObject Instantiated");
+                    Debug.Log("ModLoaderSolution | ModLoaderSolution has loaded");
                     gameObject.AddComponent<Utilities>();
                     gameObject.AddComponent<AssetBundling>();
                     Debug.Log("ModLoaderSolution | ModLoaderSolution.Utilities added");
-                    gameObject.AddComponent<Initialisation>();
+                    gameObject.AddComponent<Init>();
                     Debug.Log("ModLoaderSolution | SplitTimer.Initialisation added");
                 }
             }

@@ -85,7 +85,7 @@ namespace SplitTimer
                     else
                         throw new System.Exception("AssetBundle not loaded! Can't load into specialised demo!!");
                 }
-                PlayerInf.Instance.OnBikeSwitch(oldBike, bike);
+                PlayerInfo.Instance.OnBikeSwitch(oldBike, bike);
                 oldBike = bike;
             }
             

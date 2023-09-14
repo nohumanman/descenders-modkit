@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using System;
 
 namespace SplitTimer{
-	public class PlayerInf : MonoBehaviour {
+	public class PlayerInfo : MonoBehaviour {
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
@@ -15,10 +15,10 @@ namespace SplitTimer{
 		public float speed;
 		bool hasLoadedPlayer = false;
 		bool wasBailed = false;
-		public static PlayerInf Instance { get; private set; }
+		public static PlayerInfo Instance { get; private set; }
 		void Awake(){
-			Debug.Log("PlayerInfo | LocalApplicationData '" + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "'");
-			Debug.Log("PlayerInfo | Version number " + version);
+			//Debug.Log("ModLoaderSolution.PlayerInfo | LocalApplicationData '" + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "'");
+			Debug.Log("ModLoaderSolution.PlayerInfo | Version number " + version);
 			if (Instance != null && Instance != this) 
 				Destroy(this); 
 			else
@@ -34,16 +34,16 @@ namespace SplitTimer{
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
 			foreach (Trail trail in FindObjectsOfType<Trail>())
             {
-				Debug.Log("PlayerInfo | Looking for leaderboard texts on trail '" + trail.name + "'");
+				Debug.Log("ModLoaderSolution.PlayerInfo | Looking for leaderboard texts on trail '" + trail.name + "'");
 				//trail.leaderboardText.GetComponent<TextMesh>().font = AssetBundling.Instance.bundle.LoadAsset<UnityEngine.UI.Text>("");
 				if (trail.leaderboardText != null)
                 {
-					Debug.Log("PlayerInfo | Found Speedrun.com Leaderboard for '" + trail.name + "'");
+					Debug.Log("ModLoaderSolution.PlayerInfo | Found Speedrun.com Leaderboard for '" + trail.name + "'");
 					NetClient.Instance.SendData("SPEEDRUN_DOT_COM_LEADERBOARD|" + trail.name);
 				}
 				if (trail.autoLeaderboardText != null)
                 {
-					Debug.Log("PlayerInfo | Found auto Leaderboard for '" + trail.name + "'");
+					Debug.Log("ModLoaderSolution.PlayerInfo | Found auto Leaderboard for '" + trail.name + "'");
 					NetClient.Instance.SendData("LEADERBOARD|" + trail.name);
 				}
             }
@@ -52,7 +52,7 @@ namespace SplitTimer{
 		void Update () {
 			if (Utilities.instance.GetCurrentMap() != prevMap)
             {
-				Debug.Log("MAP CHANGED!");
+				Debug.Log("ModLoaderSolution.PlayerInfo | Map Change Detected");
 				OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
 
 				// if not a bike park or a mod

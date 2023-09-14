@@ -24,11 +24,11 @@ namespace SplitTimer
             {
                 Debug.Log("SplitTimer.Checkpoint | Checkpoint '" + this.name + "' Entered");
                 if (!Utilities.instance.isInReplayMode())
-                    PlayerInf.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, SplitTimerText.Instance.time.ToString());
+                    PlayerInfo.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, SplitTimerText.Instance.time.ToString());
                 
                 if (this.checkpointType == CheckpointType.Start)
                 {
-                    NetClient.Instance.SendData("START_SPEED|" + PlayerInf.Instance.speed);
+                    NetClient.Instance.SendData("START_SPEED|" + PlayerInfo.Instance.speed);
                     SplitTimerText.Instance.RestartTimer();
                     //NetClient.Instance.gameObject.GetComponent<Utilities>().SetVel(5);
                 }

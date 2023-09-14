@@ -29,7 +29,7 @@ namespace SplitTimer{
 			Application.logMessageReceived += Log;
 		}
 		void Start () {
-			Debug.Log("NetClient | Connecting to tcp server port " + port.ToString() + " with ip '" + ip + "'");
+			Debug.Log("ModLoaderSolution.NetClient | Connecting to tcp server port " + port.ToString() + " with ip '" + ip + "'");
 			ConnectToTcpServer();
 			ridersGates = FindObjectsOfType<RidersGate>();
 			if (new PlayerIdentification.SteamIntegration().getName() == "Descender")
@@ -48,7 +48,7 @@ namespace SplitTimer{
 			}
 			if (Time.time - hasStarted > 30 && (socketConnection == null || !socketConnection.Connected))
             {
-				Debug.Log("NetClient | Disconnected! Reconecting now...");
+				Debug.Log("ModLoaderSolution.NetClient | Disconnected! Reconecting now...");
                 // SplitTimerText.Instance.count = false;
                 SplitTimerText.Instance.text.color = Color.red;
 				SplitTimerText.Instance.checkpointTime = "Server Disconnected :(";
@@ -69,11 +69,11 @@ namespace SplitTimer{
 			}
 			catch (InvalidOperationException)
             {
-				// Debug.Log("NetClient | Message was recieved while messages were being read - cancelled reading.");
+				// Debug.Log("ModLoaderSolution.NetClient | Message was recieved while messages were being read - cancelled reading.");
             }
 		}
 		private void ConnectToTcpServer () {
-			Debug.Log("NetClient | Connecting to TCP Server");
+			Debug.Log("ModLoaderSolution.NetClient | Connecting to TCP Server");
 			hasStarted = Time.time;
 			try {
 				clientReceiveThread = new Thread (new ThreadStart(ListenForData));
@@ -82,7 +82,7 @@ namespace SplitTimer{
 				hasStarted = Time.time;
 			}
 			catch (Exception e) {
-				Debug.Log("NetClient | On client connect exception " + e); 		
+				Debug.Log("ModLoaderSolution.NetClient | On client connect exception " + e); 		
 			}
 		}
 		public void Log(string logString, string stackTrace, LogType type)
@@ -146,9 +146,9 @@ namespace SplitTimer{
         }
 		private void ListenForData() {
 			try {
-				Debug.Log("NetClient | Creating TcpClient()");
+				Debug.Log("ModLoaderSolution.NetClient | Creating TcpClient()");
 				socketConnection = new TcpClient(ip, port);
-				Debug.Log("NetClient | TcpClient created!");
+				Debug.Log("ModLoaderSolution.NetClient | TcpClient created!");
 				Byte[] bytes = new Byte[1024];
 				while (true) {
 					using (NetworkStream stream = socketConnection.GetStream()) { 					
@@ -165,18 +165,18 @@ namespace SplitTimer{
 				}
 			}
 			catch {             
-				Debug.Log("NetClient | Socket exception in ListenForData()");         
+				Debug.Log("ModLoaderSolution.NetClient | Socket exception in ListenForData()");         
 			}
 		}
 		public void NetStart()
         {
-			PlayerInf.Instance.NetStart();
+			PlayerInfo.Instance.NetStart();
 			foreach (MedalSystem medalSystem in FindObjectsOfType<MedalSystem>())
 				medalSystem.NetStart();
 			this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
 		}
 		private void MessageRecieved(string message) {
-			Debug.Log("NetClient | Message Recieved: " + message);
+			Debug.Log("ModLoaderSolution.NetClient | Message Recieved: " + message);
 			if (message == "")
 				return;
 			if (message == "SUCCESS") {
@@ -333,8 +333,8 @@ namespace SplitTimer{
 			}
 			if (message.StartsWith("GET_IDS"))
             {
-				foreach (PlayerInfo inf in Singleton<PlayerManager>.SP.GetAllPlayers())
-					Debug.Log(Utilities.FromPlayerInfo(inf).steamID);
+				foreach (global::PlayerInfo inf in Singleton<PlayerManager>.SP.GetAllPlayers())
+                    Debug.Log(Utilities.FromPlayerInfo(inf).steamID);
 			}
 			if (message.StartsWith("FREEZE_PLAYER"))
             {
@@ -447,13 +447,13 @@ namespace SplitTimer{
 				DevCommandsGameplay.LockItem(int.Parse(code));
 			}
 			SendData("pong");
-			// Debug.Log("NetClient | Message Processed: " + message);
+			// Debug.Log("ModLoaderSolution.NetClient | Message Processed: " + message);
 		}
 		public void SendData(string clientMessage) {
-			//Debug.Log("NetClient | Client sending message: " + clientMessage);
+			//Debug.Log("ModLoaderSolution.NetClient | Client sending message: " + clientMessage);
 			clientMessage = clientMessage + "\n";
 			if (socketConnection == null) {
-				Debug.Log("NetClient | SendData cancelled, socket not connected!");
+				Debug.Log("ModLoaderSolution.NetClient | SendData cancelled, socket not connected!");
 				return;
 			}
 			try
@@ -467,7 +467,7 @@ namespace SplitTimer{
 			}
 			catch (SocketException socketException)
 			{
-				Debug.Log("NetClient | Socket exception: " + socketException);
+				Debug.Log("ModLoaderSolution.NetClient | Socket exception: " + socketException);
 			}
 		}
 		public void OnDestroy()

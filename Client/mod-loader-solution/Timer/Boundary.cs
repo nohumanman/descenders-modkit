@@ -39,7 +39,7 @@ namespace SplitTimer
                 if (!inBoundary && !notifiedServerOfEnter)
                 {
                     other.gameObject.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
-                    PlayerInf.Instance.OnBoundryEnter(
+                    PlayerInfo.Instance.OnBoundryEnter(
                         trail.name,
                         boundaryHash
                     );
@@ -52,7 +52,7 @@ namespace SplitTimer
         void FixedUpdate()
         {
             if (!inBoundary && !notifiedServerOfExit) {
-                PlayerInf.Instance.OnBoundryExit(
+                PlayerInfo.Instance.OnBoundryExit(
                     trail.name,
                     boundaryHash
                 );

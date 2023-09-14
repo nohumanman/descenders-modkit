@@ -7,42 +7,15 @@ using System.IO;
 
 namespace SplitTimer
 {
-    public class Initialisation : MonoBehaviour
+    public class Init : MonoBehaviour
     {
-        IEnumerator DownloadVersionDll()
-        {
-            string binPath = (
-                Environment.CurrentDirectory
-                + "\\version.dll"
-            );
-            Debug.Log("Initialisation.DownloadVersionDll | binpath: " + binPath);
-            string url = "https://nohumanman.com/static/version.dll";
-            using (UnityWebRequest www = UnityWebRequest.Get(url))
-            {
-                yield return www.SendWebRequest();
-                if (www.isNetworkError || www.isHttpError)
-                    Debug.Log(www.error);
-                else
-                {
-                    Debug.Log("Initialisation.DownloadVersionDll | Saving new version.dll");
-                    try
-                    {
-                        System.IO.File.WriteAllBytes(binPath, www.downloadHandler.data);
-                    }
-                    catch (IOException)
-                    {
-                        Debug.Log("Initialisation.DownloadVersionDll | IOException - dll write has failed!");
-                    }
-                }
-            }
-        }
         IEnumerator DownloadModInjector()
         {
             string binPath = (
                 Environment.CurrentDirectory
                 + "\\ModInjector.dll"
             );
-            Debug.Log("Initialisation.DownloadModInjector | binpath: " + binPath);
+            Debug.Log("ModLoaderSolution.Init | Mod injector path: " + binPath);
             string url = "https://nohumanman.com/static/ModInjector.dll";
             using (UnityWebRequest www = UnityWebRequest.Get(url))
             {
@@ -51,14 +24,13 @@ namespace SplitTimer
                     Debug.Log(www.error);
                 else
                 {
-                    Debug.Log("Initialisation.DownloadVersionDll | Saving new version.dll");
                     try
                     {
                         System.IO.File.WriteAllBytes(binPath, www.downloadHandler.data);
                     }
                     catch (IOException)
                     {
-                        Debug.Log("Initialisation.DownloadVersionDll | IOException - dll write has failed!");
+                        Debug.Log("ModLoaderSolution.Init | IOException - dll write has failed!");
                     }
                 }
             }
@@ -66,7 +38,7 @@ namespace SplitTimer
         List<object> objectsSeen = new List<object>();
         public void InitialiseObjs(bool firstStart = false)
         {
-            Debug.Log("Initialising objects!");
+            Debug.Log("ModLoaderSolution.Init | Initialising objects!");
             object[] objects = FindObjectsOfType(typeof(GameObject));
             foreach (object obj in objects)
             {
@@ -120,7 +92,7 @@ namespace SplitTimer
             if (firstStart)
             {
                 DontDestroyOnLoad(gameObject.transform.root);
-                gameObject.AddComponent<PlayerInf>();
+                gameObject.AddComponent<PlayerInfo>();
                 gameObject.AddComponent<NetClient>();
                 gameObject.AddComponent<BikeSwitcher>();
                 gameObject.AddComponent<TimeModifier>();
