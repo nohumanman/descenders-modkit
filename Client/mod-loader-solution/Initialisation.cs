@@ -131,7 +131,6 @@ namespace SplitTimer
                 //gameObject.AddComponent<RainbowLight>();
                 gameObject.AddComponent<StatsModification>();
                 gameObject.AddComponent<UserInterface>();
-                gameObject.AddComponent<Flags>();
                 gameObject.AddComponent<ChaosMod>();
                 gameObject.AddComponent<Chat>();
             }
