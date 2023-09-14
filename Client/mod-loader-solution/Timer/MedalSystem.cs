@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
 	public class MedalSystem : MonoBehaviour
 	{

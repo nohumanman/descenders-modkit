@@ -8,7 +8,8 @@ using UnityEngine;
 using ModLoaderSolution;
 using UnityEngine.Networking;
 
-namespace SplitTimer{
+namespace ModLoaderSolution
+{
 	public class NetClient : MonoBehaviour {
 		public static NetClient Instance { get; private set; }
 		public RidersGate[] ridersGates;
@@ -170,15 +171,15 @@ namespace SplitTimer{
 		}
 		public void NetStart()
         {
-			PlayerInfo.Instance.NetStart();
+			PlayerManagement.Instance.NetStart();
 			foreach (MedalSystem medalSystem in FindObjectsOfType<MedalSystem>())
 				medalSystem.NetStart();
 			this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
 		}
 		private void MessageRecieved(string message) {
-			Debug.Log("ModLoaderSolution.NetClient | Message Recieved: " + message);
 			if (message == "")
 				return;
+			Debug.Log("ModLoaderSolution.NetClient | Message Recieved: " + message);
 			if (message == "SUCCESS") {
 				NetStart();
 			}

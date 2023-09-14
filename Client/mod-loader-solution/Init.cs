@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using System.IO;
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
     public class Init : MonoBehaviour
     {
@@ -92,7 +92,7 @@ namespace SplitTimer
             if (firstStart)
             {
                 DontDestroyOnLoad(gameObject.transform.root);
-                gameObject.AddComponent<PlayerInfo>();
+                gameObject.AddComponent<PlayerManagement>();
                 gameObject.AddComponent<NetClient>();
                 gameObject.AddComponent<BikeSwitcher>();
                 gameObject.AddComponent<TimeModifier>();

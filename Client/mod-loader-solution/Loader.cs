@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using ModTool.Interface;
-using SplitTimer;
 using System.IO;
 using System.Windows.Forms;
 using UnityEngine.Networking;
@@ -47,12 +46,12 @@ namespace ModLoaderSolution
                     gameObject = new GameObject();
                     DontDestroyOnLoad(gameObject);
                     gameObject.name = "DescendersSplitTimerModLoaded";
-                    Debug.Log("ModLoaderSolution | ModLoaderSolution has loaded");
+                    Debug.Log("ModLoaderSolution.Loader | ModLoaderSolution has loaded");
                     gameObject.AddComponent<Utilities>();
                     gameObject.AddComponent<AssetBundling>();
-                    Debug.Log("ModLoaderSolution | ModLoaderSolution.Utilities added");
+                    Debug.Log("ModLoaderSolution.Loader | ModLoaderSolution.Utilities added");
                     gameObject.AddComponent<Init>();
-                    Debug.Log("ModLoaderSolution | SplitTimer.Initialisation added");
+                    Debug.Log("ModLoaderSolution.Loader | SplitTimer.Initialisation added");
                 }
             }
             else

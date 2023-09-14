@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
 	public class SplitTimerText : MonoBehaviour
 	{

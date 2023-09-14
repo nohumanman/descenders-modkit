@@ -6,8 +6,9 @@ using ModLoaderSolution;
 using UnityEngine.SceneManagement;
 using System;
 
-namespace SplitTimer{
-	public class PlayerInfo : MonoBehaviour {
+namespace ModLoaderSolution
+{
+	public class PlayerManagement : MonoBehaviour {
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
@@ -15,7 +16,7 @@ namespace SplitTimer{
 		public float speed;
 		bool hasLoadedPlayer = false;
 		bool wasBailed = false;
-		public static PlayerInfo Instance { get; private set; }
+		public static PlayerManagement Instance { get; private set; }
 		void Awake(){
 			//Debug.Log("ModLoaderSolution.PlayerInfo | LocalApplicationData '" + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "'");
 			Debug.Log("ModLoaderSolution.PlayerInfo | Version number " + version);

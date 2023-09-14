@@ -3,7 +3,7 @@ using UnityEngine;
 using ModLoaderSolution;
 
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
     public class TimeModifier : MonoBehaviour
     {

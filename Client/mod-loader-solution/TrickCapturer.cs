@@ -16,7 +16,7 @@ using Object = UnityEngine.Object;
 using TMPro;
 using InControl;
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
     public class TrickCapturer : MonoBehaviour
     {

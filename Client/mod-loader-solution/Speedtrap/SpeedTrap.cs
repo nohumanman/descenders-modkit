@@ -5,7 +5,7 @@ using PlayerIdentification;
 using UnityEngine.UI;
 
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
 	public class SpeedTrap : MonoBehaviour
 	{

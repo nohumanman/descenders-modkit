@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using ModLoaderSolution;
-using SplitTimer;
 using System;
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
     public class CustomTeleporter : MonoBehaviour
     {

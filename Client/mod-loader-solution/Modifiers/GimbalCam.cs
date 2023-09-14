@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
     public class GimbalCam : MonoBehaviour
     {

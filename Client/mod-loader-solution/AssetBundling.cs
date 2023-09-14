@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.IO;
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
     public class AssetBundling : MonoBehaviour
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 using PlayerIdentification;
 using ModLoaderSolution;
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
 	public class RainbowLight : MonoBehaviour
 	{

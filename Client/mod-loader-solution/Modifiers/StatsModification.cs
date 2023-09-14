@@ -6,7 +6,7 @@ using UnityEngine;
 using ModLoaderSolution;
 
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
     struct StatStruct
     {

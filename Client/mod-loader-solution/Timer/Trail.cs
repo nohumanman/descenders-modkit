@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using ModLoaderSolution;
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
     public class Trail : MonoBehaviour
     {

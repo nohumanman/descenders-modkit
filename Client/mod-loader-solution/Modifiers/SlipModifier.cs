@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ModLoaderSolution;
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
     public class SlipModifier : MonoBehaviour
     {

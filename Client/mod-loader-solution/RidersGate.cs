@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SplitTimer{
+namespace ModLoaderSolution
+{
 	[RequireComponent(typeof(Animator))]
 	[RequireComponent(typeof(AudioSource))]
 	public class RidersGate : MonoBehaviour {

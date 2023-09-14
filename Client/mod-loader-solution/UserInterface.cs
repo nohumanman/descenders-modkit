@@ -8,7 +8,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using System.Collections;
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
     public struct PlayerInfoForTeleport
     {

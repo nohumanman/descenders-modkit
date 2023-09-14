@@ -15,7 +15,7 @@ public class TimerCopier : ModBehaviour
     IEnumerator DelayedStart()
     {
         yield return new WaitForSeconds(1f);
-        textFrom = FindObjectOfType<SplitTimer.SplitTimerText>().text;
+        textFrom = FindObjectOfType<ModLoaderSolution.SplitTimerText>().text;
         textTo = this.gameObject.GetComponent<Text>();
     }
     void Update()

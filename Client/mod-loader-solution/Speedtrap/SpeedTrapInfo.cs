@@ -4,7 +4,7 @@ using UnityEngine;
 using PlayerIdentification;
 
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
 	public class SpeedTrapInfo : MonoBehaviour
 	{

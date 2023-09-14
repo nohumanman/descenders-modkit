@@ -2,7 +2,7 @@
 using System.Collections;
 
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
     public class Boundary : MonoBehaviour
     {
@@ -39,7 +39,7 @@ namespace SplitTimer
                 if (!inBoundary && !notifiedServerOfEnter)
                 {
                     other.gameObject.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
-                    PlayerInfo.Instance.OnBoundryEnter(
+                    PlayerManagement.Instance.OnBoundryEnter(
                         trail.name,
                         boundaryHash
                     );
@@ -52,7 +52,7 @@ namespace SplitTimer
         void FixedUpdate()
         {
             if (!inBoundary && !notifiedServerOfExit) {
-                PlayerInfo.Instance.OnBoundryExit(
+                PlayerManagement.Instance.OnBoundryExit(
                     trail.name,
                     boundaryHash
                 );

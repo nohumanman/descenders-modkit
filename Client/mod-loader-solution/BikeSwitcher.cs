@@ -4,14 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using ModLoaderSolution;
 
-namespace SplitTimer
+namespace ModLoaderSolution
 {
 	public class BikeSwitcher : MonoBehaviour
 	{
         public string oldBike;
+
         public void ToBike(string bike, string id)
         {
-            Debug.Log("ToBike('" + bike + "')");
+            Debug.Log("ModLoaderSolution.BikeSwitcher | id " + id + " switching to bike '" + bike + "'");
             StartCoroutine(_ToBike(bike, id));
         }
         IEnumerator _ToBike(string bike, string id)
@@ -85,8 +86,12 @@ namespace SplitTimer
                     else
                         throw new System.Exception("AssetBundle not loaded! Can't load into specialised demo!!");
                 }
-                PlayerInfo.Instance.OnBikeSwitch(oldBike, bike);
-                oldBike = bike;
+                // if the player is us, tell the server
+                if (id == (new PlayerIdentification.SteamIntegration().id).ToString())
+                {
+                    PlayerManagement.Instance.OnBikeSwitch(oldBike, bike);
+                    oldBike = bike;
+                }
             }
             
         }
