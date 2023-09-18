@@ -24,7 +24,7 @@ operations = {
     "BOUNDRY_ENTER":
         lambda netPlayer, data: netPlayer.on_boundry_enter(data[1], data[2]),
     "BOUNDRY_EXIT":
-        lambda netPlayer, data: netPlayer.on_boundry_exit(data[1], data[2]),
+        lambda netPlayer, data: netPlayer.on_boundry_exit(data[1], data[2], data[3]),
     "CHECKPOINT_ENTER":
         lambda netPlayer, data: netPlayer.on_checkpoint_enter(
             data[1],
@@ -421,9 +421,9 @@ class UnitySocket():
         trail = self.get_trail(trail_name)
         trail.add_boundary(boundry_guid)
 
-    def on_boundry_exit(self, trail_name: str, boundry_guid: str):
+    def on_boundry_exit(self, trail_name: str, boundry_guid: str, boundry_obj_name: str):
         trail = self.get_trail(trail_name)
-        trail.remove_boundary(boundry_guid)
+        trail.remove_boundary(boundry_guid, boundry_obj_name)
 
     def on_checkpoint_enter(
         self,

@@ -54,7 +54,8 @@ namespace ModLoaderSolution
             if (!inBoundary && !notifiedServerOfExit) {
                 PlayerManagement.Instance.OnBoundryExit(
                     trail.name,
-                    boundaryHash
+                    boundaryHash,
+                    this.gameObject.name
                 );
                 notifiedServerOfExit = true;
                 notifiedServerOfEnter = false;
