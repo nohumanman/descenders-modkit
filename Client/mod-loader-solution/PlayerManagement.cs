@@ -12,7 +12,7 @@ namespace ModLoaderSolution
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
-		public string version = "0.2.32";
+		public string version = "0.2.33";
 		public float speed;
 		bool hasLoadedPlayer = false;
 		bool wasBailed = false;
@@ -100,8 +100,8 @@ namespace ModLoaderSolution
 		public void OnBoundryEnter(string trail_name, string boundry_guid){
 			NetClient.Instance.SendData("BOUNDRY_ENTER|" + trail_name + "|" + boundry_guid);
 		}
-		public void OnBoundryExit(string trail_name, string boundry_guid){
-			NetClient.Instance.SendData("BOUNDRY_EXIT|" + trail_name + "|" + boundry_guid);
+		public void OnBoundryExit(string trail_name, string boundry_guid, string boundry_obj_name){
+			NetClient.Instance.SendData("BOUNDRY_EXIT|" + trail_name + "|" + boundry_guid + "|" + boundry_obj_name);
 		}
 		public void OnCheckpointEnter(string trail_name, string type, int total_checkpoints, string client_time){
 			NetClient.Instance.SendData("CHECKPOINT_ENTER|" + trail_name + "|" + type + "|" + total_checkpoints.ToString() + "|" + client_time);

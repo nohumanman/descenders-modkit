@@ -54,15 +54,15 @@ class TrailTimer():
                 # if self.current_penalty < 0.5:
                 #     self.current_penalty = 0
                 self.total_running_penalty += self.current_penalty
-                self.network_player.send(
-                    f"SPLIT_TIME|penalty of "
-                    f"~{round(self.current_penalty * 100) / 100}"
-                )
+                #self.network_player.send(
+                #    f"SPLIT_TIME|penalty of "
+                #    f"~{round(self.current_penalty * 100) / 100}"
+                #)
                 self.network_player.set_text_default()
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
 
-    def remove_boundary(self, boundary_guid):
+    def remove_boundary(self, boundary_guid, boundry_obj_name):
         if boundary_guid in self.__boundaries:
             self.__boundaries.remove(boundary_guid)
         if (
@@ -71,6 +71,7 @@ class TrailTimer():
         ):
             if (self.started):
                 self.exit_time = time.time()
+                self.network_player.send(f"INVALIDATE_TIME|Exited Boundaries of Trail.\nIf this is incorrect, please report it to nohumanman on Discord\nBOUNDARY ISSUE: {boundry_obj_name}")
                 self.network_player.set_text_colour(255, 0, 0)
 
     def start_timer(self, total_checkpoints: int):
