@@ -73,6 +73,7 @@ class TrailTimer():
                 self.exit_time = time.time()
                 self.network_player.send(f"INVALIDATE_TIME|Exited Boundaries of Trail.\nIf this is incorrect, please report it to nohumanman on Discord\nBOUNDARY ISSUE: {boundry_obj_name}")
                 self.network_player.set_text_colour(255, 0, 0)
+                self.started = False
 
     def start_timer(self, total_checkpoints: int):
         split_timer_logger.info(
