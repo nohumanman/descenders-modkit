@@ -1,0 +1,57 @@
+# Blender MTL File: 'Log wood cabin.blend'
+# Material Count: 5
+
+newmtl Material.002
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump D:\\Recover Project\\Zenith Mountain Pre-Beta 2\\Zenith Mountain\\Assets\\Textures\\Wood005_2K-JPG\\Wood005_2K_Normal.jpg
+
+newmtl Material.003
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump F:\\Unity Assets\\CC0 Textures\\Wood018_2K-JPG\\Wood018_2K_Normal.jpg
+
+newmtl Material.004
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump D:\\Recover Project\\Zenith Mountain Pre-Beta 2\\Zenith Mountain\\Assets\\Textures\\Bricks023_2K-JPG\\Bricks023_2K_Normal.jpg
+
+newmtl Material.005
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump D:\\Recover Project\\Zenith Mountain Pre-Beta 2\\Zenith Mountain\\Assets\\Textures\\Wood011_2K-JPG\\Wood011_2K_Normal.jpg
+map_Kd D:\\Recover Project\\Zenith Mountain Pre-Beta 2\\Zenith Mountain\\Assets\\Textures\\Wood011_2K-JPG\\Wood011_2K_Color.jpg
+
+newmtl Material.006
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.042028 0.042028 0.042028
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
