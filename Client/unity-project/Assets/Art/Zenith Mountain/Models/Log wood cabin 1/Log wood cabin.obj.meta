@@ -1,0 +1,195 @@
+fileFormatVersion: 2
+guid: cd952864ca65d0e4a9d352e45b282a46
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Cube.001_Cube.003
+    100002: Cube.002_Cube.004
+    100004: Cube.004_Cube.006
+    100006: Cube_Cube.002
+    100008: Cylinder
+    100010: Cylinder.001_Cylinder.004
+    100012: //RootNode
+    100014: Plane
+    100016: Cube.001_Cube.003_Material.005
+    100018: Cube.001_Cube.003_Material.006
+    100020: Cube.002_Cube.004_Material.005
+    100022: Cube.002_Cube.004_Material.006
+    100024: Cube.004_Cube.006_Material.003
+    100026: Cube_Cube.002_Material.005
+    100028: Cube_Cube.002_Material.006
+    100030: Cylinder.001_Cylinder.004_Material.002
+    100032: Cylinder_Cylinder_Material.002
+    100034: Plane_Plane_Material.004
+    100036: Plane_Plane_Material.006
+    400000: Cube.001_Cube.003
+    400002: Cube.002_Cube.004
+    400004: Cube.004_Cube.006
+    400006: Cube_Cube.002
+    400008: Cylinder
+    400010: Cylinder.001_Cylinder.004
+    400012: //RootNode
+    400014: Plane
+    400016: Cube.001_Cube.003_Material.005
+    400018: Cube.001_Cube.003_Material.006
+    400020: Cube.002_Cube.004_Material.005
+    400022: Cube.002_Cube.004_Material.006
+    400024: Cube.004_Cube.006_Material.003
+    400026: Cube_Cube.002_Material.005
+    400028: Cube_Cube.002_Material.006
+    400030: Cylinder.001_Cylinder.004_Material.002
+    400032: Cylinder_Cylinder_Material.002
+    400034: Plane_Plane_Material.004
+    400036: Plane_Plane_Material.006
+    2100000: Cube.001_Cube.003Mat
+    2100002: Cube.002_Cube.004Mat
+    2100004: Cube.004_Cube.006Mat
+    2100006: Cube_Cube.002Mat
+    2100008: CylinderMat
+    2100010: Cylinder.001_Cylinder.004Mat
+    2100012: PlaneMat
+    2100014: Cube.001_Cube.003_Material.005Mat
+    2100016: Cube.001_Cube.003_Material.006Mat
+    2100018: Cube.002_Cube.004_Material.005Mat
+    2100020: Cube.002_Cube.004_Material.006Mat
+    2100022: Cube.004_Cube.006_Material.003Mat
+    2100024: Cube_Cube.002_Material.005Mat
+    2100026: Cube_Cube.002_Material.006Mat
+    2100028: Cylinder.001_Cylinder.004_Material.002Mat
+    2100030: Cylinder_Cylinder_Material.002Mat
+    2100032: Plane_Plane_Material.004Mat
+    2100034: Plane_Plane_Material.006Mat
+    2300000: Cube.001_Cube.003
+    2300002: Cube.002_Cube.004
+    2300004: Cube.004_Cube.006
+    2300006: Cube_Cube.002
+    2300008: Cylinder
+    2300010: Cylinder.001_Cylinder.004
+    2300012: Plane
+    2300014: Cube.001_Cube.003_Material.005
+    2300016: Cube.001_Cube.003_Material.006
+    2300018: Cube.002_Cube.004_Material.005
+    2300020: Cube.002_Cube.004_Material.006
+    2300022: Cube.004_Cube.006_Material.003
+    2300024: Cube_Cube.002_Material.005
+    2300026: Cube_Cube.002_Material.006
+    2300028: Cylinder.001_Cylinder.004_Material.002
+    2300030: Cylinder_Cylinder_Material.002
+    2300032: Plane_Plane_Material.004
+    2300034: Plane_Plane_Material.006
+    3300000: Cube.001_Cube.003
+    3300002: Cube.002_Cube.004
+    3300004: Cube.004_Cube.006
+    3300006: Cube_Cube.002
+    3300008: Cylinder
+    3300010: Cylinder.001_Cylinder.004
+    3300012: Plane
+    3300014: Cube.001_Cube.003_Material.005
+    3300016: Cube.001_Cube.003_Material.006
+    3300018: Cube.002_Cube.004_Material.005
+    3300020: Cube.002_Cube.004_Material.006
+    3300022: Cube.004_Cube.006_Material.003
+    3300024: Cube_Cube.002_Material.005
+    3300026: Cube_Cube.002_Material.006
+    3300028: Cylinder.001_Cylinder.004_Material.002
+    3300030: Cylinder_Cylinder_Material.002
+    3300032: Plane_Plane_Material.004
+    3300034: Plane_Plane_Material.006
+    4300000: Cube.001_Cube.003
+    4300002: Cube.002_Cube.004
+    4300004: Cube.004_Cube.006
+    4300006: Cube_Cube.002
+    4300008: Cylinder
+    4300010: Cylinder.001_Cylinder.004
+    4300012: Plane
+    4300014: Cube.001_Cube.003_Material.005
+    4300016: Cube.001_Cube.003_Material.006
+    4300018: Cube.002_Cube.004_Material.005
+    4300020: Cube.002_Cube.004_Material.006
+    4300022: Cube.004_Cube.006_Material.003
+    4300024: Cube_Cube.002_Material.005
+    4300026: Cube_Cube.002_Material.006
+    4300028: Cylinder.001_Cylinder.004_Material.002
+    4300030: Cylinder_Cylinder_Material.002
+    4300032: Plane_Plane_Material.004
+    4300034: Plane_Plane_Material.006
+  externalObjects: {}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    preserveHierarchy: 0
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

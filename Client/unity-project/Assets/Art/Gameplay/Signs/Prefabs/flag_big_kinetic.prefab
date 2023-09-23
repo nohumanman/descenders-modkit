@@ -21,12 +21,13 @@ GameObject:
   - component: {fileID: 4458279339191958}
   - component: {fileID: 33056052978024028}
   - component: {fileID: 23097231035698740}
+  - component: {fileID: 64449638821795214}
   m_Layer: 0
   m_Name: flag_big_kinetic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 18
   m_IsActive: 1
 --- !u!4 &4458279339191958
 Transform:
@@ -81,4 +82,18 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1778909347597320}
+  m_Mesh: {fileID: 4300000, guid: e4cd404c8ca96fb47b23c646304a45a4, type: 3}
+--- !u!64 &64449638821795214
+MeshCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1778909347597320}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_SkinWidth: 0.01
   m_Mesh: {fileID: 4300000, guid: e4cd404c8ca96fb47b23c646304a45a4, type: 3}

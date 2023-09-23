@@ -1,7 +1,5 @@
 fileFormatVersion: 2
 guid: 83fd331b768f1214884febcfa67241c0
-timeCreated: 1542795997
-licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
@@ -18,7 +16,12 @@ ModelImporter:
     3300002: start_multiplayer_platform
     4300000: start_multiplayer_platform
     4300002: start_multiplayer_gate
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: start_multiplayer_MAT
+    second: {fileID: 2100000, guid: c722ab597c9cb9042982b0826b6c23e1, type: 2}
   materials:
     importMaterials: 1
     materialName: 1
