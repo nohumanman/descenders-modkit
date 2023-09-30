@@ -18,7 +18,7 @@ public class MedalSystemInfo : ModBehaviour {
     public GameObject bronzeMedalNotGot;
     [Header("Config")]
     public string trailName;
-    [MenuItem("Tools/MatthewsTools/Split Timer/Attempt auto-assign medals")]
+    [MenuItem("Tools/Descenders Competitive/Medals/Attempt auto-assign medals")]
     public static void AttemptBoundaryAutoAssign(){
         foreach(MedalSystemInfo medalSystemInfo in FindObjectsOfType<MedalSystemInfo>()){
             foreach(Transform x in medalSystemInfo.gameObject.transform){
