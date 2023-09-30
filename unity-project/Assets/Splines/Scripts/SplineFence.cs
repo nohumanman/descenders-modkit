@@ -11,8 +11,11 @@ public class SplineFence : ModTool.Interface.ModBehaviour
 
 	[Header("Input meshes")]
 	public Mesh inputMesh;
+	#pragma warning disable
 	Vector3[] baseVertices;
+	#pragma warning disable
 	public Mesh inputCollisionMesh;
+	#pragma warning disable
 	Vector3[] baseCollisionVertices;
 
 	public float rotateInputMesh = 0f;
@@ -121,8 +124,8 @@ public class SplineFence : ModTool.Interface.ModBehaviour
 	public void UpdateMesh()
 	{
 		//check if the length has changed and we need to do a mesh because of that
-		bool newMultiplier = multiplier != GetMeshMultiplier();
-		bool newInputOffset = lastOffsetInfo != GetMeshInputOffsets();
+		//bool newMultiplier = multiplier != GetMeshMultiplier(); // unused
+		//bool newInputOffset = lastOffsetInfo != GetMeshInputOffsets(); // unused
 
 		//check for mesh regen
 		//if (baseVertices == null || baseVertices.Length == 0 || clickToRegen || newMultiplier || newInputOffset)
@@ -181,7 +184,7 @@ public class SplineFence : ModTool.Interface.ModBehaviour
 
 		Mesh newmesh = new Mesh();
 		int multiply = followLine.pointCount;
-		float meshLength = GetMeshLength();
+		//float meshLength = GetMeshLength(); // unused
 
 		//duplicate mesh several times with offset along spline
 		Vector3[] origVertices = original.vertices;

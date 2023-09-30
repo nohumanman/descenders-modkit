@@ -201,8 +201,8 @@ namespace SharpMonoInjector
             MonoImageOpenStatus status = (MonoImageOpenStatus)_memory.ReadInt(statusPtr);
             
             if (status != MonoImageOpenStatus.MONO_IMAGE_OK) {
-                IntPtr messagePtr = Execute(Exports[mono_image_strerror], (IntPtr)status);
-                string message = _memory.ReadString(messagePtr, 256, Encoding.UTF8);
+                //IntPtr messagePtr = Execute(Exports[mono_image_strerror], (IntPtr)status); // unused
+                //string message = _memory.ReadString(messagePtr, 256, Encoding.UTF8); // unused
                 throw new InjectorException("{mono_image_open_from_data}() failed: {message}");
             }
 
@@ -218,8 +218,8 @@ namespace SharpMonoInjector
             MonoImageOpenStatus status = (MonoImageOpenStatus)_memory.ReadInt(statusPtr);
 
             if (status != MonoImageOpenStatus.MONO_IMAGE_OK) {
-                IntPtr messagePtr = Execute(Exports[mono_image_strerror], (IntPtr)status);
-                string message = _memory.ReadString(messagePtr, 256, Encoding.UTF8);
+                //IntPtr messagePtr = Execute(Exports[mono_image_strerror], (IntPtr)status); // unused
+                //string message = _memory.ReadString(messagePtr, 256, Encoding.UTF8); // unused
                 throw new InjectorException("{mono_assembly_load_from_full}() failed: {message}");
             }
 
@@ -266,7 +266,7 @@ namespace SharpMonoInjector
         {
             IntPtr excPtr = Is64Bit ? _memory.AllocateAndWrite((long)0) : _memory.AllocateAndWrite(0);
 
-            IntPtr result = Execute(Exports[mono_runtime_invoke], method, IntPtr.Zero, IntPtr.Zero, excPtr);
+            //IntPtr result = Execute(Exports[mono_runtime_invoke], method, IntPtr.Zero, IntPtr.Zero, excPtr); // unused
 
             IntPtr exc = (IntPtr)_memory.ReadInt(excPtr);
 

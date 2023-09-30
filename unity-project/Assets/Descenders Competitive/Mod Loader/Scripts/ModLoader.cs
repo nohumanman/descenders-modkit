@@ -8,7 +8,8 @@ namespace APILoaderScript
     public class ModLoader : ModBehaviour
     {
         private static Injector injector = new Injector(Process.GetCurrentProcess().Id);
-        private static IntPtr assemblyPtr;
+        #pragma warning disable
+        private static IntPtr assemblyPtr; // unused
 
         public static void Inject()
         {
