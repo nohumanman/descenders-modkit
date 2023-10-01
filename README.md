@@ -30,6 +30,7 @@ Note: Most of these feature rely on an external server, *uptime is not guarantee
 - [Split Timer](#split-timer)
 - [Teleport Pad](#teleport-pad)
 - [Mod Loader](#mod-loader)
+- [Assets](#assets)
 
 ### Split Timer
 - Uses checkpoints to show 'splits' (a way of showing of how quick you are relative to your personal best and the world record)
@@ -43,3 +44,6 @@ This project is packaged with JubJub's Mod Loader.
 ### Teleport Pad
 - Gives you the ability to teleport players using a box collider.
 - Gives you the ability to freeze the player on teleport unlike many conventional teleporter scripts.
+
+### Assets
+![Alt text](image.png)
