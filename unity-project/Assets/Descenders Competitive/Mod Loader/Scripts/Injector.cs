@@ -202,6 +202,7 @@ namespace SharpMonoInjector
             
             if (status != MonoImageOpenStatus.MONO_IMAGE_OK) {
                 IntPtr messagePtr = Execute(Exports[mono_image_strerror], (IntPtr)status);
+                #pragma warning disable
                 string message = _memory.ReadString(messagePtr, 256, Encoding.UTF8);
                 throw new InjectorException("{mono_image_open_from_data}() failed: {message}");
             }
@@ -218,6 +219,7 @@ namespace SharpMonoInjector
             MonoImageOpenStatus status = (MonoImageOpenStatus)_memory.ReadInt(statusPtr);
 
             if (status != MonoImageOpenStatus.MONO_IMAGE_OK) {
+                #pragma warning disable
                 IntPtr messagePtr = Execute(Exports[mono_image_strerror], (IntPtr)status);
                 string message = _memory.ReadString(messagePtr, 256, Encoding.UTF8);
                 throw new InjectorException("{mono_assembly_load_from_full}() failed: {message}");
