@@ -5,3 +5,5 @@ Below is a list of all users that have contributed to this project. If you belie
 - Dogtorque
 - Kush
 - Roel (Spline Tool)
+- Rosie
+- Ovanny
