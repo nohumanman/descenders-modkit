@@ -40,18 +40,18 @@ namespace APILoaderScript
 
         void Start()
         {
-            UnityEngine.Debug.Log("Finding API Loader");
+            UnityEngine.Debug.Log("APILoaderScript.ModLoader | ModLoaderFinding API Loader");
 
             UnityEngine.GameObject apiloader = FindAPILoader();
 
             if (apiloader != null)
             {
-                UnityEngine.Debug.Log("GameObject Exists for " + apiloader.name + " so setting active");
+                UnityEngine.Debug.Log("APILoaderScript.ModLoader | GameObject Exists for " + apiloader.name + " so setting active");
                 apiloader.SetActive(true);
             }
             else
             {
-                UnityEngine.Debug.Log("Injecting API Loader");
+                UnityEngine.Debug.Log("APILoaderScript.ModLoader | Injecting API Loader");
                 Inject();
             }
         }
@@ -60,7 +60,7 @@ namespace APILoaderScript
         {
             UnityEngine.GameObject apiloader = FindAPILoader();
 
-            UnityEngine.Debug.Log("Disabling API Loader with name " + apiloader.name);
+            UnityEngine.Debug.Log("APILoaderScript.ModLoader | Disabling API Loader with name " + apiloader.name);
 
             apiloader.SetActive(false);
         }
