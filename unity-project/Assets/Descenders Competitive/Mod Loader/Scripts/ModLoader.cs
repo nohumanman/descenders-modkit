@@ -9,7 +9,7 @@ namespace APILoaderScript
     {
         private static Injector injector = new Injector(Process.GetCurrentProcess().Id);
         #pragma warning disable
-        private static IntPtr assemblyPtr; // unused
+        private static IntPtr assemblyPtr;
 
         public static void Inject()
         {
