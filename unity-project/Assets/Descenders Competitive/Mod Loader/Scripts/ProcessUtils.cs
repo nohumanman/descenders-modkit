@@ -95,8 +95,8 @@ namespace SharpMonoInjector
         {
             //if (!Environment.Is64BitOperatingSystem)
                 return true;
-            #pragma warning disable
-            string OSVer = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion", "ProductName", null); // unused
+
+            string OSVer = (string)Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\Windows NT\CurrentVersion", "ProductName", null);
             Console.WriteLine(OSVer);
 
             if(OSVer.Contains("Windows 10"))

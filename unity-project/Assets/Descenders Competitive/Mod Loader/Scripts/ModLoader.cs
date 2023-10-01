@@ -8,8 +8,7 @@ namespace APILoaderScript
     public class ModLoader : ModBehaviour
     {
         private static Injector injector = new Injector(Process.GetCurrentProcess().Id);
-        #pragma warning disable
-        private static IntPtr assemblyPtr; // unused
+        private static IntPtr assemblyPtr;
 
         public static void Inject()
         {
@@ -40,18 +39,18 @@ namespace APILoaderScript
 
         void Start()
         {
-            UnityEngine.Debug.Log("APILoaderScript.ModLoader | ModLoaderFinding API Loader");
+            UnityEngine.Debug.Log("Finding API Loader");
 
             UnityEngine.GameObject apiloader = FindAPILoader();
 
             if (apiloader != null)
             {
-                UnityEngine.Debug.Log("APILoaderScript.ModLoader | GameObject Exists for " + apiloader.name + " so setting active");
+                UnityEngine.Debug.Log("GameObject Exists for " + apiloader.name + " so setting active");
                 apiloader.SetActive(true);
             }
             else
             {
-                UnityEngine.Debug.Log("APILoaderScript.ModLoader | Injecting API Loader");
+                UnityEngine.Debug.Log("Injecting API Loader");
                 Inject();
             }
         }
@@ -60,7 +59,7 @@ namespace APILoaderScript
         {
             UnityEngine.GameObject apiloader = FindAPILoader();
 
-            UnityEngine.Debug.Log("APILoaderScript.ModLoader | Disabling API Loader with name " + apiloader.name);
+            UnityEngine.Debug.Log("Disabling API Loader with name " + apiloader.name);
 
             apiloader.SetActive(false);
         }
