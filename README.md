@@ -2,6 +2,10 @@
 
 This repository contains scripts, assets, and a server-controlled split timer to mod game [Descenders](https://store.steampowered.com/app/681280/Descenders/).
 
+## Wiki
+
+For installation details on using each feature, or for general problems & FAQs, go to the [Descenders Modding Wiki](https://github.com/nohumanman/descenders-modding/wiki)
+
 ## Installation
 
 - Download the latest [Descenders Modding Toolkit Release](https://github.com/nohumanman/descenders-split-timer/releases/tag/main-release)
