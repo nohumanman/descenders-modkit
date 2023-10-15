@@ -52,7 +52,7 @@ namespace ModLoaderSolution
 				Debug.Log("ModLoaderSolution.NetClient | Disconnected! Reconecting now...");
                 // SplitTimerText.Instance.count = false;
                 SplitTimerText.Instance.text.color = Color.red;
-				SplitTimerText.Instance.checkpointTime = "Server Disconnected :(";
+				SplitTimerText.Instance.checkpointTime = "";
 				ConnectToTcpServer();
             }
             try
