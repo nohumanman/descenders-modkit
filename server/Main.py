@@ -10,6 +10,7 @@ import logging
 import os
 
 script_path = os.path.dirname(os.path.realpath(__file__))
+os.chdir(script_path)
 log_location = script_path + "/SplitTimer.log"
 
 split_timer_logger = logging.getLogger('DescendersSplitTimer')

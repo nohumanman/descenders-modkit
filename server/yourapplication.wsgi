@@ -1,6 +1,6 @@
 
 import sys
-sys.path.insert(0, '/home/admin/desc-comp-toolkit')
+sys.path.insert(0, '/var/www/desc-comp-toolkit')
 
 from Main import webserver as a
 

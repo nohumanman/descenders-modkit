@@ -175,7 +175,7 @@ class Webserver():
         lines = ""
         try:
             with open(
-                f"/home/admin/desc-comp-toolkit/output_logs/{id}.txt",
+                    f"{os.getcwd()}/output_logs/{id}.txt",
                 "rt"
             ) as my_file:
                 file_lines = my_file.read().splitlines()
