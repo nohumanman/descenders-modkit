@@ -184,7 +184,7 @@ class Webserver():
                     for line in file_lines:
                         lines += f"> {line}<br>"
             except Exception as e:
-            lines = f"failed to get output log! (error {e})"
+                lines = f"Failed to get output log. One likely does not exist, has the user just loaded in?"
             return lines
         else:
             return "You are not authorised to fetch output log."
