@@ -172,19 +172,22 @@ class Webserver():
             return str(e)
 
     def get_output_log(self, id):
-        lines = ""
-        try:
-            with open(
+        if self.permission() == "AUTHORISED":
+            lines = ""
+            try:
+                with open(
                     f"{os.getcwd()}/output_logs/{id}.txt",
-                "rt"
-            ) as my_file:
-                file_lines = my_file.read().splitlines()
-                file_lines = file_lines[-50:]
-                for line in file_lines:
-                    lines += f"> {line}<br>"
-        except Exception as e:
+                    "rt"
+                ) as my_file:
+                    file_lines = my_file.read().splitlines()
+                    file_lines = file_lines[-50:]
+                    for line in file_lines:
+                        lines += f"> {line}<br>"
+            except Exception as e:
             lines = f"failed to get output log! (error {e})"
-        return lines
+            return lines
+        else:
+            return "You are not authorised to fetch output log."
 
     def get(self):
         player_json = [
