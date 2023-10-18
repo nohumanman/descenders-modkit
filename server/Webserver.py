@@ -221,7 +221,7 @@ class Webserver():
     def upload_replay(self):
         logging.error(request.data)
         request.files["replay"].save(
-            "/home/admin/desc-comp-toolkit/static/replays/"
+            f"{os.getcwd()}/static/replays/"
             f"{request.form['time_id']}.replay"
         )
 

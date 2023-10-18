@@ -104,7 +104,7 @@ class UnitySocket():
     def log_line(self, line):
         line = "|".join(line)
         with open(
-            f"/home/admin/desc-comp-toolkit/output_logs/{self.steam_id}.txt",
+            f"{os.getcwd()}/output_logs/{self.steam_id}.txt",
             "a+"
         ) as my_file:
             my_file.write(f"{round(time.time())} - {line}\n")
