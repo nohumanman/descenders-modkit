@@ -63,7 +63,7 @@ namespace ModLoaderSolution
                 myButtonStyle.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");
                 GUI.skin.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");
                 myButtonStyle.fontSize = 13;
-                if (GUI.Button(new Rect(10, 10, 150, 25), " \\/ COMMANDS \\/", myButtonStyle))
+                if (GUI.Button(new Rect(10, 10, 150, 25), " \\/ commands \\/", myButtonStyle))
                     __COMMANDS__ = !__COMMANDS__;
                 if (__COMMANDS__)
                 {
@@ -84,7 +84,7 @@ namespace ModLoaderSolution
                             tr.drawTreesAndFoliage = !tr.drawTreesAndFoliage;
                 }
                 int yPos = 10;
-                if (GUI.Button(new Rect(160, yPos, 150, 25), "\\/ CHECKPOINTS  \\/"))
+                if (GUI.Button(new Rect(160, yPos, 150, 25), "\\/ checkpoints \\/"))
                     __CHECKPOINTS__ = !__CHECKPOINTS__;
                 yPos += 40;
                 if (__CHECKPOINTS__)
