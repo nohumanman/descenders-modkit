@@ -68,18 +68,17 @@ namespace ModLoaderSolution
             stats.Add(new Stat("scaledFrictionFactor", typeof(float), "rKH}Gur", StatType.Vehicle));
             stats.Add(new Stat("tweakingGripLoss", typeof(float), "z\u0082q|kdz", StatType.Vehicle));
             // wheels
-            stats.Add(new Stat("xL{gJGT", typeof(float), "xL{gJGT", StatType.Wheel, 0)); // default 0.5
-            //stats.Add(new Stat("xL{gJGT", typeof(float), "xL{gJGT", StatType.Wheel, 1)); // default 0.5
-            stats.Add(new Stat("p~mkyX{", typeof(float), "p~mkyX{", StatType.Wheel, 0)); // default 50
-            stats.Add(new Stat("YrKDSPL", typeof(float), "YrKDSPL", StatType.Wheel, 0)); // default 5
-            stats.Add(new Stat("HqsqNkJ", typeof(float), "HqsqNkJ", StatType.Wheel, 0)); // default 0.5
-            stats.Add(new Stat("[z\u0082FoKi", typeof(float), "[z\u0082FoKi", StatType.Wheel, 0)); // default 0.1
-            stats.Add(new Stat("kISVipu", typeof(bool), "kISVipu", StatType.Wheel, 0)); // default true
-            stats.Add(new Stat("L\u0084fpN}[", typeof(bool), "L\u0084fpN}[", StatType.Wheel, 0)); // default true
-            stats.Add(new Stat("EI`qFti", typeof(bool), "EI`qFti", StatType.Wheel, 0)); // default true
-            stats.Add(new Stat("^X`UpQn", typeof(bool), "^X`UpQn", StatType.Wheel, 0)); // default true
-            stats.Add(new Stat("H\u007fywOFs", typeof(float), "H\u007fywOFs", StatType.Wheel, 0)); // default 0.5
-            stats.Add(new Stat("V\u007f}eqT\u0084", typeof(float), "V\u007f}eqT\u0084", StatType.Wheel)); // default 0.5
+            //stats.Add(new Stat("xL{gJGT", typeof(float), "xL{gJGT", StatType.Wheel, 0)); // default 0.5
+            //stats.Add(new Stat("p~mkyX{", typeof(float), "p~mkyX{", StatType.Wheel, 0)); // default 50
+            //stats.Add(new Stat("YrKDSPL", typeof(float), "YrKDSPL", StatType.Wheel, 0)); // default 5
+            //stats.Add(new Stat("HqsqNkJ", typeof(float), "HqsqNkJ", StatType.Wheel, 0)); // default 0.5
+            //stats.Add(new Stat("[z\u0082FoKi", typeof(float), "[z\u0082FoKi", StatType.Wheel, 0)); // default 0.1
+            //stats.Add(new Stat("kISVipu", typeof(bool), "kISVipu", StatType.Wheel, 0)); // default true
+            //stats.Add(new Stat("L\u0084fpN}[", typeof(bool), "L\u0084fpN}[", StatType.Wheel, 0)); // default true
+            //stats.Add(new Stat("EI`qFti", typeof(bool), "EI`qFti", StatType.Wheel, 0)); // default true
+            //stats.Add(new Stat("^X`UpQn", typeof(bool), "^X`UpQn", StatType.Wheel, 0)); // default true
+            //stats.Add(new Stat("H\u007fywOFs", typeof(float), "H\u007fywOFs", StatType.Wheel, 0)); // default 0.5
+            //stats.Add(new Stat("V\u007f}eqT\u0084", typeof(float), "V\u007f}eqT\u0084", StatType.Wheel)); // default 0.5
         }
         [Serializable]
         public class This
