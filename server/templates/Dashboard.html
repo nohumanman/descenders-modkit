@@ -1,6 +1,6 @@
 <html lang="en">
     <head>
-        <title>Desc Comp Tools</title>
+        <title>Descenders Modkit</title>
         <link rel="icon" type="image/png" href="/static/images/Descenders Competitive Logo.png">
         <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -18,10 +18,10 @@
                 <v-footer color="black" height="80" transparent app bottom fixed padless>
                     <v-row align="center" justify="center">
                         <v-col align="center" justify="center">
-                            <v-btn icon @click="redirect('https://github.com/nohumanman/desc-comp-toolkit')"><v-icon size="60">mdi-github-circle</v-icon></v-btn>
+                            <v-btn icon @click="redirect('https://github.com/nohumanman/descenders-modkit')"><v-icon size="60">mdi-github-circle</v-icon></v-btn>
                         </v-col>
                         <v-col align="center" justify="center">
-                            Created by Matthew Bayley<br>Using Vuetify & Vue.JS
+                            Created by nohumanman<br>Using Vuetify & Vue.JS
                         </v-col>
                         <v-col align="center" justify="center">
                             <v-col align="center" justify="center">
@@ -139,15 +139,18 @@
                         </div>
                     </v-overlay>
                     <v-tabs v-model="tab">
-                        <v-tab>User Dashboard</v-tab>
+                        <v-tab>Dashboard</v-tab>
                         <v-tab>Times</v-tab>
                         <v-tab>Trails</v-tab>
                     </v-tabs>
                     <v-tabs-items v-model="tab" fill-height style="height:100%;">
                         <v-tab-item>
                             <h1 style="text-align:center; font-size:50px;">
-                                Descenders Competitive Toolkit
+                                Descenders Modkit
                             </h1>
+                            <h2 style="text-align:center; font-size:30px;">
+                                Dashboard
+                            </h2>
                             <h2 style="text-align:center;">Your Steam ID [[self]]</h2>
                             <h2 style="text-align:center;">Currently [[players.length-1]] Concurrent Users</h2>
                             <v-col align="center" justify="center">
@@ -212,6 +215,12 @@
                             </v-row>
                         </v-tab-item>
                         <v-tab-item fill-height>
+                            <h1 style="text-align:center; font-size:50px;">
+                                Descenders Modkit
+                            </h1>
+                            <h2 style="text-align:center; font-size:30px;">
+                                All Times
+                            </h2>
                             <v-container fill-height>
                                 <v-row>
                                     <v-col>
@@ -266,6 +275,12 @@
                             </v-container>
                         </v-tab-item>
                         <v-tab-item>
+                            <h1 style="text-align:center; font-size:50px;">
+                                Descenders Modkit
+                            </h1>
+                            <h2 style="text-align:center; font-size:30px;">
+                                Trail Times
+                            </h2>
                             <!-- <v-btn @click="GetTrails()">Update Trails</v-btn> !-->
                             <br>
                             <v-row>
