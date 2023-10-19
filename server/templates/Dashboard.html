@@ -234,6 +234,7 @@
                                             <tr>
                                                 <th style="padding:10px;">pfp</th>
                                                 <th style="padding:10px;">Steam Name</th>
+                                                <th style="padding:10px;">Submission Date</th>
                                                 <th style="padding:10px; color:rgb(138, 138, 255)">Time</th>
                                                 <th style="padding:10px;">Steam ID</th>
                                                 <th style="padding:10px;">Time ID</th>
@@ -247,6 +248,7 @@
                                             <tr v-for="time, x in times">
                                                 <td style="padding:10px;"><img height="50" width="50" :src="time.avatar_src"></td>
                                                 <td style="padding:10px;">[[time.steam_name]]</td>
+                                                <td style="padding:10px; color:rgb(138, 138, 255)">[[timestamp_to_date(time.timestamp)]]</td>
                                                 <td style="padding:10px; color:rgb(138, 138, 255)">[[secs_to_str(time.total_time)]]</td>
                                                 <td style="padding:10px;">[[time.steam_id]]</td>
                                                 <td style="padding:10px;">[[time.time_id]]</td>

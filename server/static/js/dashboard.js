@@ -148,6 +148,10 @@ var app = new Vue({
 
             app.SubmitEval(app.self, ["SPECTATE|" + id.name]);
         },
+        timestamp_to_date(unix_timestamp){
+            var s = new Date(unix_timestamp * 1000).toLocaleDateString("en-UK")
+            return s;
+        },
         secs_to_str(secs){
             secs = parseFloat(secs);
             d_mins = Math.floor(secs / 60);
