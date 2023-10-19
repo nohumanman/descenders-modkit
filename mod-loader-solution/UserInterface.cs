@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +24,6 @@ namespace ModLoaderSolution
         bool __CHECKPOINTS__ = false;
         bool __PLAYERS__ = false;
         bool __STATS__ = false;
-        bool __STATS__FRONT = false;
         bool __QoL__ = false;
         bool __TRICKS__ = false;
         public float timeElapsed = 0;
