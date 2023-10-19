@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,7 +46,7 @@ namespace ModLoaderSolution
                 GUIStyle myButtonStyle23 = new GUIStyle(GUI.skin.button);
                 myButtonStyle23.normal.textColor = Color.white;
                 myButtonStyle23.normal.background = MakeTex(5, 5, new Color(0.2f, 0.06f, 0.12f, 0.7f));
-                myButtonStyle23.fontSize = 15;
+                myButtonStyle23.fontSize = 30;
                 GUI.Label(new Rect((Screen.width / 2) - 450, Screen.height - 150, 800, 150), "Descenders Modkit by nohumanman\nsplit-timer.nohumanman.com\ngithub.com/nohumanman/descenders-modkit", myButtonStyle23);
             }
             if (!StatsModification.instance.IfStatsAreDefault())
