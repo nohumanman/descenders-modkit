@@ -51,7 +51,7 @@ var app = new Vue({
         manual_eval: "",
         trails: [],
         self: {}, // the object of the player currently logged in
-        tab: 0, // the current tab selected
+        tab: 2, // the current tab selected
         search: null, // the current search being used to filter players
         cached_output_log: "", // the current output log being viewed
     },
@@ -113,6 +113,9 @@ var app = new Vue({
         },
         CheckStatus(){
             $.get("/permission", function(data){
+                if (data != app.validated && data == "AUTHORISED"){
+                    app.tab = 0;
+                }
                 app.validated = data;
             })
         },
