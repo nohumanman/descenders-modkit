@@ -1,4 +1,4 @@
-# Descenders Competitive Toolkit
+# Descenders Modkit
 
 This repository contains scripts, assets, and a server-controlled split timer to mod game [Descenders](https://store.steampowered.com/app/681280/Descenders/).
 
