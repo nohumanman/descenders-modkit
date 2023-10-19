@@ -315,6 +315,11 @@ namespace ModLoaderSolution
 				foreach (RidersGate ridersGate in ridersGates)
 					ridersGate.TriggerGate(randomTime);
 			}
+			if (message.StartsWith("LOG_GAMEOBJECTS"))
+			{
+				foreach (GameObject go in FindObjectsOfType<GameObject>())
+					Debug.Log(go);
+			}
 			if (message.StartsWith("TOGGLE_SPECTATOR"))
             {
 				GetComponent<Utilities>().ToggleSpectator();
