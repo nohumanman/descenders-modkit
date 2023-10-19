@@ -75,7 +75,8 @@ namespace ModLoaderSolution
 
             GameObject IntroSeq = bundle.LoadAsset<GameObject>("IntroSequence");
             Instantiate(IntroSeq).AddComponent<DisableOnAny>();
-            GameObject.Find("Map_Name").GetComponent<Text>().text = Utilities.instance.GetCurrentMap();
+            GameObject.Find("Map_Name").GetComponent<Text>().text = " You are using the Descenders Modkit ";
+            GameObject.Find("Description").GetComponent<Text>().text = "- TAB to open bike switcher\n- CTRL-I to open stats modification\n- Quit the game to remove this mod\n\nFor more info go to split-timer.nohumanman.com/info";
         }
         void Start()
         {
