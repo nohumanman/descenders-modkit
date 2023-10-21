@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PlayerIdentification;
@@ -108,7 +108,6 @@ namespace ModLoaderSolution
 		}
 		public void OnMapEnter(string map_id, string map_name){
 			NetClient.Instance.SendData("MAP_ENTER|" + map_id + "|" + map_name);
-			this.GetComponent<UserInterface>().timeElapsed = 0;
 			// if map_name is 0 we are in lobby
 			if (map_name == "0")
 				Destroy(GameObject.Find("sign_modoftheyear"));
