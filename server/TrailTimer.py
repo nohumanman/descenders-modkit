@@ -194,6 +194,9 @@ class TrailTimer():
             self.invalidate_timer("Didn't go through all checkpoints.")
             if not self.network_player.being_monitored:
                 return
+        if len(self.times) == 0:
+            # No times logged, can't finish
+            return
         if (self.times[len(self.times)-1] < 0):
             self.invalidate_timer("Time was negative")
             if not self.network_player.being_monitored:
