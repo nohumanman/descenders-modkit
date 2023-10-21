@@ -16,24 +16,24 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 # Prevent logging from outputting to stdout
 logging.basicConfig(
     filename=script_path + '/SplitTimer.log',
-    level=logging.INFO,
+    level=logging.WARNING,
+    format='%(asctime)s - %(name)s\t - %(levelname)s\t - %(filename)s\t - Line %(lineno)d:\t %(message)s'
 )
 
 os.chdir(script_path)
 log_location = script_path + "/SplitTimer.log"
 
 split_timer_logger = logging.getLogger('DescendersSplitTimer')
-split_timer_logger.setLevel(logging.INFO)
+split_timer_logger.setLevel(logging.WARNING)
 
 handler = logging.FileHandler(log_location)
 handler.setFormatter(
     logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - Line %(lineno)d: %(message)s'
+        '%(asctime)s - %(name)s\t - %(levelname)s\t - %(filename)s\t - Line %(lineno)d:\t %(message)s'
     )
 )
 handler.setLevel(logging.INFO)
 split_timer_logger.addHandler(handler)
-
 split_timer_logger.info(
     "--------------------------------"
     " Descenders Split Timer Started "
