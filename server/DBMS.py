@@ -211,7 +211,10 @@ class DBMS():
                 SELECT ban_type FROM Player
                 WHERE steam_id = "{steam_id}"
             ''')
-        return resp[0][0]
+        try:
+            return resp[0][0]
+        except IndexError:
+            return ""
 
     @staticmethod
     def get_valid_ids():
