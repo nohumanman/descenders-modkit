@@ -467,14 +467,12 @@ class UnitySocket():
     def update_concurrent_users(self):
         discord_bot = self.parent.discord_bot
         try:
-            discord_bot.loop.run_until_complete(
-                discord_bot.watch_user(
+            asyncio.run(discord_bot.watch_user(
                     str(len(self.parent.players))
                     + " concurrent users!"
-                )
-            )
+            ))
         except RuntimeError:
-            logging.error("Event already running")
+            logging.info("update_concurrent_users() called, but it's already being attempted")
 
     def get_medals(self, trail_name: str):
         split_timer_logger.info(
