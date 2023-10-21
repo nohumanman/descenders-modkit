@@ -442,13 +442,14 @@ class UnitySocket():
         if type == "Finish":
             self.get_trail(trail_name).end_timer(client_time)
 
-    def on_map_enter(self, map_id, map_name):
+    def on_map_enter(self, map_id :str, map_name: str):
         self.world_name = map_name
         self.time_started = time.time()
         self.update_concurrent_users()
-        if (self.bike_type == ""):
+        if (self.bike_type == "" or self.bike_type is None):
             self.bike_type = self.get_default_bike()
-        self.send_all("SET_BIKE|" + self.bike_type + "|" + self.steam_id)
+        if self.steam_id is not None:
+            self.send_all("SET_BIKE|" + self.bike_type + "|" + self.steam_id)
 
     def on_map_exit(self):
         self.update_concurrent_users()
