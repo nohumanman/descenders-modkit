@@ -49,6 +49,16 @@ namespace ModLoaderSolution
                 inBoundary = true;
             }
         }
+        public void ForceUpdate()
+        {
+            if (inBoundary)
+            {
+                PlayerManagement.Instance.OnBoundryEnter(
+                     trail.name,
+                     boundaryHash
+                 );
+            }
+        }
         void FixedUpdate()
         {
             if (!inBoundary && !notifiedServerOfExit) {

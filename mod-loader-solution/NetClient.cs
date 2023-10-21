@@ -175,6 +175,8 @@ namespace ModLoaderSolution
 			foreach (MedalSystem medalSystem in FindObjectsOfType<MedalSystem>())
 				medalSystem.NetStart();
 			this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
+			foreach (Boundary b in FindObjectsOfType<Boundary>())
+				b.ForceUpdate(); // force tell the server what boundaries we are in.
 		}
 		private void MessageRecieved(string message) {
 			if (message == "")
