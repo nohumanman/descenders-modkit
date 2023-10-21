@@ -26,6 +26,7 @@ class DiscordBot(commands.Bot):
         self.socket_server = socket_server
         self.loop = asyncio.get_event_loop()
         self.loop.create_task(self.start(discord_token))
+        self.changing_presence = False
         self.time_of_last_lux_request = 0
         threading.Thread(target=self.loop.run_forever).start()
 
@@ -40,13 +41,16 @@ class DiscordBot(commands.Bot):
         await channel.send(message)
 
     async def watch_user(self, user_name: str):
-        await self.change_presence(
-            status=discord.Status.online,
-            activity=discord.Activity(
-                type=discord.ActivityType.watching,
-                name=user_name
+        if not self.changing_presence:
+            self.changing_presence = True
+            await self.change_presence(
+                status=discord.Status.online,
+                activity=discord.Activity(
+                    type=discord.ActivityType.watching,
+                    name=user_name
+                )
             )
-        )
+            self.changing_presence = False
 
     async def on_ready(self):
         split_timer_logger.info("DiscordBot.py - Discord bot started.")
