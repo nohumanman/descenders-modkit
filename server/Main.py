@@ -32,7 +32,7 @@ handler.setFormatter(
         '%(asctime)s - %(name)s\t - %(levelname)s\t - %(filename)s\t - Line %(lineno)d:\t %(message)s'
     )
 )
-handler.setLevel(logging.INFO)
+handler.setLevel(logging.WARNING)
 split_timer_logger.addHandler(handler)
 split_timer_logger.info(
     "--------------------------------"
