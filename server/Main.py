@@ -9,13 +9,21 @@ import random
 import logging
 import os
 
+
+
 script_path = os.path.dirname(os.path.realpath(__file__))
+
+# Prevent logging from outputting to stdout
+logging.basicConfig(
+    filename=script_path + '/SplitTimer.log',
+    level=logging.INFO,
+)
+
 os.chdir(script_path)
 log_location = script_path + "/SplitTimer.log"
 
 split_timer_logger = logging.getLogger('DescendersSplitTimer')
-split_timer_logger.setLevel(logging.DEBUG)
-
+split_timer_logger.setLevel(logging.INFO)
 
 handler = logging.FileHandler(log_location)
 handler.setFormatter(
