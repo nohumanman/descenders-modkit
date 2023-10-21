@@ -1,6 +1,7 @@
 import socket
 import time
 import srcomapi
+import asyncio
 import srcomapi.datatypes as dt
 from DBMS import DBMS
 from TrailTimer import TrailTimer
