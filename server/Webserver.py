@@ -218,11 +218,11 @@ class Webserver():
             return "INVALID_PERMS"
 
     def upload_replay(self):
-        logging.error(request.data)
         request.files["replay"].save(
             f"{os.getcwd()}/static/replays/"
             f"{request.form['time_id']}.replay"
         )
+        return "Success"
 
     def get_worlds(self):
         return jsonify({"worlds": DBMS.get_worlds()})
