@@ -351,10 +351,6 @@ class UnitySocket():
     def handle_data(self, data: str):
         if data == "":
             return
-        # split_timer_logger.info(
-        #     f"UnitySocket.py - {self.steam_id} '{self.steam_name}'"
-        #     f" called handle_data('{data}')"
-        # )
         data_list = data.split("|")
         for operator in operations:
             if data.startswith(operator):
