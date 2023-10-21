@@ -31,7 +31,7 @@ class DashboardSocketServer():
             s.bind((self.host, self.port))
             s.listen()
             while True:
-                print("Waiting for client...")
+
                 conn, addr = s.accept()
                 logging.info(f"Connected by {addr}")
                 threading.Thread(

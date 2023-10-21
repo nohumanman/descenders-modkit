@@ -129,7 +129,6 @@ class DBMS():
         try:
             fastest_time_on_trail_id = time_id[0][0]
         except IndexError:
-            print("No trail specified")
             return []
         times = DBMS.execute_sql(
             f'''
@@ -174,7 +173,6 @@ class DBMS():
         try:
             fastest_time_on_trail_id = time_id[0][0]
         except IndexError:
-            print("No trail specified")
             return []
         times = DBMS.execute_sql(
             f'''
@@ -774,4 +772,3 @@ class DBMS():
         return to_return
 
 
-print(DBMS.get_start_bike("Igloo Bike Park"))

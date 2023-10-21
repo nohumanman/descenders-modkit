@@ -146,7 +146,6 @@ class Webserver():
         try:
             if self.permission() == "AUTHORISED":
                 args = request.args.get("order")
-                print(args)
                 try:
                     self.socket_server.get_player_by_id(id).send(args)
                     if args.startswith("SET_BIKE"):

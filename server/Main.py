@@ -20,7 +20,7 @@ split_timer_logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(log_location)
 handler.setFormatter(
     logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        '%(asctime)s - %(name)s - %(levelname)s - Line %(lineno)d: %(message)s'
     )
 )
 handler.setLevel(logging.INFO)

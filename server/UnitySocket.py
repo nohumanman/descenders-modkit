@@ -449,10 +449,8 @@ class UnitySocket():
         self.world_name = map_name
         self.time_started = time.time()
         self.update_concurrent_users()
-        print("in map_enter!")
         if (self.bike_type == ""):
             self.bike_type = self.get_default_bike()
-            print("Setting bike to " + self.bike_type)
         self.send_all("SET_BIKE|" + self.bike_type + "|" + self.steam_id)
 
     def on_map_exit(self):
