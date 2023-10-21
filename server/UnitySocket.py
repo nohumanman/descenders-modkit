@@ -357,7 +357,7 @@ class UnitySocket():
                 try:
                     operations[operator](self, data_list)
                 except Exception as e:
-                    logging.error(e)
+                    split_timer_logger.error(e)
 
     def recieve(self):
         while True:
