@@ -26,7 +26,6 @@ namespace ModLoaderSolution
         bool __STATS__ = false;
         bool __QoL__ = false;
         bool __TRICKS__ = false;
-        public float timeElapsed = 0;
         Vector2 scrollPosition = Vector2.zero;
         public static Texture2D MakeTex(int width, int height, Color col)
         {
@@ -40,15 +39,6 @@ namespace ModLoaderSolution
         }
         void OnGUI()
         {
-            timeElapsed += Time.deltaTime;
-            if (timeElapsed < 30)
-            {
-                GUIStyle myButtonStyle23 = new GUIStyle(GUI.skin.button);
-                myButtonStyle23.normal.textColor = Color.white;
-                myButtonStyle23.normal.background = MakeTex(5, 5, new Color(0.2f, 0.06f, 0.12f, 0.7f));
-                myButtonStyle23.fontSize = 30;
-                GUI.Label(new Rect((Screen.width / 2) - 400, Screen.height - 150, 800, 150), "Descenders Modkit by nohumanman\nsplit-timer.nohumanman.com\ngithub.com/nohumanman/descenders-modkit", myButtonStyle23);
-            }
             if (!StatsModification.instance.IfStatsAreDefault())
             {
                 GUIStyle myButtonStyle2 = new GUIStyle(GUI.skin.button);
