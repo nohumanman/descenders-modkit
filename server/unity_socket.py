@@ -241,16 +241,19 @@ class UnitySocket():
                     )
                 )
             except RuntimeError:
-                split_timer_logger.error("Failed to send alert of ban!")
+                split_timer_logger.error("Failed to send alert!")
         self.send("BANNED|" + _type)
         logging.info("id%s '%s' banned with '%s'", self.steam_id, self.steam_name, _type)
         discord_bot = self.parent.discord_bot
-        discord_bot.loop.run_until_complete(
-            discord_bot.ban_note(
-                f"Player {self.steam_name} (id{self.steam_id}) tried"
-                f" to join but was banned with '{_type}'."
+        try:
+            discord_bot.loop.run_until_complete(
+                discord_bot.ban_note(
+                    f"Player {self.steam_name} (id{self.steam_id}) tried"
+                    f" to join but was banned with '{_type}'."
+                )
             )
-        )
+        except RuntimeError:
+            split_timer_logger.error("Failed to send alert of ban!")
 
     def has_both_steam_name_and_id(self):
         DBMS.submit_alias(self.steam_id, self.steam_name)
@@ -328,6 +331,8 @@ class UnitySocket():
             except ConnectionResetError:
                 split_timer_logger.warning("id%s '%s' has disconnected due to ConnectionResetError", self.steam_id, self.steam_name)
                 break
+            except OSError:
+                split_timer_logger.warning("id%s '%s' somehow had OSError", self.steam_id, self.steam_name)
             if not data:
                 split_timer_logger.warning("id%s '%s' has disconnected because data is false? or none?", self.steam_id, self.steam_name)
                 break

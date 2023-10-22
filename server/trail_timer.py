@@ -205,16 +205,19 @@ class TrailTimer():
                 if self.times[len(self.times)-1] < fastest[len(fastest)-1]:
                     self.__new_fastest_time(our_time)
                 discord_bot = self.network_player.parent.discord_bot
-                discord_bot.loop.run_until_complete(
-                    discord_bot.ban_note(
-                        "Time on '"
-                        + self.trail_name
-                        + "' by '"
-                        + self.network_player.steam_name
-                        + "' of "
-                        + our_time
+                try:
+                    discord_bot.loop.run_until_complete(
+                        discord_bot.ban_note(
+                            "Time on '"
+                            + self.trail_name
+                            + "' by '"
+                            + self.network_player.steam_name
+                            + "' of "
+                            + our_time
+                        )
                     )
-                )
+                except RuntimeError:
+                    split_timer_logger.warning("Failed to submit time to discord server")
             except (IndexError, KeyError) as e:
                 logging.error("Fastest not found: %s", e)
             time_id = DBMS().submit_time(

@@ -82,7 +82,7 @@ class Webserver():
                 self.get, ["GET"]
             ),
             WebserverRoute(
-                "/eval/<id>", "eval",
+                "/eval/<player_id>", "eval",
                 self.eval, ["GET"]
             ),
             WebserverRoute(
