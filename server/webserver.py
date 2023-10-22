@@ -1,14 +1,15 @@
-from flask import Flask, session, request, redirect, jsonify, render_template
+""" Used to host the website using flask """
 import os
-from authlib.integrations.requests_client import OAuth2Session
 import logging
-import UnitySocketServer
-from DBMS import DBMS
-from Tokens import (
+from flask import Flask, session, request, redirect, jsonify, render_template
+from authlib.integrations.requests_client import OAuth2Session
+from authlib.integrations.base_client import MissingTokenError
+from unity_socket_server import UnitySocketServer, PlayerNotFound
+from dbms import DBMS
+from tokens import (
     OAUTH2_CLIENT_ID,
     OAUTH2_CLIENT_SECRET
 )
-import datetime
 
 OAUTH2_REDIRECT_URI = 'https://split-timer.nohumanman.com/callback'
 API_BASE_URL = os.environ.get('API_BASE_URL', 'https://discordapp.com/api')
@@ -121,7 +122,7 @@ class Webserver():
                 ["GET"]
             ),
             WebserverRoute(
-                "/get-output-log/<id>",
+                "/get-output-log/<player_id>",
                 "get_output_log",
                 self.get_output_log,
                 ["GET"]
@@ -139,51 +140,48 @@ class Webserver():
                 methods=route.methods
             )
 
-    def server_error(self, info):
+    def server_error(self):
         return render_template("500Error.html")
 
-    def eval(self, id):
-        try:
-            if self.permission() == "AUTHORISED":
-                args = request.args.get("order")
-                try:
-                    self.socket_server.get_player_by_id(id).send(args)
-                    if args.startswith("SET_BIKE"):
-                        if args[9:10] == "1":
-                            self.socket_server.get_player_by_id(
-                                id
-                            ).bike_type = "downhill"
-                        elif args[9:10] == "0":
-                            self.socket_server.get_player_by_id(
-                                id
-                            ).bike_type = "enduro"
-                        elif args[9:10] == "2":
-                            self.socket_server.get_player_by_id(
-                                id
-                            ).bike_type = "hardtail"
-                except Exception as e:
-                    logging.error(e)
-                    return e
-                return "Hello World!"
-            else:
-                return "FAILED - NOT VALID PERMISSIONS!", 401
-        except Exception as e:
-            return str(e)
+    def eval(self, player_id):
+        if self.permission() == "AUTHORISED":
+            args = request.args.get("order")
+            try:
+                self.socket_server.get_player_by_id(player_id).send(args)
+                if args.startswith("SET_BIKE"):
+                    if args[9:10] == "1":
+                        self.socket_server.get_player_by_id(
+                            player_id
+                        ).bike_type = "downhill"
+                    elif args[9:10] == "0":
+                        self.socket_server.get_player_by_id(
+                            player_id
+                        ).bike_type = "enduro"
+                    elif args[9:10] == "2":
+                        self.socket_server.get_player_by_id(
+                            player_id
+                        ).bike_type = "hardtail"
+            except PlayerNotFound:
+                pass
+            return ""
+        else:
+            return "FAILED - NOT VALID PERMISSIONS!", 401
 
-    def get_output_log(self, id):
+    def get_output_log(self, player_id):
         if self.permission() == "AUTHORISED":
             lines = ""
             try:
                 with open(
-                    f"{os.getcwd()}/output_logs/{id}.txt",
-                    "rt"
+                    f"{os.getcwd()}/output_logs/{player_id}.txt",
+                    "rt",
+                    encoding="utf-8"
                 ) as my_file:
                     file_lines = my_file.read().splitlines()
                     file_lines = file_lines[-50:]
                     for line in file_lines:
                         lines += f"> {line}<br>"
-            except Exception as e:
-                lines = f"Failed to get output log. One likely does not exist, has the user just loaded in?"
+            except FileNotFoundError:
+                lines = "Failed to get output log. One likely does not exist, has the user just loaded in?"
             return lines
         else:
             return "You are not authorised to fetch output log."
@@ -229,11 +227,8 @@ class Webserver():
 
     def concurrency(self):
         from datetime import datetime
-        try:
-            map_name = request.args.get("map_name")
-            if map_name == "":
-                map_name = None
-        except Exception:
+        map_name = request.args.get("map_name")
+        if map_name == "":
             map_name = None
         return jsonify({
             "concurrency": DBMS.get_daily_plays(
@@ -296,15 +291,11 @@ class Webserver():
             connections = discord.get(
                 API_BASE_URL + '/users/@me/connections'
             ).json()
-            split_timer_logger.info(
-                "Webserver.py - discord login to website"
-                f" - user '{user['id']}' named '{user['username']}'"
-            )
             try:
-                id = user['id']
+                user_id = user['id']
                 try:
                     email = user['email']
-                except Exception:
+                except KeyError:
                     email = ""
                 username = user['username']
                 steam_id = "NONE"
@@ -312,14 +303,13 @@ class Webserver():
                     for connection in connections:
                         if connection['type'] == "steam":
                             steam_id = connection['id']
-                except Exception as e:
-                    logging.info("25123 - " + str(e))
-                DBMS.discord_login(id, username, email, steam_id)
-            except Exception as e:
-                logging.info("User " + str(user) + " with error " + str(e))
-                logging.info("With connections " + str(connections))
+                except KeyError:
+                    logging.info("Steam ID Not Found")
+                DBMS.discord_login(user_id, username, email, steam_id)
+            except (IndexError, KeyError) as e:
+                logging.info("User %s with error %s", user, str(e))
             return redirect("/")
-        except Exception as e:
+        except (IndexError, KeyError) as e:
             return str(e)
 
     def me(self):
@@ -331,28 +321,25 @@ class Webserver():
             ).json()
             guilds = discord.get(API_BASE_URL + '/users/@me/guilds').json()
             return jsonify(user=user, guilds=guilds, connections=connections)
-        except Exception:
+        except MissingTokenError:
             return jsonify({})
 
     def split_time(self):
         return render_template("SplitTime.html")
 
     def spectate(self):
-        try:
-            self_id = request.args.get("steam_id")
-            spectating = request.args.get("player_name")
-            target_id = request.args.get("target_id")
-            for player in self.socket_server.players:
-                player.being_monitored = False
-            self.socket_server.get_player_by_id(
-                self_id
-            ).spectating = spectating
-            self.socket_server.get_player_by_id(
-                target_id
-            ).being_monitored = True
-            return "Gotcha"
-        except Exception as e:
-            return str(e)
+        self_id = request.args.get("steam_id")
+        spectating = request.args.get("player_name")
+        target_id = request.args.get("target_id")
+        for player in self.socket_server.players:
+            player.being_monitored = False
+        self.socket_server.get_player_by_id(
+            self_id
+        ).spectating = spectating
+        self.socket_server.get_player_by_id(
+            target_id
+        ).being_monitored = True
+        return "Gotcha"
 
     def tag(self):
         return render_template("PlayerTag.html")
