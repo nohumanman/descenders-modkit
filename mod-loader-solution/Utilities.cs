@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -212,7 +212,7 @@ namespace ModLoaderSolution
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return Convert.ToInt64((date - epoch).TotalSeconds);
         }
-        public void ModifyDiscordMapName(string map_name, bool useTimestamp = false)
+        public void UpdateDiscordPresence(long startTimestamp = 0)
         {
             // don't do custom presence in freeplay
             if (!isBikePark() && !isMod() && !(GetCurrentMap() == "0"))
@@ -220,25 +220,28 @@ namespace ModLoaderSolution
             DiscordManager dm = DiscordManager.SP;
             // dm.presence.details = dm.\u0084mfo\u007fzP.details
             DiscordRpc.RichPresence richpresence = (DiscordRpc.RichPresence)typeof(DiscordManager).GetField("\u0084mfo\u007fzP").GetValue(dm);
-
-            PlayerInfoImpact x = GetPlayerInfoImpact();
-            Debug.Log(x);
-
-            string current_map = Utilities.instance.GetCurrentMap().Split('-')[0];
-            if (seeds.TryGetValue(map_name, out var seed))
+            DiscordRpc.RichPresence richpresenceCopy = richpresence;
+            string current_map = GetCurrentMap().Split('-')[0];
+            
+            if (seeds.TryGetValue(current_map, out var seed))
                 richpresence.details = "In " + seed;
             else
-                richpresence.details = "In " + map_name;
+                richpresence.details = "In " + current_map;
             richpresence.largeImageText = "nohumanman's Descenders Modkit";
             richpresence.largeImageKey = "overworld";
             // teams to small image
-            /*
-            richpresence.smallImageKey = "arboreal";
-            richpresence.smallImageText = "Team Arboreal";
-            */
-            if (useTimestamp)
-                richpresence.startTimestamp = ToUnixTime(DateTime.UtcNow);
-            DiscordRpc.UpdatePresence(ref richpresence);
+            //richpresence.smallImageKey = "arboreal";
+            //richpresence.smallImageText = "Team Arboreal";
+            if (startTimestamp != 0)
+                richpresence.startTimestamp = startTimestamp;
+
+            typeof(DiscordManager).GetField("\u0084mfo\u007fzP").SetValue(dm, richpresence);
+            // if different, update presence
+            // NOTE: This will always update, because our assignment of rich presence
+            // is overwritten immediately by descenders
+            if (!richpresenceCopy.Equals(richpresence))
+                DiscordRpc.UpdatePresence(ref richpresence);
+            
         }
         public List<Mod> GetAllMods()
         {
