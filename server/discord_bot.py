@@ -151,15 +151,12 @@ class DiscordBot(commands.Bot):
                 bike = player["bike"]
                 version = player["version"]
                 penalty = player["penalty"]
-                leaderboard_str += f"{num} - {name} with "
-                leaderboard_str += f"{time1} on {bike} (v{version})"
-                leaderboard_str += f" penalty of {penalty}"
-                if player['starting_speed'] is not None:
-                    leaderboard_str += " (starting speed of "
-                    st_time = round(float(player['starting_speed']), 2)
-                    leaderboard_str += f"{st_time}) \n"
-                else:
-                    leaderboard_str += "\n"
+                verified = player["verified"] == "1"
+                if not verified: leaderboard_str += "||"
+                leaderboard_str += f"{num} - {time1} - {name}"
+                time_id = player['time_id']
+                if not verified: leaderboard_str += f"  ----⚠️ [UNVERIFIED](https://split-timer.nohumanman.com/static/replays/{time_id}.replay) ⚠️ ----||"
+                leaderboard_str += "\n"
             try:
                 await message.channel.send(
                     f"Top {self.queue[message.author.id]}"
