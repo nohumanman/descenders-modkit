@@ -222,34 +222,6 @@ namespace ModLoaderSolution
             Debug.Log(x);
 
             string current_map = Utilities.instance.GetCurrentMap().Split('-')[0];
-            Dictionary<string, string> seeds = new Dictionary<string, string>() {
-                { "0", "Lobby" },
-                {"1008" , "BikeOut v1"},
-                {"1009" , "Mt. Rosie"},
-                {"1010" , "Vuurberg"},
-                {"1011" , "Cambria"},
-                {"1012" , "STMP Line"},
-                {"1013" , "BikeOut v2"},
-                {"1014" , "Stoker"},
-                {"1015" , "Dyfi"},
-                {"1016" , "BikeOut v3"},
-                {"1017" , "New Lexico"},
-                {"1018" , "Alodalakes Bike Resort"},
-                {"1019" , "Descenders Island"},
-                {"1020" , "The Sanctuary"},
-                {"1021" , "Mega Park"},
-                {"1022" , "Kushmuck 4x Park"},
-                {"1023" , "Jump City"},
-                {"1024" , "BikeOut v4"},
-                {"1025" , "Ido Bike park"},
-                {"1026" , "Rose Ridge"},
-                {"1027" , "Mt Slope"},
-                {"1028" , "Drylands National Park"},
-                {"1029" , "Dutchman's Rock"},
-                {"1030" , "Island Cakewalk"},
-                {"1031" , "Llangynog Freeride"},
-                {"1032" , "Rival Falls"}
-            };
             if (seeds.TryGetValue(map_name, out var seed))
                 richpresence.details = "In " + seed;
             else
