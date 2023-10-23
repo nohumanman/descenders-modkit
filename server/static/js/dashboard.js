@@ -252,10 +252,10 @@ function updatePlayers() {
 //app.setSelf('UNKNOWN');
 updatePlayers();
 app.CheckStatus();
-setInterval(updatePlayers, 1000);
-setInterval(app.CheckStatus, 1000);
+//setInterval(updatePlayers, 1000);
+//setInterval(app.CheckStatus, 1000);
 app.getSteamId();
-setInterval(app.getSteamId, 500);
+//setInterval(app.getSteamId, 500);
 //app.GetConcurrency();
 app.GetTrails();
 //app.GetWorlds();
