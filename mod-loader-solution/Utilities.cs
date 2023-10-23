@@ -179,7 +179,64 @@ namespace ModLoaderSolution
             SessionManager sessionManager = Singleton<SessionManager>.SP;
             return sessionManager.GetCurrentLevelFullSeed();
         }
+        public static long ToUnixTime(DateTime date)
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return Convert.ToInt64((date - epoch).TotalSeconds);
+        }
+        public void ModifyDiscordMapName(string map_name, bool useTimestamp = false)
+        {
+            DiscordManager dm = DiscordManager.SP;
+            // dm.presence.details = dm.\u0084mfo\u007fzP.details
+            DiscordRpc.RichPresence richpresence = (DiscordRpc.RichPresence)typeof(DiscordManager).GetField("\u0084mfo\u007fzP").GetValue(dm);
 
+            PlayerInfoImpact x = GetPlayerInfoImpact();
+            Debug.Log(x);
+
+            string current_map = Utilities.instance.GetCurrentMap().Split('-')[0];
+            Dictionary<string, string> seeds = new Dictionary<string, string>() {
+                { "0", "Lobby" },
+                {"1008" , "BikeOut v1"},
+                {"1009" , "Mt. Rosie"},
+                {"1010" , "Vuurberg"},
+                {"1011" , "Cambria"},
+                {"1012" , "STMP Line"},
+                {"1013" , "BikeOut v2"},
+                {"1014" , "Stoker"},
+                {"1015" , "Dyfi"},
+                {"1016" , "BikeOut v3"},
+                {"1017" , "New Lexico"},
+                {"1018" , "Alodalakes Bike Resort"},
+                {"1019" , "Descenders Island"},
+                {"1020" , "The Sanctuary"},
+                {"1021" , "Mega Park"},
+                {"1022" , "Kushmuck 4x Park"},
+                {"1023" , "Jump City"},
+                {"1024" , "BikeOut v4"},
+                {"1025" , "Ido Bike park"},
+                {"1026" , "Rose Ridge"},
+                {"1027" , "Mt Slope"},
+                {"1028" , "Drylands National Park"},
+                {"1029" , "Dutchman's Rock"},
+                {"1030" , "Island Cakewalk"},
+                {"1031" , "Llangynog Freeride"},
+                {"1032" , "Rival Falls"}
+            };
+            if (seeds.TryGetValue(map_name, out var seed))
+                richpresence.details = "In " + seed;
+            else
+                richpresence.details = "In " + map_name;
+            richpresence.largeImageText = "nohumanman's Descenders Modkit";
+            richpresence.largeImageKey = "overworld";
+            // teams to small image
+            /*
+            richpresence.smallImageKey = "arboreal";
+            richpresence.smallImageText = "Team Arboreal";
+            */
+            if (useTimestamp)
+                richpresence.startTimestamp = ToUnixTime(DateTime.UtcNow);
+            DiscordRpc.UpdatePresence(ref richpresence);
+        }
         public List<Mod> GetAllMods()
         {
             GameData gameData = FindObjectOfType<GameData>();

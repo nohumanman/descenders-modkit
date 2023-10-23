@@ -50,9 +50,20 @@ namespace ModLoaderSolution
             }
 		}
 		string prevMap = "";
+		public void _ChangeMapPresence()
+        {
+			StartCoroutine(ChangeMapPresence());
+        }
+		public IEnumerator ChangeMapPresence()
+        {
+			yield return new WaitForSeconds(5f);
+			string current_map = Utilities.instance.GetCurrentMap().Split('-')[0];
+			Utilities.instance.ModifyDiscordMapName(current_map, true);
+		}
 		void Update () {
 			if (Utilities.instance.GetCurrentMap() != prevMap)
             {
+				_ChangeMapPresence();
 				Debug.Log("ModLoaderSolution.PlayerInfo | Map Change Detected");
 				OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
 
