@@ -86,6 +86,10 @@ class Webserver():
                 self.eval, ["GET"]
             ),
             WebserverRoute(
+                "/time/<time_id>", "time_details",
+                self.time_details, ["GET"]
+            ),
+            WebserverRoute(
                 "/get-spectated", "get_spectated",
                 self.get_spectated, ["GET"]
             ),
@@ -166,6 +170,24 @@ class Webserver():
             return ""
         else:
             return "FAILED - NOT VALID PERMISSIONS!", 401
+
+    def time_details(self, time_id):
+        details = DBMS.get_time_details(time_id)
+        return render_template(
+            "Time.html",
+            steam_id=details[0],
+            steam_name=details[1],
+            timestamp=details[5],
+            time_id=details[6],
+            total_time=details[8],
+            trail_name=details[9],
+            world_name=details[10],
+            ignore=details[12],
+            bike_type=details[13],
+            starting_speed=details[14],
+            version=details[15],
+            verified=details[17]
+        )
 
     def get_output_log(self, player_id):
         if self.permission() == "AUTHORISED":

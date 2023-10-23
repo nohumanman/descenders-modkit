@@ -226,7 +226,7 @@ class TrailTimer():
                     discord_bot = self.network_player.parent.discord_bot
                     discord_bot.loop.run_until_complete(
                         discord_bot.new_time(
-                            f"<@&1166081385732259941> Please verify [the new time](https://split-timer.nohumanman.com/static/replays/{time_id}.replay) on '"
+                            f"<@&1166081385732259941> Please verify [the new time](https://split-timer.nohumanman.com/time/{time_id}) on '"
                             + self.trail_name
                             + "' by '"
                             + self.network_player.steam_name

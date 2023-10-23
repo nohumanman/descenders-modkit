@@ -276,6 +276,19 @@ class DBMS():
             return ""
 
     @staticmethod
+    def get_time_details(time_id: str):
+        statement = f'''
+        SELECT
+            *
+        FROM
+            all_times
+        WHERE
+            all_times.time_id = "{time_id}"
+        '''
+        result = DBMS.execute_sql(statement)
+        return result[0]
+
+    @staticmethod
     def get_times_after_timestamp(timestamp: float, trail_name: str):
         statement = f'''
             SELECT
