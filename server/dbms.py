@@ -635,7 +635,7 @@ class DBMS():
 
     @staticmethod
     def submit_time(
-        steam_id,
+        steam_id: str,
         split_times,
         trail_name,
         being_monitored,

@@ -1,4 +1,5 @@
 import time
+import asyncio
 import logging
 from dbms import DBMS
 
@@ -26,7 +27,9 @@ class Vector3():
 class TrailTimer():
     def __init__(self, trail_name, network_player):
         self.trail_name = trail_name
-        self.network_player = network_player
+        # to prevent circular import
+        from unity_socket import UnitySocket
+        self.network_player : UnitySocket = network_player
         self.started = False
         self.times = []
         self.total_checkpoints = None
@@ -197,6 +200,17 @@ class TrailTimer():
         self.time_ended = client_time
         if (len(self.times) == self.total_checkpoints-1):
             split_timer_logger.info("id%s '%s' submitting times '%s'", self.network_player.steam_id, self.network_player.steam_name, self.times)
+            time_id = DBMS().submit_time(
+                self.network_player.steam_id,
+                self.times,
+                self.trail_name,
+                self.network_player.being_monitored,
+                self.network_player.world_name,
+                self.network_player.bike_type,
+                str(self.starting_speed),
+                str(self.network_player.version),
+                self.total_running_penalty
+            )
             fastest = DBMS.get_fastest_split_times(self.trail_name)
             try:
                 our_time = TrailTimer.secs_to_str(
@@ -206,7 +220,7 @@ class TrailTimer():
                     self.__new_fastest_time(our_time)
                 discord_bot = self.network_player.parent.discord_bot
                 try:
-                    discord_bot.loop.run_until_complete(
+                    asyncio.run(
                         discord_bot.ban_note(
                             "Time on '"
                             + self.trail_name
@@ -220,17 +234,6 @@ class TrailTimer():
                     split_timer_logger.warning("Failed to submit time to discord server")
             except (IndexError, KeyError) as e:
                 logging.error("Fastest not found: %s", e)
-            time_id = DBMS().submit_time(
-                self.network_player.steam_id,
-                self.times,
-                self.trail_name,
-                self.network_player.being_monitored,
-                self.network_player.world_name,
-                self.network_player.bike_type,
-                str(self.starting_speed),
-                str(self.network_player.version),
-                self.total_running_penalty
-            )
             DBMS.submit_locations(time_id, self.player_positions)
             penalty_message = ""
             if self.total_running_penalty == 0:

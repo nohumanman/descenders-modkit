@@ -17,7 +17,7 @@ split_timer_logger = logging.getLogger('DescendersSplitTimer')
 
 operations = {
     "STEAM_ID":
-        lambda netPlayer, data: netPlayer.set_steam_id(data[1]),
+        lambda netPlayer, data: netPlayer.set_steam_id(str(data[1])),
     "STEAM_NAME":
         lambda netPlayer, data: netPlayer.set_steam_name(data[1]),
     "WORLD_NAME":
@@ -80,7 +80,7 @@ operations = {
 
 class UnitySocket():
     """ Used to handle the connection to the descenders unity client """
-    def __init__(self, conn: socket, addr, parent):
+    def __init__(self, conn: socket.socket, addr, parent):
         split_timer_logger.info(
             "UnitySocket.py - New UnitySocket instance created"
         )
@@ -89,8 +89,8 @@ class UnitySocket():
         self.parent = parent
         self.trails = {}
         self.__avatar_src = None
-        self.steam_id = None
-        self.steam_name = None
+        self.steam_id : str = None
+        self.steam_name : str = None
         self.bike_type = ""
         self.world_name = None
         self.spectating = ""
@@ -233,8 +233,7 @@ class UnitySocket():
         if _type == "ALERT":
             try:
                 discord_bot = self.parent.discord_bot
-                discord_bot.loop.run_until_complete(
-                    discord_bot.ban_note(
+                asyncio.run(discord_bot.ban_note(
                         f"OI <@437237976347705346> - Player {self.steam_name}"
                         f" (id{self.steam_id}) joined"
                         f" '{self.world_name}'."
@@ -246,7 +245,7 @@ class UnitySocket():
         logging.info("id%s '%s' banned with '%s'", self.steam_id, self.steam_name, _type)
         discord_bot = self.parent.discord_bot
         try:
-            discord_bot.loop.run_until_complete(
+            asyncio.run(
                 discord_bot.ban_note(
                     f"Player {self.steam_name} (id{self.steam_id}) tried"
                     f" to join but was banned with '{_type}'."
@@ -279,7 +278,7 @@ class UnitySocket():
         elif ban_type == "ILLEGAL":
             self.ban("ILLEGAL")
 
-    def set_steam_id(self, steam_id):
+    def set_steam_id(self, steam_id : str):
         split_timer_logger.info("id%s '%s' has set steam id to %s", self.steam_id, self.steam_name, steam_id)
         self.steam_id = steam_id
         if self.steam_name is not None:
@@ -327,15 +326,14 @@ class UnitySocket():
     def recieve(self):
         while True:
             try:
-                data = self.conn.recv(1024)
+                data = self.conn.recv(8192)
             except ConnectionResetError:
                 split_timer_logger.warning("id%s '%s' has disconnected due to ConnectionResetError", self.steam_id, self.steam_name)
                 break
-            except OSError:
-                split_timer_logger.warning("id%s '%s' somehow had OSError", self.steam_id, self.steam_name)
-            if not data:
-                split_timer_logger.warning("id%s '%s' has disconnected because data is false? or none?", self.steam_id, self.steam_name)
-                break
+            # if data is too big
+            except OSError: pass
+            # if data is finished
+            if not data: pass
             for piece in data.decode().split("\n"):
                 self.handle_data(piece)
         del(self)
