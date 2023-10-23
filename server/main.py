@@ -66,6 +66,7 @@ discord_bot = DiscordBot(DISCORD_TOKEN, "!", unity_socket_server)
 unity_socket_server.discord_bot = discord_bot
 SHOULD_RANDOMISE = True
 
+webserver.discord_bot = discord_bot
 
 def riders_gate():
     """ Function to call the 'randomgate' function on """

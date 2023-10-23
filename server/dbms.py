@@ -276,6 +276,19 @@ class DBMS():
             return ""
 
     @staticmethod
+    def get_time_details(time_id: str):
+        statement = f'''
+        SELECT
+            *
+        FROM
+            all_times
+        WHERE
+            all_times.time_id = "{time_id}"
+        '''
+        result = DBMS.execute_sql(statement)
+        return result[0]
+
+    @staticmethod
     def get_times_after_timestamp(timestamp: float, trail_name: str):
         statement = f'''
             SELECT
@@ -636,6 +649,17 @@ class DBMS():
         return [res[0] for res in result]
 
     @staticmethod
+    def verify_time(time_id: str):
+        DBMS.execute_sql(
+            f'''
+                UPDATE Time
+                SET verified = 1
+                WHERE time_id = "{time_id}"
+            ''',
+            write=True
+        )
+
+    @staticmethod
     def submit_time(
         steam_id: str,
         split_times,
@@ -657,13 +681,13 @@ class DBMS():
             INSERT INTO Time (
                 steam_id, time_id, timestamp, world_name,
                 trail_name, was_monitored, bike_type,
-                ignore, starting_speed, version, penalty
+                ignore, starting_speed, version, penalty, verified
             )
             VALUES (
                 "{steam_id}", "{time_id}", {time.time()},
                 "{current_world}", "{trail_name}",
                 "{str(being_monitored)}", "{bike_type}",
-                "False", "{starting_speed}", "{version}", {penalty}
+                "False", "{starting_speed}", "{version}", {penalty}, "0"
             )
             ''',
             write=True

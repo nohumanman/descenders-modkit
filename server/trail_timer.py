@@ -3,6 +3,10 @@ import asyncio
 import logging
 from dbms import DBMS
 
+# Used to fix RuntimeError in using async from thread
+import nest_asyncio
+nest_asyncio.apply()
+
 split_timer_logger = logging.getLogger('DescendersSplitTimer')
 
 
@@ -218,11 +222,11 @@ class TrailTimer():
                 )
                 if self.times[len(self.times)-1] < fastest[len(fastest)-1]:
                     self.__new_fastest_time(our_time)
-                discord_bot = self.network_player.parent.discord_bot
                 try:
-                    asyncio.run(
-                        discord_bot.ban_note(
-                            "Time on '"
+                    discord_bot = self.network_player.parent.discord_bot
+                    discord_bot.loop.run_until_complete(
+                        discord_bot.new_time(
+                            f"<@&1166081385732259941> Please verify [the new time](https://split-timer.nohumanman.com/time/{time_id}) on '"
                             + self.trail_name
                             + "' by '"
                             + self.network_player.steam_name
@@ -230,8 +234,8 @@ class TrailTimer():
                             + our_time
                         )
                     )
-                except RuntimeError:
-                    split_timer_logger.warning("Failed to submit time to discord server")
+                except RuntimeError as e:
+                    split_timer_logger.warning("Failed to submit time to discord server %s", e)
             except (IndexError, KeyError) as e:
                 logging.error("Fastest not found: %s", e)
             DBMS.submit_locations(time_id, self.player_positions)
