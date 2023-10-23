@@ -214,6 +214,9 @@ namespace ModLoaderSolution
         }
         public void ModifyDiscordMapName(string map_name, bool useTimestamp = false)
         {
+            // don't do custom presence in freeplay
+            if (!isBikePark() && !isMod() && !(GetCurrentMap() == "0"))
+                return;
             DiscordManager dm = DiscordManager.SP;
             // dm.presence.details = dm.\u0084mfo\u007fzP.details
             DiscordRpc.RichPresence richpresence = (DiscordRpc.RichPresence)typeof(DiscordManager).GetField("\u0084mfo\u007fzP").GetValue(dm);
