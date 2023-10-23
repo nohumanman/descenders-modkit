@@ -435,7 +435,8 @@ class DBMS():
                 MIN(checkpoint_time),
                 Time.version,
                 Time.penalty,
-                Time.verified
+                Time.verified,
+                Time.time_id
             FROM
                 Time
                 INNER JOIN
@@ -477,7 +478,8 @@ class DBMS():
                 "starting_speed": time[0],
                 "version": time[4],
                 "penalty": time[5],
-                "verified": str(time[6])
+                "verified": str(time[6]),
+                "time_id": str(time[7])
             }
             for i, time in enumerate(result)
         ]
