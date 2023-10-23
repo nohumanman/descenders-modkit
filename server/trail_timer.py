@@ -270,7 +270,7 @@ class TrailTimer():
         self.invalidate_timer("Client time did not match server time!")
         discord_bot = self.network_player.parent.discord_bot
         discord_bot.loop.run_until_complete(
-            discord_bot.ban_note(
+            discord_bot.new_time(
                 "**Potential cheat** from "
                 f"{self.network_player.steam_name}"
                 " - client time did not match server time!"

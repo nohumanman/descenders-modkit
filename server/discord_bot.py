@@ -54,6 +54,12 @@ class DiscordBot(commands.Bot):
         channel = self.get_channel(channel_id)
         await channel.send(message)
 
+    async def new_time(self, message):
+        """ Used to send a message to the split time server dev channel of a ban record """
+        channel_id = 1166082973385375744
+        channel = self.get_channel(channel_id)
+        await channel.send(message)
+
     async def set_presence(self, user_name: str):
         """ Used to set the presence of the discord bot """
         if not self.changing_presence:
