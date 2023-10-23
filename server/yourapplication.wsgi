@@ -1,8 +1,8 @@
 
 import sys
-sys.path.insert(0, '/var/www/desc-comp-toolkit')
+sys.path.insert(0, '/var/www/descenders-modkit')
 
-from Main import webserver as a
+from main import webserver as a
 
 application = a.webserver_app
 

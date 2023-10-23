@@ -1,3 +1,4 @@
+""" Database Management System """
 import sqlite3
 import time
 import os
@@ -16,7 +17,10 @@ class DBMS():
     def execute_sql(statement: str, write=False):
         con = sqlite3.connect(script_path + "/SplitTimer.db")
         cur = con.cursor()
-        execution = cur.execute(statement)
+        try:
+            execution = cur.execute(statement)
+        except sqlite3.OperationalError:
+            return []
         if write:
             con.commit()
         result = execution.fetchall()
@@ -75,10 +79,6 @@ class DBMS():
             "SELECT webhook_url FROM webhooks"
             f" WHERE trail_name = '{trail_name}'"
         )
-
-    @staticmethod
-    def get_all_players():
-        return DBMS.execute_sql('''SELECT * FROM Players''')
 
     @staticmethod
     def update_player(steam_id, steam_name, avatar_src):
@@ -147,10 +147,7 @@ class DBMS():
 
     @staticmethod
     def get_fastest_split_times(
-        trail_name,
-        competitors_only=False,
-        min_timestamp=None,
-        monitored_only=False
+        trail_name
     ):
         statement = f'''
             SELECT
@@ -235,7 +232,7 @@ class DBMS():
         '''
         try:
             return DBMS().execute_sql(statement, write=True)[0][0]
-        except Exception:
+        except IndexError:
             return None
 
     @staticmethod
@@ -275,7 +272,7 @@ class DBMS():
         result = DBMS.execute_sql(statement)
         try:
             return result[0][0]
-        except Exception:
+        except IndexError:
             return ""
 
     @staticmethod
@@ -340,7 +337,7 @@ class DBMS():
 
     @staticmethod
     def get_all_players():
-        statement = f'''
+        statement = '''
             SELECT Player.steam_id, Player.steam_name, Player.avatar_src, Rep.rep, max(Rep.timestamp) as rep_timestamp FROM Player
             INNER JOIN Rep on Rep.steam_id = Player.steam_id
             GROUP BY Player.steam_id
@@ -529,7 +526,7 @@ class DBMS():
         result = DBMS.execute_sql(statement)
         try:
             return result[0][0]
-        except Exception:
+        except IndexError:
             return ""
 
     @staticmethod
@@ -638,7 +635,7 @@ class DBMS():
 
     @staticmethod
     def submit_time(
-        steam_id,
+        steam_id: str,
         split_times,
         trail_name,
         being_monitored,
@@ -704,6 +701,7 @@ class DBMS():
             write=True
         )
 
+    @staticmethod
     def get_medals(steam_id, trail_name):
         x = f'''
             SELECT
@@ -752,26 +750,24 @@ class DBMS():
             FROM TrailMedal
             WHERE trail_name = "{trail_name}"
         '''
-        rainbowTime = 0
-        goldTime = 0
-        silverTime = 0
-        bronzeTime = 0
+        rainbow_time = 0
+        gold_time = 0
+        silver_time = 0
+        bronze_time = 0
         for medal in DBMS.execute_sql(y):
             if medal[0] == "rainbow":
-                rainbowTime = float(medal[1])
+                rainbow_time = float(medal[1])
             elif medal[0] == "gold":
-                goldTime = float(medal[1])
+                gold_time = float(medal[1])
             elif medal[0] == "silver":
-                silverTime = float(medal[1])
+                silver_time = float(medal[1])
             elif medal[0] == "bronze":
-                bronzeTime = float(medal[1])
+                bronze_time = float(medal[1])
         # rainbow, gold, silver, bronze
         to_return = [False, False, False, False]
         for player_time in result:
-            to_return[0] = player_time[3] <= rainbowTime
-            to_return[1] = player_time[3] <= goldTime
-            to_return[2] = player_time[3] <= silverTime
-            to_return[3] = player_time[3] <= bronzeTime
+            to_return[0] = player_time[3] <= rainbow_time
+            to_return[1] = player_time[3] <= gold_time
+            to_return[2] = player_time[3] <= silver_time
+            to_return[3] = player_time[3] <= bronze_time
         return to_return
-
-

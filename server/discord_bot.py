@@ -1,16 +1,20 @@
-from TrailTimer import TrailTimer
-import discord
-from discord.ext import commands
-import threading
-import asyncio
-from DBMS import DBMS
+""" A discord bot used to interact to get times and such """
 import logging
 import time
+import threading
+import asyncio
+import discord
+from discord.ext import commands
+from discord import HTTPException
+from trail_timer import TrailTimer
+from dbms import DBMS
+
 
 split_timer_logger = logging.getLogger('DescendersSplitTimer')
 
 
 def posh_time(seconds):
+    """ Used to convert seconds to days, hours, minutes, and seconds """
     days = int(round(seconds / 86400))
     hours = int(round((seconds % 86400) / 3600))
     minutes = int(round((seconds % 3600) / 60))
@@ -19,6 +23,7 @@ def posh_time(seconds):
 
 
 class DiscordBot(commands.Bot):
+    """ DiscordBot class used to create discord bot instance """
     def __init__(self, discord_token, command_prefix, socket_server):
         super().__init__(command_prefix, intents=discord.Intents().all())
         self.command_prefix = command_prefix
@@ -28,47 +33,51 @@ class DiscordBot(commands.Bot):
         self.loop.create_task(self.start(discord_token))
         self.changing_presence = False
         self.time_of_last_lux_request = 0
+        self.command_outputs = {
+            "!help": "this message",
+            "!inspect <time_id>": "shows details of a particular run",
+            "!top <number>" : "shows the top <number> of runs on a trail",
+            "!totaltime" : "shows the total time spent on a trail entered",
+            "!info <player_name>" : "shows info about a player"
+        }
         threading.Thread(target=self.loop.run_forever).start()
 
-    async def new_fastest_time(self, time):
+    async def new_fastest_time(self, time_of_run):
+        """ Used to send a message to the split time server giving the new fastest time """
         channel_id = 929121402597015685
         channel = self.get_channel(channel_id)
-        await channel.send(time)
+        await channel.send(time_of_run)
 
     async def ban_note(self, message):
+        """ Used to send a message to the split time server dev channel of a ban record """
         channel_id = 997942390432206879
         channel = self.get_channel(channel_id)
         await channel.send(message)
 
-    async def watch_user(self, user_name: str):
+    async def set_presence(self, user_name: str):
+        """ Used to set the presence of the discord bot """
         if not self.changing_presence:
             self.changing_presence = True
-            await self.change_presence(
-                status=discord.Status.online,
-                activity=discord.Activity(
-                    type=discord.ActivityType.watching,
-                    name=user_name
+            try:
+                await self.change_presence(
+                    status=discord.Status.online,
+                    activity=discord.Activity(
+                        type=discord.ActivityType.watching,
+                        name=user_name
+                    )
                 )
-            )
+            except AttributeError:
+                split_timer_logger.info("Failed to change presence")
             self.changing_presence = False
 
-    async def on_ready(self):
-        split_timer_logger.info("DiscordBot.py - Discord bot started.")
-        await self.wait_until_ready()
-
     async def on_message(self, message):
-        split_timer_logger.info(f"DiscordBot.py - Message sent '{message}'")
+        split_timer_logger.info("Message sent '%s'", message)
         if message.author == self.user:
             return
         if message.content.startswith(self.command_prefix + "help"):
-            hp = '''
-__commands__
-`!help` - this message
-`!inspect <time_id>` - shows details of a particular run
-`!top <number>` - shows the top <number> of runs on a trail entered after !top is called
-`!totaltime` - shows the total time spent on a trail entered
-`!info <player_name>` - shows info about a player
-            '''
+            hp = ""
+            for command, description in self.command_outputs.items():
+                hp += "`!" + command + "`\r - " + description + "\n"
             await message.channel.send(hp)
         if (
             (
@@ -99,7 +108,10 @@ __commands__
             await message.channel.send(out)
             out = f"{time_id} was on version {DBMS.get_version(time_id)}\n"
             await message.channel.send(out)
-            out = f"Replay should be found at https://split-timer.nohumanman.com/static/replays/{time_id}.replay\n"
+            out = (
+                "Replay should be found at "
+                f"https://split-timer.nohumanman.com/static/replays/{time_id}.replay\n"
+                )
             await message.channel.send(out)
         if message.content.startswith(self.command_prefix + "totaltime"):
             total_times = DBMS.get_total_times()
@@ -114,7 +126,7 @@ __commands__
                 i += 1
             try:
                 await message.channel.send(text)
-            except Exception:
+            except HTTPException:
                 await message.channel.send(
                     "Sorry - too many players to display!"
                 )
@@ -153,7 +165,7 @@ __commands__
                     f"Top {self.queue[message.author.id]}"
                     f" on {message.content}\n\n{leaderboard_str}"
                 )
-            except Exception:
+            except HTTPException:
                 await message.channel.send(
                     "Sorry - too many players to display!"
                 )
@@ -163,7 +175,7 @@ __commands__
                 player_name = message.content[
                     len(self.command_prefix + "info "):
                 ]
-            except Exception:
+            except IndexError:
                 player_name = "nohumanman"
             stats = DBMS.get_player_stats(
                 DBMS.get_id_from_name(player_name)
