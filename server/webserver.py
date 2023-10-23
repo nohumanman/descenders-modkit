@@ -10,6 +10,9 @@ from tokens import (
     OAUTH2_CLIENT_ID,
     OAUTH2_CLIENT_SECRET
 )
+# Used to fix RuntimeError in using async from thread
+import nest_asyncio
+nest_asyncio.apply()
 
 OAUTH2_REDIRECT_URI = 'https://split-timer.nohumanman.com/callback'
 API_BASE_URL = os.environ.get('API_BASE_URL', 'https://discordapp.com/api')
@@ -32,6 +35,7 @@ class Webserver():
         self.webserver_app = Flask(__name__)
         self.webserver_app.config['SECRET_KEY'] = OAUTH2_CLIENT_SECRET
         self.socket_server = socket_server
+        self.discord_bot = None
         self.routes = [
             WebserverRoute(
                 "/callback", "callback",
@@ -88,6 +92,10 @@ class Webserver():
             WebserverRoute(
                 "/time/<time_id>", "time_details",
                 self.time_details, ["GET"]
+            ),
+            WebserverRoute(
+                "/verify_time/<time_id>", "verify_time",
+                self.verify_time, ["GET"]
             ),
             WebserverRoute(
                 "/get-spectated", "get_spectated",
@@ -188,6 +196,20 @@ class Webserver():
             version=details[15],
             verified=details[17]
         )
+    
+    def verify_time(self, time_id):
+        if self.permission() == "AUTHORISED":
+            DBMS.verify_time(time_id)
+            try:
+                self.discord_bot.loop.run_until_complete(
+                    self.discord_bot.new_time(
+                        f"Time {time_id} verified."
+                    )
+                )
+            except RuntimeError as e:
+                split_timer_logger.warning("Failed to submit time to discord server %s", e)
+            return "verified"
+        return "unverified"
 
     def get_output_log(self, player_id):
         if self.permission() == "AUTHORISED":

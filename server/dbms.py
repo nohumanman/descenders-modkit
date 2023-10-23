@@ -649,6 +649,17 @@ class DBMS():
         return [res[0] for res in result]
 
     @staticmethod
+    def verify_time(time_id: str):
+        DBMS.execute_sql(
+            f'''
+                UPDATE Time
+                SET verified = 1
+                WHERE time_id = "{time_id}"
+            ''',
+            write=True
+        )
+
+    @staticmethod
     def submit_time(
         steam_id: str,
         split_times,
