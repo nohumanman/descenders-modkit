@@ -12,7 +12,7 @@ namespace ModLoaderSolution
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
-		public string version = "0.2.35";
+		public string version = "0.2.36";
 		public float speed;
 		bool hasLoadedPlayer = false;
 		bool wasBailed = false;
@@ -50,12 +50,21 @@ namespace ModLoaderSolution
             }
 		}
 		string prevMap = "";
+		IEnumerator ChangeMapPresence(string map_name)
+        {
+			long startTimestamp = Utilities.ToUnixTime(DateTime.UtcNow);
+			while (Utilities.instance.GetCurrentMap() == map_name)
+            {
+				Utilities.instance.UpdateDiscordPresence(startTimestamp);
+				yield return new WaitForSeconds(3f);
+			}
+		}
 		void Update () {
 			if (Utilities.instance.GetCurrentMap() != prevMap)
             {
+				StartCoroutine(ChangeMapPresence(Utilities.instance.GetCurrentMap()));
 				Debug.Log("ModLoaderSolution.PlayerInfo | Map Change Detected");
 				OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
-
 				// if not a bike park or a mod
 				if (!Utilities.instance.isBikePark() && !Utilities.instance.isMod() && !(Utilities.instance.GetCurrentMap() == "0"))
 				{
@@ -64,7 +73,6 @@ namespace ModLoaderSolution
 				}
 				else
 					StatsModification.instance.permitted = true;
-				
 				StatsModification.instance.DirtyStats();
 				prevMap = Utilities.instance.GetCurrentMap();
 			}

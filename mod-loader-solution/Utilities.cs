@@ -28,6 +28,34 @@ namespace ModLoaderSolution
         List<string> history = new List<string>();
         private Camera mainCamera;
         private float GameTime = 0f;
+        public readonly Dictionary<string, string> seeds = new Dictionary<string, string>() {
+                { "0", "Lobby" },
+                {"1008" , "BikeOut v1"},
+                {"1009" , "Mt. Rosie"},
+                {"1010" , "Vuurberg"},
+                {"1011" , "Cambria"},
+                {"1012" , "STMP Line"},
+                {"1013" , "BikeOut v2"},
+                {"1014" , "Stoker"},
+                {"1015" , "Dyfi"},
+                {"1016" , "BikeOut v3"},
+                {"1017" , "New Lexico"},
+                {"1018" , "Alodalakes Bike Resort"},
+                {"1019" , "Descenders Island"},
+                {"1020" , "The Sanctuary"},
+                {"1021" , "Mega Park"},
+                {"1022" , "Kushmuck 4x Park"},
+                {"1023" , "Jump City"},
+                {"1024" , "BikeOut v4"},
+                {"1025" , "Ido Bike park"},
+                {"1026" , "Rose Ridge"},
+                {"1027" , "Mt Slope"},
+                {"1028" , "Drylands National Park"},
+                {"1029" , "Dutchman's Rock"},
+                {"1030" , "Island Cakewalk"},
+                {"1031" , "Llangynog Freeride"},
+                {"1032" , "Rival Falls"}
+            };
         public float gameTime
         {
             get
@@ -179,7 +207,42 @@ namespace ModLoaderSolution
             SessionManager sessionManager = Singleton<SessionManager>.SP;
             return sessionManager.GetCurrentLevelFullSeed();
         }
+        public static long ToUnixTime(DateTime date)
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return Convert.ToInt64((date - epoch).TotalSeconds);
+        }
+        public void UpdateDiscordPresence(long startTimestamp = 0)
+        {
+            // don't do custom presence in freeplay
+            if (!isBikePark() && !isMod() && !(GetCurrentMap() == "0"))
+                return;
+            DiscordManager dm = DiscordManager.SP;
+            // dm.presence.details = dm.\u0084mfo\u007fzP.details
+            DiscordRpc.RichPresence richpresence = (DiscordRpc.RichPresence)typeof(DiscordManager).GetField("\u0084mfo\u007fzP").GetValue(dm);
+            DiscordRpc.RichPresence richpresenceCopy = richpresence;
+            string current_map = GetCurrentMap().Split('-')[0];
+            
+            if (seeds.TryGetValue(current_map, out var seed))
+                richpresence.details = "In " + seed;
+            else
+                richpresence.details = "In " + current_map;
+            richpresence.largeImageText = "nohumanman's Descenders Modkit";
+            richpresence.largeImageKey = "overworld";
+            // teams to small image
+            //richpresence.smallImageKey = "arboreal";
+            //richpresence.smallImageText = "Team Arboreal";
+            if (startTimestamp != 0)
+                richpresence.startTimestamp = startTimestamp;
 
+            typeof(DiscordManager).GetField("\u0084mfo\u007fzP").SetValue(dm, richpresence);
+            // if different, update presence
+            // NOTE: This will always update, because our assignment of rich presence
+            // is overwritten immediately by descenders
+            if (!richpresenceCopy.Equals(richpresence))
+                DiscordRpc.UpdatePresence(ref richpresence);
+            
+        }
         public List<Mod> GetAllMods()
         {
             GameData gameData = FindObjectOfType<GameData>();
