@@ -55,12 +55,13 @@ class TrailTimer():
             and not self.network_player.being_monitored
         ):
             if (self.started):
-                self.current_penalty = (time.time()-self.exit_time)*100
-                if self.current_penalty < 2:
-                    self.current_penalty = 2
+                pass
+                #self.current_penalty = (time.time()-self.exit_time)*100
+                #if self.current_penalty < 2:
+                #    self.current_penalty = 2
                 # if self.current_penalty < 0.5:
                 #     self.current_penalty = 0
-                self.total_running_penalty += self.current_penalty
+                #self.total_running_penalty += self.current_penalty
                 #self.network_player.send(
                 #    f"SPLIT_TIME|penalty of "
                 #    f"~{round(self.current_penalty * 100) / 100}"
@@ -77,10 +78,11 @@ class TrailTimer():
             and not self.network_player.being_monitored
         ):
             if (self.started):
-                self.exit_time = time.time()
-                self.network_player.send(f"INVALIDATE_TIME|Exited Boundaries of Trail.\nIf this is incorrect, please report it to nohumanman on Discord\nBOUNDARY ISSUE: {boundry_obj_name}")
-                self.network_player.set_text_colour(255, 0, 0)
-                self.started = False
+                pass
+                #self.exit_time = time.time()
+                #self.network_player.send(f"INVALIDATE_TIME|Exited Boundaries of Trail.\nIf this is incorrect, please report it to nohumanman on Discord\nBOUNDARY ISSUE: {boundry_obj_name}")
+                #self.network_player.set_text_colour(255, 0, 0)
+                #self.started = False
 
     def start_timer(self, total_checkpoints: int):
         split_timer_logger.info("id%s '%s' started timer with checkpoints %s", self.network_player.steam_id, self.network_player.steam_name, total_checkpoints)
