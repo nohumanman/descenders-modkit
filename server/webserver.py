@@ -181,22 +181,25 @@ class Webserver():
             return "FAILED - NOT VALID PERMISSIONS!", 401
 
     def time_details(self, time_id):
-        details = self.dbms.get_time_details(time_id)
-        return render_template(
-            "Time.html",
-            steam_id=details[0],
-            steam_name=details[1],
-            timestamp=details[5],
-            time_id=details[6],
-            total_time=details[8],
-            trail_name=details[9],
-            world_name=details[10],
-            ignore=details[12],
-            bike_type=details[13],
-            starting_speed=details[14],
-            version=details[15],
-            verified=details[17]
-        )
+        try:
+            details = self.dbms.get_time_details(time_id)
+            return render_template(
+                "Time.html",
+                steam_id=details[0],
+                steam_name=details[1],
+                timestamp=details[5],
+                time_id=details[6],
+                total_time=details[8],
+                trail_name=details[9],
+                world_name=details[10],
+                ignore=details[12],
+                bike_type=details[13],
+                starting_speed=details[14],
+                version=details[15],
+                verified=details[17]
+            )
+        except IndexError:
+            return "No time found!"
     
     def verify_time(self, time_id):
         if self.permission() == "AUTHORISED":
@@ -205,6 +208,18 @@ class Webserver():
                 self.discord_bot.loop.run_until_complete(
                     self.discord_bot.new_time(
                         f"Time {time_id} verified."
+                    )
+                )
+            except RuntimeError as e:
+                split_timer_logger.warning("Failed to submit time to discord server %s", e)
+            try:
+                details = self.dbms.get_time_details(time_id)
+                time_id=details[6],
+                total_time=details[8],
+                trail_name=details[9],
+                self.discord_bot.loop.run_until_complete(
+                    self.discord_bot.new_time(
+                        f"[Time](https://modkit.nohumanman.com/time/{time_id}) of {total_time} on {trail_name} verified!"
                     )
                 )
             except RuntimeError as e:
@@ -236,15 +251,15 @@ class Webserver():
             {
                 "id": player.steam_id,
                 "name": player.steam_name,
-                "steam_avatar_src": "",# player.get_avatar_src(),
+                "steam_avatar_src": "",#player.get_avatar_src(),
                 "reputation": player.reputation,
                 "total_time": "",#player.get_total_time(),
-                "time_on_world": "",# player.get_total_time(onWorld=True),
+                "time_on_world": "",#player.get_total_time(onWorld=True),
                 "world_name": player.world_name,
                 "last_trick": player.last_trick,
                 "version": player.version,
                 "bike_type": player.bike_type,
-                "address": (lambda: player.addr if self.permission() == "AUTHORISED" else "")()
+                "address": ""#(lambda: player.addr if self.permission() == "AUTHORISED" else "")()
             } for player in self.socket_server.players
         ]
         return jsonify({"players": player_json})
