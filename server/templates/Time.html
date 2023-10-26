@@ -1,4 +1,9 @@
 <html>
+    <head>
+        <meta property="og:image" content="/static/images/Descenders Competitive Logo.png">
+        <meta property="og:title" content="Time by {{steam_name}} ({{steam_id}})"/>
+        <meta property="og:description" content="Time on trail {{trail_name}} at {{total_time}} with version {{version}}" />
+    </head>
     <body>
         <h1>This is in beta. Don't complain.</h1>
         <table>
@@ -35,8 +40,8 @@
                 <td>{{world_name}}</td>
             </tr>
             <tr>
-                <th>Ignore</th>
-                <td>{{ignore}}</td>
+                <th>Ignored</th>
+                <td>{{ignore}} -> <a target="_blank" href="/ignore-time/{{time_id}}/True">ignore this time</a></td>
             </tr>
             <tr>
                 <th>Bike Type</th>
@@ -52,11 +57,7 @@
             </tr>
             <tr>
                 <th>Verified</th>
-                <td>{{verified}}</td>
-            </tr>
-            <tr>
-                <th>Verify it</th>
-                <td><a target="_blank" href="/verify_time/{{time_id}}">verify this time</a></td>
+                <td>{{verified}} - <a target="_blank" href="/verify_time/{{time_id}}">verify this time</a></td>
             </tr>
         </table>        
     </body>
