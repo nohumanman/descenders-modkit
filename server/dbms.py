@@ -181,21 +181,6 @@ class DBMS():
         split_times = [time[2] for time in times]
         return split_times
 
-    def log_rep(self, steam_id, rep):
-        statement = f'''
-            INSERT INTO Rep (
-                steam_id,
-                timestamp,
-                rep
-            )
-            VALUES (
-                "{steam_id}",
-                {time.time()},
-                "{rep}"
-            )
-            '''
-        self.execute_sql(statement, write=True)
-
     def get_ban_status(self, steam_id: str):
         resp = self.execute_sql(f'''
                 SELECT ban_type FROM Player
