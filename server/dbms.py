@@ -403,7 +403,7 @@ class DBMS():
             })
         return values
 
-    def get_leaderboard(self, trail_name, num=10) -> list:
+    def get_leaderboard(self, trail_name, num=10, steam_id="") -> list:
         statement = f'''
             SELECT
                 starting_speed,
@@ -438,6 +438,7 @@ class DBMS():
                 checkpoint_num = max_checkpoint
                 AND
                 (Time.ignore = "False" OR Time.ignore is NULL)
+                AND (Time.verified = "1" OR Time.steam_id = "{steam_id}")
             GROUP BY
                 trail_name,
                 Player.steam_id
