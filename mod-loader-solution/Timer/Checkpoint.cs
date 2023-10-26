@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using ModLoaderSolution;
 
@@ -20,6 +20,8 @@ namespace ModLoaderSolution
         }
         void OnTriggerEnter(Collider other)
         {
+            if (Utilities.instance.isInReplayMode())
+                return;
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human" && doesWork)
             {
                 Debug.Log("SplitTimer.Checkpoint | Checkpoint '" + this.name + "' Entered");
