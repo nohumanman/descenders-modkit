@@ -217,7 +217,16 @@ class TrailTimer():
                 str(self.network_player.version),
                 self.total_running_penalty
             )
-            fastest = DBMS.get_fastest_split_times(self.trail_name)
+            self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
+            self.network_player.send(
+                "TIMER_FINISH|"
+                + str(
+                    TrailTimer.secs_to_str(
+                            self.times[len(self.times)-1]
+                    )
+                )
+            )
+            fastest = self.network_player.dbms.get_fastest_split_times(self.trail_name)
             try:
                 our_time = TrailTimer.secs_to_str(
                     self.times[len(self.times)-1]
@@ -240,25 +249,7 @@ class TrailTimer():
                     split_timer_logger.warning("Failed to submit time to discord server %s", e)
             except (IndexError, KeyError) as e:
                 logging.error("Fastest not found: %s", e)
-            DBMS.submit_locations(time_id, self.player_positions)
-            penalty_message = ""
-            if self.total_running_penalty == 0:
-                penalty_message = "\\nNo penalties :)"
-            else:
-                penalty_message = (
-                    "\\nPenalty of "
-                    + str(round(self.total_running_penalty * 100) / 100)
-                )
-            self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
-            self.network_player.send(
-                "TIMER_FINISH|"
-                + str(
-                    TrailTimer.secs_to_str(
-                            self.times[len(self.times)-1]
-                    )
-                )
-                + penalty_message
-            )
+            self.network_player.dbms.submit_locations(time_id, self.player_positions)
         else:
             self.invalidate_timer("Didn't enter all checkpoints.", always=True)
         self.update_leaderboards()
