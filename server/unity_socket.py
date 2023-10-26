@@ -170,7 +170,7 @@ class UnitySocket():
                     "verified": leaderboard["verified"],
                 }
                 for leaderboard in self.dbms.get_leaderboard(
-                    trail_name
+                    trail_name, steam_id=self.steam_id
                 )
             ]
         )
