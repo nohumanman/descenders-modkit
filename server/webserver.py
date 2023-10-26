@@ -205,21 +205,14 @@ class Webserver():
         if self.permission() == "AUTHORISED":
             self.dbms.verify_time(time_id)
             try:
-                self.discord_bot.loop.run_until_complete(
-                    self.discord_bot.new_time(
-                        f"Time {time_id} verified."
-                    )
-                )
-            except RuntimeError as e:
-                split_timer_logger.warning("Failed to submit time to discord server %s", e)
-            try:
                 details = self.dbms.get_time_details(time_id)
-                time_id=details[6],
-                total_time=details[8],
-                trail_name=details[9],
+                steam_name = details[1]
+                time_id=details[6]
+                total_time=details[8]
+                trail_name=details[9]
                 self.discord_bot.loop.run_until_complete(
                     self.discord_bot.new_time(
-                        f"[Time](https://modkit.nohumanman.com/time/{time_id}) of {total_time} on {trail_name} verified!"
+                        f"[Time](https://modkit.nohumanman.com/time/{time_id}) by {steam_name} of {total_time} on {trail_name} is verified."
                     )
                 )
             except RuntimeError as e:
