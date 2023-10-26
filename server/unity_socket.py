@@ -136,7 +136,6 @@ class UnitySocket():
             self.reputation = int(reputation)
         except ValueError:
             pass
-        self.dbms.log_rep(self.steam_id, self.reputation)
 
     def start_speed(self, starting_speed: float):
         split_timer_logger.info("Start speed of id%s '%s' is %s", self.steam_id, self.steam_name, starting_speed)
@@ -262,7 +261,7 @@ class UnitySocket():
                 player.steam_id == self.steam_id
                 and self is not player
             ):
-                logging.warning("id%s '%s' - duplicate steam id!", self.steam_name, self.steam_id)
+                logging.warning("id%s '%s' - duplicate steam id!", self.steam_id, self.steam_name)
                 self.parent.players.remove(player)
                 del(player)
         if self.steam_id == "OFFLINE" or self.steam_id == "":
@@ -271,7 +270,7 @@ class UnitySocket():
         for banned_name in banned_names:
             if (self.steam_name.lower() == banned_name):
                 self.ban("ILLEGAL")
-        ban_type = DBMS.get_ban_status(self.steam_id)
+        ban_type = self.dbms.get_ban_status(self.steam_id)
         if ban_type == "CLOSE":
             self.ban("CLOSE")
         elif ban_type == "CRASH":
@@ -309,7 +308,8 @@ class UnitySocket():
         try:
             self.conn.sendall((data + "\n").encode())
         except OSError:
-            split_timer_logger.error("id%s '%s' - Failed to send '%s' to client!", self.steam_id, self.steam_name, data)
+            split_timer_logger.error("id%s '%s' - Failed to send '%s' to client! Deleting self.", self.steam_id, self.steam_name, data)
+            del(self)
 
     def send_all(self, data: str):
         split_timer_logger.info("id%s '%s' is sending to all the data '%s''", self.steam_id, self.steam_name, data)
@@ -331,7 +331,6 @@ class UnitySocket():
             except ConnectionResetError:
                 split_timer_logger.warning("id%s '%s' has disconnected due to ConnectionResetError", self.steam_id, self.steam_name)
                 break
-            # if data is too big
             except OSError:
                 split_timer_logger.warning("id%s '%s' has disconnected due to OSError", self.steam_id, self.steam_name)
                 break

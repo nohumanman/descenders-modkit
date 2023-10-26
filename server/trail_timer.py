@@ -105,7 +105,7 @@ class TrailTimer():
         if self.started:
             self.times.append(float(client_time) + self.total_running_penalty)
             self.current_penalty = 0
-            fastest = DBMS.get_fastest_split_times(self.trail_name)
+            fastest = self.network_player.dbms.get_fastest_split_times(self.trail_name)
             try:
                 time_diff = (
                     fastest[len(self.times)-1]
@@ -129,7 +129,7 @@ class TrailTimer():
             if time_diff != 0:
                 mess += " WR"
 
-            fastest = DBMS.get_personal_fastest_split_times(
+            fastest = self.network_player.dbms.get_personal_fastest_split_times(
                 self.trail_name,
                 self.network_player.steam_id
             )
@@ -206,7 +206,7 @@ class TrailTimer():
         self.time_ended = client_time
         if (len(self.times) == self.total_checkpoints-1):
             split_timer_logger.info("id%s '%s' submitting times '%s'", self.network_player.steam_id, self.network_player.steam_name, self.times)
-            time_id = DBMS().submit_time(
+            time_id = self.network_player.dbms.submit_time(
                 self.network_player.steam_id,
                 self.times,
                 self.trail_name,
