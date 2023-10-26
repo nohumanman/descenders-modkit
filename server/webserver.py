@@ -31,7 +31,8 @@ class WebserverRoute():
 
 
 class Webserver():
-    def __init__(self, socket_server: UnitySocketServer):
+    def __init__(self, socket_server: UnitySocketServer, dbms : DBMS):
+        self.dbms = dbms
         self.webserver_app = Flask(__name__)
         self.webserver_app.config['SECRET_KEY'] = OAUTH2_CLIENT_SECRET
         self.socket_server = socket_server
@@ -180,7 +181,7 @@ class Webserver():
             return "FAILED - NOT VALID PERMISSIONS!", 401
 
     def time_details(self, time_id):
-        details = DBMS.get_time_details(time_id)
+        details = self.dbms.get_time_details(time_id)
         return render_template(
             "Time.html",
             steam_id=details[0],
@@ -199,7 +200,7 @@ class Webserver():
     
     def verify_time(self, time_id):
         if self.permission() == "AUTHORISED":
-            DBMS.verify_time(time_id)
+            self.dbms.verify_time(time_id)
             try:
                 self.discord_bot.loop.run_until_complete(
                     self.discord_bot.new_time(
@@ -249,12 +250,12 @@ class Webserver():
         return jsonify({"players": player_json})
 
     def get_trails(self):
-        return jsonify({"trails": DBMS.get_trails()})
+        return jsonify({"trails": self.dbms.get_trails()})
 
     def ignore_time(self, time_id : int, value: str):
         if self.permission() == "AUTHORISED":
             # value should be 'False' or 'True
-            DBMS.set_ignore_time(time_id, value)
+            self.dbms.set_ignore_time(time_id, value)
             return "success"
         else:
             return "INVALID_PERMS"
@@ -267,7 +268,7 @@ class Webserver():
         return "Success"
 
     def get_worlds(self):
-        return jsonify({"worlds": DBMS.get_worlds()})
+        return jsonify({"worlds": self.dbms.get_worlds()})
 
     def concurrency(self):
         from datetime import datetime
@@ -275,7 +276,7 @@ class Webserver():
         if map_name == "":
             map_name = None
         return jsonify({
-            "concurrency": DBMS.get_daily_plays(
+            "concurrency": self.dbms.get_daily_plays(
                 map_name,
                 datetime(2022, 5, 1),
                 datetime.now()
@@ -287,7 +288,7 @@ class Webserver():
             return "UNKNOWN"
         discord = self.make_session(token=session.get('oauth2_token'))
         user = discord.get(API_BASE_URL + '/users/@me').json()
-        if user["id"] in [str(x[0]) for x in DBMS.get_valid_ids()]:
+        if user["id"] in [str(x[0]) for x in self.dbms.get_valid_ids()]:
             return "AUTHORISED"
         return "UNAUTHORISED"
 
@@ -349,7 +350,7 @@ class Webserver():
                             steam_id = connection['id']
                 except KeyError:
                     logging.info("Steam ID Not Found")
-                DBMS.discord_login(user_id, username, email, steam_id)
+                self.dbms.discord_login(user_id, username, email, steam_id)
             except (IndexError, KeyError) as e:
                 logging.info("User %s with error %s", user, str(e))
             return redirect("/")
@@ -412,7 +413,7 @@ class Webserver():
         timestamp = float(request.args.get("timestamp"))
         trail_name = request.args.get("trail_name")
         return jsonify(
-            DBMS.get_times_after_timestamp(
+            self.dbms.get_times_after_timestamp(
                 timestamp,
                 trail_name
             )
@@ -425,11 +426,11 @@ class Webserver():
             return redirect("/")
 
     def get_leaderboard_trail(self, trail):
-        return jsonify(DBMS().get_leaderboard(trail))
+        return jsonify(self.dbms.get_leaderboard(trail))
 
     def get_all_times(self):
         lim = int(request.args.get("lim"))
-        return jsonify({"times": DBMS.get_all_times(lim)})
+        return jsonify({"times": self.dbms.get_all_times(lim)})
 
     def get_spectated(self):
         for player in self.socket_server.players:

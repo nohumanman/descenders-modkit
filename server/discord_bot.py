@@ -24,8 +24,9 @@ def posh_time(seconds):
 
 class DiscordBot(commands.Bot):
     """ DiscordBot class used to create discord bot instance """
-    def __init__(self, discord_token, command_prefix, socket_server):
+    def __init__(self, discord_token, command_prefix, socket_server, dbms : DBMS):
         super().__init__(command_prefix, intents=discord.Intents().all())
+        self.dbms = dbms
         self.command_prefix = command_prefix
         self.queue = {}
         self.socket_server = socket_server
@@ -105,14 +106,14 @@ class DiscordBot(commands.Bot):
             self.time_of_last_lux_request = time.time()
         if message.content.startswith(self.command_prefix + "inspect"):
             time_id = message.content.split(" ")[1]
-            split_times = DBMS().get_split_times(time_id)
+            split_times = self.dbms.get_split_times(time_id)
             out = "__Inspection of " + time_id + "__\n\n"
             for i, split_time in enumerate(split_times):
                 out += f"Checkpoint {i+1}: {str(split_time)}\n"
             await message.channel.send(out)
-            out = f"{time_id} had a penalty of {DBMS.get_penalty(time_id)}\n"
+            out = f"{time_id} had a penalty of {self.dbms.get_penalty(time_id)}\n"
             await message.channel.send(out)
-            out = f"{time_id} was on version {DBMS.get_version(time_id)}\n"
+            out = f"{time_id} was on version {self.dbms.get_version(time_id)}\n"
             await message.channel.send(out)
             out = (
                 "Replay should be found at "
@@ -120,7 +121,7 @@ class DiscordBot(commands.Bot):
                 )
             await message.channel.send(out)
         if message.content.startswith(self.command_prefix + "totaltime"):
-            total_times = DBMS.get_total_times()
+            total_times = self.dbms.get_total_times()
             text = ""
             i = 1
             for total_time in total_times:
@@ -137,7 +138,7 @@ class DiscordBot(commands.Bot):
                     "Sorry - too many players to display!"
                 )
         if message.author.id in [id for id in self.queue]:
-            leaderboard = DBMS.get_leaderboard(
+            leaderboard = self.dbms.get_leaderboard(
                 message.content,
                 self.queue[message.author.id]
             )
@@ -180,8 +181,8 @@ class DiscordBot(commands.Bot):
                 ]
             except IndexError:
                 player_name = "nohumanman"
-            stats = DBMS.get_player_stats(
-                DBMS.get_id_from_name(player_name)
+            stats = self.dbms.get_player_stats(
+                self.dbms.get_id_from_name(player_name)
             )[0]
             embed = discord.Embed()
             embed.add_field(name="Current rep", value=stats[2])
