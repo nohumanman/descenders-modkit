@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using ModLoaderSolution;
 
@@ -28,6 +28,7 @@ namespace ModLoaderSolution
                 
                 if (this.checkpointType == CheckpointType.Start)
                 {
+                    Utilities.instance.RestartReplay();
                     NetClient.Instance.SendData("START_SPEED|" + PlayerManagement.Instance.speed);
                     SplitTimerText.Instance.RestartTimer();
                     //NetClient.Instance.gameObject.GetComponent<Utilities>().SetVel(5);
