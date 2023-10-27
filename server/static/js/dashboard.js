@@ -91,6 +91,7 @@ var app = new Vue({
         GetTrails(){
             $.get("/get-trails", function(data){
                 app.trails = data["trails"];
+                app.trails.sort(function(a, b){return a.world_name-b.world_name});
             })
         },
         UpdateTimeIgnore(time){
