@@ -285,7 +285,7 @@
                             <br>
                             <v-row>
                                 <v-col v-for="trail in trails" style="padding:30px;">
-                                    <v-card width="400" color="teal">
+                                    <v-card width="400" :color="colorFromNameUsingHash(trail.world_name)">
                                         <v-img :src="trail.src">
                                             <div style="background:rgba(0, 0, 0, 0.543);">
                                                 <v-col align="center" style="text-align:center;">
