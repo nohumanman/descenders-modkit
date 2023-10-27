@@ -197,7 +197,7 @@ class UnitySocket():
                     )
                     ])
                 return leaderboard_json
-        return {}
+        return [{"place": 1, "time": 0, "name": f"No times", "verified": "1", "pen": 0}]
 
     def get_total_time(self, onWorld=False):
         if onWorld:
