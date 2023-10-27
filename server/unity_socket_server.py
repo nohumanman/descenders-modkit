@@ -3,6 +3,7 @@ import socket
 import threading
 import logging
 from unity_socket import UnitySocket
+from dbms import DBMS
 
 class PlayerNotFound(Exception):
     """ Exception called when the descenders unity client could not be found """
@@ -10,9 +11,10 @@ class PlayerNotFound(Exception):
 
 class UnitySocketServer():
     """ Used to communicate quickly with the Descenders Unity client. """
-    def __init__(self, ip: str, port: int):
+    def __init__(self, ip: str, port: int, dbms: DBMS):
         self.host = ip
         self.port = port
+        self.dbms = dbms
         self.discord_bot = None
         self.players = []
 

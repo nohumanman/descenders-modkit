@@ -105,7 +105,7 @@ class TrailTimer():
         if self.started:
             self.times.append(float(client_time) + self.total_running_penalty)
             self.current_penalty = 0
-            fastest = DBMS.get_fastest_split_times(self.trail_name)
+            fastest = self.network_player.dbms.get_fastest_split_times(self.trail_name)
             try:
                 time_diff = (
                     fastest[len(self.times)-1]
@@ -129,7 +129,7 @@ class TrailTimer():
             if time_diff != 0:
                 mess += " WR"
 
-            fastest = DBMS.get_personal_fastest_split_times(
+            fastest = self.network_player.dbms.get_personal_fastest_split_times(
                 self.trail_name,
                 self.network_player.steam_id
             )
@@ -206,7 +206,7 @@ class TrailTimer():
         self.time_ended = client_time
         if (len(self.times) == self.total_checkpoints-1):
             split_timer_logger.info("id%s '%s' submitting times '%s'", self.network_player.steam_id, self.network_player.steam_name, self.times)
-            time_id = DBMS().submit_time(
+            time_id = self.network_player.dbms.submit_time(
                 self.network_player.steam_id,
                 self.times,
                 self.trail_name,
@@ -217,38 +217,6 @@ class TrailTimer():
                 str(self.network_player.version),
                 self.total_running_penalty
             )
-            fastest = DBMS.get_fastest_split_times(self.trail_name)
-            try:
-                our_time = TrailTimer.secs_to_str(
-                    self.times[len(self.times)-1]
-                )
-                if self.times[len(self.times)-1] < fastest[len(fastest)-1]:
-                    self.__new_fastest_time(our_time)
-                try:
-                    discord_bot = self.network_player.parent.discord_bot
-                    discord_bot.loop.run_until_complete(
-                        discord_bot.new_time(
-                            f"<@&1166081385732259941> Please verify [the new time](https://split-timer.nohumanman.com/time/{time_id}) on '"
-                            + self.trail_name
-                            + "' by '"
-                            + self.network_player.steam_name
-                            + "' of "
-                            + our_time
-                        )
-                    )
-                except RuntimeError as e:
-                    split_timer_logger.warning("Failed to submit time to discord server %s", e)
-            except (IndexError, KeyError) as e:
-                logging.error("Fastest not found: %s", e)
-            DBMS.submit_locations(time_id, self.player_positions)
-            penalty_message = ""
-            if self.total_running_penalty == 0:
-                penalty_message = "\\nNo penalties :)"
-            else:
-                penalty_message = (
-                    "\\nPenalty of "
-                    + str(round(self.total_running_penalty * 100) / 100)
-                )
             self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
             self.network_player.send(
                 "TIMER_FINISH|"
@@ -257,8 +225,52 @@ class TrailTimer():
                             self.times[len(self.times)-1]
                     )
                 )
-                + penalty_message
             )
+            fastest = self.network_player.dbms.get_fastest_split_times(self.trail_name)
+            try:
+                our_time = TrailTimer.secs_to_str(
+                    self.times[len(self.times)-1]
+                )
+                if self.times[len(self.times)-1] < fastest[len(fastest)-1]:
+                    self.__new_fastest_time(our_time)
+                try:
+                    fastest = self.network_player.dbms.get_personal_fastest_split_times(
+                        self.trail_name,
+                        self.network_player.steam_id
+                    )
+                    try:
+                        fastest_pb = fastest[len(self.times)-1]
+                    except IndexError:
+                        fastest_pb = -1
+                    if (self.times[len(self.times)-1] <= fastest_pb or fastest_pb == -1):
+                        discord_bot = self.network_player.parent.discord_bot
+                        discord_bot.loop.run_until_complete(
+                            discord_bot.new_time(
+                                f"<@&1166081385732259941> Please verify [the new **fastest** time](https://split-timer.nohumanman.com/time/{time_id}) on '"
+                                + self.trail_name
+                                + "' by '"
+                                + self.network_player.steam_name
+                                + "' of "
+                                + our_time
+                            )
+                        )
+                    else:
+                        discord_bot = self.network_player.parent.discord_bot
+                        discord_bot.loop.run_until_complete(
+                            discord_bot.new_time(
+                                f"||(debug message: [new **non-fastest** time](https://split-timer.nohumanman.com/time/{time_id}) on '"
+                                + self.trail_name
+                                + "' by '"
+                                + self.network_player.steam_name
+                                + "' of "
+                                + our_time + "||"
+                            )
+                        )
+                except RuntimeError as e:
+                    split_timer_logger.warning("Failed to submit time to discord server %s", e)
+            except (IndexError, KeyError) as e:
+                logging.error("Fastest not found: %s", e)
+            self.network_player.dbms.submit_locations(time_id, self.player_positions)
         else:
             self.invalidate_timer("Didn't enter all checkpoints.", always=True)
         self.update_leaderboards()

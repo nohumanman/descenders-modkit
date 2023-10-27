@@ -11,33 +11,32 @@ def daterange(start_date, end_date):
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
-
 class DBMS():
-    @staticmethod
-    def execute_sql(statement: str, write=False):
-        con = sqlite3.connect(script_path + "/SplitTimer.db")
-        cur = con.cursor()
+    def __init__(self):
+        self.con = None
+
+    def execute_sql(self, statement: str, write=False):
+        if self.con is None:
+            self.con = sqlite3.connect(script_path + "/SplitTimer.db", check_same_thread=False)
+        cur = self.con.cursor()
         try:
             execution = cur.execute(statement)
         except sqlite3.OperationalError:
             return []
         if write:
-            con.commit()
+            self.con.commit()
         result = execution.fetchall()
-        con.close()
         return result
 
-    @staticmethod
-    def get_id_from_name(steam_name):
-        return DBMS.execute_sql(
+    def get_id_from_name(self, steam_name):
+        return self.execute_sql(
             f'''
             SELECT Player.steam_id
             FROM Player
             WHERE Player.steam_name = "{steam_name}"'''
         )[0][0]
 
-    @staticmethod
-    def get_player_stats(steam_id):
+    def get_player_stats(self, steam_id):
         statement = f'''
             SELECT
                 Player.steam_id,
@@ -71,18 +70,16 @@ class DBMS():
             WHERE Player.steam_id = "{steam_id}"
             GROUP BY Rep.steam_id
         '''
-        return DBMS.execute_sql(statement)
+        return self.execute_sql(statement)
 
-    @staticmethod
-    def get_webhooks(trail_name):
-        return DBMS.execute_sql(
+    def get_webhooks(self, trail_name):
+        return self.execute_sql(
             "SELECT webhook_url FROM webhooks"
             f" WHERE trail_name = '{trail_name}'"
         )
 
-    @staticmethod
-    def update_player(steam_id, steam_name, avatar_src):
-        DBMS.execute_sql(
+    def update_player(self, steam_id, steam_name, avatar_src):
+        self.execute_sql(
             f'''
             REPLACE INTO Player (
                 steam_id,
@@ -105,8 +102,7 @@ class DBMS():
             ''', write=True
         )
 
-    @staticmethod
-    def get_personal_fastest_split_times(trail_name, steam_id):
+    def get_personal_fastest_split_times(self, trail_name, steam_id):
         statement = f'''
             SELECT
                 SplitTime.time_id,
@@ -125,12 +121,12 @@ class DBMS():
             ORDER BY checkpoint_num DESC, checkpoint_time ASC
             LIMIT 1
             '''
-        time_id = DBMS.execute_sql(statement)
+        time_id = self.execute_sql(statement)
         try:
             fastest_time_on_trail_id = time_id[0][0]
         except IndexError:
             return []
-        times = DBMS.execute_sql(
+        times = self.execute_sql(
             f'''
             SELECT
                 *
@@ -145,8 +141,7 @@ class DBMS():
         split_times = [time[2] for time in times]
         return split_times
 
-    @staticmethod
-    def get_fastest_split_times(
+    def get_fastest_split_times(self,
         trail_name
     ):
         statement = f'''
@@ -166,12 +161,12 @@ class DBMS():
             ORDER BY checkpoint_num DESC, checkpoint_time ASC
             LIMIT 1
             '''
-        time_id = DBMS.execute_sql(statement)
+        time_id = self.execute_sql(statement)
         try:
             fastest_time_on_trail_id = time_id[0][0]
         except IndexError:
             return []
-        times = DBMS.execute_sql(
+        times = self.execute_sql(
             f'''
             SELECT
                 *
@@ -186,25 +181,8 @@ class DBMS():
         split_times = [time[2] for time in times]
         return split_times
 
-    @staticmethod
-    def log_rep(steam_id, rep):
-        statement = f'''
-            INSERT INTO Rep (
-                steam_id,
-                timestamp,
-                rep
-            )
-            VALUES (
-                "{steam_id}",
-                {time.time()},
-                "{rep}"
-            )
-            '''
-        DBMS.execute_sql(statement, write=True)
-
-    @staticmethod
-    def get_ban_status(steam_id: str):
-        resp = DBMS.execute_sql(f'''
+    def get_ban_status(self, steam_id: str):
+        resp = self.execute_sql(f'''
                 SELECT ban_type FROM Player
                 WHERE steam_id = "{steam_id}"
             ''')
@@ -213,9 +191,8 @@ class DBMS():
         except IndexError:
             return ""
 
-    @staticmethod
-    def get_valid_ids():
-        return DBMS.execute_sql('''
+    def get_valid_ids(self):
+        return self.execute_sql('''
             SELECT
                 discord_id
             FROM
@@ -224,19 +201,17 @@ class DBMS():
                 valid = "TRUE"
             ''')
 
-    @staticmethod
-    def get_steam_id(discord_id):
+    def get_steam_id(self, discord_id):
         statement = f'''
             SELECT steam_id FROM
             User where discord_id = "{discord_id}"
         '''
         try:
-            return DBMS().execute_sql(statement, write=True)[0][0]
+            return self.execute_sql(statement, write=True)[0][0]
         except IndexError:
             return None
 
-    @staticmethod
-    def submit_steam_id(discord_id, steam_id):
+    def submit_steam_id(self, discord_id, steam_id):
         statement = f'''
             INSERT INTO PlayerAliases
             VALUES (
@@ -245,38 +220,35 @@ class DBMS():
                 "{steam_id}"
             )
         '''
-        DBMS.execute_sql(statement, write=True)
+        self.execute_sql(statement, write=True)
 
-    @staticmethod
-    def submit_alias(steam_id, alias):
+    def submit_alias(self, steam_id, alias):
         statement = f'''
             SELECT alias
                 FROM PlayerAliases
             WHERE steam_id = {steam_id}
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         if alias not in [alias_result[0] for alias_result in result]:
             statement = f'''
                 INSERT INTO PlayerAliases
                 VALUES ({steam_id}, "{alias}")
             '''
-            DBMS.execute_sql(statement, write=True)
+            self.execute_sql(statement, write=True)
 
-    @staticmethod
-    def get_player_name(steam_id):
+    def get_player_name(self, steam_id):
         statement = f'''
             SELECT steam_name
                 FROM Player
             WHERE steam_id = {steam_id}
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         try:
             return result[0][0]
         except IndexError:
             return ""
 
-    @staticmethod
-    def get_time_details(time_id: str):
+    def get_time_details(self, time_id: str):
         statement = f'''
         SELECT
             *
@@ -285,11 +257,10 @@ class DBMS():
         WHERE
             all_times.time_id = "{time_id}"
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         return result[0]
 
-    @staticmethod
-    def get_times_after_timestamp(timestamp: float, trail_name: str):
+    def get_times_after_timestamp(self, timestamp: float, trail_name: str):
         statement = f'''
             SELECT
                 starting_speed,
@@ -315,16 +286,15 @@ class DBMS():
             ORDER BY
                 checkpoint_time ASC
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         return result
 
-    @staticmethod
-    def get_all_times(lim: int):
+    def get_all_times(self, lim: int):
         statement = f'''
             SELECT * FROM all_times
             LIMIT {lim}
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         return [
             {
 
@@ -348,19 +318,17 @@ class DBMS():
             for time in result
         ]
 
-    @staticmethod
-    def get_all_players():
+    def get_all_players(self):
         statement = '''
             SELECT Player.steam_id, Player.steam_name, Player.avatar_src, Rep.rep, max(Rep.timestamp) as rep_timestamp FROM Player
             INNER JOIN Rep on Rep.steam_id = Player.steam_id
             GROUP BY Player.steam_id
             ORDER BY Player.steam_name ASC
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         return result
 
-    @staticmethod
-    def submit_locations(time_id, locations):
+    def submit_locations(self, time_id, locations):
         for location in locations:
             timestamp = location[0]
             x = location[1][0]
@@ -374,40 +342,37 @@ class DBMS():
                     {x}, {y}, {z}
                 )
             '''
-            DBMS.execute_sql(statement, write=True)
+            self.execute_sql(statement, write=True)
 
-    @staticmethod
-    def get_start_bike(world_name: str):
+    def get_start_bike(self, world_name: str):
         statement = f'''
             SELECT start_bike
             FROM WorldInfo
             WHERE
                 world_name="{world_name}"
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         if len(result) < 1:
             return None
         return result[0][0]
 
-    @staticmethod
-    def get_trails():
+    def get_trails(self):
         return [{
             "trail_name": trail[0],
             "world_name": trail[1],
             "times_ridden": trail[2],
-            "leaderboard": DBMS.get_leaderboard(trail[0]),
+            "leaderboard": self.get_leaderboard(trail[0]),
             "average_start_speed": trail[3],
             "src": trail[4]
-        } for trail in DBMS.execute_sql('''SELECT * FROM TrailInfo''')]
+        } for trail in self.execute_sql('''SELECT * FROM TrailInfo''')]
 
-    @staticmethod
-    def get_worlds():
-        return [world[0] for world in DBMS.execute_sql(
+    def get_worlds(self):
+        return [world[0] for world in self.execute_sql(
             '''SELECT world_name FROM Session GROUP BY world_name'''
         )]
 
-    @staticmethod
     def get_daily_plays(
+        self,
         map_name: str,
         date_start: datetime,
         date_end: datetime
@@ -428,7 +393,7 @@ class DBMS():
             if map_name is not None:
                 statement += f' AND world_name = "{map_name}"'
             statement += ") GROUP BY steam_id"
-            sessions = DBMS.execute_sql(statement)
+            sessions = self.execute_sql(statement)
             values.append({
                 "year": now.year,
                 "month": now.month,
@@ -438,8 +403,7 @@ class DBMS():
             })
         return values
 
-    @staticmethod
-    def get_leaderboard(trail_name, num=10) -> list:
+    def get_leaderboard(self, trail_name, num=10, steam_id="") -> list:
         statement = f'''
             SELECT
                 starting_speed,
@@ -474,6 +438,7 @@ class DBMS():
                 checkpoint_num = max_checkpoint
                 AND
                 (Time.ignore = "False" OR Time.ignore is NULL)
+                AND (Time.verified = "1" OR Time.steam_id = "{steam_id}")
             GROUP BY
                 trail_name,
                 Player.steam_id
@@ -481,7 +446,7 @@ class DBMS():
                 checkpoint_time ASC
             LIMIT {num}
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         return [
             {
                 "place": i + 1,
@@ -497,20 +462,18 @@ class DBMS():
             for i, time in enumerate(result)
         ]
 
-    @staticmethod
-    def max_start_time(trail_time: str) -> float:
+    def max_start_time(self, trail_time: str) -> float:
         statement = f'''
             SELECT max_starting_time FROM TrailStartTime
             WHERE trail_name = "{trail_time}"
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         try:
             return float(result[0][0])
         except IndexError:
             return 50
 
-    @staticmethod
-    def set_ignore_time(time_id, val):
+    def set_ignore_time(self, time_id, val):
         statement = f'''
             UPDATE Time
             SET
@@ -518,10 +481,9 @@ class DBMS():
             WHERE
                 time_id = {time_id}
         '''
-        DBMS.execute_sql(statement, write=True)
+        self.execute_sql(statement, write=True)
 
-    @staticmethod
-    def set_monitored(time_id, val):
+    def set_monitored(self, time_id, val):
         statement = f'''
             UPDATE Time
             SET
@@ -529,32 +491,29 @@ class DBMS():
             WHERE
                 time_id = {time_id}
         '''
-        DBMS.execute_sql(statement, write=True)
+        self.execute_sql(statement, write=True)
 
-    @staticmethod
-    def get_avatar(steam_id):
+    def get_avatar(self, steam_id):
         statement = f'''
             SELECT avatar_src
                 FROM Player
             WHERE steam_id = {steam_id}
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         try:
             return result[0][0]
         except IndexError:
             return ""
 
-    @staticmethod
-    def submit_ip(steam_id, address, port):
+    def submit_ip(self, steam_id, address, port):
         timestamp = time.time()
         statement = f'''
             INSERT INTO IP (steam_id, timestamp, address, port)
             VALUES ({steam_id}, {timestamp}, "{address}", {port})
         '''
-        DBMS.execute_sql(statement, write=True)
+        self.execute_sql(statement, write=True)
 
-    @staticmethod
-    def get_archive():
+    def get_archive(self):
         statement = '''
             SELECT
                 sum(time_ended - time_started) AS total_time,
@@ -571,11 +530,10 @@ class DBMS():
             ORDER BY
                 total_time DESC
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         return result
 
-    @staticmethod
-    def discord_login(discord_id, discord_name, email, steam_id):
+    def discord_login(self, discord_id, discord_name, email, steam_id):
         statement = f'''
             INSERT OR IGNORE INTO User
             VALUES(
@@ -586,57 +544,52 @@ class DBMS():
                 "{email}"
             )
         '''
-        DBMS.execute_sql(statement, write=True)
+        self.execute_sql(statement, write=True)
 
-    @staticmethod
-    def get_penalty(time_id):
+    def get_penalty(self, time_id):
         statement = f'''
             SELECT penalty
             FROM Time
             WHERE time_id = "{time_id}"
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         return result[0][0]
 
-    @staticmethod
-    def get_version(time_id):
+    def get_version(self, time_id):
         statement = f'''
             SELECT version
             FROM Time
             WHERE time_id = "{time_id}"
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         return result[0][0]
 
-    @staticmethod
-    def get_total_times(limit=10):
+    def get_total_times(self, limit=10):
         statement = f'''
             SELECT * FROM TotalTime
             LIMIT {limit}
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         return result
 
-    @staticmethod
-    def get_time_on_world(steam_id, world="none"):
+    def get_time_on_world(self, steam_id, world="none"):
         statement = f'''
             SELECT sum(time_ended - time_started) AS total_time FROM Session
             WHERE steam_id = "{steam_id}"
         '''
         if world != "none":
             statement += f'''AND world_name = "{world}"'''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         if result[0][0] is None:
             return 0
         return result[0][0]
 
-    @staticmethod
-    def get_times_trail_ridden(trail_name):
+    def get_times_trail_ridden(self, trail_name):
         statement = f'''
             SELECT timestamp FROM Time
             WHERE trail_name = "{trail_name}"
         '''
-        timestamps = DBMS.execute_sql(statement)
+        timestamps = self.execute_sql(statement)
         return [stamp[0] for stamp in timestamps]
 
     def get_split_times(self, time_id):
@@ -645,12 +598,11 @@ class DBMS():
             WHERE time_id = "{time_id}"
             ORDER BY checkpoint_num
         '''
-        result = DBMS.execute_sql(statement)
+        result = self.execute_sql(statement)
         return [res[0] for res in result]
 
-    @staticmethod
-    def verify_time(time_id: str):
-        DBMS.execute_sql(
+    def verify_time(self, time_id: str):
+        self.execute_sql(
             f'''
                 UPDATE Time
                 SET verified = 1
@@ -659,8 +611,8 @@ class DBMS():
             write=True
         )
 
-    @staticmethod
     def submit_time(
+        self,
         steam_id: str,
         split_times,
         trail_name,
@@ -676,7 +628,7 @@ class DBMS():
             + str(steam_id)
             + str(time.time())
         )
-        DBMS.execute_sql(
+        self.execute_sql(
             f'''
             INSERT INTO Time (
                 steam_id, time_id, timestamp, world_name,
@@ -693,7 +645,7 @@ class DBMS():
             write=True
         )
         for n, split_time in enumerate(split_times):
-            DBMS.execute_sql(f'''
+            self.execute_sql(f'''
             INSERT INTO SplitTime (
                 time_id,
                 checkpoint_num,
@@ -707,9 +659,8 @@ class DBMS():
             ''', write=True)
         return time_id
 
-    @staticmethod
-    def end_session(steam_id, time_started, time_ended, world_name):
-        DBMS.execute_sql(
+    def end_session(self, steam_id, time_started, time_ended, world_name):
+        self.execute_sql(
             f'''
             INSERT INTO Session (
                 steam_id,
@@ -727,8 +678,7 @@ class DBMS():
             write=True
         )
 
-    @staticmethod
-    def get_medals(steam_id, trail_name):
+    def get_medals(self, steam_id, trail_name):
         x = f'''
             SELECT
                 starting_speed,
@@ -768,7 +718,7 @@ class DBMS():
             ORDER BY
                 checkpoint_time ASC
         '''
-        result = DBMS.execute_sql(x)
+        result = self.execute_sql(x)
         if len(result) == 0:
             return [False, False, False, False]
         y = f'''
@@ -780,7 +730,7 @@ class DBMS():
         gold_time = 0
         silver_time = 0
         bronze_time = 0
-        for medal in DBMS.execute_sql(y):
+        for medal in self.execute_sql(y):
             if medal[0] == "rainbow":
                 rainbow_time = float(medal[1])
             elif medal[0] == "gold":

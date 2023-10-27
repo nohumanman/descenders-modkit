@@ -8,6 +8,7 @@ from unity_socket_server import UnitySocketServer
 from discord_bot import DiscordBot
 from tokens import DISCORD_TOKEN
 from webserver import Webserver
+from dbms import DBMS
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -46,11 +47,14 @@ split_timer_logger.info(
 
 split_timer_logger.info("Main.py - instantiating UnitySocketServer()")
 
+dbms = DBMS()
+
 UNITY_SOCKET_IP = "0.0.0.0"
 UNITY_SOCKET_PORT = 65432
 unity_socket_server = UnitySocketServer(
     UNITY_SOCKET_IP,
-    UNITY_SOCKET_PORT
+    UNITY_SOCKET_PORT,
+    dbms
 )
 threading.Thread(target=unity_socket_server.start).start()
 
@@ -60,9 +64,9 @@ split_timer_logger.info("Main.py - instantiating Webserver()")
 
 WEBSITE_IP = "0.0.0.0"
 WEBSITE_PORT = 8080
-webserver = Webserver(unity_socket_server)
+webserver = Webserver(unity_socket_server, dbms)
 
-discord_bot = DiscordBot(DISCORD_TOKEN, "!", unity_socket_server)
+discord_bot = DiscordBot(DISCORD_TOKEN, "!", unity_socket_server, dbms)
 unity_socket_server.discord_bot = discord_bot
 SHOULD_RANDOMISE = True
 

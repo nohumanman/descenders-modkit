@@ -91,6 +91,7 @@ var app = new Vue({
         GetTrails(){
             $.get("/get-trails", function(data){
                 app.trails = data["trails"];
+                app.trails.sort(function(a, b){return a.world_name-b.world_name});
             })
         },
         UpdateTimeIgnore(time){
@@ -99,6 +100,17 @@ var app = new Vue({
                 if (text != "success")
                     time.ignore = app.InverseStringBool(time.ignore);
             });
+        },
+        colorFromNameUsingHash(name) {
+            // Simple hash function to generate a color based on the input name
+            const hashCode = name.split('').reduce((acc, char) => {
+                return char.charCodeAt(0) + acc;
+            }, 0);
+            
+            // Convert the hash code to a hexadecimal color value
+            const colorValue = `#${(hashCode & 0x00ffffff).toString(16)}`;
+            
+            return colorValue;
         },
         InverseStringBool(value){
             if (value == "True")

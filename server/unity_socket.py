@@ -87,6 +87,7 @@ class UnitySocket():
         self.addr = addr
         self.conn = conn
         self.parent = parent
+        self.dbms = parent.dbms
         self.trails = {}
         self.__avatar_src = None
         self.steam_id : str = None
@@ -135,13 +136,12 @@ class UnitySocket():
             self.reputation = int(reputation)
         except ValueError:
             pass
-        DBMS.log_rep(self.steam_id, self.reputation)
 
     def start_speed(self, starting_speed: float):
         split_timer_logger.info("Start speed of id%s '%s' is %s", self.steam_id, self.steam_name, starting_speed)
         for trail_name, trail in self.trails.items():
             trail.starting_speed = starting_speed
-            if starting_speed > DBMS.max_start_time(trail_name):
+            if starting_speed > self.dbms.max_start_time(trail_name):
                 trail.invalidate_timer(
                     "You went through the start too fast!"
                 )
@@ -169,8 +169,8 @@ class UnitySocket():
                     "bike": leaderboard["bike"],
                     "verified": leaderboard["verified"],
                 }
-                for leaderboard in DBMS.get_leaderboard(
-                    trail_name
+                for leaderboard in self.dbms.get_leaderboard(
+                    trail_name, steam_id=self.steam_id
                 )
             ]
         )
@@ -197,12 +197,12 @@ class UnitySocket():
                     )
                     ])
                 return leaderboard_json
-        return {}
+        return [{"place": 1, "time": 0, "name": f"No times", "verified": "1", "pen": 0}]
 
     def get_total_time(self, onWorld=False):
         if onWorld:
-            return DBMS.get_time_on_world(self.steam_id, self.world_name)
-        return DBMS.get_time_on_world(self.steam_id)
+            return self.dbms.get_time_on_world(self.steam_id, self.world_name)
+        return self.dbms.get_time_on_world(self.steam_id)
 
     def get_avatar_src(self):
         if self.__avatar_src is not None:
@@ -217,7 +217,7 @@ class UnitySocket():
             self.__avatar_src = avatar_src_req.json()[
                 "response"]["players"][0]["avatarfull"]
         except (IndexError, KeyError):
-            self.__avatar_src = DBMS().get_avatar(self.steam_id)
+            self.__avatar_src = self.dbms.get_avatar(self.steam_id)
         return self.__avatar_src
 
     def set_steam_name(self, steam_name):
@@ -255,13 +255,13 @@ class UnitySocket():
             split_timer_logger.error("Failed to send alert of ban!")
 
     def has_both_steam_name_and_id(self):
-        DBMS.submit_alias(self.steam_id, self.steam_name)
+        self.dbms.submit_alias(self.steam_id, self.steam_name)
         for player in self.parent.players:
             if (
                 player.steam_id == self.steam_id
                 and self is not player
             ):
-                logging.warning("id%s '%s' - duplicate steam id!", self.steam_name, self.steam_id)
+                logging.warning("id%s '%s' - duplicate steam id!", self.steam_id, self.steam_name)
                 self.parent.players.remove(player)
                 del(player)
         if self.steam_id == "OFFLINE" or self.steam_id == "":
@@ -270,7 +270,7 @@ class UnitySocket():
         for banned_name in banned_names:
             if (self.steam_name.lower() == banned_name):
                 self.ban("ILLEGAL")
-        ban_type = DBMS().get_ban_status(self.steam_id)
+        ban_type = self.dbms.get_ban_status(self.steam_id)
         if ban_type == "CLOSE":
             self.ban("CLOSE")
         elif ban_type == "CRASH":
@@ -286,7 +286,7 @@ class UnitySocket():
 
     def get_default_bike(self):
         if self.world_name is not None:
-            start_bike = DBMS().get_start_bike(self.world_name)
+            start_bike = self.dbms.get_start_bike(self.world_name)
             if (start_bike is None):
                 return "enduro"
             return start_bike
@@ -296,19 +296,20 @@ class UnitySocket():
     def set_world_name(self, world_name):
         split_timer_logger.info("id%s '%s' has set world name to '%s'", self.steam_id, self.steam_name, world_name)
         self.world_name = world_name
-        DBMS().update_player(
+        self.dbms.update_player(
             self.steam_id,
             self.steam_name,
             self.get_avatar_src()
         )
-        DBMS.submit_ip(self.steam_id, self.addr[0], self.addr[1])
+        self.dbms.submit_ip(self.steam_id, self.addr[0], self.addr[1])
 
     def send(self, data: str):
         split_timer_logger.info("id%s '%s' has been sent data '%s'", self.steam_id, self.steam_name, data)
         try:
             self.conn.sendall((data + "\n").encode())
         except OSError:
-            split_timer_logger.error("Failed to send to client!")
+            split_timer_logger.error("id%s '%s' - Failed to send '%s' to client! Deleting self.", self.steam_id, self.steam_name, data)
+            del(self)
 
     def send_all(self, data: str):
         split_timer_logger.info("id%s '%s' is sending to all the data '%s''", self.steam_id, self.steam_name, data)
@@ -330,10 +331,13 @@ class UnitySocket():
             except ConnectionResetError:
                 split_timer_logger.warning("id%s '%s' has disconnected due to ConnectionResetError", self.steam_id, self.steam_name)
                 break
-            # if data is too big
-            except OSError: pass
+            except OSError:
+                split_timer_logger.warning("id%s '%s' has disconnected due to OSError", self.steam_id, self.steam_name)
+                break
             # if data is finished
-            if not data: pass
+            if not data:
+                split_timer_logger.warning("id%s '%s' has disconnected due to empty data", self.steam_id, self.steam_name)
+                break
             for piece in data.decode().split("\n"):
                 self.handle_data(piece)
         del(self)
@@ -403,7 +407,7 @@ class UnitySocket():
     def on_map_exit(self):
         self.update_concurrent_users()
         self.trails = {}
-        DBMS.end_session(
+        self.dbms.end_session(
             self.steam_id,
             self.time_started,
             time.time(),
@@ -425,7 +429,7 @@ class UnitySocket():
 
     def get_medals(self, trail_name: str):
         split_timer_logger.info("id%s '%s' has fetched medals on trail '%s'", self.steam_id, self.steam_name, trail_name)
-        (rainbow, gold, silver, bronze) = DBMS.get_medals(
+        (rainbow, gold, silver, bronze) = self.dbms.get_medals(
             self.steam_id,
             trail_name
         )

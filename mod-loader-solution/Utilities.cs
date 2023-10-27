@@ -135,6 +135,11 @@ namespace ModLoaderSolution
         {
 
         }
+        public void RestartReplay()
+        {
+            Debug.Log("Utilities | RestartReplay()");
+            GameObject.Find("Player_Human").GetComponent<VehicleReplay>().SendMessage("StartRecord");
+        }
         public void SaveReplayToFile(string path)
         {
             string replayObfuscatedName = "Ym}\u0084upr";

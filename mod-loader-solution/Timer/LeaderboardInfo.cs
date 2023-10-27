@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -30,6 +30,11 @@ namespace ModLoaderSolution
         }
         public string LeaderboardAsString()
         {
+            if (pen == null)
+            {
+                pen = new float[name.Length];
+                verified = new string[name.Length];
+            }
             if (name == null || name.Length == 0)
                 return "";
             string leaderboardString = "";

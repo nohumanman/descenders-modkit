@@ -20,6 +20,8 @@ namespace ModLoaderSolution
         }
         void OnTriggerEnter(Collider other)
         {
+            if (Utilities.instance.isInReplayMode())
+                return;
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human" && doesWork)
             {
                 Debug.Log("SplitTimer.Checkpoint | Checkpoint '" + this.name + "' Entered");
@@ -28,6 +30,7 @@ namespace ModLoaderSolution
                 
                 if (this.checkpointType == CheckpointType.Start)
                 {
+                    Utilities.instance.RestartReplay();
                     NetClient.Instance.SendData("START_SPEED|" + PlayerManagement.Instance.speed);
                     SplitTimerText.Instance.RestartTimer();
                     //NetClient.Instance.gameObject.GetComponent<Utilities>().SetVel(5);
