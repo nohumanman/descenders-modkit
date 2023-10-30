@@ -285,18 +285,11 @@ class UnitySocket():
         self.dbms.submit_ip(self.steam_id, self.addr[0], self.addr[1])
 
     def send(self, data: str):
-        max_attempts = 5
-        attempts = 0
         split_timer_logger.info("id%s '%s' has been sent data '%s'", self.steam_id, self.steam_name, data)
-        while True:
-            try:
-                self.conn.sendall((data + "\n").encode())
-                break
-            except OSError:
-                pass
-            if attempts > max_attempts:
-                split_timer_logger.error("Failed to send messsage to %s", self.addr[0])
-                break
+        try:
+            self.conn.sendall((data + "\n").encode())
+        except OSError:
+            pass
 
     def send_all(self, data: str):
         split_timer_logger.info("id%s '%s' is sending to all the data '%s''", self.steam_id, self.steam_name, data)
@@ -318,7 +311,7 @@ class UnitySocket():
             except ConnectionResetError:
                 break
             except OSError:
-                break
+                pass
             if not data: # if data is finished
                 break
             for piece in data.decode().split("\n"):
