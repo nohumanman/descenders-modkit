@@ -83,7 +83,7 @@ class TrailTimer():
     def checkpoint(self, client_time: str):
         split_timer_logger.info("id%s '%s' entered checkpoint with client time %s", self.network_player.steam_id, self.network_player.steam_name, client_time)
         if self.started:
-            self.times.append(float(client_time) + self.total_running_penalty)
+            self.times.append(float(client_time))
             fastest = self.network_player.dbms.get_fastest_split_times(self.trail_name)
             try:
                 time_diff = (
