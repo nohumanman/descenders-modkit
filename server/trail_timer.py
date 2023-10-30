@@ -48,27 +48,10 @@ class TrailTimer():
         return self.__boundaries
 
     def add_boundary(self, boundary_guid):
-        if (
-            len(self.__boundaries) == 0
-            and not self.network_player.being_monitored
-        ):
-            if (self.started):
-                pass
-                #self.current_penalty = (time.time()-self.exit_time)*100
-                #if self.current_penalty < 2:
-                #    self.current_penalty = 2
-                # if self.current_penalty < 0.5:
-                #     self.current_penalty = 0
-                #self.total_running_penalty += self.current_penalty
-                #self.network_player.send(
-                #    f"SPLIT_TIME|penalty of "
-                #    f"~{round(self.current_penalty * 100) / 100}"
-                #)
-                self.network_player.set_text_default()
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
 
-    def remove_boundary(self, boundary_guid, boundry_obj_name):
+    def remove_boundary(self, boundary_guid):
         if boundary_guid in self.__boundaries:
             self.__boundaries.remove(boundary_guid)
         if (

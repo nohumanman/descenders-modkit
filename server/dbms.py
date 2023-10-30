@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 script_path = os.path.dirname(os.path.realpath(__file__))
 
 
-def daterange(start_date, end_date):
+def daterange(start_date: datetime, end_date: datetime):
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
 

@@ -77,7 +77,7 @@ class DiscordBot(commands.Bot):
                 split_timer_logger.info("Failed to change presence")
             self.changing_presence = False
 
-    async def on_message(self, message):
+    async def on_message(self = None, message = None): # none and none default to allow inheritance
         split_timer_logger.info("Message sent '%s'", message)
         if message.author == self.user:
             return
@@ -155,9 +155,6 @@ class DiscordBot(commands.Bot):
                     num = "🥉"
                 else:
                     num = TrailTimer.ord(i + 1)
-                bike = player["bike"]
-                version = player["version"]
-                penalty = player["penalty"]
                 verified = player["verified"] == "1"
                 if not verified: leaderboard_str += "||"
                 leaderboard_str += f"{num} - {time1} - {name}"

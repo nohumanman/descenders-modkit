@@ -1,4 +1,5 @@
 """ Used to manipulate socket connection """
+from typing import TYPE_CHECKING
 import socket
 import time
 import logging
@@ -9,9 +10,8 @@ import srcomapi
 import srcomapi.datatypes as dt
 from trail_timer import TrailTimer, Vector3
 from tokens import STEAM_API_KEY
-# for imports with intellisense
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
+
+if TYPE_CHECKING: # for imports with intellisense
     from unity_socket_server import UnitySocketServer
 
 script_path = os.path.dirname(os.path.realpath(__file__))
@@ -28,7 +28,7 @@ operations = {
     "BOUNDRY_ENTER":
         lambda netPlayer, data: netPlayer.on_boundry_enter(data[1], data[2]),
     "BOUNDRY_EXIT":
-        lambda netPlayer, data: netPlayer.on_boundry_exit(data[1], data[2], data[3]),
+        lambda netPlayer, data: netPlayer.on_boundry_exit(data[1], data[2]),
     "CHECKPOINT_ENTER":
         lambda netPlayer, data: netPlayer.on_checkpoint_enter(
             data[1],
@@ -200,7 +200,7 @@ class UnitySocket():
                     )
                     ])
                 return leaderboard_json
-        return [{"place": 1, "time": 0, "name": f"No times", "verified": "1", "pen": 0}]
+        return [{"place": 1, "time": 0, "name": "No times", "verified": "1", "pen": 0}]
 
     def get_total_time(self, onWorld=False):
         if onWorld:
@@ -357,9 +357,9 @@ class UnitySocket():
         trail = self.get_trail(trail_name)
         trail.add_boundary(boundry_guid)
 
-    def on_boundry_exit(self, trail_name: str, boundry_guid: str, boundry_obj_name: str):
+    def on_boundry_exit(self, trail_name: str, boundry_guid: str):
         trail = self.get_trail(trail_name)
-        trail.remove_boundary(boundry_guid, boundry_obj_name)
+        trail.remove_boundary(boundry_guid)
 
     def on_checkpoint_enter(
         self,
