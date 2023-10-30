@@ -47,6 +47,7 @@ class TrailTimer():
         if len(self.__boundaries) == 0 and self.started:
             # note we cannot verify this user instantly
             self.auto_verify = False
+            self.network_player.send("SPLIT_TIME|cuts detected, your time will be reviewed")
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
 
@@ -60,6 +61,7 @@ class TrailTimer():
             if (self.started):
                 # note we cannot verify this user instantly
                 self.auto_verify = False
+                self.network_player.send("SPLIT_TIME|cuts detected, your time will be reviewed")
 
     def start_timer(self, total_checkpoints: int):
         split_timer_logger.info("id%s '%s' started timer with checkpoints %s", self.network_player.steam_id, self.network_player.steam_name, total_checkpoints)
