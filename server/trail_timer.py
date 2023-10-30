@@ -1,9 +1,14 @@
+from typing import TYPE_CHECKING
 import time
 import logging
 
 # Used to fix RuntimeError in using async from thread
 import nest_asyncio
 nest_asyncio.apply()
+
+if TYPE_CHECKING: # for imports with intellisense
+    from unity_socket import UnitySocket
+
 
 split_timer_logger = logging.getLogger('DescendersSplitTimer')
 
@@ -29,8 +34,6 @@ class Vector3():
 class TrailTimer():
     def __init__(self, trail_name, network_player):
         self.trail_name = trail_name
-        # to prevent circular import
-        from unity_socket import UnitySocket
         self.network_player : UnitySocket = network_player
         self.started = False
         self.times = []
@@ -80,7 +83,7 @@ class TrailTimer():
     def checkpoint(self, client_time: str):
         split_timer_logger.info("id%s '%s' entered checkpoint with client time %s", self.network_player.steam_id, self.network_player.steam_name, client_time)
         if self.started:
-            self.times.append(float(client_time) + self.total_running_penalty)
+            self.times.append(float(client_time))
             fastest = self.network_player.dbms.get_fastest_split_times(self.trail_name)
             try:
                 time_diff = (

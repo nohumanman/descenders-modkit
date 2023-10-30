@@ -1,4 +1,5 @@
 # Descenders Modkit
+[![Python application](https://github.com/nohumanman/descenders-modkit/actions/workflows/python-app.yml/badge.svg)](https://github.com/nohumanman/descenders-modkit/actions/workflows/python-app.yml)
 
 This repository contains scripts, assets, and a server-controlled split timer to mod game [Descenders](https://store.steampowered.com/app/681280/Descenders/).
 
