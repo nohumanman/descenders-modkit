@@ -40,6 +40,7 @@ class UnitySocketServer():
         self.players.append(player)
         with conn:
             player.recieve()
+        logging.info("UnitySocketServer.py - Destroying client from addr %s", addr)
         self.players.remove(player)
         del(player)
 

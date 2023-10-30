@@ -310,14 +310,10 @@ class UnitySocket():
             try:
                 data = self.conn.recv(8192)
             except ConnectionResetError:
-                split_timer_logger.warning("id%s '%s' has disconnected due to ConnectionResetError", self.steam_id, self.steam_name)
                 break
             except OSError:
-                split_timer_logger.warning("id%s '%s' has disconnected due to OSError", self.steam_id, self.steam_name)
                 break
-            # if data is finished
-            if not data:
-                split_timer_logger.warning("id%s '%s' has disconnected due to empty data", self.steam_id, self.steam_name)
+            if not data: # if data is finished
                 break
             for piece in data.decode().split("\n"):
                 self.handle_data(piece)
