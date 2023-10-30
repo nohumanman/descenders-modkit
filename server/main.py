@@ -14,7 +14,7 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 
 # Prevent logging from outputting to stdout
 logging.basicConfig(
-    filename=script_path + '/SplitTimer.log',
+    filename=script_path + '/modkit.log',
     level=logging.WARNING,
     format=(
         '%(asctime)s - %(name)s\t - %(levelname)s\t'
@@ -23,7 +23,7 @@ logging.basicConfig(
 )
 
 os.chdir(script_path)
-log_location = script_path + "/SplitTimer.log"
+log_location = script_path + "/modkit.log"
 
 split_timer_logger = logging.getLogger('DescendersSplitTimer')
 split_timer_logger.setLevel(logging.WARNING)
