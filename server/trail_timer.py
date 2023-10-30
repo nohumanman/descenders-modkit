@@ -216,7 +216,19 @@ class TrailTimer():
                         fastest_pb = fastest[len(self.times)-1]
                     except IndexError:
                         fastest_pb = -1
-                    if (self.times[len(self.times)-1] <= fastest_pb or fastest_pb == -1):
+                    if (self.times[len(self.times)-1] <= fastest_pb or fastest_pb == -1 and self.auto_verify):
+                        discord_bot = self.network_player.parent.discord_bot
+                        discord_bot.loop.run_until_complete(
+                            discord_bot.new_time(
+                                f"Server has auto verified [a new pb](https://split-timer.nohumanman.com/time/{time_id}) on '"
+                                + self.trail_name
+                                + "' by '"
+                                + self.network_player.steam_name
+                                + "' of "
+                                + our_time
+                            )
+                        )
+                    elif (self.times[len(self.times)-1] <= fastest_pb or fastest_pb == -1):
                         discord_bot = self.network_player.parent.discord_bot
                         discord_bot.loop.run_until_complete(
                             discord_bot.new_time(
