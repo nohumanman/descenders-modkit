@@ -16,7 +16,7 @@ class UnitySocketServer():
         self.port = port
         self.dbms = dbms
         self.discord_bot = None
-        self.players = []
+        self.players: list[UnitySocket] = []
 
     def get_player_by_id(self, _id: str) -> UnitySocket:
         """ Finds the player connected to the socket server from their id """

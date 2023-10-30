@@ -10,6 +10,10 @@ import srcomapi.datatypes as dt
 from dbms import DBMS
 from trail_timer import TrailTimer, Vector3
 from tokens import STEAM_API_KEY
+# for imports with intellisense
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from unity_socket_server import UnitySocketServer
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -80,7 +84,7 @@ operations = {
 
 class UnitySocket():
     """ Used to handle the connection to the descenders unity client """
-    def __init__(self, conn: socket.socket, addr, parent):
+    def __init__(self, conn: socket.socket, addr, parent: 'UnitySocketServer'):
         split_timer_logger.info(
             "UnitySocket.py - New UnitySocket instance created"
         )
