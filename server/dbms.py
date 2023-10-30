@@ -1,7 +1,7 @@
 """ Database Management System """
 import sqlite3
 import time
-import os
+import ods
 from datetime import datetime, timedelta
 
 script_path = os.path.dirname(os.path.realpath(__file__))
