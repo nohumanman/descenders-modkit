@@ -621,13 +621,15 @@ class DBMS():
         bike_type,
         starting_speed,
         version,
-        penalty: float
+        penalty: float,
+        verified: str
     ):
         time_id = hash(
             str(split_times[len(split_times)-1])
             + str(steam_id)
             + str(time.time())
         )
+        # verified as "0" = unverified, "1" = verified
         self.execute_sql(
             f'''
             INSERT INTO Time (
@@ -639,7 +641,7 @@ class DBMS():
                 "{steam_id}", "{time_id}", {time.time()},
                 "{current_world}", "{trail_name}",
                 "{str(being_monitored)}", "{bike_type}",
-                "False", "{starting_speed}", "{version}", {penalty}, "0"
+                "False", "{starting_speed}", "{version}", {penalty}, "{verified}"
             )
             ''',
             write=True
