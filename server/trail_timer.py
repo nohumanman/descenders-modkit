@@ -43,11 +43,16 @@ class TrailTimer():
         self.current_penalty = 0.0
         self.player_positions = []
         self.exit_time = 0
+        self.auto_verify = True
 
     def get_boundaries(self):
         return self.__boundaries
 
     def add_boundary(self, boundary_guid):
+        # if we were out of bounds and are in a run
+        if len(self.__boundaries) == 0 and self.started:
+            # note we cannot verify this user instantly
+            self.auto_verify = False
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
 
