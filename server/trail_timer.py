@@ -58,15 +58,12 @@ class TrailTimer():
             and not self.network_player.being_monitored
         ):
             if (self.started):
-                pass
-                #self.exit_time = time.time()
-                #self.network_player.send(f"INVALIDATE_TIME|Exited Boundaries of Trail.\nIf this is incorrect, please report it to nohumanman on Discord\nBOUNDARY ISSUE: {boundry_obj_name}")
-                #self.network_player.set_text_colour(255, 0, 0)
-                #self.started = False
+                # note we cannot verify this user instantly
+                self.auto_verify = False
 
     def start_timer(self, total_checkpoints: int):
         split_timer_logger.info("id%s '%s' started timer with checkpoints %s", self.network_player.steam_id, self.network_player.steam_name, total_checkpoints)
-        self.total_running_penalty = 0
+        self.auto_verify = True
         if (
             len(self.__boundaries) == 0
             and not self.network_player.being_monitored
@@ -190,6 +187,7 @@ class TrailTimer():
                 str(self.starting_speed),
                 str(self.network_player.version),
                 0,
+                "0" if self.auto_verify else "1"
             )
             self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
             self.network_player.send(
@@ -249,7 +247,7 @@ class TrailTimer():
         self.update_leaderboards()
         self.update_medals()
         self.times = []
-        self.total_running_penalty = 0
+        self.auto_verify = True
 
     def potential_cheat(self, client_time: float):
         split_timer_logger.info("id%s '%s' has potentially cheated! client time %s", self.network_player.steam_id, self.network_player.steam_name, client_time)
