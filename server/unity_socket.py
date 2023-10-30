@@ -234,29 +234,7 @@ class UnitySocket():
         split_timer_logger.info("Banning id%s '%s'", self.steam_id, self.steam_name)
         if _type == "ILLEGAL":
             self.send("TOGGLE_GOD")
-        if _type == "ALERT":
-            try:
-                discord_bot = self.parent.discord_bot
-                asyncio.run(discord_bot.ban_note(
-                        f"OI <@437237976347705346> - Player {self.steam_name}"
-                        f" (id{self.steam_id}) joined"
-                        f" '{self.world_name}'."
-                    )
-                )
-            except RuntimeError:
-                split_timer_logger.error("Failed to send alert!")
         self.send("BANNED|" + _type)
-        logging.info("id%s '%s' banned with '%s'", self.steam_id, self.steam_name, _type)
-        discord_bot = self.parent.discord_bot
-        try:
-            asyncio.run(
-                discord_bot.ban_note(
-                    f"Player {self.steam_name} (id{self.steam_id}) tried"
-                    f" to join but was banned with '{_type}'."
-                )
-            )
-        except RuntimeError:
-            split_timer_logger.error("Failed to send alert of ban!")
 
     def has_both_steam_name_and_id(self):
         self.dbms.submit_alias(self.steam_id, self.steam_name)
