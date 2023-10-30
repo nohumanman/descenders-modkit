@@ -192,7 +192,7 @@ class TrailTimer():
                 str(self.starting_speed),
                 str(self.network_player.version),
                 0,
-                "0" if self.auto_verify else "1"
+                "1" if self.auto_verify else "0"
             )
             self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
             self.network_player.send(
