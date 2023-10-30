@@ -7,7 +7,6 @@ import asyncio
 import requests
 import srcomapi
 import srcomapi.datatypes as dt
-from dbms import DBMS
 from trail_timer import TrailTimer, Vector3
 from tokens import STEAM_API_KEY
 # for imports with intellisense

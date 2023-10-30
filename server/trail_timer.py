@@ -1,7 +1,5 @@
 import time
-import asyncio
 import logging
-from dbms import DBMS
 
 # Used to fix RuntimeError in using async from thread
 import nest_asyncio
