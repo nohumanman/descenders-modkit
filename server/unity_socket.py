@@ -311,7 +311,7 @@ class UnitySocket():
             except ConnectionResetError:
                 break
             except OSError:
-                break
+                pass
             if not data: # if data is finished
                 break
             for piece in data.decode().split("\n"):
