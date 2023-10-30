@@ -17,7 +17,7 @@ class DBMS():
 
     def execute_sql(self, statement: str, write=False):
         if self.con is None:
-            self.con = sqlite3.connect(script_path + "/SplitTimer.db", check_same_thread=False)
+            self.con = sqlite3.connect(script_path + "/modkit.db", check_same_thread=False)
         cur = self.con.cursor()
         try:
             execution = cur.execute(statement)
