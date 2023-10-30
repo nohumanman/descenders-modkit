@@ -41,6 +41,7 @@ class UnitySocketServer():
         with conn:
             player.recieve()
         self.players.remove(player)
+        del(player)
 
     def start(self):
         """ Starts listening on the socket server port and establishes incoming connections """

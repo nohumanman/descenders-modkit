@@ -308,8 +308,7 @@ class UnitySocket():
         try:
             self.conn.sendall((data + "\n").encode())
         except OSError:
-            split_timer_logger.error("id%s '%s' - Failed to send '%s' to client! Deleting self.", self.steam_id, self.steam_name, data)
-            del(self)
+            split_timer_logger.error("id%s '%s' - Failed to send '%s' to client!", self.steam_id, self.steam_name, data)
 
     def send_all(self, data: str):
         split_timer_logger.info("id%s '%s' is sending to all the data '%s''", self.steam_id, self.steam_name, data)
@@ -340,7 +339,6 @@ class UnitySocket():
                 break
             for piece in data.decode().split("\n"):
                 self.handle_data(piece)
-        del(self)
 
     def invalidate_all_trails(self, reason: str):
         split_timer_logger.info("id%s '%s' has all trails invalidated due to '%s'", self.steam_id, self.steam_name, reason)
