@@ -195,13 +195,18 @@ class TrailTimer():
                 "1" if self.auto_verify else "0"
             )
             self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
+            comment = "\\n"
+            if self.auto_verify:
+                comment += "time automatically verified"
+            else:
+                comment += "your time is awaiting review"
             self.network_player.send(
                 "TIMER_FINISH|"
                 + str(
                     TrailTimer.secs_to_str(
                             self.times[len(self.times)-1]
                     )
-                )
+                ) + comment
             )
             fastest = self.network_player.dbms.get_fastest_split_times(self.trail_name)
             try:
