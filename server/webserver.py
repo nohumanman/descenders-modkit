@@ -141,6 +141,7 @@ class Webserver():
                 ["GET"]
             ),
         ]
+        self.tokens_and_ids = {}
         self.add_routes()
         self.webserver_app.register_error_handler(500, self.server_error)
 
@@ -291,16 +292,29 @@ class Webserver():
             )
         })
 
-    def permission(self):
-        if session.get('oauth2_token') is None:
+    def __get_cached_user_id(self, oauth2_token):
+        return self.tokens_and_ids.get(oauth2_token)
+
+    async def permission(self):
+        oauth2_token = session.get('oauth2_token')
+        if oauth2_token is None:
             return "UNKNOWN"
-        discord = self.make_session(token=session.get('oauth2_token'))
+        # get cached user id
+        user_id = self.__get_cached_user_id(oauth2_token)
+        if user_id is not None:
+            if user_id in self.dbms.get_valid_ids():
+                return "AUTHORISED"
+            else:
+                return "UNAUTHORISED"
+        
+        discord = self.make_session(token=oauth2_token)
         user = discord.get(API_BASE_URL + '/users/@me').json()
+        self.tokens_and_ids[oauth2_token] = user["id"]
         if user["id"] in [str(x[0]) for x in self.dbms.get_valid_ids()]:
             return "AUTHORISED"
         return "UNAUTHORISED"
 
-    def logged_in(self):
+    async def logged_in(self):
         return (
             self.permission() == "AUTHORISED"
             or self.permission() == "UNAUTHORISED"
