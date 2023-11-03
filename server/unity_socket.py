@@ -314,8 +314,11 @@ class UnitySocket():
                 pass
             if not data: # if data is finished
                 break
-            for piece in data.decode().split("\n"):
-                self.handle_data(piece)
+            try:
+                for piece in data.decode().split("\n"):
+                    self.handle_data(piece)
+            except UnicodeDecodeError:
+                pass
 
     def invalidate_all_trails(self, reason: str):
         split_timer_logger.info("id%s '%s' has all trails invalidated due to '%s'", self.steam_id, self.steam_name, reason)
