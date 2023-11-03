@@ -24,7 +24,10 @@ class DBMS():
         except sqlite3.OperationalError:
             return []
         if write:
-            self.con.commit()
+            try:
+                self.con.commit()
+            except sqlite3.OperationalError:
+                pass
         result = execution.fetchall()
         return result
 
