@@ -13,22 +13,18 @@ def daterange(start_date: datetime, end_date: datetime):
 
 class DBMS():
     def __init__(self):
-        self.con = None
+        self.db_file = script_path + "/modkit.db"
 
     def execute_sql(self, statement: str, write=False):
-        if self.con is None:
-            self.con = sqlite3.connect(script_path + "/modkit.db", check_same_thread=False)
-        cur = self.con.cursor()
-        try:
-            execution = cur.execute(statement)
-        except sqlite3.OperationalError:
-            return []
-        if write:
+        with sqlite3.connect(self.db_file, check_same_thread=False) as con:
+            cur = con.cursor()
             try:
-                self.con.commit()
+                execution = cur.execute(statement)
             except sqlite3.OperationalError:
-                pass
-        result = execution.fetchall()
+                return []
+            if write:
+                con.commit()
+            result = execution.fetchall()
         return result
 
     def get_id_from_name(self, steam_name):
