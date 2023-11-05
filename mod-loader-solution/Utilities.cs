@@ -695,7 +695,15 @@ namespace ModLoaderSolution
             }
             return targets;
         }
+        public GameObject GetPlayerById(int id)
+        {
+            return null;
+        }
+        public void SpectatePlayerCustom(int id)
+        {
+            GameObject player = GetPlayerById(id);
 
+        }
         public void SpectatePlayer(int id)
         {
             DevCommandsCamera.Spectate(id);

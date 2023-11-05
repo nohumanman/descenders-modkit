@@ -207,6 +207,7 @@ namespace ModLoaderSolution
 				Debug.Log("Current Position: " + pos.ToString());
 				SendData("POS|" + pos.x + "|" + pos.y + "|" + pos.z);
             }
+			
 			if (message.StartsWith("CHAT_MESSAGE"))
             {
 				string user = message.Split('|')[1];
@@ -329,7 +330,7 @@ namespace ModLoaderSolution
 			if (message.StartsWith("SPECTATE"))
             {
 				string name = message.Split('|')[1];
-				Utilities.instance.SpectatePlayer(name);
+				Utilities.instance.SpectatePlayerCustom(name);
             }
 			if (message.StartsWith("SET_BIKE"))
             {
