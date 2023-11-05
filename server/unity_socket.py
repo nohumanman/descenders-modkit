@@ -374,6 +374,12 @@ class UnitySocket():
     def recieve(self):
         """ Recieve data from the descenders unity client """
         while True:
+            if time.time()-self.info.time_started > 20 and self.info.steam_id == "":
+                logging.info(
+                    "%s- failed to give steam id in time, timed out automatically", self.addr
+                )
+                self.conn.close()
+                break
             try:
                 data = self.conn.recv(8192)
                 if not data: # if data is finished
