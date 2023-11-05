@@ -387,6 +387,9 @@ class UnitySocket():
                 break
             except OSError:
                 pass
+            except Exception as e:
+                logging.error("PLAYER WILL BE DELETED! Error in recieve loop: %s", e)
+                break
 
     def invalidate_all_trails(self, reason: str):
         """ Invalidate all trails for a player. """
