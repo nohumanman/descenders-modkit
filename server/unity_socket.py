@@ -461,7 +461,7 @@ class UnitySocket():
         self.update_concurrent_users()
         for trail_name, trail in self.trails.items():
             if trail_name in self.trails:
-                trail.invalidate_times()
+                trail.invalidate_time()
         self.trails = {}
         self.dbms.end_session(
             self.info.steam_id,
