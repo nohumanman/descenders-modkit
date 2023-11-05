@@ -812,7 +812,11 @@ namespace ModLoaderSolution
         {
             return Camera.main.GetComponent<BikeCamera>().enabled;
         }
-
+        public void DisableControlledCam()
+        {
+            Camera.main.GetComponent<BikeCamera>().enabled = false;
+            Camera.main.GetComponent<FreeCam>().enabled = false;
+        }
         public void SetFreeCam()
         {
             if (!isInFreeCam())
