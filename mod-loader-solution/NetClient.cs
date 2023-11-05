@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -329,8 +329,8 @@ namespace ModLoaderSolution
 			}
 			if (message.StartsWith("SPECTATE"))
             {
-				string name = message.Split('|')[1];
-				Utilities.instance.SpectatePlayerCustom(name);
+				string id = message.Split('|')[1];
+				Utilities.instance.SpectatePlayerCustom(id);
             }
 			if (message.StartsWith("SET_BIKE"))
             {
