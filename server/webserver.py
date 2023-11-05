@@ -63,6 +63,18 @@ class Webserver():
                 self.index, ["GET"]
             ),
             WebserverRoute(
+                "/dashboard", "dashboard",
+                self.index, ["GET"]
+            ),
+            WebserverRoute(
+                "/times", "times",
+                self.index, ["GET"]
+            ),
+            WebserverRoute(
+                "/trails", "times",
+                self.index, ["GET"]
+            ),
+            WebserverRoute(
                 "/leaderboard", "leaderboard",
                 self.leaderboard, ["GET"]
             ),

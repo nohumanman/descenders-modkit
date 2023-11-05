@@ -139,9 +139,9 @@
                         </div>
                     </v-overlay>
                     <v-tabs v-model="tab">
-                        <v-tab>Dashboard</v-tab>
-                        <v-tab>Times</v-tab>
-                        <v-tab>Trails</v-tab>
+                        <v-tab @click="SilentUrlSwitch('dashboard')">Dashboard</v-tab>
+                        <v-tab @click="SilentUrlSwitch('times')">Times</v-tab>
+                        <v-tab @click="SilentUrlSwitch('trails')">Trails</v-tab>
                     </v-tabs>
                     <v-tabs-items v-model="tab" fill-height style="height:100%;">
                         <v-tab-item>

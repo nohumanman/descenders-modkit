@@ -83,6 +83,14 @@ var app = new Vue({
                 });
             }
         },
+        SilentUrlSwitch(url){
+            const nextURL = url;
+            const nextTitle = 'Descenders Modkit';
+            const nextState = { additionalInformation: 'Updated the URL with JS' };
+
+            // This will create a new entry in the browser's history, without reloading
+            window.history.pushState(nextState, nextTitle, nextURL);
+        },
         GetPlayerOutputLog(player){
             $.get("/get-output-log/" + player.id, function(data){
                 app.cached_output_log = data;
