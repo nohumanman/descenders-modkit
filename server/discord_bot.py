@@ -10,9 +10,6 @@ from trail_timer import TrailTimer
 from dbms import DBMS
 
 
-split_timer_logger = logging.getLogger('DescendersSplitTimer')
-
-
 def posh_time(seconds):
     """ Used to convert seconds to days, hours, minutes, and seconds """
     days = int(round(seconds / 86400))
@@ -24,10 +21,10 @@ def posh_time(seconds):
 
 class DiscordBot(commands.Bot):
     """ DiscordBot class used to create discord bot instance """
-    def __init__(self, discord_token, command_prefix, socket_server, dbms : DBMS):
+    def __init__(self, discord_token, command_prefix: str, socket_server, dbms : DBMS):
         super().__init__(command_prefix, intents=discord.Intents().all())
         self.dbms = dbms
-        self.command_prefix = command_prefix
+        self.command_prefix: str = command_prefix
         self.queue = {}
         self.socket_server = socket_server
         self.loop = asyncio.get_event_loop()
@@ -47,19 +44,22 @@ class DiscordBot(commands.Bot):
         """ Used to send a message to the split time server giving the new fastest time """
         channel_id = 929121402597015685
         channel = self.get_channel(channel_id)
-        await channel.send(time_of_run)
+        if isinstance(channel, discord.TextChannel):
+            await channel.send(time_of_run)
 
     async def ban_note(self, message):
         """ Used to send a message to the split time server dev channel of a ban record """
         channel_id = 997942390432206879
         channel = self.get_channel(channel_id)
-        await channel.send(message)
+        if isinstance(channel, discord.TextChannel):
+            await channel.send(message)
 
     async def new_time(self, message):
         """ Used to send a message to the split time server dev channel of a ban record """
         channel_id = 1166082973385375744
         channel = self.get_channel(channel_id)
-        await channel.send(message)
+        if isinstance(channel, discord.TextChannel):
+            await channel.send(message)
 
     async def set_presence(self, user_name: str):
         """ Used to set the presence of the discord bot """
@@ -74,11 +74,13 @@ class DiscordBot(commands.Bot):
                     )
                 )
             except AttributeError:
-                split_timer_logger.info("Failed to change presence")
+                logging.info("Failed to change presence")
             self.changing_presence = False
 
     async def on_message(self = None, message = None): # none and none default to allow inheritance
-        split_timer_logger.info("Message sent '%s'", message)
+        logging.info("Message sent '%s'", message)
+        if message is None:
+            return
         if message.author == self.user:
             return
         if message.content.startswith(self.command_prefix + "help"):
@@ -156,10 +158,13 @@ class DiscordBot(commands.Bot):
                 else:
                     num = TrailTimer.ord(i + 1)
                 verified = player["verified"] == "1"
-                if not verified: leaderboard_str += "||"
+                if not verified:
+                    leaderboard_str += "||"
                 leaderboard_str += f"{num} - {time1} - {name}"
                 time_id = player['time_id']
-                if not verified: leaderboard_str += f"  ----⚠️ [UNVERIFIED](https://split-timer.nohumanman.com/static/replays/{time_id}.replay) ⚠️ ----||"
+                if not verified:
+                    replay_url = "https://split-timer.nohumanman.com/static/replays/"
+                    leaderboard_str += f"--⚠️ [UNVERIFIED]({replay_url}{time_id}.replay) ⚠️ --||"
                 leaderboard_str += "\n"
             try:
                 await message.channel.send(

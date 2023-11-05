@@ -9,31 +9,36 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 
 
 def daterange(start_date: datetime, end_date: datetime):
+    """ Generate a range of dates between the given start_date and end_date """
     for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
 class DBMS():
+    """ A simple Database Management System (DBMS) class for managing data. """
     def __init__(self):
         self.db_file = script_path + "/modkit.db"
         self.wait = False
 
     def execute_sql(self, statement: str, write=False):
+        """ Execute an SQL statement on a database """
         while self.wait:
             pass
         self.wait = True
-        with sqlite3.connect(self.db_file, check_same_thread=False) as con:
-            cur = con.cursor()
-            try:
-                execution = cur.execute(statement)
-            except sqlite3.OperationalError:
-                return []
-            if write:
-                con.commit()
-            result = execution.fetchall()
+        con = sqlite3.connect(self.db_file, check_same_thread=False)
+        cur = con.cursor()
+        try:
+            execution = cur.execute(statement)
+        except sqlite3.OperationalError:
+            return []
+        if write:
+            con.commit()
+        result = execution.fetchall()
+        con.close()
         self.wait = False
         return result
 
     def get_id_from_name(self, steam_name):
+        """ Get the Steam ID associated with a given Steam username. """
         return self.execute_sql(
             f'''
             SELECT Player.steam_id
@@ -42,6 +47,7 @@ class DBMS():
         )[0][0]
 
     def get_player_stats(self, steam_id):
+        """ def get_player_stats(self, steam_id): """
         statement = f'''
             SELECT
                 Player.steam_id,
@@ -78,12 +84,14 @@ class DBMS():
         return self.execute_sql(statement)
 
     def get_webhooks(self, trail_name):
+        """ Get the webhooks associated with a given trail. """
         return self.execute_sql(
             "SELECT webhook_url FROM webhooks"
             f" WHERE trail_name = '{trail_name}'"
         )
 
     def update_player(self, steam_id, steam_name, avatar_src):
+        """ Update the player's name and avatar. """
         self.execute_sql(
             f'''
             REPLACE INTO Player (
@@ -108,6 +116,7 @@ class DBMS():
         )
 
     def get_personal_fastest_split_times(self, trail_name, steam_id):
+        """ Get the fastest split times for a given player on a given trail. """
         statement = f'''
             SELECT
                 SplitTime.time_id,
@@ -149,6 +158,7 @@ class DBMS():
     def get_fastest_split_times(self,
         trail_name
     ):
+        """ Get the fastest split times for a given trail. """
         statement = f'''
             SELECT
                 SplitTime.time_id,
@@ -187,6 +197,7 @@ class DBMS():
         return split_times
 
     def get_ban_status(self, steam_id: str):
+        """ Get the ban status of a given player. """
         resp = self.execute_sql(f'''
                 SELECT ban_type FROM Player
                 WHERE steam_id = "{steam_id}"
@@ -197,6 +208,7 @@ class DBMS():
             return ""
 
     def get_valid_ids(self):
+        """ Get the valid Discord IDs. """
         return self.execute_sql('''
             SELECT
                 discord_id
@@ -207,6 +219,7 @@ class DBMS():
             ''')
 
     def get_steam_id(self, discord_id):
+        """ Get the Steam ID associated with a given Discord ID. """
         statement = f'''
             SELECT steam_id FROM
             User where discord_id = "{discord_id}"
@@ -217,6 +230,7 @@ class DBMS():
             return None
 
     def submit_steam_id(self, discord_id, steam_id):
+        """ Submit a Steam ID to the database. """
         statement = f'''
             INSERT INTO PlayerAliases
             VALUES (
@@ -228,6 +242,7 @@ class DBMS():
         self.execute_sql(statement, write=True)
 
     def submit_alias(self, steam_id, alias):
+        """ Submit an alias to the database. """
         statement = f'''
             SELECT alias
                 FROM PlayerAliases
@@ -242,6 +257,7 @@ class DBMS():
             self.execute_sql(statement, write=True)
 
     def get_player_name(self, steam_id):
+        """ Get the Steam name associated with a given Steam ID. """
         statement = f'''
             SELECT steam_name
                 FROM Player
@@ -254,6 +270,7 @@ class DBMS():
             return ""
 
     def get_time_details(self, time_id: str):
+        """ Get the details of a given time. """
         statement = f'''
         SELECT
             *
@@ -266,6 +283,7 @@ class DBMS():
         return result[0]
 
     def get_times_after_timestamp(self, timestamp: float, trail_name: str):
+        """ Get the times after a given timestamp. """
         statement = f'''
             SELECT
                 starting_speed,
@@ -295,6 +313,7 @@ class DBMS():
         return result
 
     def get_all_times(self, lim: int):
+        """ Get all times. """
         statement = f'''
             SELECT * FROM all_times
             LIMIT {lim}
@@ -325,6 +344,7 @@ class DBMS():
         ]
 
     def get_all_players(self):
+        """ Get all players. """
         statement = '''
             SELECT Player.steam_id, Player.steam_name, Player.avatar_src, Rep.rep, max(Rep.timestamp) as rep_timestamp FROM Player
             INNER JOIN Rep on Rep.steam_id = Player.steam_id
@@ -335,6 +355,7 @@ class DBMS():
         return result
 
     def submit_locations(self, time_id, locations):
+        """ Submit locations to the database."""
         for location in locations:
             timestamp = location[0]
             x = location[1][0]
@@ -351,6 +372,7 @@ class DBMS():
             self.execute_sql(statement, write=True)
 
     def get_start_bike(self, world_name: str):
+        """ Get the starting bike for a given world. """
         statement = f'''
             SELECT start_bike
             FROM WorldInfo
@@ -363,6 +385,7 @@ class DBMS():
         return result[0][0]
 
     def get_trails(self):
+        """ Get all trails."""
         return [{
             "trail_name": trail[0],
             "world_name": trail[1],
@@ -373,6 +396,7 @@ class DBMS():
         } for trail in self.execute_sql('''SELECT * FROM TrailInfo''')]
 
     def get_worlds(self):
+        """ Get all worlds. """
         return [world[0] for world in self.execute_sql(
             '''SELECT world_name FROM Session GROUP BY world_name'''
         )]
@@ -383,6 +407,7 @@ class DBMS():
         date_start: datetime,
         date_end: datetime
     ) -> list:
+        """ Get the number of daily plays for a given map. """
         values = []
         for single_date in daterange(date_start, date_end):
             now = single_date
@@ -410,6 +435,7 @@ class DBMS():
         return values
 
     def get_leaderboard(self, trail_name, num=10, steam_id="") -> list:
+        """ Get the leaderboard for a given trail. """
         statement = f'''
             SELECT
                 starting_speed,
@@ -469,6 +495,7 @@ class DBMS():
         ]
 
     def max_start_time(self, trail_time: str) -> float:
+        """ Get the maximum starting time for a given trail. """
         statement = f'''
             SELECT max_starting_time FROM TrailStartTime
             WHERE trail_name = "{trail_time}"
@@ -480,6 +507,7 @@ class DBMS():
             return 50
 
     def set_ignore_time(self, time_id, val):
+        """ Set the ignore time for a given time. """
         statement = f'''
             UPDATE Time
             SET
@@ -490,6 +518,7 @@ class DBMS():
         self.execute_sql(statement, write=True)
 
     def set_monitored(self, time_id, val):
+        """ Set the monitored status for a given time. """
         statement = f'''
             UPDATE Time
             SET
@@ -500,6 +529,7 @@ class DBMS():
         self.execute_sql(statement, write=True)
 
     def get_avatar(self, steam_id):
+        """ Get the avatar for a given Steam ID. """
         statement = f'''
             SELECT avatar_src
                 FROM Player
@@ -512,6 +542,7 @@ class DBMS():
             return ""
 
     def submit_ip(self, steam_id, address, port):
+        """ Submit an IP address to the database. """
         timestamp = time.time()
         statement = f'''
             INSERT INTO IP (steam_id, timestamp, address, port)
@@ -520,6 +551,7 @@ class DBMS():
         self.execute_sql(statement, write=True)
 
     def get_archive(self):
+        """ Get the archive. """
         statement = '''
             SELECT
                 sum(time_ended - time_started) AS total_time,
@@ -540,6 +572,7 @@ class DBMS():
         return result
 
     def discord_login(self, discord_id, discord_name, email, steam_id):
+        """ Log in to Discord. """
         statement = f'''
             INSERT OR IGNORE INTO User
             VALUES(
@@ -553,6 +586,7 @@ class DBMS():
         self.execute_sql(statement, write=True)
 
     def get_penalty(self, time_id):
+        """ Get the penalty for a given time. """
         statement = f'''
             SELECT penalty
             FROM Time
@@ -562,6 +596,7 @@ class DBMS():
         return result[0][0]
 
     def get_version(self, time_id):
+        """ Get the version for a given time. """
         statement = f'''
             SELECT version
             FROM Time
@@ -571,6 +606,7 @@ class DBMS():
         return result[0][0]
 
     def get_total_times(self, limit=10):
+        """ Get the total times for a given trail. """
         statement = f'''
             SELECT * FROM TotalTime
             LIMIT {limit}
@@ -579,6 +615,7 @@ class DBMS():
         return result
 
     def get_time_on_world(self, steam_id, world="none"):
+        """ Get the time spent on a given world. """
         statement = f'''
             SELECT sum(time_ended - time_started) AS total_time FROM Session
             WHERE steam_id = "{steam_id}"
@@ -591,6 +628,7 @@ class DBMS():
         return result[0][0]
 
     def get_times_trail_ridden(self, trail_name):
+        """ Get the number of times a given trail has been ridden. """
         statement = f'''
             SELECT timestamp FROM Time
             WHERE trail_name = "{trail_name}"
@@ -599,6 +637,7 @@ class DBMS():
         return [stamp[0] for stamp in timestamps]
 
     def get_split_times(self, time_id):
+        """ Get the split times for a given time. """
         statement = f'''
             SELECT checkpoint_time FROM SplitTime
             WHERE time_id = "{time_id}"
@@ -608,6 +647,7 @@ class DBMS():
         return [res[0] for res in result]
 
     def verify_time(self, time_id: str):
+        """ Verify a given time. """
         self.execute_sql(
             f'''
                 UPDATE Time
@@ -630,6 +670,7 @@ class DBMS():
         penalty: float,
         verified: str
     ):
+        """ Submit a time to the database. """
         logging.info(
             "submit_time(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
             steam_id, split_times, trail_name, being_monitored,
@@ -673,6 +714,7 @@ class DBMS():
         return time_id
 
     def end_session(self, steam_id, time_started, time_ended, world_name):
+        """ End a session. """
         self.execute_sql(
             f'''
             INSERT INTO Session (
@@ -692,6 +734,7 @@ class DBMS():
         )
 
     def get_medals(self, steam_id, trail_name):
+        """ Get the medals for a given trail. """
         x = f'''
             SELECT
                 starting_speed,
