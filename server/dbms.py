@@ -318,7 +318,8 @@ class DBMS():
                 "ignore": time[12],
                 "bike_type": time[13],
                 "starting_speed": time[14],
-                "version": time[15]
+                "version": time[15],
+                "verified": time[17]
             }
             for time in result
         ]

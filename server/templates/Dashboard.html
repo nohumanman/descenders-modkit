@@ -238,13 +238,15 @@
                                         <p style="text-align: center;">Times may take a while to load...</p>
                                     </v-col>
                                 </v-row>
-                                <div v-if="times.length != 0">
+                                <div v-if="times.length != 0" style="text-align:center;">
                                         <table style="color:white; border:white; padding: 0; margin: 0; text-align: center;">
                                             <tr>
                                                 <th style="padding:10px;">pfp</th>
                                                 <th style="padding:10px;">Steam Name</th>
                                                 <th style="padding:10px;">Date & Time</th>
                                                 <th style="padding:10px; color:rgb(138, 138, 255)">Time</th>
+                                                <th style="padding:10px;">Verified</th>
+                                                <th style="padding:10px;">Deleted</th>
                                                 <th style="padding:10px;">World Name</th>
                                                 <th style="padding:10px;">Trail Name</th>
                                                 <th style="padding:10px;">Starting Speed</th>
@@ -256,6 +258,8 @@
                                                 <td style="padding:10px;"><a target="_blank" :href="'http://steamcommunity.com/profiles/' + time.steam_id">[[time.steam_name]]</a></td>
                                                 <td style="padding:10px;">[[timestamp_to_date_time(time.timestamp)]]</td>
                                                 <td style="padding:10px; color:rgb(138, 138, 255)"><a target="_blank" :href="'/time/' + time.time_id">[[secs_to_str(time.total_time)]]</a></td>
+                                                <td style="padding:10px;">[[time.verified]]</td>
+                                                <td style="padding:10px;">[[time.ignore]]</td>
                                                 <td style="padding:10px;">[[time.world_name]]</td>
                                                 <td style="padding:10px;">[[time.trail_name]]</td>
                                                 <td style="padding:10px;">[[time.starting_speed]]</td>
