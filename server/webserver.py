@@ -1,28 +1,45 @@
 """ Used to host the website using flask """
 from typing import TYPE_CHECKING
 import os
-import logging
 from datetime import datetime
-from flask import Flask, session, request, redirect, jsonify, render_template
+import logging
+
+# Flask imports
+from flask import (
+    Flask,
+    session,
+    request,
+    redirect,
+    jsonify,
+    render_template
+)
+
+# Authlib imports
 from authlib.integrations.requests_client import OAuth2Session
 from authlib.integrations.base_client import MissingTokenError
+
+# Unity Socket Server imports
 from unity_socket_server import UnitySocketServer, PlayerNotFound
+
+# Database Management System imports
 from dbms import DBMS
-from tokens import (
-    OAUTH2_CLIENT_ID,
-    OAUTH2_CLIENT_SECRET
-)
+
+# Tokens imports
+from tokens import OAUTH2_CLIENT_ID, OAUTH2_CLIENT_SECRET
+
 # Used to fix RuntimeError in using async from thread
 import nest_asyncio
 nest_asyncio.apply()
 
-if TYPE_CHECKING: # for imports with intellisense
+if TYPE_CHECKING:
+    # Imports related to the Discord bot (if any)
     from discord_bot import DiscordBot
 
 OAUTH2_REDIRECT_URI = 'https://split-timer.nohumanman.com/callback'
 API_BASE_URL = os.environ.get('API_BASE_URL', 'https://discordapp.com/api')
 AUTHORIZATION_BASE_URL = API_BASE_URL + '/oauth2/authorize'
 TOKEN_URL = API_BASE_URL + '/oauth2/token'
+
 
 logging = logging.getLogger('DescendersSplitTimer')
 
@@ -35,6 +52,23 @@ class WebserverRoute():
         self.view_func = view_func
         self.methods = methods
 
+    def is_valid(self):
+        """ Function to check if the route is valid """
+        return (
+            self.route is not None
+            and self.endpoint is not None
+            and self.view_func is not None
+            and self.methods is not None
+        )
+
+    def to_dict(self):
+        """ Function to convert the route to a dictionary """
+        return {
+            "route": self.route,
+            "endpoint": self.endpoint,
+            "view_func": self.view_func,
+            "methods": self.methods
+        }
 
 class Webserver():
     """ Used to host the website using flask """
@@ -160,7 +194,7 @@ class Webserver():
         for route in self.routes:
             self.webserver_app.add_url_rule(
                 route.route,
-                endpoint=route.endpoint,
+                    endpoint=route.endpoint,
                 view_func=route.view_func,
                 methods=route.methods
             )
@@ -181,8 +215,7 @@ class Webserver():
             except PlayerNotFound:
                 pass
             return ""
-        else:
-            return "FAILED - NOT VALID PERMISSIONS!", 401
+        return "FAILED - NOT VALID PERMISSIONS!", 401
 
     async def time_details(self, time_id):
         """ Function to get the details of a time with id time_id """
@@ -248,8 +281,7 @@ class Webserver():
                     " One likely does not exist, has the user just loaded in?"
                 )
             return lines
-        else:
-            return "You are not authorised to fetch output log."
+        return "You are not authorised to fetch output log."
 
     async def get(self):
         """ Function to get the details of a player with id player_id """
@@ -280,8 +312,7 @@ class Webserver():
             # value should be 'False' or 'True
             self.dbms.set_ignore_time(time_id, value)
             return "success"
-        else:
-            return "INVALID_PERMS"
+        return "INVALID_PERMS"
 
     async def upload_replay(self):
         """ Function to upload a replay """
@@ -322,8 +353,7 @@ class Webserver():
         if user_id is not None:
             if user_id in self.dbms.get_valid_ids():
                 return "AUTHORISED"
-            else:
-                return "UNAUTHORISED"
+            return "UNAUTHORISED"
         discord = self.make_session(token=oauth2_token)
         user = discord.get(API_BASE_URL + '/users/@me').json()
         self.tokens_and_ids[oauth2_token] = user["id"]
@@ -464,8 +494,7 @@ class Webserver():
         """ Function to get the leaderboard of the website"""
         if self.logged_in():
             return render_template("Leaderboard.html")
-        else:
-            return redirect("/")
+        return redirect("/")
 
     def get_leaderboard_trail(self, trail):
         """ Function to get the leaderboard of the website"""
