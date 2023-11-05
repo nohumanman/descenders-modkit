@@ -1,9 +1,13 @@
 """ Used to host the socket server. """
+from typing import TYPE_CHECKING
 import socket
 import threading
 import logging
 from unity_socket import UnitySocket
 from dbms import DBMS
+
+if TYPE_CHECKING: # for imports with intellisense
+    from discord_bot import DiscordBot
 
 class PlayerNotFound(Exception):
     """ Exception called when the descenders unity client could not be found """
@@ -15,13 +19,13 @@ class UnitySocketServer():
         self.host = ip
         self.port = port
         self.dbms = dbms
-        self.discord_bot = None
+        self.discord_bot : DiscordBot | None = None
         self.players: list[UnitySocket] = []
 
     def get_player_by_id(self, _id: str) -> UnitySocket:
         """ Finds the player connected to the socket server from their id """
         for player in self.players:
-            if player.steam_id == _id:
+            if player.info.steam_id == _id:
                 return player
         raise PlayerNotFound("Cannot find player")
 
@@ -29,11 +33,11 @@ class UnitySocketServer():
         """Used to find the player connected to the socket server from their name
           Not to be used reliably, some names may be identical. """
         for player in self.players:
-            if player.steam_name == name:
+            if player.info.steam_name == name:
                 return player
         raise PlayerNotFound("Cannot find player")
 
-    def create_client(self, conn : socket, addr):
+    def create_client(self, conn : socket.socket, addr):
         """ Creates a client from their socket and address """
         logging.info("UnitySocketServer.py - Creating client from addr %s", addr)
         player = UnitySocket(conn, addr, self)
@@ -42,7 +46,7 @@ class UnitySocketServer():
             player.recieve()
         logging.info("UnitySocketServer.py - Destroying client from addr %s", addr)
         self.players.remove(player)
-        del(player)
+        del player
 
     def start(self):
         """ Starts listening on the socket server port and establishes incoming connections """

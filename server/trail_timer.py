@@ -1,43 +1,25 @@
+""" Used to track the time on a map """
 from typing import TYPE_CHECKING
 import time
 import logging
-
-# Used to fix RuntimeError in using async from thread
-import nest_asyncio
+import nest_asyncio # Used to fix RuntimeError in using async from thread
 nest_asyncio.apply()
 
 if TYPE_CHECKING: # for imports with intellisense
     from unity_socket import UnitySocket
 
 
-split_timer_logger = logging.getLogger('DescendersSplitTimer')
-
-
-class Vector3():
-    def __init__(self):
-        self.x = 0
-        self.y = 0
-        self.z = 0
-
-    def get_as_str(self):
-        return f"X:{self.x} Y: {self.y} Z:{self.z}"
-
-    @staticmethod
-    def get_distance(vector1, vector2):
-        return ((
-            (vector1.x - vector2.x)**2
-            + (vector1.y - vector2.y)**2
-            + (vector1.z - vector2.z)**2
-        )**(0.5))
+logging = logging.getLogger('DescendersSplitTimer')
 
 
 class TrailTimer():
+    """ Used to track the time on a trail """
     def __init__(self, trail_name, network_player):
         self.trail_name = trail_name
         self.network_player : UnitySocket = network_player
         self.started = False
         self.times = []
-        self.total_checkpoints = None
+        self.total_checkpoints: int = -1
         self.__boundaries = []
         self.time_started = 0
         self.time_ended = 0
@@ -46,6 +28,13 @@ class TrailTimer():
         self.auto_verify = True
 
     def add_boundary(self, boundary_guid):
+        """
+        Add a boundary to the list of boundaries encountered during a run.
+
+        If the list of boundaries is empty and a run has started, it sets the 'auto_verify' flag to
+        False and sends a message to the network player indicating that their time will be reviewed
+        due to cuts.
+        """
         # if we were out of bounds and are in a run
         if len(self.__boundaries) == 0 and self.started:
             # note we cannot verify this user instantly
@@ -55,24 +44,25 @@ class TrailTimer():
             self.__boundaries.append(boundary_guid)
 
     def remove_boundary(self, boundary_guid):
+        """
+        Remove a boundary from the list of boundaries encountered during a run.
+        """
         if boundary_guid in self.__boundaries:
             self.__boundaries.remove(boundary_guid)
-        if (
-            len(self.__boundaries) == 0
-            and not self.network_player.being_monitored
-        ):
-            if (self.started):
+        if len(self.__boundaries) == 0:
+            if self.started:
                 # note we cannot verify this user instantly
                 self.auto_verify = False
                 self.network_player.send("SPLIT_TIME|cuts detected, your time will be reviewed")
 
     def start_timer(self, total_checkpoints: int):
-        split_timer_logger.info("id%s '%s' started timer with checkpoints %s", self.network_player.steam_id, self.network_player.steam_name, total_checkpoints)
+        """ Start the timer. """
+        logging.info(
+            "%s '%s'\t- started timer with checkpoints %s", self.network_player.info.steam_id,
+            self.network_player.info.steam_name, total_checkpoints
+        )
         self.auto_verify = True
-        if (
-            len(self.__boundaries) == 0
-            and not self.network_player.being_monitored
-        ):
+        if len(self.__boundaries) == 0:
             self.invalidate_timer("OUT OF BOUNDS!", always=True)
         else:
             self.started = True
@@ -80,8 +70,12 @@ class TrailTimer():
             self.time_started = time.time()
             self.times = []
 
-    def checkpoint(self, client_time: str):
-        split_timer_logger.info("id%s '%s' entered checkpoint with client time %s", self.network_player.steam_id, self.network_player.steam_name, client_time)
+    def checkpoint(self, client_time: float):
+        """ Log a checkpoint. """
+        logging.info(
+            "%s '%s'\t- entered checkpoint with client time %s", self.network_player.info.steam_id,
+            self.network_player.info.steam_name, client_time
+        )
         if self.started:
             self.times.append(float(client_time))
             fastest = self.network_player.dbms.get_fastest_split_times(self.trail_name)
@@ -110,7 +104,7 @@ class TrailTimer():
 
             fastest = self.network_player.dbms.get_personal_fastest_split_times(
                 self.trail_name,
-                self.network_player.steam_id
+                self.network_player.info.steam_id
             )
             try:
                 time_diff_local = (
@@ -138,7 +132,11 @@ class TrailTimer():
             self.network_player.send(f"SPLIT_TIME|{mess}")
 
     def invalidate_timer(self, reason: str, always=False):
-        split_timer_logger.info("id%s '%s'  invalidated due to %s, always=%s", self.network_player.steam_id, self.network_player.steam_name, reason, always)
+        """ Invalidate the timer. """
+        logging.info(
+            "%s '%s'\t- invalidated due to %s, always=%s",
+            self.network_player.info.steam_id, self.network_player.info.steam_name, reason, always
+        )
         if (not self.started) and not always:
             return
         self.network_player.send(f"INVALIDATE_TIME|{reason}")
@@ -146,51 +144,48 @@ class TrailTimer():
         self.times = []
 
     def update_medals(self):
+        """ Update the medals for the player. """
         self.network_player.get_medals(self.trail_name)
 
-    def end_timer(self, client_time: str):
-        split_timer_logger.info("id%s '%s' ending timer at client time %s", self.network_player.steam_id, self.network_player.steam_name, client_time)
+    def end_timer(self, client_time: float):
+        """ End the timer. """
+        logging.info(
+            "%s '%s'\t- ending timer at client time %s",
+            self.network_player.info.steam_id, self.network_player.info.steam_name, client_time
+        )
         self.started = False
         if len(self.__boundaries) == 0:
             self.invalidate_timer("OUT OF BOUNDS ON FINISH!!!")
             return
         if self.total_checkpoints is None:
             self.invalidate_timer("Didn't go through all checkpoints.")
-            if not self.network_player.being_monitored:
-                return
         if len(self.times) == 0:
             # No times logged, can't finish
             return
-        if (self.times[len(self.times)-1] < 0):
+        if self.times[len(self.times)-1] < 0:
             self.invalidate_timer("Time was negative")
-            if not self.network_player.being_monitored:
-                return
-        if (
-            not(
-                (
-                    (time.time() - self.time_started) - float(client_time) < 1
-                )
-                and
-                (
-                    (time.time() - self.time_started) - float(client_time) > -1
-                )
-            )
-        ):
+        # Check if the client time matches the server time
+        server_end_time = time.time() - self.time_started
+        client_end_time = float(client_time)
+        if not(server_end_time - client_end_time < 1 and server_end_time - client_end_time > -1):
             self.potential_cheat(client_time)
             return
         self.times.append(float(client_time))
         self.time_ended = client_time
-        if (len(self.times) == self.total_checkpoints-1):
-            split_timer_logger.info("id%s '%s' submitting times '%s'", self.network_player.steam_id, self.network_player.steam_name, self.times)
+        if len(self.times) == self.total_checkpoints-1:
+            logging.info(
+                "%s '%s'\t- submitting times '%s'", self.network_player.info.steam_id,
+                self.network_player.info.steam_name, self.times
+            )
             time_id = self.network_player.dbms.submit_time(
-                self.network_player.steam_id,
+                self.network_player.info.steam_id,
                 self.times,
                 self.trail_name,
-                self.network_player.being_monitored,
-                self.network_player.world_name,
-                self.network_player.bike_type,
+                False,
+                self.network_player.info.world_name,
+                self.network_player.info.bike_type,
                 str(self.starting_speed),
-                str(self.network_player.version),
+                str(self.network_player.info.version),
                 0,
                 "1" if self.auto_verify else "0"
             )
@@ -218,50 +213,60 @@ class TrailTimer():
                 try:
                     fastest = self.network_player.dbms.get_personal_fastest_split_times(
                         self.trail_name,
-                        self.network_player.steam_id
+                        self.network_player.info.steam_id
                     )
                     try:
                         fastest_pb = fastest[len(self.times)-1]
                     except IndexError:
                         fastest_pb = -1
-                    if (self.times[len(self.times)-1] <= fastest_pb or fastest_pb == -1 and self.auto_verify):
+                    time_url = f"https://split-timer.nohumanman.com/time/{time_id}"
+                    # if the time is faster than the fastest pb or there is no fastest pb
+                    # and the time is auto verified
+                    if (
+                        self.times[len(self.times)-1] <= fastest_pb
+                        or fastest_pb == -1 and self.auto_verify
+                    ):
                         discord_bot = self.network_player.parent.discord_bot
-                        discord_bot.loop.run_until_complete(
-                            discord_bot.new_time(
-                                f"Server has auto verified [a new pb](https://split-timer.nohumanman.com/time/{time_id}) on '"
-                                + self.trail_name
-                                + "' by '"
-                                + self.network_player.steam_name
-                                + "' of "
-                                + our_time
+                        if discord_bot is not None:
+                            discord_bot.loop.run_until_complete(
+                                discord_bot.new_time(
+                                    f"Server has auto verified [a new pb]({time_url}) on '"
+                                    + self.trail_name
+                                    + "' by '"
+                                    + self.network_player.info.steam_name
+                                    + "' of "
+                                    + our_time
+                                )
                             )
-                        )
-                    elif (self.times[len(self.times)-1] <= fastest_pb or fastest_pb == -1):
+                    elif self.times[len(self.times)-1] <= fastest_pb or fastest_pb == -1:
                         discord_bot = self.network_player.parent.discord_bot
-                        discord_bot.loop.run_until_complete(
-                            discord_bot.new_time(
-                                f"<@&1166081385732259941> Please verify [the new **fastest** time](https://split-timer.nohumanman.com/time/{time_id}) on '"
-                                + self.trail_name
-                                + "' by '"
-                                + self.network_player.steam_name
-                                + "' of "
-                                + our_time
+                        if discord_bot is not None:
+                            discord_bot.loop.run_until_complete(
+                                discord_bot.new_time(
+                                    "<@&1166081385732259941> Please verify "
+                                    + f"[the new **fastest** time]({time_url}) on '"
+                                    + self.trail_name
+                                    + "' by '"
+                                    + self.network_player.info.steam_name
+                                    + "' of "
+                                    + our_time
+                                )
                             )
-                        )
                     else:
                         discord_bot = self.network_player.parent.discord_bot
-                        discord_bot.loop.run_until_complete(
-                            discord_bot.new_time(
-                                f"||(debug message: [new **non-fastest** time](https://split-timer.nohumanman.com/time/{time_id}) on '"
-                                + self.trail_name
-                                + "' by '"
-                                + self.network_player.steam_name
-                                + "' of "
-                                + our_time + "||"
+                        if discord_bot is not None:
+                            discord_bot.loop.run_until_complete(
+                                discord_bot.new_time(
+                                    f"||(debug message: [new **non-fastest** time]({time_url}) on '"
+                                    + self.trail_name
+                                    + "' by '"
+                                    + self.network_player.info.steam_name
+                                    + "' of "
+                                    + our_time + "||"
+                                )
                             )
-                        )
                 except RuntimeError as e:
-                    split_timer_logger.warning("Failed to submit time to discord server %s", e)
+                    logging.warning("Failed to submit time to discord server %s", e)
             except (IndexError, KeyError) as e:
                 logging.error("Fastest not found: %s", e)
         else:
@@ -272,20 +277,26 @@ class TrailTimer():
         self.auto_verify = True
 
     def potential_cheat(self, client_time: float):
-        split_timer_logger.info("id%s '%s' has potentially cheated! client time %s", self.network_player.steam_id, self.network_player.steam_name, client_time)
+        """ Called when the client time does not match the server time. """
+        logging.info(
+            "%s '%s'\t- potentially cheated! client time %s", self.network_player.info.steam_id,
+            self.network_player.info.steam_name, client_time
+        )
         self.invalidate_timer("Client time did not match server time!")
         discord_bot = self.network_player.parent.discord_bot
-        discord_bot.loop.run_until_complete(
-            discord_bot.ban_note(
-                "**Potential cheat** from "
-                f"{self.network_player.steam_name}"
-                " - client time did not match server time!"
-                f"\n\nTime submitted was '{client_time}' and "
-                f"server time was '{(time.time() - self.time_started)}'"
+        if discord_bot is not None:
+            discord_bot.loop.run_until_complete(
+                discord_bot.ban_note(
+                    "**Potential cheat** from "
+                    f"{self.network_player.info.steam_name}"
+                    " - client time did not match server time!"
+                    f"\n\nTime submitted was '{client_time}' and "
+                    f"server time was '{(time.time() - self.time_started)}'"
+                )
             )
-        )
 
     def update_leaderboards(self):
+        """ Update the leaderboards for the trail. """
         for net_player in self.network_player.parent.players:
             net_player.send(
                 "LEADERBOARD|"
@@ -296,21 +307,27 @@ class TrailTimer():
             )
 
     def __new_fastest_time(self, our_time: str):
-        split_timer_logger.info("id%s '%s' new fastest time!", self.network_player.steam_id, self.network_player.steam_name)
-        discord_bot = self.network_player.parent.discord_bot
-        discord_bot.loop.run_until_complete(
-            discord_bot.new_fastest_time(
-                "🎉 New fastest time on **"
-                + self.trail_name
-                + "** by **"
-                + self.network_player.steam_name
-                + "**! 🎉\nTime to beat is: "
-                + our_time
-            )
+        """ Called when a new fastest time is set. """
+        logging.info(
+            "%s '%s'\t- new fastest time!", self.network_player.info.steam_id,
+            self.network_player.info.steam_name
         )
+        discord_bot = self.network_player.parent.discord_bot
+        if discord_bot is not None:
+            discord_bot.loop.run_until_complete(
+                discord_bot.new_fastest_time(
+                    "🎉 New fastest time on **"
+                    + self.trail_name
+                    + "** by **"
+                    + self.network_player.info.steam_name
+                    + "**! 🎉\nTime to beat is: "
+                    + our_time
+                )
+            )
 
     @staticmethod
     def secs_to_str(secs):
+        """ Convert seconds to a string. """
         secs = float(secs)
         d_mins = int(secs // 60)
         d_secs = int(secs % 60)
@@ -326,6 +343,7 @@ class TrailTimer():
 
     @staticmethod
     def ord(n):
+        """ Convert a number to an ordinal. """
         return (
             str(n)
             + ("th" if 4 <= (n % 100) <= 20 else {

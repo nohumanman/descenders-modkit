@@ -13,7 +13,7 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 # Prevent logging from outputting to stdout
 logging.basicConfig(
     filename=script_path + '/modkit.log',
-    level=logging.WARNING,
+    level=logging.DEBUG,
     format=(
         '%(asctime)s - %(name)s\t - %(levelname)s\t'
         ' - %(filename)s\t - Line %(lineno)d:\t %(message)s'
@@ -21,29 +21,10 @@ logging.basicConfig(
 )
 
 os.chdir(script_path)
-log_location = script_path + "/modkit.log"
-
-split_timer_logger = logging.getLogger('DescendersSplitTimer')
-split_timer_logger.setLevel(logging.WARNING)
-
-handler = logging.FileHandler(log_location)
-handler.setFormatter(
-    logging.Formatter(
-        '%(asctime)s - %(name)s\t - %(levelname)s\t'
-        ' - %(filename)s\t - Line %(lineno)d:\t %(message)s'
-    )
-)
-handler.setLevel(logging.WARNING)
-split_timer_logger.addHandler(handler)
-split_timer_logger.info(
-    "--------------------------------"
-    " Descenders Split Timer Started "
-    "--------------------------------"
-)
 
 # -- Unity Socket Server --
 
-split_timer_logger.info("Main.py - instantiating UnitySocketServer()")
+logging.info("Main.py - instantiating UnitySocketServer()")
 
 dbms = DBMS()
 
@@ -58,7 +39,7 @@ threading.Thread(target=unity_socket_server.start).start()
 
 # -- Website Server --
 
-split_timer_logger.info("Main.py - instantiating Webserver()")
+logging.info("Main.py - instantiating Webserver()")
 
 WEBSITE_IP = "0.0.0.0"
 WEBSITE_PORT = 8080
