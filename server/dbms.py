@@ -15,8 +15,12 @@ def daterange(start_date: datetime, end_date: datetime):
 class DBMS():
     def __init__(self):
         self.db_file = script_path + "/modkit.db"
+        self.wait = False
 
     def execute_sql(self, statement: str, write=False):
+        while self.wait:
+            pass
+        self.wait = True
         with sqlite3.connect(self.db_file, check_same_thread=False) as con:
             cur = con.cursor()
             try:
@@ -26,6 +30,7 @@ class DBMS():
             if write:
                 con.commit()
             result = execution.fetchall()
+        self.wait = False
         return result
 
     def get_id_from_name(self, steam_name):
