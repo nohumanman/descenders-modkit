@@ -695,14 +695,15 @@ namespace ModLoaderSolution
             }
             return targets;
         }
-        public GameObject GetPlayerById(int id)
+        public GameObject GetPlayerBySteamName(string name)
         {
-            return null;
+            // TEMPORARY
+            return GetPlayer();
         }
-        public void SpectatePlayerCustom(int id)
+        public void SpectatePlayerCustom(string name)
         {
-            GameObject player = GetPlayerById(id);
-
+            GameObject player = GetPlayerBySteamName(name);
+            FindObjectOfType<FollowCamSystem>().subject = player;
         }
         public void SpectatePlayer(int id)
         {

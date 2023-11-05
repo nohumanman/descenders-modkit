@@ -14,6 +14,8 @@ namespace ModLoaderSolution
         public Vector3 currentCamLoc = Vector3.zero;
         public void Update()
         {
+            if (subject == null)
+                return;
             Utilities.instance.DisableControlledCam();
             float closest = Mathf.Infinity;
             bool anyValid = false;
