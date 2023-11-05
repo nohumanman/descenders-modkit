@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,7 +28,7 @@ namespace ModLoaderSolution
                     }
                 }
             if (!anyValid)
-                currentCamLoc = Utilities.instance.GetPlayer().transform.position;
+                currentCamLoc = Utilities.instance.GetPlayer().transform.position - Utilities.instance.GetPlayer().transform.forward*3;
             if (currentCamLoc != Vector3.zero)
             {
                 foreach(Camera cam in FindObjectsOfType<Camera>())
