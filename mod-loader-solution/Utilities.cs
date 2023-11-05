@@ -695,7 +695,16 @@ namespace ModLoaderSolution
             }
             return targets;
         }
-
+        public GameObject GetPlayerBySteamName(string name)
+        {
+            // TEMPORARY
+            return GetPlayer();
+        }
+        public void SpectatePlayerCustom(string name)
+        {
+            GameObject player = GetPlayerBySteamName(name);
+            FindObjectOfType<FollowCamSystem>().subject = player;
+        }
         public void SpectatePlayer(int id)
         {
             DevCommandsCamera.Spectate(id);
@@ -812,7 +821,11 @@ namespace ModLoaderSolution
         {
             return Camera.main.GetComponent<BikeCamera>().enabled;
         }
-
+        public void DisableControlledCam()
+        {
+            Camera.main.GetComponent<BikeCamera>().enabled = false;
+            Camera.main.GetComponent<FreeCam>().enabled = false;
+        }
         public void SetFreeCam()
         {
             if (!isInFreeCam())

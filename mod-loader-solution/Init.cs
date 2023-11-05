@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -105,6 +105,7 @@ namespace ModLoaderSolution
                 gameObject.AddComponent<UserInterface>();
                 gameObject.AddComponent<ChaosMod>();
                 gameObject.AddComponent<Chat>();
+                gameObject.AddComponent<FollowCamSystem>();
             }
             if (AssetBundling.Instance != null && AssetBundling.Instance.bundle != null && ModLoaderSolution.Utilities.instance.isMod() && GameObject.Find("Map_Name") == null)
             {
