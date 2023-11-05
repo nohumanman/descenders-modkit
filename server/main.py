@@ -1,7 +1,5 @@
 """ Main function of descenders-modkit server """
 import threading
-import time
-import random
 import logging
 import os
 from unity_socket_server import UnitySocketServer
@@ -68,21 +66,8 @@ webserver = Webserver(unity_socket_server, dbms)
 
 discord_bot = DiscordBot(DISCORD_TOKEN, "!", unity_socket_server, dbms)
 unity_socket_server.discord_bot = discord_bot
-SHOULD_RANDOMISE = True
 
 webserver.discord_bot = discord_bot
-
-def riders_gate():
-    """ Function to call the 'randomgate' function on """
-    while True:
-        time.sleep(25)
-        if SHOULD_RANDOMISE:
-            rand = str(random.randint(0, 3000) / 1000)
-            for player in unity_socket_server.players:
-                player.send("RIDERSGATE|" + rand)
-
-riders_gate_thread = threading.Thread(target=riders_gate)
-riders_gate_thread.start()
 
 if __name__ == "__main__":
     webserver.webserver_app.run(
