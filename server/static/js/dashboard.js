@@ -164,6 +164,12 @@ var app = new Vue({
             var s = new Date(unix_timestamp * 1000).toLocaleDateString("en-UK")
             return s;
         },
+        timestamp_to_date_time(unix_timestamp){
+            var date = new Date(unix_timestamp * 1000);
+            var options = { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+            var s = date.toLocaleDateString("en-UK", options);
+            return s;
+        },
         secs_to_str(secs){
             secs = parseFloat(secs);
             d_mins = Math.floor(secs / 60);
