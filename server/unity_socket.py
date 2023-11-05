@@ -384,6 +384,8 @@ class UnitySocket():
 
     def on_map_exit(self):
         self.update_concurrent_users()
+        for trail_name, trail in self.trails.items():
+            trail.invalidate_times()
         self.trails = {}
         self.dbms.end_session(
             self.steam_id,
