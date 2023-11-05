@@ -3,6 +3,7 @@ import sqlite3
 import time
 import os
 from datetime import datetime, timedelta
+import logging
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -623,6 +624,11 @@ class DBMS():
         penalty: float,
         verified: str
     ):
+        logging.info(
+            "submit_time(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            steam_id, split_times, trail_name, being_monitored,
+            current_world, bike_type, starting_speed, version, penalty, verified
+        )
         time_id = hash(
             str(split_times[len(split_times)-1])
             + str(steam_id)
