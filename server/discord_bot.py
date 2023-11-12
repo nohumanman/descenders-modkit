@@ -32,11 +32,11 @@ class DiscordBot(commands.Bot):
         self.changing_presence = False
         self.time_of_last_lux_request = 0
         self.command_outputs = {
-            "!help": "this message",
-            "!inspect <time_id>": "shows details of a particular run",
-            "!top <number>" : "shows the top <number> of runs on a trail",
-            "!totaltime" : "shows the total time spent on a trail entered",
-            "!info <player_name>" : "shows info about a player"
+            "help": "this message",
+            "inspect <time_id>": "shows details of a particular run",
+            "top <number>" : "shows the top <number> of runs on a trail",
+            "totaltime" : "shows the total time spent on a trail entered",
+            "info <player_name>" : "shows info about a player"
         }
         threading.Thread(target=self.loop.run_forever).start()
 
@@ -86,7 +86,7 @@ class DiscordBot(commands.Bot):
         if message.content.startswith(self.command_prefix + "help"):
             hp = ""
             for command, description in self.command_outputs.items():
-                hp += "`!" + command + "`\r - " + description + "\n"
+                hp += "`!" + command + "` - " + description + "\n"
             await message.channel.send(hp)
         if (
             (
