@@ -206,14 +206,14 @@ class Webserver():
             try:
                 if args is None:
                     return "Failed - no args"
-                self.socket_server.get_player_by_id(player_id).send(args)
+                await self.socket_server.get_player_by_id(player_id).send(args)
                 if args.startswith("SET_BIKE"):
                     specified = args[9:10]
                     player = self.socket_server.get_player_by_id(player_id)
                     bike_corresponding = {"1": "downhill", "0": "enduro", "2": "hardtail"}
                     player.info.bike_type = bike_corresponding[specified]
             except PlayerNotFound:
-                pass
+                return "Player not found"
             return ""
         return "FAILED - NOT VALID PERMISSIONS!", 401
 
@@ -339,7 +339,7 @@ class Webserver():
             )
         })
 
-    async def permission(self):
+    def permission(self):
         """ Function to get the permission of a user """
         oauth2_token = session.get('oauth2_token')
         if oauth2_token is None:
