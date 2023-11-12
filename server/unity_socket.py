@@ -75,8 +75,6 @@ operations = {
         lambda netPlayer, data: netPlayer.set_version(str(data[1])),
     "GET_MEDALS":
         lambda netPlayer, data: netPlayer.get_medals(str(data[1])),
-    "LOG_LINE":
-        lambda netPlayer, data: netPlayer.log_line(data[1:]),
 }
 
 
@@ -112,16 +110,6 @@ class UnitySocket():
             last_trick="", reputation=0,
             version="OUTDATED", time_started=time.time()
         )
-
-    async def log_line(self, line):
-        return
-        """ Log a line of data to a text file for a specific Steam user. """
-        line = "|".join(line)
-        with open(
-            f"{os.getcwd()}/output_logs/{self.info.steam_id}.txt","a+",
-            encoding="utf-8"
-        ) as file:
-            file.write(f"{round(time.time())} - {line}\n")
 
     async def send_chat_message(self, mess: str):
         """ Send a chat message to all players in the same session """
