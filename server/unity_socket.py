@@ -50,9 +50,9 @@ operations = {
             netPlayer.send(
                 "SPEEDRUN_DOT_COM_LEADERBOARD|"
                 + data[1] + "|"
-                #+ str(netPlayer.convert_to_unity(
-                #    netPlayer.get_speedrun_dot_com_leaderboard(data[1])
-                #))
+                + str(netPlayer.convert_to_unity(
+                    netPlayer.get_speedrun_dot_com_leaderboard(data[1])
+                ))
             )
         ),
     "LEADERBOARD":
@@ -60,9 +60,9 @@ operations = {
             netPlayer.send(
                 "LEADERBOARD|"
                 + data[1] + "|"
-                #+ str(
-                #    netPlayer.get_leaderboard(data[1])
-                #)
+                + str(
+                    netPlayer.get_leaderboard(data[1])
+                )
             )
         ),
     "CHAT_MESSAGE":
@@ -212,7 +212,7 @@ class UnitySocket():
             ]
         )
 
-    async def get_speedrun_dot_com_leaderboard(self, trail_name):
+    def get_speedrun_dot_com_leaderboard(self, trail_name):
         """ Retrieve the leaderboard data for a specific trail from Speedrun.com """
         api = srcomapi.SpeedrunCom()
         game = api.get_game("Descenders")
