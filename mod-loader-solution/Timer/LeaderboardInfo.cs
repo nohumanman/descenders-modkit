@@ -64,6 +64,11 @@ namespace ModLoaderSolution
             int seconds = intTime % 60;
             float fraction = time * 1000;
             fraction = (fraction % 1000);
+            if (fraction == 1000)
+            {
+                fraction = 0;
+                seconds += 1;
+            }
             string timeText = System.String.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, fraction);
             return timeText;
         }
