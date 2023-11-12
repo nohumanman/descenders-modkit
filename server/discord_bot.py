@@ -188,18 +188,13 @@ class DiscordBot(commands.Bot):
             )[0]
             embed = discord.Embed()
             embed.add_field(name="Current rep", value=stats[2])
-            embed.add_field(name="Times logged on", value=stats[4])
-            embed.add_field(name="Trails Ridden", value=stats[5])
-            embed.add_field(
-                name="Total Time",
-                value=posh_time(float(round(stats[6])))
-            )
-            embed.add_field(name="Total Top Places", value="0 lol")
+            embed.add_field(name="Trails Ridden", value=stats[4])
+            embed.add_field(name="Total Top Places", value="ERROR")
             embed.set_footer(text="Stats for " + str(stats[0]))
             embed.set_author(
                 name=f"Stats for {stats[1]}",
                 url=f"https://steamcommunity.com/profiles/{stats[0]}/",
-                icon_url=stats[7]
+                icon_url=stats[5]
             )
             await message.channel.send(embed=embed)
 

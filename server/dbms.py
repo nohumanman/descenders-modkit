@@ -54,27 +54,14 @@ class DBMS():
                 Player.steam_name,
                 Rep.rep,
                 Max(Rep.timestamp) as last_login,
-                times_logged_on,
                 trails_ridden,
-                total_time,
                 Player.avatar_src
             FROM
                 Player,
                 (
-                    SELECT COUNT(*) as times_logged_on
-                    FROM Session
-                    WHERE Session.steam_id = {steam_id}
-                ),
-                (
                     SELECT COUNT(*) as trails_ridden
                     FROM Time
                     WHERE Time.steam_id = {steam_id}
-                ),
-                (
-                    SELECT
-                        sum(Session.time_ended - Session.time_started)
-                        AS total_time
-                    FROM Session WHERE steam_id = {steam_id}
                 )
             INNER JOIN Rep ON Rep.steam_id = Player.steam_id
             INNER JOIN Time ON Time.steam_id = Player.steam_id
