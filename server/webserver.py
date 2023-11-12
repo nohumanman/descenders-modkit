@@ -339,24 +339,13 @@ class Webserver():
             )
         })
 
-    def __get_cached_user_id(self, oauth2_token):
-        """ Function to get the cached user id of a user with oauth2_token """
-        return self.tokens_and_ids.get(oauth2_token)
-
     async def permission(self):
         """ Function to get the permission of a user """
         oauth2_token = session.get('oauth2_token')
         if oauth2_token is None:
             return "UNKNOWN"
-        # get cached user id
-        user_id = self.__get_cached_user_id(oauth2_token)
-        if user_id is not None:
-            if user_id in self.dbms.get_valid_ids():
-                return "AUTHORISED"
-            return "UNAUTHORISED"
         discord = self.make_session(token=oauth2_token)
         user = discord.get(API_BASE_URL + '/users/@me').json()
-        self.tokens_and_ids[oauth2_token] = user["id"]
         if user["id"] in [str(x[0]) for x in self.dbms.get_valid_ids()]:
             return "AUTHORISED"
         return "UNAUTHORISED"

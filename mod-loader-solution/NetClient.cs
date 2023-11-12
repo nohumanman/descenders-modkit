@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
@@ -207,6 +207,7 @@ namespace ModLoaderSolution
 				Debug.Log("Current Position: " + pos.ToString());
 				SendData("POS|" + pos.x + "|" + pos.y + "|" + pos.z);
             }
+			
 			if (message.StartsWith("CHAT_MESSAGE"))
             {
 				string user = message.Split('|')[1];
@@ -328,8 +329,8 @@ namespace ModLoaderSolution
 			}
 			if (message.StartsWith("SPECTATE"))
             {
-				string name = message.Split('|')[1];
-				Utilities.instance.SpectatePlayer(name);
+				string id = message.Split('|')[1];
+				Utilities.instance.SpectatePlayerCustom(id);
             }
 			if (message.StartsWith("SET_BIKE"))
             {

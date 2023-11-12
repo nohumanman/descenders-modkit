@@ -374,6 +374,12 @@ class UnitySocket():
     def recieve(self):
         """ Recieve data from the descenders unity client """
         while True:
+            if time.time()-self.info.time_started > 20 and self.info.steam_id == "":
+                logging.info(
+                    "%s- failed to give steam id in time, timed out automatically", self.addr
+                )
+                self.conn.close()
+                break
             try:
                 data = self.conn.recv(8192)
                 if not data: # if data is finished
@@ -387,6 +393,9 @@ class UnitySocket():
                 break
             except OSError:
                 pass
+            except Exception as e:
+                logging.error("PLAYER WILL BE DELETED! Error in recieve loop: %s", e)
+                break
 
     def invalidate_all_trails(self, reason: str):
         """ Invalidate all trails for a player. """
@@ -461,7 +470,7 @@ class UnitySocket():
         self.update_concurrent_users()
         for trail_name, trail in self.trails.items():
             if trail_name in self.trails:
-                trail.invalidate_times()
+                trail.invalidate_time()
         self.trails = {}
         self.dbms.end_session(
             self.info.steam_id,

@@ -25,36 +25,35 @@ UNITY_SOCKET_PORT = 65432
 WEBSITE_IP = "0.0.0.0"
 WEBSITE_PORT = 8080
 
-def main():
-    """ Main function of descenders-modkit server """
-    script_path = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(script_path)
 
-    log_file = os.path.join(script_path, "modkit.log")
-    setup_logging(log_file)
+""" Main function of descenders-modkit server """
+script_path = os.path.dirname(os.path.realpath(__file__))
+os.chdir(script_path)
 
-    dbms_instance = DBMS()
+log_file = os.path.join(script_path, "modkit.log")
+setup_logging(log_file)
 
-    # - Unity Socket Server -
-    unity_socket_server = UnitySocketServer(UNITY_SOCKET_IP, UNITY_SOCKET_PORT, dbms_instance)
-    threading.Thread(target=unity_socket_server.start).start()
+dbms_instance = DBMS()
 
-    # - Website Server -
-    webserver = Webserver(unity_socket_server, dbms_instance)
+# - Unity Socket Server -
+unity_socket_server = UnitySocketServer(UNITY_SOCKET_IP, UNITY_SOCKET_PORT, dbms_instance)
+threading.Thread(target=unity_socket_server.start).start()
 
-    # - Discord Bot -
-    discord_bot = DiscordBot(DISCORD_TOKEN, "!", unity_socket_server, dbms_instance)
+# - Website Server -
+webserver = Webserver(unity_socket_server, dbms_instance)
 
-    # assign discord bot in unity socket server and webserver
-    unity_socket_server.discord_bot = discord_bot
-    webserver.discord_bot = discord_bot
+# - Discord Bot -
+discord_bot = DiscordBot(DISCORD_TOKEN, "!", unity_socket_server, dbms_instance)
 
-    # run webserver
-    if __name__ == "__main__":
-        webserver.webserver_app.run(
-            WEBSITE_IP, port=WEBSITE_PORT,
-            debug=True, ssl_context='adhoc'
-        )
-        print("Server available from https://localhost:8080/")
+# assign discord bot in unity socket server and webserver
+unity_socket_server.discord_bot = discord_bot
+webserver.discord_bot = discord_bot
 
-main()
+# run webserver
+if __name__ == "__main__":
+    webserver.webserver_app.run(
+        WEBSITE_IP, port=WEBSITE_PORT,
+        debug=True, ssl_context='adhoc'
+    )
+    print("Server available from https://localhost:8080/")
+

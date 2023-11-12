@@ -695,7 +695,13 @@ namespace ModLoaderSolution
             }
             return targets;
         }
-
+        public void SpectatePlayerCustom(string id)
+        {
+            GameObject player = GetPlayerFromId(id);
+            if (player == null)
+                return;
+            FindObjectOfType<FollowCamSystem>().subject = player;
+        }
         public void SpectatePlayer(int id)
         {
             DevCommandsCamera.Spectate(id);
@@ -812,7 +818,11 @@ namespace ModLoaderSolution
         {
             return Camera.main.GetComponent<BikeCamera>().enabled;
         }
-
+        public void DisableControlledCam()
+        {
+            Camera.main.GetComponent<BikeCamera>().enabled = false;
+            Camera.main.GetComponent<FreeCam>().enabled = false;
+        }
         public void SetFreeCam()
         {
             if (!isInFreeCam())
