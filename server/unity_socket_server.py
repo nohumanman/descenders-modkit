@@ -1,7 +1,8 @@
 """ Used to host the socket server. """
 from typing import TYPE_CHECKING
-import socket
-import threading
+from typing import Union
+import asyncio
+from asyncio import StreamReader, StreamWriter
 import logging
 from unity_socket import UnitySocket
 from dbms import DBMS
@@ -37,28 +38,29 @@ class UnitySocketServer():
                 return player
         raise PlayerNotFound("Cannot find player")
 
-    def create_client(self, conn : socket.socket, addr):
-        """ Creates a client from their socket and address """
-        logging.info("UnitySocketServer.py - Creating client from addr %s", addr)
-        player = UnitySocket(conn, addr, self)
-        self.players.append(player)
-        with conn:
-            player.recieve()
-        logging.info("UnitySocketServer.py - Destroying client from addr %s", addr)
-        self.players.remove(player)
-        del player
+    def get_player_by_addr(self, addr: tuple[str, int]) -> Union[UnitySocket, None]:
+        """ Finds the player connected to the socket server from their address """
+        for player in self.players:
+            if player.addr == addr:
+                return player
+        return None
 
-    def start(self):
-        """ Starts listening on the socket server port and establishes incoming connections """
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            logging.info("Socket server open on %s:%s", self.host, self.port)
-            s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            s.bind((self.host, self.port))
-            s.listen()
-            while True:
-                conn, addr = s.accept()
-                logging.info("Establishing client from %s", addr)
-                threading.Thread(
-                    target=self.create_client,
-                    args=(conn, addr)
-                ).start()
+    async def create_client(self, reader: StreamReader, writer: StreamWriter):
+        """ Creates a client from their socket and address """
+        logging.info("create_client")
+        player = self.get_player_by_addr(writer.get_extra_info('peername'))
+        if player is None:
+            player = UnitySocket(writer.get_extra_info('peername'), self, reader, writer)
+            self.players.append(player)
+        logging.info("Created player")
+        await player.send("SUCCESS")
+        while True:
+            data = await reader.read(1024)
+            if data == b'':
+                logging.info("Recieved EOF. Client disconnected.")
+                return
+            message = data.decode()
+            addr = writer.get_extra_info('peername')
+            #logging.info(f"Received {message!r} from {addr!r}")
+            for mess in message.split("\n"):
+                await player.handle_data(mess)

@@ -27,7 +27,7 @@ class TrailTimer():
         self.exit_time = 0
         self.auto_verify = True
 
-    def add_boundary(self, boundary_guid):
+    async def add_boundary(self, boundary_guid):
         """
         Add a boundary to the list of boundaries encountered during a run.
 
@@ -39,11 +39,11 @@ class TrailTimer():
         if len(self.__boundaries) == 0 and self.started:
             # note we cannot verify this user instantly
             self.auto_verify = False
-            self.network_player.send("SPLIT_TIME|cuts detected, your time will be reviewed")
+            await self.network_player.send("SPLIT_TIME|Time will be reviewed")
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
 
-    def remove_boundary(self, boundary_guid):
+    async def remove_boundary(self, boundary_guid):
         """
         Remove a boundary from the list of boundaries encountered during a run.
         """
@@ -53,9 +53,9 @@ class TrailTimer():
             if self.started:
                 # note we cannot verify this user instantly
                 self.auto_verify = False
-                self.network_player.send("SPLIT_TIME|cuts detected, your time will be reviewed")
+                await self.network_player.send("SPLIT_TIME|Time will be reviewed")
 
-    def start_timer(self, total_checkpoints: int):
+    async def start_timer(self, total_checkpoints: int):
         """ Start the timer. """
         logging.info(
             "%s '%s'\t- started timer with checkpoints %s", self.network_player.info.steam_id,
@@ -63,14 +63,14 @@ class TrailTimer():
         )
         self.auto_verify = True
         if len(self.__boundaries) == 0:
-            self.invalidate_timer("OUT OF BOUNDS!", always=True)
+            await self.invalidate_timer("OUT OF BOUNDS!", always=True)
         else:
             self.started = True
             self.total_checkpoints = total_checkpoints
             self.time_started = time.time()
             self.times = []
 
-    def checkpoint(self, client_time: float):
+    async def checkpoint(self, client_time: float):
         """ Log a checkpoint. """
         logging.info(
             "%s '%s'\t- entered checkpoint with client time %s", self.network_player.info.steam_id,
@@ -129,9 +129,9 @@ class TrailTimer():
                 mess += " PB"
             if mess == "":
                 mess = self.secs_to_str(float(client_time))
-            self.network_player.send(f"SPLIT_TIME|{mess}")
+            await self.network_player.send(f"SPLIT_TIME|{mess}")
 
-    def invalidate_timer(self, reason: str, always=False):
+    async def invalidate_timer(self, reason: str, always=False):
         """ Invalidate the timer. """
         logging.info(
             "%s '%s'\t- invalidated due to %s, always=%s",
@@ -139,15 +139,15 @@ class TrailTimer():
         )
         if (not self.started) and not always:
             return
-        self.network_player.send(f"INVALIDATE_TIME|{reason}")
+        await self.network_player.send(f"INVALIDATE_TIME|{reason}\\n")
         self.started = False
         self.times = []
 
     def update_medals(self):
         """ Update the medals for the player. """
-        self.network_player.get_medals(self.trail_name)
+        #self.network_player.get_medals(self.trail_name)
 
-    def end_timer(self, client_time: float):
+    async def end_timer(self, client_time: float):
         """ End the timer. """
         logging.info(
             "%s '%s'\t- ending timer at client time %s",
@@ -155,20 +155,20 @@ class TrailTimer():
         )
         self.started = False
         if len(self.__boundaries) == 0:
-            self.invalidate_timer("OUT OF BOUNDS ON FINISH!!!")
+            await self.invalidate_timer("OUT OF BOUNDS ON FINISH!!!")
             return
         if self.total_checkpoints is None:
-            self.invalidate_timer("Didn't go through all checkpoints.")
+            await self.invalidate_timer("Didn't go through all checkpoints.")
         if len(self.times) == 0:
             # No times logged, can't finish
             return
         if self.times[len(self.times)-1] < 0:
-            self.invalidate_timer("Time was negative")
+            await self.invalidate_timer("Time was negative")
         # Check if the client time matches the server time
         server_end_time = time.time() - self.time_started
         client_end_time = float(client_time)
         if not(server_end_time - client_end_time < 1 and server_end_time - client_end_time > -1):
-            self.potential_cheat(client_time)
+            await self.potential_cheat(client_time)
             return
         self.times.append(float(client_time))
         self.time_ended = client_time
@@ -189,13 +189,13 @@ class TrailTimer():
                 0,
                 "1" if self.auto_verify else "0"
             )
-            self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
+            #self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
             comment = "\\n"
             if self.auto_verify:
-                comment += "time automatically verified"
+                comment += "verified"
             else:
-                comment += "your time is awaiting review"
-            self.network_player.send(
+                comment += "awaiting review"
+            await self.network_player.send(
                 "TIMER_FINISH|"
                 + str(
                     TrailTimer.secs_to_str(
@@ -270,19 +270,19 @@ class TrailTimer():
             except (IndexError, KeyError) as e:
                 logging.error("Fastest not found: %s", e)
         else:
-            self.invalidate_timer("Didn't enter all checkpoints.", always=True)
+            await self.invalidate_timer("Didn't enter all checkpoints.", always=True)
         self.update_leaderboards()
         self.update_medals()
         self.times = []
         self.auto_verify = True
 
-    def potential_cheat(self, client_time: float):
+    async def potential_cheat(self, client_time: float):
         """ Called when the client time does not match the server time. """
         logging.info(
             "%s '%s'\t- potentially cheated! client time %s", self.network_player.info.steam_id,
             self.network_player.info.steam_name, client_time
         )
-        self.invalidate_timer("Client time did not match server time!")
+        await self.invalidate_timer("Client time did not match server time!")
         discord_bot = self.network_player.parent.discord_bot
         if discord_bot is not None:
             discord_bot.loop.run_until_complete(
@@ -297,14 +297,15 @@ class TrailTimer():
 
     def update_leaderboards(self):
         """ Update the leaderboards for the trail. """
-        for net_player in self.network_player.parent.players:
-            net_player.send(
-                "LEADERBOARD|"
-                + self.trail_name + "|"
-                + str(
-                    self.network_player.get_leaderboard(self.trail_name)
-                )
-            )
+        pass
+        #for net_player in self.network_player.parent.players:
+            #net_player.send(
+            #    "LEADERBOARD|"
+           #     + self.trail_name + "|"
+            #    + str(
+            #        self.network_player.get_leaderboard(self.trail_name)
+            #    )
+            #)
 
     def __new_fastest_time(self, our_time: str):
         """ Called when a new fastest time is set. """

@@ -1,7 +1,9 @@
 """ Main function of descenders-modkit server """
 import threading
 import logging
+import asyncio
 import os
+from concurrent.futures import ThreadPoolExecutor
 from unity_socket_server import UnitySocketServer
 from discord_bot import DiscordBot
 from tokens import DISCORD_TOKEN
@@ -23,7 +25,7 @@ def setup_logging(log_file):
 UNITY_SOCKET_IP = "0.0.0.0"
 UNITY_SOCKET_PORT = 65432
 WEBSITE_IP = "0.0.0.0"
-WEBSITE_PORT = 8080
+WEBSITE_PORT = 8081
 
 
 """ Main function of descenders-modkit server """
@@ -37,7 +39,14 @@ dbms_instance = DBMS()
 
 # - Unity Socket Server -
 unity_socket_server = UnitySocketServer(UNITY_SOCKET_IP, UNITY_SOCKET_PORT, dbms_instance)
-threading.Thread(target=unity_socket_server.start).start()
+
+loop = asyncio.get_event_loop()
+server_coro = asyncio.start_server(
+    unity_socket_server.create_client,
+    unity_socket_server.host,
+    unity_socket_server.port,
+)
+server = loop.run_until_complete(server_coro)
 
 # - Website Server -
 webserver = Webserver(unity_socket_server, dbms_instance)
@@ -49,6 +58,12 @@ discord_bot = DiscordBot(DISCORD_TOKEN, "!", unity_socket_server, dbms_instance)
 unity_socket_server.discord_bot = discord_bot
 webserver.discord_bot = discord_bot
 
+print("running forever")
+
+#loop.run_forever()
+
+threading.Thread(target=loop.run_forever).start()
+
 # run webserver
 if __name__ == "__main__":
     webserver.webserver_app.run(
@@ -56,4 +71,3 @@ if __name__ == "__main__":
         debug=True, ssl_context='adhoc'
     )
     print("Server available from https://localhost:8080/")
-
