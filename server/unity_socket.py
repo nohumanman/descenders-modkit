@@ -1,6 +1,5 @@
 """ Used to manipulate socket connection """
 from typing import TYPE_CHECKING
-import socket
 import dataclasses
 import time
 import logging
@@ -413,6 +412,12 @@ class UnitySocket():
             trail_name, checkpoint_type
         )
         trail = await self.get_trail(trail_name)
+        if trail is None:
+            logging.error(
+                "%s '%s' - trail %s not found!",
+                self.info.steam_id, self.info.steam_name, trail_name
+            )
+            return
         trail.total_checkpoints = int(total_checkpoints)
         if checkpoint_type == "Start":
             await trail.start_timer(total_checkpoints)

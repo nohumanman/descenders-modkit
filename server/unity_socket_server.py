@@ -1,7 +1,6 @@
 """ Used to host the socket server. """
 from typing import TYPE_CHECKING
 from typing import Union
-import asyncio
 from asyncio import StreamReader, StreamWriter
 import logging
 from unity_socket import UnitySocket
@@ -60,7 +59,7 @@ class UnitySocketServer():
                 logging.info("Recieved EOF. Client disconnected.")
                 return
             message = data.decode()
-            addr = writer.get_extra_info('peername')
+            #addr = writer.get_extra_info('peername')
             #logging.info(f"Received {message!r} from {addr!r}")
             for mess in message.split("\n"):
                 await player.handle_data(mess)

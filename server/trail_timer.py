@@ -143,9 +143,9 @@ class TrailTimer():
         self.started = False
         self.times = []
 
-    def update_medals(self):
+    async def update_medals(self):
         """ Update the medals for the player. """
-        #self.network_player.get_medals(self.trail_name)
+        await self.network_player.get_medals(self.trail_name)
 
     async def end_timer(self, client_time: float):
         """ End the timer. """
@@ -271,8 +271,8 @@ class TrailTimer():
                 logging.error("Fastest not found: %s", e)
         else:
             await self.invalidate_timer("Didn't enter all checkpoints.", always=True)
-        self.update_leaderboards()
-        self.update_medals()
+        await self.update_leaderboards()
+        await self.update_medals()
         self.times = []
         self.auto_verify = True
 
@@ -295,17 +295,16 @@ class TrailTimer():
                 )
             )
 
-    def update_leaderboards(self):
+    async def update_leaderboards(self):
         """ Update the leaderboards for the trail. """
-        pass
-        #for net_player in self.network_player.parent.players:
-            #net_player.send(
-            #    "LEADERBOARD|"
-           #     + self.trail_name + "|"
-            #    + str(
-            #        self.network_player.get_leaderboard(self.trail_name)
-            #    )
-            #)
+        for net_player in self.network_player.parent.players:
+            await net_player.send(
+                "LEADERBOARD|"
+                + self.trail_name + "|"
+                + str(
+                    self.network_player.get_leaderboard(self.trail_name)
+                )
+            )
 
     def __new_fastest_time(self, our_time: str):
         """ Called when a new fastest time is set. """

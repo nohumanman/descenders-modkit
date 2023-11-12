@@ -3,7 +3,6 @@ import threading
 import logging
 import asyncio
 import os
-from concurrent.futures import ThreadPoolExecutor
 from unity_socket_server import UnitySocketServer
 from discord_bot import DiscordBot
 from tokens import DISCORD_TOKEN
@@ -32,8 +31,8 @@ WEBSITE_PORT = 8081
 script_path = os.path.dirname(os.path.realpath(__file__))
 os.chdir(script_path)
 
-log_file = os.path.join(script_path, "modkit.log")
-setup_logging(log_file)
+_log_file = os.path.join(script_path, "modkit.log")
+setup_logging(_log_file)
 
 dbms_instance = DBMS()
 
