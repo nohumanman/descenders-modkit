@@ -9,6 +9,7 @@ namespace ModLoaderSolution
     {
         public static TimeModifier Instance { get; private set; }
         public float speed = 1f;
+        public bool enabled = true;
         void Awake()
         {
             if (Instance != null && Instance != this)
@@ -18,6 +19,14 @@ namespace ModLoaderSolution
         }
         void Update()
         {
+            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Y))
+                enabled = !enabled;
+            if (!enabled)
+            {
+                speed = 1f;
+                return;
+            }
+
             if (Input.GetKeyDown("joystick button 8"))
                 speed = 0.5f;
             if (Input.GetKeyUp("joystick button 8"))
