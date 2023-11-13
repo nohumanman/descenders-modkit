@@ -220,7 +220,7 @@ class Webserver():
     async def time_details(self, time_id):
         """ Function to get the details of a time with id time_id """
         try:
-            details = self.dbms.get_time_details(time_id)
+            details = await self.dbms.get_time_details(time_id)
             return render_template(
                 "Time.html",
                 steam_id=details[0],
@@ -242,9 +242,9 @@ class Webserver():
     async def verify_time(self, time_id):
         """ Function to verify a time with id time_id """
         if self.permission() == "AUTHORISED":
-            self.dbms.verify_time(time_id)
+            await self.dbms.verify_time(time_id)
             try:
-                details = self.dbms.get_time_details(time_id)
+                details = await self.dbms.get_time_details(time_id)
                 steam_name = details[1]
                 time_id=details[6]
                 total_time=details[8]
@@ -304,13 +304,13 @@ class Webserver():
 
     async def get_trails(self):
         """ Function to get the trails """ 
-        return jsonify({"trails": self.dbms.get_trails()})
+        return jsonify({"trails": await self.dbms.get_trails()})
 
     async def ignore_time(self, time_id : int, value: str):
         """ Function to ignore a time with id time_id"""
         if self.permission() == "AUTHORISED":
             # value should be 'False' or 'True
-            self.dbms.set_ignore_time(time_id, value)
+            await self.dbms.set_ignore_time(time_id, value)
             return "success"
         return "INVALID_PERMS"
 
@@ -324,29 +324,29 @@ class Webserver():
 
     async def get_worlds(self):
         """ Function to get the worlds """
-        return jsonify({"worlds": self.dbms.get_worlds()})
+        return jsonify({"worlds": await self.dbms.get_worlds()})
 
-    def concurrency(self):
+    async def concurrency(self):
         """ Function to get the concurrency of a map """
         map_name = request.args.get("map_name")
         if map_name == "" or map_name is None:
             return jsonify({})
         return jsonify({
-            "concurrency": self.dbms.get_daily_plays(
+            "concurrency": await self.dbms.get_daily_plays(
                 map_name,
                 datetime(2022, 5, 1),
                 datetime.now()
             )
         })
 
-    def permission(self):
+    async def permission(self):
         """ Function to get the permission of a user """
         oauth2_token = session.get('oauth2_token')
         if oauth2_token is None:
             return "UNKNOWN"
         discord = self.make_session(token=oauth2_token)
         user = discord.get(API_BASE_URL + '/users/@me').json()
-        if user["id"] in [str(x[0]) for x in self.dbms.get_valid_ids()]:
+        if user["id"] in [str(x[0]) for x in await self.dbms.get_valid_ids()]:
             return "AUTHORISED"
         return "UNAUTHORISED"
 
@@ -378,7 +378,7 @@ class Webserver():
         session['oauth2_token'] = token
 
     # routes
-    def callback(self):
+    async def callback(self):
         """ Function to handle the callback of the website """
         try:
             if request.values.get('error'):
@@ -412,7 +412,7 @@ class Webserver():
                             steam_id = connection['id']
                 except KeyError:
                     logging.info("Steam ID Not Found")
-                self.dbms.discord_login(user_id, username, email, steam_id)
+                await self.dbms.discord_login(user_id, username, email, steam_id)
             except (IndexError, KeyError) as e:
                 logging.info("User %s with error %s", user, str(e))
             return redirect("/")
@@ -473,7 +473,7 @@ class Webserver():
         if trail_name is None:
             return jsonify({})
         return jsonify(
-            self.dbms.get_times_after_timestamp(
+            await self.dbms.get_times_after_timestamp(
                 timestamp,
                 trail_name
             )
@@ -485,14 +485,14 @@ class Webserver():
             return render_template("Leaderboard.html")
         return redirect("/")
 
-    def get_leaderboard_trail(self, trail):
+    async def get_leaderboard_trail(self, trail):
         """ Function to get the leaderboard of the website"""
-        return jsonify(self.dbms.get_leaderboard(trail))
+        return jsonify(await self.dbms.get_leaderboard(trail))
 
-    def get_all_times(self):
+    async def get_all_times(self):
         """ Function to get all the times of the website"""
         lim_str = request.args.get("lim")
         if lim_str is None:
             return jsonify({})
         lim = int(lim_str)
-        return jsonify({"times": self.dbms.get_all_times(lim)})
+        return jsonify({"times": await self.dbms.get_all_times(lim)})

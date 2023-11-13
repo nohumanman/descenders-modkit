@@ -78,7 +78,7 @@ class TrailTimer():
         )
         if self.started:
             self.times.append(float(client_time))
-            fastest = self.network_player.dbms.get_fastest_split_times(self.trail_name)
+            fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
             try:
                 time_diff = (
                     fastest[len(self.times)-1]
@@ -102,7 +102,7 @@ class TrailTimer():
             if time_diff != 0:
                 mess += " WR"
 
-            fastest = self.network_player.dbms.get_personal_fastest_split_times(
+            fastest = await self.network_player.dbms.get_personal_fastest_split_times(
                 self.trail_name,
                 self.network_player.info.steam_id
             )
@@ -203,7 +203,7 @@ class TrailTimer():
                     )
                 ) + comment
             )
-            fastest = self.network_player.dbms.get_fastest_split_times(self.trail_name)
+            fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
             try:
                 our_time = TrailTimer.secs_to_str(
                     self.times[len(self.times)-1]
@@ -211,7 +211,7 @@ class TrailTimer():
                 if self.times[len(self.times)-1] < fastest[len(fastest)-1]:
                     self.__new_fastest_time(our_time)
                 try:
-                    fastest = self.network_player.dbms.get_personal_fastest_split_times(
+                    fastest = await self.network_player.dbms.get_personal_fastest_split_times(
                         self.trail_name,
                         self.network_player.info.steam_id
                     )
