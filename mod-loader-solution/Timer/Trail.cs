@@ -19,6 +19,7 @@ namespace ModLoaderSolution
         {
             Debug.Log("ModLoaderSolution.Trail | Found Trail '" + name + "'");
             AddScripts();
+            autoLeaderboardText.GetComponent<TextMesh>().text = "Not connected to server.";
         }
         public void AddScripts()
         {
