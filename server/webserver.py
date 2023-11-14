@@ -289,7 +289,7 @@ class Webserver():
             {
                 "id": player.info.steam_id,
                 "name": player.info.steam_name,
-                "steam_avatar_src": player.get_avatar_src(),
+                "steam_avatar_src": "",#player.get_avatar_src(),
                 "reputation": player.info.reputation,
                 "total_time": "",#player.get_total_time(),
                 "time_on_world": "",#player.get_total_time(onWorld=True),

@@ -1,6 +1,8 @@
 """ Used to host the socket server. """
 from typing import TYPE_CHECKING
 from typing import Union
+import time
+import asyncio
 from asyncio import StreamReader, StreamWriter
 import logging
 from unity_socket import UnitySocket
@@ -19,8 +21,22 @@ class UnitySocketServer():
         self.host = ip
         self.port = port
         self.dbms = dbms
+        self.timeout = 120
         self.discord_bot : DiscordBot | None = None
         self.players: list[UnitySocket] = []
+
+    def delete_player(self, player: UnitySocket):
+        """ Deletes the player from the socket server """
+        self.players.remove(player)
+        player.writer.close()
+        del player
+
+    def delete_timed_out_players(self):
+        """ Deletes players that have timed out """
+        for player in self.players:
+            if (time.time() - player.last_contact) > self.timeout:
+                logging.info("%s '%s' - contact timeout disconnect", player.info.steam_id, player.info.steam_name)
+                self.delete_player(player)
 
     def get_player_by_id(self, _id: str) -> UnitySocket:
         """ Finds the player connected to the socket server from their id """
@@ -47,6 +63,7 @@ class UnitySocketServer():
     async def create_client(self, reader: StreamReader, writer: StreamWriter):
         """ Creates a client from their socket and address """
         logging.info("create_client")
+        self.delete_timed_out_players()
         player = self.get_player_by_addr(writer.get_extra_info('peername'))
         if player is None:
             player = UnitySocket(writer.get_extra_info('peername'), self, reader, writer)
@@ -54,12 +71,21 @@ class UnitySocketServer():
         logging.info("Created player")
         await player.send("SUCCESS")
         while True:
-            data = await reader.read(1024)
+            try:
+                data = await asyncio.wait_for(reader.read(1024), timeout=120)
+            except asyncio.TimeoutError:
+                logging.info("%s '%s' - asyncio timeout", player.info.steam_id, player.info.steam_name)
+                self.delete_player(player)
+                return
             if data == b'':
-                logging.info("Recieved EOF. Client disconnected.")
+                logging.info("%s '%s' - eof timeout", player.info.steam_id, player.info.steam_name)
+                self.delete_player(player)
                 return
             message = data.decode()
             #addr = writer.get_extra_info('peername')
             #logging.info(f"Received {message!r} from {addr!r}")
+            if player is None:
+                logging.error("Player is None")
+                return
             for mess in message.split("\n"):
                 await player.handle_data(mess)

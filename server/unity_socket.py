@@ -48,20 +48,20 @@ operations = {
         lambda netPlayer, data: (
             netPlayer.send(
                 "SPEEDRUN_DOT_COM_LEADERBOARD|"
-                + data[1] + "|"
-                + str(netPlayer.convert_to_unity(
-                    netPlayer.get_speedrun_dot_com_leaderboard(data[1])
-                ))
+                + data[1] + "|ERROR"
+                #+ str(netPlayer.convert_to_unity(
+                #    netPlayer.get_speedrun_dot_com_leaderboard(data[1])
+                #))
             )
         ),
     "LEADERBOARD":
         lambda netPlayer, data: (
             netPlayer.send(
                 "LEADERBOARD|"
-                + data[1] + "|"
-                + str(
-                    netPlayer.get_leaderboard(data[1])
-                )
+                + data[1] + "|ERRORRR"
+                #+ str(
+                #    "ERR"#netPlayer.get_leaderboard(data[1])
+                #)
             )
         ),
     "CHAT_MESSAGE":
@@ -337,10 +337,6 @@ class UnitySocket():
         logging.info(
             "%s '%s'\t- sending data '%s'", self.info.steam_id, self.info.steam_name, data
         )
-        if (time.time() - self.last_contact) > 10:
-            self.writer.close()
-            del self
-            return
         try:
             self.writer.write((data + "\n").encode("utf-8"))
             await self.writer.drain()
@@ -364,6 +360,7 @@ class UnitySocket():
             return
         data_list = data.split("|")
         for operator, function in operations.items():
+            self.last_contact = time.time()
             if data.startswith(operator):
                 await function(self, data_list)
 

@@ -177,7 +177,7 @@ class TrailTimer():
                 "%s '%s'\t- submitting times '%s'", self.network_player.info.steam_id,
                 self.network_player.info.steam_name, self.times
             )
-            time_id = self.network_player.dbms.submit_time(
+            time_id = await self.network_player.dbms.submit_time(
                 self.network_player.info.steam_id,
                 self.times,
                 self.trail_name,
