@@ -235,52 +235,51 @@ var app = new Vue({
             else{
                 return ""
             }
+        },
+        updatePlayers() {
+            $.getJSON("/get", function(data){
+                
+                function compare_lname( a, b )
+                {
+                    if (a.name != null && b.name != null){
+                        if ( a.name.toLowerCase() < b.name.toLowerCase()){
+                            return -1;
+                        }
+                        if ( a.name.toLowerCase() > b.name.toLowerCase()){
+                            return 1;
+                        }
+                    }
+                    return 0;
+                }
+                //data["players"].sort(compare_lname);
+                app.players = data["players"];
+                if (app.players[0] == null || app.players[0].id != "ALL"){
+                    app.players.unshift(
+                        {
+                            "name":"All Players",
+                            "id" : "ALL",
+                            "command" : "",
+                            "address": ["0.0.0.0", 6969],
+                            "steam_avatar_src" : "https://dinahjean.files.wordpress.com/2020/04/all.jpg",
+                            "time_on_world": 0,
+                            "total_time": 0,
+                            "time_loaded": startTime/1000,
+                            "world_name": "this dashboard",
+                            "reputation":  0,
+                            "version": "0.0.0",
+                            "bike_type": ""
+                        }
+                    )
+                }
+            })
         }
     }
 });
 
 let startTime = new Date().getTime();
 
-function updatePlayers() {
-    $.getJSON("/get", function(data){
-        
-        function compare_lname( a, b )
-        {
-            if (a.name != null && b.name != null){
-                if ( a.name.toLowerCase() < b.name.toLowerCase()){
-                    return -1;
-                }
-                if ( a.name.toLowerCase() > b.name.toLowerCase()){
-                    return 1;
-                }
-            }
-            return 0;
-        }
-        //data["players"].sort(compare_lname);
-        app.players = data["players"];
-        if (app.players[0] == null || app.players[0].id != "ALL"){
-            app.players.unshift(
-                {
-                    "name":"All Players",
-                    "id" : "ALL",
-                    "command" : "",
-                    "address": ["0.0.0.0", 6969],
-                    "steam_avatar_src" : "https://dinahjean.files.wordpress.com/2020/04/all.jpg",
-                    "time_on_world": 0,
-                    "total_time": 0,
-                    "time_loaded": startTime/1000,
-                    "world_name": "this dashboard",
-                    "reputation":  0,
-                    "version": "0.0.0",
-                    "bike_type": ""
-                }
-            )
-        }
-    })
-}
-
 //app.setSelf('UNKNOWN');
-updatePlayers();
+app.updatePlayers();
 app.CheckStatus();
 //setInterval(updatePlayers, 1000);
 //setInterval(app.CheckStatus, 1000);
