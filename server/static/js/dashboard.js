@@ -184,6 +184,10 @@ var app = new Vue({
             d_secs = Math.floor(secs % 60)
             fraction = secs * 1000;
             fraction = Math.round(fraction % 1000);
+            if (fraction > 999){
+              d_secs += 1;
+              fraction = 0;
+            }
             d_mins = d_mins.toString();
             d_secs = d_secs.toString();
             fraction = fraction.toString();

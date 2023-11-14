@@ -48,20 +48,20 @@ operations = {
         lambda netPlayer, data: (
             netPlayer.send(
                 "SPEEDRUN_DOT_COM_LEADERBOARD|"
-                + data[1] + "|"
-                + str(netPlayer.convert_to_unity(
-                    netPlayer.get_speedrun_dot_com_leaderboard(data[1])
-                ))
+                + data[1] + "|ERROR"
+                #+ str(netPlayer.convert_to_unity(
+                #    netPlayer.get_speedrun_dot_com_leaderboard(data[1])
+                #))
             )
         ),
     "LEADERBOARD":
         lambda netPlayer, data: (
             netPlayer.send(
                 "LEADERBOARD|"
-                + data[1] + "|"
-                + str(
-                    netPlayer.get_leaderboard(data[1])
-                )
+                + data[1] + "|ERRORRR"
+                #+ str(
+                #    "ERR"#netPlayer.get_leaderboard(data[1])
+                #)
             )
         ),
     "CHAT_MESSAGE":
@@ -102,6 +102,7 @@ class UnitySocket():
         self.reader = reader
         self.writer = writer
         self.trails = {}
+        self.last_contact = time.time()
         self.info: Player = Player(
             steam_name="", steam_id="",
             avatar_src="",
@@ -161,7 +162,7 @@ class UnitySocket():
         )
         for trail_name, trail in self.trails.items():
             trail.starting_speed = starting_speed
-            if starting_speed > self.dbms.max_start_time(trail_name):
+            if starting_speed > await self.dbms.max_start_time(trail_name):
                 trail.invalidate_timer(
                     "You went through the start too fast!"
                 )
@@ -179,7 +180,7 @@ class UnitySocket():
                 unity_leaderboard[key].append(leaderboard_time[key])
         return unity_leaderboard
 
-    def get_leaderboard(self, trail_name):
+    async def get_leaderboard(self, trail_name):
         """
         Get and convert the leaderboard data for a specific trail to a Unity-friendly format.
         """
@@ -193,7 +194,7 @@ class UnitySocket():
                     "bike": leaderboard["bike"],
                     "verified": leaderboard["verified"],
                 }
-                for leaderboard in self.dbms.get_leaderboard(
+                for leaderboard in await self.dbms.get_leaderboard(
                     trail_name, steam_id=self.info.steam_id
                 )
             ]
@@ -229,10 +230,10 @@ class UnitySocket():
         Get the total time spent by a player in the game, optionally within a specific world.
         """
         if on_world:
-            return self.dbms.get_time_on_world(self.info.steam_id, self.info.world_name)
-        return self.dbms.get_time_on_world(self.info.steam_id)
+            return await self.dbms.get_time_on_world(self.info.steam_id, self.info.world_name)
+        return await self.dbms.get_time_on_world(self.info.steam_id)
 
-    def get_avatar_src(self):
+    async def get_avatar_src(self):
         """ Get the URL of the player's avatar image. """
         if self.info.avatar_src is not None:
             return self.info.avatar_src
@@ -240,13 +241,13 @@ class UnitySocket():
             "https://api.steampowered.com/"
             "ISteamUser/GetPlayerSummaries"
             f"/v0002/?key={STEAM_API_KEY}"
-            f"&steamids={self.info.steam_id}", timeout=10
+            f"&steamids={self.info.steam_id}"
         )
         try:
             self.info.avatar_src = avatar_src_req.json()[
                 "response"]["players"][0]["avatarfull"]
         except (IndexError, KeyError):
-            self.info.avatar_src = self.dbms.get_avatar(self.info.steam_id)
+            self.info.avatar_src = await self.dbms.get_avatar(self.info.steam_id)
         return self.info.avatar_src
 
     async def set_steam_name(self, steam_name):
@@ -271,7 +272,7 @@ class UnitySocket():
 
     async def has_both_steam_name_and_id(self):
         """ Called when a player has both a steam name and id. """
-        self.dbms.submit_alias(self.info.steam_id, self.info.steam_name)
+        await self.dbms.submit_alias(self.info.steam_id, self.info.steam_name)
         for player in self.parent.players:
             if (
                 player.info.steam_id == self.info.steam_id
@@ -289,7 +290,7 @@ class UnitySocket():
         for banned_name in banned_names:
             if self.info.steam_name.lower() == banned_name:
                 await self.ban("ILLEGAL")
-        ban_type = self.dbms.get_ban_status(self.info.steam_id)
+        ban_type = await self.dbms.get_ban_status(self.info.steam_id)
         if ban_type == "CLOSE":
             await self.ban("CLOSE")
         elif ban_type == "CRASH":
@@ -310,7 +311,7 @@ class UnitySocket():
     async def get_default_bike(self):
         """ Get the async default bike for a player. """
         if self.info.world_name is not None:
-            start_bike = self.dbms.get_start_bike(self.info.world_name)
+            start_bike = await self.dbms.get_start_bike(self.info.world_name)
             if start_bike is None:
                 return "enduro"
             return start_bike
@@ -324,12 +325,12 @@ class UnitySocket():
             self.info.steam_name, world_name
         )
         self.info.world_name = world_name
-        self.dbms.update_player(
+        await self.dbms.update_player(
             self.info.steam_id,
             self.info.steam_name,
             self.get_avatar_src()
         )
-        self.dbms.submit_ip(self.info.steam_id, self.addr[0], self.addr[1])
+        await self.dbms.submit_ip(self.info.steam_id, self.addr[0], self.addr[1])
 
     async def send(self, data: str):
         """ Send data to the descenders unity client """
@@ -354,10 +355,12 @@ class UnitySocket():
 
     async def handle_data(self, data: str):
         """ Handle data sent from the descenders unity client """
+        self.last_contact = time.time()
         if data == "":
             return
         data_list = data.split("|")
         for operator, function in operations.items():
+            self.last_contact = time.time()
             if data.startswith(operator):
                 await function(self, data_list)
 
@@ -443,7 +446,7 @@ class UnitySocket():
             if trail_name in self.trails:
                 trail.invalidate_time()
         self.trails = {}
-        self.dbms.end_session(
+        await self.dbms.end_session(
             self.info.steam_id,
             self.info.time_started,
             time.time(),
@@ -472,7 +475,7 @@ class UnitySocket():
             "%s '%s'\t- fetched medals on trail '%s'",
             self.info.steam_id, self.info.steam_name, trail_name
         )
-        (rainbow, gold, silver, bronze) = self.dbms.get_medals(
+        (rainbow, gold, silver, bronze) = await self.dbms.get_medals(
             self.info.steam_id,
             trail_name
         )

@@ -32,11 +32,11 @@ class DiscordBot(commands.Bot):
         self.changing_presence = False
         self.time_of_last_lux_request = 0
         self.command_outputs = {
-            "!help": "this message",
-            "!inspect <time_id>": "shows details of a particular run",
-            "!top <number>" : "shows the top <number> of runs on a trail",
-            "!totaltime" : "shows the total time spent on a trail entered",
-            "!info <player_name>" : "shows info about a player"
+            "help": "this message",
+            "inspect <time_id>": "shows details of a particular run",
+            "top <number>" : "shows the top <number> of runs on a trail",
+            "totaltime" : "shows the total time spent on a trail entered",
+            "info <player_name>" : "shows info about a player"
         }
         threading.Thread(target=self.loop.run_forever).start()
 
@@ -86,7 +86,7 @@ class DiscordBot(commands.Bot):
         if message.content.startswith(self.command_prefix + "help"):
             hp = ""
             for command, description in self.command_outputs.items():
-                hp += "`!" + command + "`\r - " + description + "\n"
+                hp += "`!" + command + "` - " + description + "\n"
             await message.channel.send(hp)
         if (
             (
@@ -108,7 +108,7 @@ class DiscordBot(commands.Bot):
             self.time_of_last_lux_request = time.time()
         if message.content.startswith(self.command_prefix + "inspect"):
             time_id = message.content.split(" ")[1]
-            split_times = self.dbms.get_split_times(time_id)
+            split_times = await self.dbms.get_split_times(time_id)
             out = "__Inspection of " + time_id + "__\n\n"
             for i, split_time in enumerate(split_times):
                 out += f"Checkpoint {i+1}: {str(split_time)}\n"
@@ -123,7 +123,7 @@ class DiscordBot(commands.Bot):
                 )
             await message.channel.send(out)
         if message.content.startswith(self.command_prefix + "totaltime"):
-            total_times = self.dbms.get_total_times()
+            total_times = await self.dbms.get_total_times()
             text = ""
             i = 1
             for total_time in total_times:
@@ -140,7 +140,7 @@ class DiscordBot(commands.Bot):
                     "Sorry - too many players to display!"
                 )
         if message.author.id in [id for id in self.queue]:
-            leaderboard = self.dbms.get_leaderboard(
+            leaderboard = await self.dbms.get_leaderboard(
                 message.content,
                 self.queue[message.author.id]
             )
@@ -176,32 +176,6 @@ class DiscordBot(commands.Bot):
                     "Sorry - too many players to display!"
                 )
             self.queue.pop(message.author.id)
-        if message.content.startswith(self.command_prefix + "info"):
-            try:
-                player_name = message.content[
-                    len(self.command_prefix + "info "):
-                ]
-            except IndexError:
-                player_name = "nohumanman"
-            stats = self.dbms.get_player_stats(
-                self.dbms.get_id_from_name(player_name)
-            )[0]
-            embed = discord.Embed()
-            embed.add_field(name="Current rep", value=stats[2])
-            embed.add_field(name="Times logged on", value=stats[4])
-            embed.add_field(name="Trails Ridden", value=stats[5])
-            embed.add_field(
-                name="Total Time",
-                value=posh_time(float(round(stats[6])))
-            )
-            embed.add_field(name="Total Top Places", value="0 lol")
-            embed.set_footer(text="Stats for " + str(stats[0]))
-            embed.set_author(
-                name=f"Stats for {stats[1]}",
-                url=f"https://steamcommunity.com/profiles/{stats[0]}/",
-                icon_url=stats[7]
-            )
-            await message.channel.send(embed=embed)
 
         if message.content.startswith(self.command_prefix + 'top'):
             try:

@@ -78,7 +78,7 @@ class TrailTimer():
         )
         if self.started:
             self.times.append(float(client_time))
-            fastest = self.network_player.dbms.get_fastest_split_times(self.trail_name)
+            fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
             try:
                 time_diff = (
                     fastest[len(self.times)-1]
@@ -102,7 +102,7 @@ class TrailTimer():
             if time_diff != 0:
                 mess += " WR"
 
-            fastest = self.network_player.dbms.get_personal_fastest_split_times(
+            fastest = await self.network_player.dbms.get_personal_fastest_split_times(
                 self.trail_name,
                 self.network_player.info.steam_id
             )
@@ -177,7 +177,7 @@ class TrailTimer():
                 "%s '%s'\t- submitting times '%s'", self.network_player.info.steam_id,
                 self.network_player.info.steam_name, self.times
             )
-            time_id = self.network_player.dbms.submit_time(
+            time_id = await self.network_player.dbms.submit_time(
                 self.network_player.info.steam_id,
                 self.times,
                 self.trail_name,
@@ -203,7 +203,7 @@ class TrailTimer():
                     )
                 ) + comment
             )
-            fastest = self.network_player.dbms.get_fastest_split_times(self.trail_name)
+            fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
             try:
                 our_time = TrailTimer.secs_to_str(
                     self.times[len(self.times)-1]
@@ -211,7 +211,7 @@ class TrailTimer():
                 if self.times[len(self.times)-1] < fastest[len(fastest)-1]:
                     self.__new_fastest_time(our_time)
                 try:
-                    fastest = self.network_player.dbms.get_personal_fastest_split_times(
+                    fastest = await self.network_player.dbms.get_personal_fastest_split_times(
                         self.trail_name,
                         self.network_player.info.steam_id
                     )
@@ -333,6 +333,9 @@ class TrailTimer():
         d_secs = int(secs % 60)
         fraction = float(secs * 1000)
         fraction = round(fraction % 1000)
+        if fraction == 1000:
+            fraction = 0
+            d_secs += 1
         if len(str(d_mins)) == 1:
             d_mins = "0" + str(d_mins)
         if len(str(d_secs)) == 1:
