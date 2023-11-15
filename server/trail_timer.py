@@ -189,7 +189,7 @@ class TrailTimer():
                 0,
                 "1" if self.auto_verify else "0"
             )
-            #self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
+            await self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
             comment = "\\n"
             if self.auto_verify:
                 comment += "verified"
