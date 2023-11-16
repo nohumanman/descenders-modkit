@@ -1,6 +1,6 @@
-# Descenders Modkit
+<a target="_blank" href="https://modkit.nohumanman.com/"><img src="server\src\static\images\Descenders Competitive Logo.png" align="right" height=100/></a>
 
-<div align="center">
+# Descenders Modkit
 
 [![Python application][python-application-svg-url]][python-application-url]
 [![License: GPL v3][gpg-license-svg-url]][gpg-license-url]
@@ -10,7 +10,6 @@
 [gpg-license-svg-url]: https://img.shields.io/badge/License-GPLv3-blue.svg
 [gpg-license-url]: https://www.gnu.org/licenses/gpl-3.0
 
-</div>
 
 > Scripts for modding in Descenders and a server-driven split timer system
 
