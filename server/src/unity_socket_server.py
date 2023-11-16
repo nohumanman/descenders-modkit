@@ -25,6 +25,12 @@ class UnitySocketServer():
         self.discord_bot : DiscordBot | None = None
         self.players: list[UnitySocket] = []
 
+    def get_discord_bot(self) -> DiscordBot:
+        """ Returns the discord bot """
+        if self.discord_bot is None:
+            raise RuntimeError("Discord bot not set")
+        return self.discord_bot
+
     def delete_player(self, player: UnitySocket):
         """ Deletes the player from the socket server """
         self.players.remove(player)
