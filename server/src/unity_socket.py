@@ -274,6 +274,11 @@ class UnitySocket():
 
     async def has_both_steam_name_and_id(self):
         """ Called when a player has both a steam name and id. """
+        await self.dbms.update_player(
+            self.info.steam_id,
+            self.info.steam_name,
+            await self.get_avatar_src()
+        )
         await self.dbms.submit_alias(self.info.steam_id, self.info.steam_name)
         for player in self.parent.players:
             if (
@@ -327,12 +332,7 @@ class UnitySocket():
             self.info.steam_name, world_name
         )
         self.info.world_name = world_name
-        await self.dbms.update_player(
-            self.info.steam_id,
-            self.info.steam_name,
-            self.get_avatar_src()
-        )
-        await self.dbms.submit_ip(self.info.steam_id, self.addr[0], self.addr[1])
+        #await self.dbms.submit_ip(self.info.steam_id, self.addr[0], self.addr[1])
 
     async def send(self, data: str):
         """ Send data to the descenders unity client """
