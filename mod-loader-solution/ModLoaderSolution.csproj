@@ -38,6 +38,7 @@
     <Compile Include="Chat.cs" />
     <Compile Include="CustomTeleporter.cs" />
     <Compile Include="DisableOnAny.cs" />
+    <Compile Include="FollowCamSystem.cs" />
     <Compile Include="Init.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Modifiers\CameraModifier.cs" />
