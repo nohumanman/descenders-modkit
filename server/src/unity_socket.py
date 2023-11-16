@@ -427,7 +427,7 @@ class UnitySocket():
                 self.info.steam_id, self.info.steam_name, trail_name
             )
             return
-        trail.total_checkpoints = int(total_checkpoints)
+        trail.timer_info.total_checkpoints = int(total_checkpoints)
         if checkpoint_type == "Start":
             await trail.start_timer(total_checkpoints)
         if checkpoint_type == "Intermediate":
