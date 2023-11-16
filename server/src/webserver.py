@@ -308,9 +308,15 @@ class Webserver():
 
     async def ignore_time(self, time_id : int, value: str):
         """ Function to ignore a time with id time_id"""
-        if self.permission() == "AUTHORISED":
+        if await self.permission() == "AUTHORISED":
             # value should be 'False' or 'True
             await self.dbms.set_ignore_time(time_id, value)
+            if self.discord_bot is not None:
+                self.discord_bot.loop.run_until_complete(
+                    self.discord_bot.new_time(
+                        f"[Time](https://modkit.nohumanman.com/time/{time_id}) has been deleted."
+                    )
+                )
             return "success"
         return "INVALID_PERMS"
 
