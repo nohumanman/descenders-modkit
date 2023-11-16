@@ -167,8 +167,16 @@ class TrailTimer():
                 lambda: not self.timer_info.started,
             "ERR007: Client time did not match server time":
                 lambda: not(
-                    (time.time() - self.timer_info.time_started) - self.timer_info.times[len(self.timer_info.times)-1] < 1
-                    and (time.time() - self.timer_info.time_started) - self.timer_info.times[len(self.timer_info.times)-1] > -1
+                    (
+                        (
+                            (time.time() - self.timer_info.time_started)
+                            - self.timer_info.times[len(self.timer_info.times)-1]
+                        ) < 1
+                    and (
+                        (time.time() - self.timer_info.time_started)
+                        - self.timer_info.times[len(self.timer_info.times)-1]
+                        ) > -1
+                    )
                 )
         }
         for error_message, error in errors.items():

@@ -25,7 +25,7 @@ class UnitySocketServer():
         self.discord_bot : DiscordBot | None = None
         self.players: list[UnitySocket] = []
 
-    def get_discord_bot(self) -> DiscordBot:
+    def get_discord_bot(self) -> 'DiscordBot':
         """ Returns the discord bot """
         if self.discord_bot is None:
             raise RuntimeError("Discord bot not set")

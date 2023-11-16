@@ -101,6 +101,7 @@ class UnitySocket():
         )
 
     async def send_leaderboard(self, trail_name: str):
+        """ Send the leaderboard data for a specific trail to the descenders unity client """
         await self.send(
             "SPEEDRUN_DOT_COM_LEADERBOARD|"
             + trail_name + "|"
@@ -110,6 +111,7 @@ class UnitySocket():
         )
 
     async def send_speedrun_leaderboard(self, trail_name: str):
+        """ Send the leaderboard data for a specific trail to the descenders unity client """
         await self.send(
             "LEADERBOARD|"
             + trail_name + "|"
