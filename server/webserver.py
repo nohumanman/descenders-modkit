@@ -201,7 +201,7 @@ class Webserver():
 
     async def eval(self, player_id):
         """ Function to evaluate commands sent to player with id player_id """
-        if self.permission() == "AUTHORISED":
+        if await self.permission() == "AUTHORISED":
             args = request.args.get("order")
             try:
                 if args is None:
@@ -241,7 +241,7 @@ class Webserver():
 
     async def verify_time(self, time_id):
         """ Function to verify a time with id time_id """
-        if self.permission() == "AUTHORISED":
+        if await self.permission() == "AUTHORISED":
             await self.dbms.verify_time(time_id)
             try:
                 details = await self.dbms.get_time_details(time_id)
@@ -263,7 +263,7 @@ class Webserver():
 
     async def get_output_log(self, player_id):
         """ Function to get the output log of a player with id player_id """
-        if self.permission() == "AUTHORISED":
+        if await self.permission() == "AUTHORISED":
             lines = ""
             try:
                 with open(
@@ -289,7 +289,7 @@ class Webserver():
             {
                 "id": player.info.steam_id,
                 "name": player.info.steam_name,
-                "steam_avatar_src": "",#player.get_avatar_src(),
+                "steam_avatar_src": await player.get_avatar_src(),
                 "reputation": player.info.reputation,
                 "total_time": "",#player.get_total_time(),
                 "time_on_world": "",#player.get_total_time(onWorld=True),
@@ -353,8 +353,8 @@ class Webserver():
     async def logged_in(self):
         """ Function to check if a user is logged in """
         return (
-            self.permission() == "AUTHORISED"
-            or self.permission() == "UNAUTHORISED"
+            await self.permission() == "AUTHORISED"
+            or await self.permission() == "UNAUTHORISED"
         )
 
     def make_session(self, token=None, state=None, scope=None):

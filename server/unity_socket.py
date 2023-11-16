@@ -237,7 +237,7 @@ class UnitySocket():
 
     async def get_avatar_src(self):
         """ Get the URL of the player's avatar image. """
-        if self.info.avatar_src is not None:
+        if self.info.avatar_src != "":
             return self.info.avatar_src
         avatar_src_req = requests.get(
             "https://api.steampowered.com/"

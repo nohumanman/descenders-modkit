@@ -209,7 +209,7 @@ class TrailTimer():
                     self.times[len(self.times)-1]
                 )
                 if self.times[len(self.times)-1] < fastest[len(fastest)-1]:
-                    self.__new_fastest_time(our_time)
+                    await self.__new_fastest_time(our_time)
                 try:
                     fastest = await self.network_player.dbms.get_personal_fastest_split_times(
                         self.trail_name,
@@ -306,7 +306,7 @@ class TrailTimer():
                 )
             )
 
-    def __new_fastest_time(self, our_time: str):
+    async def __new_fastest_time(self, our_time: str):
         """ Called when a new fastest time is set. """
         logging.info(
             "%s '%s'\t- new fastest time!", self.network_player.info.steam_id,
@@ -314,8 +314,7 @@ class TrailTimer():
         )
         discord_bot = self.network_player.parent.discord_bot
         if discord_bot is not None:
-            discord_bot.loop.run_until_complete(
-                discord_bot.new_fastest_time(
+            await discord_bot.new_fastest_time(
                     "🎉 New fastest time on **"
                     + self.trail_name
                     + "** by **"
@@ -323,7 +322,6 @@ class TrailTimer():
                     + "**! 🎉\nTime to beat is: "
                     + our_time
                 )
-            )
 
     @staticmethod
     def secs_to_str(secs):
