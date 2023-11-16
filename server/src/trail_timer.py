@@ -179,17 +179,10 @@ class TrailTimer():
 
     async def end_timer(self, client_time: float):
         """ End the timer. """
-        logging.info(
-            "%s '%s'\t- ending timer at client time %s",
-            self.network_player.info.steam_id, self.network_player.info.steam_name, client_time
-        )
-        self.timer_info.times.append(float(client_time))
+        self.timer_info.times.append(float(client_time)) # add the final time
+        # check if we can end the timer
         if not await self.can_end():
             return
-        logging.info(
-            "%s '%s'\t- submitting times '%s'", self.network_player.info.steam_id,
-            self.network_player.info.steam_name, self.timer_info.times
-        )
         # submit the time to the database
         time_id = await self.network_player.dbms.submit_time(
             self.network_player.info.steam_id,
