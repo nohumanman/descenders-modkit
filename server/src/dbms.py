@@ -447,8 +447,8 @@ class DBMS():
                 AND
                 checkpoint_num = max_checkpoint
                 AND
-                (Time.ignore = "False" OR Time.ignore is NULL)
-                AND (Time.verified = "1" OR Time.steam_id = "{steam_id}")
+                (Time.ignore = "False")
+                AND (Time.verified = 1 OR Time.steam_id = "{steam_id}")
             GROUP BY
                 trail_name,
                 Player.steam_id
