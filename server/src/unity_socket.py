@@ -5,6 +5,7 @@ import time
 import logging
 import os
 import asyncio
+import aiosqlite
 import requests
 import srcomapi
 import srcomapi.datatypes as dt
@@ -253,7 +254,10 @@ class UnitySocket():
             self.info.avatar_src = avatar_src_req.json()[
                 "response"]["players"][0]["avatarfull"]
         except (IndexError, KeyError):
-            self.info.avatar_src = await self.dbms.get_avatar(self.info.steam_id)
+            try:
+                self.info.avatar_src = await self.dbms.get_avatar(self.info.steam_id)
+            except aiosqlite.OperationalError:
+                self.info.avatar_src = ""
         return self.info.avatar_src
 
     async def set_steam_name(self, steam_name):
