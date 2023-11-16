@@ -83,6 +83,13 @@ var app = new Vue({
                 });
             }
         },
+        TimeStateToColour(time){
+            if (time.ignore == "True")
+                return "red"
+            if (time.verified == "0")
+                return "yellow"
+            return ""
+        },
         SilentUrlSwitch(url){
             const nextURL = url;
             const nextTitle = 'Descenders Modkit';
