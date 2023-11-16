@@ -35,7 +35,8 @@ class UnitySocketServer():
         """ Deletes players that have timed out """
         for player in self.players:
             if (time.time() - player.last_contact) > self.timeout:
-                logging.info("%s '%s' - contact timeout disconnect", player.info.steam_id, player.info.steam_name)
+                logging.info("%s '%s' - contact timeout disconnect",
+                             player.info.steam_id, player.info.steam_name)
                 self.delete_player(player)
 
     def get_player_by_id(self, _id: str) -> UnitySocket:
@@ -74,7 +75,8 @@ class UnitySocketServer():
             try:
                 data = await asyncio.wait_for(reader.read(1024), timeout=120)
             except asyncio.TimeoutError:
-                logging.info("%s '%s' - asyncio timeout", player.info.steam_id, player.info.steam_name)
+                logging.info("%s '%s' - asyncio timeout",
+                             player.info.steam_id, player.info.steam_name)
                 self.delete_player(player)
                 return
             if data == b'':
