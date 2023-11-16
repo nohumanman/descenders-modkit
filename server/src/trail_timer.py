@@ -190,6 +190,7 @@ class TrailTimer():
             "%s '%s'\t- submitting times '%s'", self.network_player.info.steam_id,
             self.network_player.info.steam_name, self.timer_info.times
         )
+        # submit the time to the database
         time_id = await self.network_player.dbms.submit_time(
             self.network_player.info.steam_id,
             self.timer_info.times,
@@ -202,84 +203,44 @@ class TrailTimer():
             0,
             "1" if self.timer_info.auto_verify else "0"
         )
-        await self.network_player.send(f"UPLOAD_REPLAY|{time_id}") # ask client to upload replay
-        comment = "\\n"
-        if self.timer_info.auto_verify:
-            comment += "verified"
-        else:
-            comment += "awaiting review"
+        # ask client to upload replay
+        await self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
+        # send the submitted time to the client
+        comment = "verified" if self.timer_info.auto_verify else "awaiting review"
+        secs_str = TrailTimer.secs_to_str(client_time)
         await self.network_player.send(
-            "TIMER_FINISH|"
-            + str(
-                TrailTimer.secs_to_str(
-                        self.timer_info.times[len(self.timer_info.times)-1]
-                )
-            ) + comment
+            f"TIMER_FINISH|{secs_str}\\n{comment}"
         )
-        fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
-        try:
-            our_time = TrailTimer.secs_to_str(
-                self.timer_info.times[len(self.timer_info.times)-1]
-            )
-            if self.timer_info.times[len(self.timer_info.times)-1] < fastest[len(fastest)-1]:
-                await self.__new_fastest_time(our_time)
-            try:
-                fastest = await self.network_player.dbms.get_personal_fastest_split_times(
-                    self.trail_name,
-                    self.network_player.info.steam_id
-                )
-                try:
-                    fastest_pb = fastest[len(self.timer_info.times)-1]
-                except IndexError:
-                    fastest_pb = -1
-                time_url = f"https://split-timer.nohumanman.com/time/{time_id}"
-                # if the time is faster than the fastest pb or there is no fastest pb
-                # and the time is auto verified
-                if (
-                    self.timer_info.times[len(self.timer_info.times)-1] <= fastest_pb
-                    or fastest_pb == -1 and self.timer_info.auto_verify
-                ):
-                    discord_bot = self.network_player.parent.discord_bot
-                    if discord_bot is not None:
-                        await discord_bot.new_time(
-                            f"Server has auto verified [a new pb]({time_url}) on"
-                            f"'{self.trail_name}' by '{self.network_player.info.steam_name}'"
-                            f"' of {our_time}"
-                        )
-                        
-                elif self.timer_info.times[len(self.timer_info.times)-1] <= fastest_pb or fastest_pb == -1:
-                    discord_bot = self.network_player.parent.discord_bot
-                    if discord_bot is not None:
-                        await discord_bot.new_time(
-                            "<@&1166081385732259941> Please verify "
-                            + f"[the new **fastest** time]({time_url}) on '"
-                            + self.trail_name
-                            + "' by '"
-                            + self.network_player.info.steam_name
-                            + "' of "
-                            + our_time
-                        )
-                        
-                else:
-                    discord_bot = self.network_player.parent.discord_bot
-                    if discord_bot is not None:
-                        discord_bot.loop.run_until_complete(
-                            discord_bot.new_time(
-                                f"||(debug message: [new **non-fastest** time]({time_url}) on '"
-                                + self.trail_name
-                                + "' by '"
-                                + self.network_player.info.steam_name
-                                + "' of "
-                                + our_time + "||"
-                            )
-                        )
-            except RuntimeError as e:
-                logging.warning("Failed to submit time to discord server %s", e)
-        except (IndexError, KeyError) as e:
-            logging.error("Fastest not found: %s", e)
+        # send the time to the discord server if it is a new fastest time
+        local_fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
+        if client_time < local_fastest[len(local_fastest)-1]:
+            await self.__new_fastest_time(secs_str)
+        # send the time to the discord server if it is a new fastest time
+        global_fastest = await self.network_player.dbms.get_personal_fastest_split_times(
+            self.trail_name,
+            self.network_player.info.steam_id
+        )
+        if global_fastest is None or len(global_fastest) == 0:
+            fastest_pb = -1
+        else:
+            fastest_pb = global_fastest[len(global_fastest)-1]
 
+        # send the time to the discord server if it is a new personal best
+        time_url = f"https://split-timer.nohumanman.com/time/{time_id}"
+        if (client_time < fastest_pb or fastest_pb == -1 and self.timer_info.auto_verify):
+            await self.network_player.parent.get_discord_bot().new_time(
+                f"Automatically verified [a new pb]({time_url}) on '{self.trail_name}' by "
+                f"'{self.network_player.info.steam_name}' of {secs_str}"
+            )
+        elif client_time < fastest_pb or fastest_pb == -1:
+            await self.network_player.parent.get_discord_bot().new_time(
+                f"<@&1166081385732259941> Please verify [the new pb time]({time_url}) on "
+                f"'{self.trail_name}' by '{self.network_player.info.steam_name}' of {secs_str}"
+            )
+        # update the leaderboards and medals on connected clients
         await self.update_leaderboards()
         await self.update_medals()
+        # reset the timer
         self.timer_info.times = []
         self.timer_info.auto_verify = True
 
