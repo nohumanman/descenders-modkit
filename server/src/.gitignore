@@ -1,1 +1,3 @@
 tokens.py
+*.db
+*.db-journal
