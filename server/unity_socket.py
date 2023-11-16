@@ -45,25 +45,9 @@ operations = {
     "REP":
         lambda netPlayer, data: netPlayer.set_reputation(data[1]),
     "SPEEDRUN_DOT_COM_LEADERBOARD":
-        lambda netPlayer, data: (
-            netPlayer.send(
-                "SPEEDRUN_DOT_COM_LEADERBOARD|"
-                + data[1] + "|ERROR"
-                #+ str(netPlayer.convert_to_unity(
-                #    netPlayer.get_speedrun_dot_com_leaderboard(data[1])
-                #))
-            )
-        ),
+        lambda netPlayer, data: netPlayer.send_leaderboard(data[1]),
     "LEADERBOARD":
-        lambda netPlayer, data: (
-            netPlayer.send(
-                "LEADERBOARD|"
-                + data[1] + "|ERRORRR"
-                #+ str(
-                #    "ERR"#netPlayer.get_leaderboard(data[1])
-                #)
-            )
-        ),
+        lambda netPlayer, data: netPlayer.send_speedrun_leaderboard(data[1]),
     "CHAT_MESSAGE":
         lambda netPlayer, data: netPlayer.send_chat_message(data[1]),
     "START_SPEED":
@@ -109,6 +93,24 @@ class UnitySocket():
             bike_type="", world_name="",
             last_trick="", reputation=0,
             version="OUTDATED", time_started=time.time()
+        )
+
+    async def send_leaderboard(self, trail_name: str):
+        await self.send(
+            "SPEEDRUN_DOT_COM_LEADERBOARD|"
+            + trail_name + "|"
+            + str(self.convert_to_unity(
+                self.get_speedrun_dot_com_leaderboard(trail_name)
+            ))
+        )
+
+    async def send_speedrun_leaderboard(self, trail_name: str):
+        await self.send(
+            "LEADERBOARD|"
+            + trail_name + "|"
+            + str(
+                await self.get_leaderboard(trail_name)
+            )
         )
 
     async def send_chat_message(self, mess: str):
