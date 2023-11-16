@@ -76,7 +76,11 @@ class Player:
 
 class UnitySocket():
     """ Used to handle the connection to the descenders unity client """
-    def __init__(self, addr, parent: 'UnitySocketServer', reader:  asyncio.StreamReader, writer: asyncio.StreamWriter):
+    def __init__(self,
+                 addr,
+                 parent: 'UnitySocketServer',
+                 reader:  asyncio.StreamReader,
+                 writer: asyncio.StreamWriter):
         logging.info(
             "%s- New Instance created", addr
         )
@@ -243,7 +247,7 @@ class UnitySocket():
             "https://api.steampowered.com/"
             "ISteamUser/GetPlayerSummaries"
             f"/v0002/?key={STEAM_API_KEY}"
-            f"&steamids={self.info.steam_id}"
+            f"&steamids={self.info.steam_id}", timeout=5
         )
         try:
             self.info.avatar_src = avatar_src_req.json()[
