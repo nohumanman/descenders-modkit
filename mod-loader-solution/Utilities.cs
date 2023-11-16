@@ -135,6 +135,16 @@ namespace ModLoaderSolution
         {
 
         }
+        // Note: VERY INNEFFICIENT
+        public List<GameObject> GetNetworkedPlayers()
+        {
+            List<GameObject> networkedPlayers = new List<GameObject>();
+            foreach (GameObject x in FindObjectsOfType<GameObject>()) {
+                if (x.name == "Player_Networked")
+                    networkedPlayers.Add(x);
+            }
+            return networkedPlayers;
+        }
         public void RestartReplay()
         {
             Debug.Log("Utilities | RestartReplay()");
