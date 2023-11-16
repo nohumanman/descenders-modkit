@@ -256,7 +256,7 @@
                                                 <th style="padding:10px;">Version</th>
                                                 <th style="padding:10px;">Replay</th>
                                             </tr>
-                                            <tr v-for="time, x in times">
+                                            <tr v-for="time, x in times" :style="{background: TimeStateToColour(time)}">
                                                 <td style="padding:10px;"><img height="50" width="50" :src="time.avatar_src"></td>
                                                 <td style="padding:10px;"><a target="_blank" :href="'http://steamcommunity.com/profiles/' + time.steam_id">[[time.steam_name]]</a></td>
                                                 <td style="padding:10px;">[[timestamp_to_date_time(time.timestamp)]]</td>

@@ -93,7 +93,7 @@ class DBMS():
             ''', write=True
         )
 
-    async def get_personal_fastest_split_times(self, trail_name, steam_id):
+    async def get_personal_fastest_split_times(self, trail_name: str, steam_id: int):
         """ Get the fastest split times for a given player on a given trail. """
         statement = f'''
             SELECT
@@ -130,7 +130,7 @@ class DBMS():
                 checkpoint_num
             '''
         )
-        split_times = [time[2] for time in times]
+        split_times = [float(time[2]) for time in times]
         return split_times
 
     async def get_fastest_split_times(self,
@@ -447,8 +447,8 @@ class DBMS():
                 AND
                 checkpoint_num = max_checkpoint
                 AND
-                (Time.ignore = "False" OR Time.ignore is NULL)
-                AND (Time.verified = "1" OR Time.steam_id = "{steam_id}")
+                (Time.ignore = "False")
+                AND (Time.verified = 1 OR Time.steam_id = "{steam_id}")
             GROUP BY
                 trail_name,
                 Player.steam_id
@@ -671,7 +671,7 @@ class DBMS():
                 "{steam_id}", "{time_id}", {time.time()},
                 "{current_world}", "{trail_name}",
                 "{str(being_monitored)}", "{bike_type}",
-                "False", "{starting_speed}", "{version}", {penalty}, "{verified}"
+                "False", {starting_speed}, "{version}", {penalty}, "{verified}"
             )
             ''',
             write=True
