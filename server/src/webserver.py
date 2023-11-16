@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     # Imports related to the Discord bot (if any)
     from discord_bot import DiscordBot
 
-OAUTH2_REDIRECT_URI = 'https://split-timer.nohumanman.com/callback'
+OAUTH2_REDIRECT_URI = 'https://modkit.nohumanman.com/callback'
 API_BASE_URL = os.environ.get('API_BASE_URL', 'https://discordapp.com/api')
 AUTHORIZATION_BASE_URL = API_BASE_URL + '/oauth2/authorize'
 TOKEN_URL = API_BASE_URL + '/oauth2/token'
