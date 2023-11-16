@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,7 +12,19 @@ namespace ModLoaderSolution
     public class FollowCamSystem : MonoBehaviour
     {
         public GameObject subject;
-        public List<Vector3> camLocations = new List<Vector3>() { new Vector3(5, 210, 525), new Vector3(41, 197, 507), new Vector3(57, 201, 511), new Vector3(109, 193, 508) };
+        public List<Vector3> camLocations = new List<Vector3>() {
+            new Vector3(246, 401, 26),
+            new Vector3(318, 403, 20),
+            new Vector3(406, 380, 44),
+            new Vector3(444, 343, 93),
+            new Vector3(532, 315, 39),
+            new Vector3(580, 287, 90),
+            new Vector3(543, 258, 129),
+            new Vector3(563, 228, 172),
+            new Vector3(650, 203, 319),
+            new Vector3(615, 200, 384),
+            new Vector3(439, 351, 50)
+        };
         public Vector3 currentCamLoc = Vector3.zero;
         public void OnGUI()
         {
