@@ -671,7 +671,7 @@ class DBMS():
                 "{steam_id}", "{time_id}", {time.time()},
                 "{current_world}", "{trail_name}",
                 "{str(being_monitored)}", "{bike_type}",
-                "False", {starting_speed}, "{version}", {penalty}, "{verified}"
+                "False", {starting_speed}, "{version}", {penalty}, {verified}
             )
             ''',
             write=True
