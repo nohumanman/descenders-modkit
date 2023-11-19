@@ -103,6 +103,13 @@ var app = new Vue({
                 app.cached_output_log = data;
             });
         },
+        GetTimeDiff(time, trail, index){
+            try{
+                if (index == 0)
+                    return 0;
+                return (time - trail.leaderboard[0].time).toFixed(2);
+            } catch(Exception){}
+        },
         GetTrails(){
             $.get("/get-trails", function(data){
                 app.trails = data["trails"];
