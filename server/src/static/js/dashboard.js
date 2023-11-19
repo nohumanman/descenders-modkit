@@ -98,6 +98,21 @@ var app = new Vue({
             // This will create a new entry in the browser's history, without reloading
             window.history.pushState(nextState, nextTitle, nextURL);
         },
+        GetTabByURL(){
+            var url = window.location.href;
+            url_split = url.split("/");
+            var _tab = url_split[url_split.length - 1];
+            switch (_tab){
+                case "dashboard":
+                    return 0;
+                case "times":
+                    return 1;
+                case "trails":
+                    return 2;
+            }
+            app.SilentUrlSwitch('dashboard')
+            return 2;
+        },
         GetPlayerOutputLog(player){
             $.get("/get-output-log/" + player.id, function(data){
                 app.cached_output_log = data;
@@ -303,6 +318,7 @@ app.getSteamId();
 app.GetTrails();
 //app.GetWorlds();
 app.getLeaderboard();
+app.tab = app.GetTabByURL();
 
 app.items = [
     {
