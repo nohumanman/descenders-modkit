@@ -298,14 +298,17 @@
                                         <p style="padding-left:20px; padding-right:20px;">
                                             A trail on <b>[[trail.world_name]]</b> that has been ridden <i>[[trail.times_ridden]]</i> times with an average starting time of [[Math.round(trail.average_start_speed)]].
                                         </p>
-                                        <v-col align="center" style="padding:50px;">
-                                            <v-row v-for="player in trail.leaderboard" style="text-align:center">
-                                                [[player.place]]. [[player.name]] - [[secs_to_str(player.time)]]
-                                            </v-row>
-                                            <v-row v-for="x in 10-trail.leaderboard.length">
-                                                [[trail.leaderboard.length+x]].
-                                            </v-row>
-                                        </v-col>
+                                        <table style="padding:20px;">
+                                            <tr v-for="player, index in trail.leaderboard" style="text-align:center">
+                                                <td style="padding-right:10px;">[[player.place]].</td>
+                                                <td style="text-align:left;">[[player.name]]</td>
+                                                <td style="padding-left:20px;">[[secs_to_str(player.time)]]</td>
+                                                <td style="padding-left:20px;">+[[GetTimeDiff(player.time, trail, index)]]</td>
+                                            </tr>
+                                            <tr v-for="x in 10-trail.leaderboard.length">
+                                                <th>[[trail.leaderboard.length+x]].</th>
+                                            </tr>
+                                        </table>
                                     </v-card>
                                 </v-col>
                             </v-row>
