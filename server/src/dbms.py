@@ -412,6 +412,68 @@ class DBMS():
             })
         return values
 
+    async def get_to_verify(self, trail_name):
+        """ Get runs that would be in the top 10 """
+        statement = f'''
+            SELECT * FROM (
+                SELECT
+                    starting_speed,
+                    steam_name,
+                    bike_type,
+                    MIN(checkpoint_time),
+                    Time.version,
+                    Time.penalty,
+                    Time.verified,
+                    Time.time_id
+                FROM
+                    Time
+                    INNER JOIN
+                        SplitTime ON SplitTime.time_id = Time.time_id
+                    INNER JOIN
+                        (
+                            SELECT
+                                max(checkpoint_num) AS max_checkpoint
+                            FROM
+                                SplitTime
+                                INNER JOIN
+                                    Time ON Time.time_id = SplitTime.time_id
+                                WHERE LOWER(Time.trail_name) = LOWER(
+                                    "{trail_name}"
+                                )
+                        ) ON SplitTime.time_id=Time.time_id
+                    INNER JOIN
+                        Player ON Player.steam_id = Time.steam_id
+                WHERE
+                    LOWER(trail_name) = LOWER("{trail_name}")
+                    AND
+                    checkpoint_num = max_checkpoint
+                    AND
+                    (Time.ignore = "False")
+                GROUP BY
+                    trail_name,
+                    Player.steam_id
+                ORDER BY
+                    checkpoint_time ASC
+                LIMIT 10
+            ) as dat
+            WHERE dat.verified = 0
+        '''
+        result = await self.execute_sql(statement)
+        return [
+            {
+                "place": i + 1,
+                "time": time[3],
+                "name": time[1],
+                "bike": time[2],
+                "starting_speed": time[0],
+                "version": time[4],
+                "penalty": time[5],
+                "verified": str(time[6]),
+                "time_id": str(time[7])
+            }
+            for i, time in enumerate(result)
+        ]
+
     async def get_leaderboard(self, trail_name, num=10, steam_id="") -> list:
         """ Get the leaderboard for a given trail. """
         statement = f'''
