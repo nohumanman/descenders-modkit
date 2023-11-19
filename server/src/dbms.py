@@ -61,6 +61,18 @@ class DBMS():
         '''
         return self.execute_sql(statement)
 
+    async def get_replay_name_from_id(self, time_id):
+        """ Get the replay name associated with a given time. """
+        vals = (await self.execute_sql(
+            f'''
+            SELECT Player.steam_name
+            FROM Time
+            INNER JOIN Player ON Time.steam_id = Player.steam_id
+            WHERE time_id = {time_id}
+            '''
+        ))
+        return f"{vals[0][0]}_{time_id}"
+
     async def get_webhooks(self, trail_name):
         """ Get the webhooks associated with a given trail. """
         return self.execute_sql(

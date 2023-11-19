@@ -11,7 +11,8 @@ from flask import (
     request,
     redirect,
     jsonify,
-    render_template
+    render_template,
+    send_file
 )
 
 # Authlib imports
@@ -185,6 +186,12 @@ class Webserver():
                 self.get_output_log,
                 ["GET"]
             ),
+            WebserverRoute(
+                "/static/replays/<time_id>",
+                "get_replay",
+                self.get_replay,
+                ["GET"]
+            ),
         ]
         self.tokens_and_ids = {}
         self.add_routes()
@@ -216,6 +223,16 @@ class Webserver():
                 return "Player not found"
             return ""
         return "FAILED - NOT VALID PERMISSIONS!", 401
+
+    async def get_replay(self, time_id):
+        time_id = time_id.split(".")[0]
+        try:
+            return send_file(
+                "static/replays/" + time_id + ".replay",
+                download_name=f"{await self.dbms.get_replay_name_from_id(time_id)}.replay"
+            )
+        except FileNotFoundError:
+            return "No replay found!"
 
     async def time_details(self, time_id):
         """ Function to get the details of a time with id time_id """
