@@ -89,7 +89,7 @@ class Webserver():
                 self.me, ["GET"]
             ),
             WebserverRoute(
-                "/split-time", "split_time",
+                "/streaming/split-time", "split_time",
                 self.split_time, ["GET"]
             ),
             WebserverRoute(
@@ -97,7 +97,7 @@ class Webserver():
                 self.permission, ["GET"]
             ),
             WebserverRoute(
-                "/tag", "tag",
+                "/streaming/tag", "tag",
                 self.tag, ["GET"]
             ),
             WebserverRoute(
