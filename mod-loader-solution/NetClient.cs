@@ -103,7 +103,7 @@ namespace ModLoaderSolution
 			form.AddBinaryData("replay", bytes, "replay");
 
 			using (UnityWebRequest www = UnityWebRequest.Post(
-				"https://split-timer.nohumanman.com/upload-outputlog",
+				"https://modkit.nohumanman.com/upload-outputlog",
 				form
 			))
 			{
@@ -129,7 +129,7 @@ namespace ModLoaderSolution
 			form.AddBinaryData("replay", bytes, "replay");
 
 			using (UnityWebRequest www = UnityWebRequest.Post(
-				"https://split-timer.nohumanman.com/upload-replay",
+				"https://modkit.nohumanman.com/upload-replay",
 				form
 			))
 			{
