@@ -227,7 +227,7 @@ class TrailTimer():
             fastest_pb = float(our_fastest[len(our_fastest)-1])
 
         # send the time to the discord server if it is a new personal best
-        time_url = f"https://split-timer.nohumanman.com/time/{time_id}"
+        time_url = f"https://modkit.nohumanman.com/time/{time_id}"
         # note: we use <= here because if the time is the same as the fastest pb, we still want to
         #       send a message to discord
         if ((client_time <= fastest_pb or fastest_pb == -1) and self.timer_info.auto_verify):
