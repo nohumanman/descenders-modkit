@@ -35,17 +35,24 @@ namespace ModLoaderSolution
                 string x = GUI.TextField(new Rect(20, 20+pos, 60, 20), vector3.x.ToString());
                 string y = GUI.TextField(new Rect(20+60, 20 + pos, 60, 20), vector3.y.ToString());
                 string z = GUI.TextField(new Rect(20+60+60, 20 + pos, 60, 20), vector3.z.ToString());
-                if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + pos, 60, 20), "SET"))
+                string fov = GUI.TextField(new Rect(20 + 60 + 60+60, 20 + pos, 60, 20), Camera.main.fieldOfView.ToString());
+                if (GUI.Button(new Rect(20 + 60 + 60 + 60 + 60, 20 + pos, 60, 20), "SET"))
                     camLocations[i] = Camera.main.transform.position;
                 else
                     camLocations[i] = new Vector3(float.Parse(x), float.Parse(y), float.Parse(z));
-                if (GUI.Button(new Rect(20 + 60 + 60 + 60+60, 20 + pos, 60, 20), "GOTO"))
+                if (GUI.Button(new Rect(20 + 60 + 60 + 60 + 60 + 60, 20 + pos, 60, 20), "GOTO"))
                     Camera.main.transform.position = vector3;
+                if (GUI.Button(new Rect(20 + 60 + 60 + 60 + 60 + 60 + 60, 20 + pos, 60, 20), "DEL"))
+                    camLocations.RemoveAt(i);
                 pos += 22;
                 i++;
             }
             if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + pos, 240, 20), "Toggle Follow Cam"))
                 bother = !bother;
+            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + pos, 240, 20), "Look at me"))
+                Camera.main.transform.LookAt(Utilities.instance.GetPlayer().transform);
+            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + pos, 240, 20), "Add Camera"))
+                camLocations.Add(Vector3.zero);
             GUIStyle myButtonStyle2 = new GUIStyle(GUI.skin.button);
             myButtonStyle2.normal.textColor = Color.white;
             myButtonStyle2.normal.background = UserInterface.MakeTex(5, 5, new Color(0.2f, 0.06f, 0.12f));
