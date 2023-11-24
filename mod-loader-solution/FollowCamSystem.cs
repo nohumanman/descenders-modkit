@@ -94,53 +94,57 @@ namespace ModLoaderSolution
         {
             int yPos = 20;
             int i = 0;
+            List<string> title = new List<string>() { "X", "Y", "Z", "PanSpeed", "ShouldZoom", "Proximity"};
+            float xPos = 20;
+            foreach (string key in title)
+            {
+                GUI.Label(new Rect(xPos, yPos, 60, 20), key);
+                xPos += 60;
+            }
+            yPos += 20;
             foreach (Cam cam in cameras)
             {
                 Vector3 vector3 = cam.loc;
                 Dictionary<string, string> fields = new Dictionary<string, string>() {
-                    { "X", cam.loc.x.ToString() } ,
+                    { "X", cam.loc.x.ToString() },
                     { "Y", cam.loc.y.ToString() },
                     { "Z", cam.loc.z.ToString() },
                     { "PanSpeed", cam.panSpeed.ToString() },
                     { "ShouldZoom", cam.shouldZoom.ToString() },
                     { "Proximity", cam.proximity.ToString() }
                 };
-                float xPos = 20;
-                foreach(string field in fields.Keys)
-                {
-                    GUI.Label(new Rect(xPos, yPos, 60, 20), field);
-                    xPos += 60;
-                }
-                yPos += 20;
                 xPos = 20;
                 foreach (string field in fields.Values) {
                     GUI.TextField(new Rect(xPos, yPos, 60, 20), field);
                     xPos += 60;
                 }
-                if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + yPos, 60 + 60 + 60 + 60 + 60, 20), "SET"))
+                if (GUI.Button(new Rect(xPos, yPos, 60, 20), "SET"))
                     cameras[i].loc = Camera.main.transform.position;
                 //else
                 //    cameras[i].loc = new Vector3(float.Parse(x), float.Parse(y), float.Parse(z));
-                if (GUI.Button(new Rect(20 + 60 + 60 + 60 + 60, 20 + yPos, 60, 20), "GOTO"))
+                xPos += 60;
+                if (GUI.Button(new Rect(xPos, yPos, 60, 20), "GOTO"))
                     Camera.main.transform.position = vector3;
-                if (GUI.Button(new Rect(20 + 60 + 60 + 60 + 60 + 60, 20 + yPos, 60, 20), "DEL"))
+                xPos += 60;
+                if (GUI.Button(new Rect(xPos, yPos, 60, 20), "DEL"))
                     cameras.RemoveAt(i);
                 yPos += 22;
                 i++;
             }
-            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + yPos, 240, 20), "Toggle Follow Cam"))
+            xPos = 20;
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Toggle Follow Cam"))
                 bother = !bother;
             yPos += 22;
-            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + yPos, 240, 20), "Look at me"))
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Look at me"))
                 Camera.main.transform.LookAt(Utilities.instance.GetPlayer().transform);
             yPos += 22;
-            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + yPos, 240, 20), "Add Camera"))
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Add Camera"))
                 cameras.Add(new Cam());
             yPos += 22;
-            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + yPos, 240, 20), "Save to cameras.txt"))
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Save to cameras.txt"))
                 SaveToFile();
             yPos += 22;
-            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + yPos, 240, 20), "Load from cameras.txt"))
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Load from cameras.txt"))
                 LoadFromFile();
             GUIStyle myButtonStyle2 = new GUIStyle(GUI.skin.button);
             myButtonStyle2.normal.textColor = Color.white;
