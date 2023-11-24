@@ -11,7 +11,7 @@ namespace ModLoaderSolution
 {
     public class Cam
     {
-        public Vector3 loc; // the location of the camera
+        public Vector3 loc = Vector3.zero; // the location of the camera
         public float panSpeed = 20; // the speed the camera follows the player rotationally
         public float proximity; // the range a camera can see
         public bool shouldZoom; // whether the camera should zoom to correct FOV
@@ -20,7 +20,7 @@ namespace ModLoaderSolution
     {
         public GameObject subject;
         public List<Cam> cameras = new List<Cam>() { };
-        public Vector3 currentCamLoc = Vector3.zero;
+        public Cam currentCam;
         public void LoadFromFile()
         {
             // credit ChatGPT
@@ -147,10 +147,10 @@ namespace ModLoaderSolution
         }
         bool shouldSnap = false;
         bool bother = true;
-        public Vector3 GetBestCamera()
+        public Cam GetBestCamera()
         {
             float closest = Mathf.Infinity;
-            Vector3 closestCam = Vector3.zero;
+            Cam closestCam = new Cam();
             float switchThreshold = 2f;
             foreach (Cam cam in cameras)
             {
@@ -158,13 +158,16 @@ namespace ModLoaderSolution
                 if (IsValid(vector3))
                 {
                     float distanceToCam = Vector3.Distance(vector3, subject.transform.position);
+                    
                     if (distanceToCam < closest - switchThreshold) // if this is the closest to our player
                     {
                         closest = distanceToCam; // set as closest
-                        closestCam = vector3;
+                        closestCam = cam;
                     }
                 }
             }
+            if (closestCam.loc == Vector3.zero)
+                return null;
             return closestCam;
         }
         public void Update()
@@ -211,19 +214,20 @@ namespace ModLoaderSolution
             catch (Exception e) { }
             Utilities.instance.DisableControlledCam();
 
-            Vector3 bestLoc = GetBestCamera();
-            if (bestLoc != currentCamLoc && bestLoc != Vector3.zero)
+            Cam bestCam = GetBestCamera();
+            Vector3 bestLoc = bestCam.loc;
+            if (bestLoc != currentCam.loc && bestLoc != Vector3.zero)
             {
-                currentCamLoc = bestLoc;
+                currentCam.loc = bestLoc;
                 shouldSnap = true;
             }
 
-            if (currentCamLoc != Vector3.zero)
+            if (currentCam.loc != Vector3.zero)
             {
                 foreach(Camera cam in FindObjectsOfType<Camera>())
                 {
                     // set position of camera to current camera location
-                    cam.transform.position = currentCamLoc;
+                    cam.transform.position = currentCam.loc;
                     // temporarily just set the rotation to look at player
                     //cam.transform.LookAt(subject.transform);
                     if (shouldSnap)
