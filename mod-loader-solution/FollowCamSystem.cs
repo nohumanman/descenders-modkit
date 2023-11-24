@@ -9,20 +9,27 @@ using System.IO;
 
 namespace ModLoaderSolution
 {
+    public class Cam
+    {
+        public Vector3 loc; // the location of the camera
+        public float panSpeed; // the speed the camera follows the player rotationally
+        public float proximity; // the range a camera can see
+        public bool shouldZoom; // whether the camera should zoom to correct FOV
+    }
     public class FollowCamSystem : MonoBehaviour
     {
         public GameObject subject;
-        public List<Vector3> camLocations = new List<Vector3>() { };
+        public List<Cam> cameras = new List<Cam>() { };
         public Vector3 currentCamLoc = Vector3.zero;
         public void LoadFromFile()
         {
             // credit ChatGPT
-            string filePath = Path.Combine(Application.persistentDataPath, "CamLocations.txt");
+            string filePath = Path.Combine(Application.persistentDataPath, "cameras.txt");
 
             // Check if the file exists before attempting to read from it
             if (File.Exists(filePath))
             {
-                camLocations.Clear(); // Clear existing camLocations data before loading
+                cameras.Clear(); // Clear existing cameras data before loading
 
                 using (StreamReader reader = new StreamReader(filePath))
                 {
@@ -35,8 +42,9 @@ namespace ModLoaderSolution
                             float x, y, z;
                             if (float.TryParse(values[0], out x) && float.TryParse(values[1], out y) && float.TryParse(values[2], out z))
                             {
-                                Vector3 loadedVector = new Vector3(x, y, z);
-                                camLocations.Add(loadedVector);
+                                Cam cam = new Cam();
+                                cam.loc = new Vector3(x, y, z);
+                                cameras.Add(cam);
                             }
                             else
                             {
@@ -50,7 +58,7 @@ namespace ModLoaderSolution
                     }
                 }
 
-                Debug.Log("CamLocations loaded from file.");
+                Debug.Log("cameras loaded from file.");
             }
             else
             {
@@ -61,60 +69,78 @@ namespace ModLoaderSolution
         public void SaveToFile()
         {
             // credit ChatGPT
-            string filePath = Path.Combine(Application.persistentDataPath, "CamLocations.txt");
+            string filePath = Path.Combine(Application.persistentDataPath, "cameras.txt");
 
-            // Ensure camLocations has data to save
-            if (camLocations.Count > 0)
+            // Ensure cameras has data to save
+            if (cameras.Count > 0)
             {
                 using (StreamWriter writer = new StreamWriter(filePath))
                 {
-                    foreach (Vector3 location in camLocations)
+                    foreach (Cam cam in cameras)
                     {
-                        string line = $"{location.x},{location.y},{location.z}";
+                        string line = $"{cam.loc.x},{cam.loc.y},{cam.loc.z},{cam.proximity},{cam.panSpeed},{cam.shouldZoom}";
                         writer.WriteLine(line);
                     }
                 }
 
-                Debug.Log("CamLocations saved to file.");
+                Debug.Log("cameras saved to file.");
             }
             else
             {
-                Debug.LogWarning("No camLocations data to save.");
+                Debug.LogWarning("No cameras data to save.");
             }
         }
-
         public void OnGUI()
         {
-            int pos = 0;
+            int yPos = 20;
             int i = 0;
-            foreach (Vector3 vector3 in camLocations)
+            foreach (Cam cam in cameras)
             {
-                string x = GUI.TextField(new Rect(20, 20+pos, 60, 20), vector3.x.ToString());
-                string y = GUI.TextField(new Rect(20+60, 20 + pos, 60, 20), vector3.y.ToString());
-                string z = GUI.TextField(new Rect(20+60+60, 20 + pos, 60, 20), vector3.z.ToString());
-                if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + pos, 60, 20), "SET"))
-                    camLocations[i] = Camera.main.transform.position;
-                else
-                    camLocations[i] = new Vector3(float.Parse(x), float.Parse(y), float.Parse(z));
-                if (GUI.Button(new Rect(20 + 60 + 60 + 60 + 60, 20 + pos, 60, 20), "GOTO"))
+                Vector3 vector3 = cam.loc;
+                Dictionary<string, string> fields = new Dictionary<string, string>() {
+                    { "X", cam.loc.x.ToString() } ,
+                    { "Y", cam.loc.y.ToString() },
+                    { "Z", cam.loc.z.ToString() },
+                    { "PanSpeed", cam.panSpeed.ToString() },
+                    { "ShouldZoom", cam.shouldZoom.ToString() },
+                    { "Proximity", cam.proximity.ToString() }
+                };
+                float xPos = 20;
+                foreach(string field in fields.Keys)
+                {
+                    GUI.Label(new Rect(xPos, yPos, 60, 20), field);
+                    xPos += 60;
+                }
+                yPos += 20;
+                xPos = 20;
+                foreach (string field in fields.Values) {
+                    GUI.TextField(new Rect(xPos, yPos, 60, 20), field);
+                    xPos += 60;
+                }
+                if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + yPos, 60 + 60 + 60 + 60 + 60, 20), "SET"))
+                    cameras[i].loc = Camera.main.transform.position;
+                //else
+                //    cameras[i].loc = new Vector3(float.Parse(x), float.Parse(y), float.Parse(z));
+                if (GUI.Button(new Rect(20 + 60 + 60 + 60 + 60, 20 + yPos, 60, 20), "GOTO"))
                     Camera.main.transform.position = vector3;
-                if (GUI.Button(new Rect(20 + 60 + 60 + 60 + 60 + 60, 20 + pos, 60, 20), "DEL"))
-                    camLocations.RemoveAt(i);
-                pos += 22;
+                if (GUI.Button(new Rect(20 + 60 + 60 + 60 + 60 + 60, 20 + yPos, 60, 20), "DEL"))
+                    cameras.RemoveAt(i);
+                yPos += 22;
                 i++;
             }
-            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + pos, 240, 20), "Toggle Follow Cam"))
+            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + yPos, 240, 20), "Toggle Follow Cam"))
                 bother = !bother;
-            pos += 22;
-            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + pos, 240, 20), "Look at me"))
+            yPos += 22;
+            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + yPos, 240, 20), "Look at me"))
                 Camera.main.transform.LookAt(Utilities.instance.GetPlayer().transform);
-            pos += 22;
-            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + pos, 240, 20), "Add Camera"))
-                camLocations.Add(Vector3.zero);
-            pos += 22;
-            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + pos, 240, 20), "Save to CamLocations.txt"))
+            yPos += 22;
+            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + yPos, 240, 20), "Add Camera"))
+                cameras.Add(new Cam());
+            yPos += 22;
+            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + yPos, 240, 20), "Save to cameras.txt"))
                 SaveToFile();
-            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + pos, 240, 20), "Load from CamLocations.txt"))
+            yPos += 22;
+            if (GUI.Button(new Rect(20 + 60 + 60 + 60, 20 + yPos, 240, 20), "Load from cameras.txt"))
                 LoadFromFile();
             GUIStyle myButtonStyle2 = new GUIStyle(GUI.skin.button);
             myButtonStyle2.normal.textColor = Color.white;
@@ -128,16 +154,20 @@ namespace ModLoaderSolution
         {
             float closest = Mathf.Infinity;
             Vector3 closestCam = Vector3.zero;
-            foreach (Vector3 vector3 in camLocations)
+            float switchThreshold = 2f;
+            foreach (Cam cam in cameras)
+            {
+                Vector3 vector3 = cam.loc;
                 if (IsValid(vector3))
                 {
                     float distanceToCam = Vector3.Distance(vector3, subject.transform.position);
-                    if (distanceToCam < closest) // if this is the closest to our player
+                    if (distanceToCam < closest - switchThreshold) // if this is the closest to our player
                     {
                         closest = distanceToCam; // set as closest
                         closestCam = vector3;
                     }
                 }
+            }
             return closestCam;
         }
         public void Update()
@@ -145,8 +175,9 @@ namespace ModLoaderSolution
             if (Input.GetKeyDown(KeyCode.P))
             {
                 Utilities.instance.GetNetworkedPlayers();
-                foreach(Vector3 v in camLocations)
+                foreach(Cam cam in cameras)
                 {
+                    Vector3 v = cam.loc;
                     GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
                     GameObject objCenter = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     MeshRenderer r = obj.GetComponent<MeshRenderer>();
@@ -176,7 +207,11 @@ namespace ModLoaderSolution
             if (!bother)
                 return;
             subject = Utilities.instance.GetPlayer();
-            subject = Utilities.instance.GetNetworkedPlayers()[0];
+            try
+            {
+                subject = Utilities.instance.GetNetworkedPlayers()[0];
+            }
+            catch (Exception e) { }
             Utilities.instance.DisableControlledCam();
 
             Vector3 bestLoc = GetBestCamera();
@@ -203,7 +238,16 @@ namespace ModLoaderSolution
                         Quaternion targetRotation = Quaternion.LookRotation(subject.transform.position - cam.transform.position);
                         cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, targetRotation, 13 * Time.deltaTime);
                     }
-                    cam.fieldOfView = 20; // TEMPORARY TO TEST
+
+                    float distanceToSubject = Vector3.Distance(cam.transform.position, subject.transform.position);
+                    const float someConstant = 5f;
+                    // Calculate FOV based on distance (adjust this formula based on your needs)
+                    float desiredFOV = Mathf.Atan(someConstant / distanceToSubject) * Mathf.Rad2Deg * 2f;
+
+                    // Set the FOV within some defined range (e.g., between 20 and 100)
+                    cam.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, desiredFOV, 13 * Time.deltaTime);//Mathf.Clamp(desiredFOV, 20, 100);
+
+
                 }
                 shouldSnap = false;
             }
