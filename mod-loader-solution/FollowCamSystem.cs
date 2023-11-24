@@ -24,84 +24,6 @@ namespace ModLoaderSolution
         private Cam currentCam;
         private bool shouldSnap = false;
         private bool bother = true;
-        public void LoadFromFile()
-        {
-            string filePath = Path.Combine(Application.persistentDataPath, "cameras.txt");
-
-            // Check if the file exists
-            if (File.Exists(filePath))
-            {
-                // Clear existing cameras data
-                cameras.Clear();
-
-                using (StreamReader reader = new StreamReader(filePath))
-                {
-                    string line;
-                    while ((line = reader.ReadLine()) != null)
-                    {
-                        string[] values = line.Split(',');
-
-                        if (values.Length == 6)
-                        {
-                            float x, y, z, proximity, panSpeed;
-                            bool shouldZoom;
-
-                            if (float.TryParse(values[0], out x) && float.TryParse(values[1], out y) && float.TryParse(values[2], out z)
-                                && float.TryParse(values[3], out proximity) && float.TryParse(values[4], out panSpeed)
-                                && bool.TryParse(values[5], out shouldZoom))
-                            {
-                                // Create a new Cam object and add it to the cameras list
-                                Cam cam = new Cam();
-                                cam.loc = new Vector3(x, y, z);
-                                cam.proximity = proximity;
-                                cam.panSpeed = panSpeed;
-                                cam.shouldZoom = shouldZoom;
-                                cameras.Add(cam);
-                            }
-                            else
-                            {
-                                Debug.LogWarning("Error parsing data from file. Skipping line: " + line);
-                            }
-                        }
-                        else
-                        {
-                            Debug.LogWarning("Invalid data format in file. Skipping line: " + line);
-                        }
-                    }
-                }
-
-                Debug.Log("Cameras loaded from file.");
-            }
-            else
-            {
-                Debug.LogWarning("File not found: " + filePath);
-            }
-        }
-
-        public void SaveToFile()
-        {
-            // credit ChatGPT
-            string filePath = Path.Combine(Application.persistentDataPath, "cameras.txt");
-
-            // Ensure cameras has data to save
-            if (cameras.Count > 0)
-            {
-                using (StreamWriter writer = new StreamWriter(filePath))
-                {
-                    foreach (Cam cam in cameras)
-                    {
-                        string line = $"{cam.loc.x},{cam.loc.y},{cam.loc.z},{cam.proximity},{cam.panSpeed},{cam.shouldZoom},{cam.zoomAmount}";
-                        writer.WriteLine(line);
-                    }
-                }
-
-                Debug.Log("cameras saved to file.");
-            }
-            else
-            {
-                Debug.LogWarning("No cameras data to save.");
-            }
-        }
         public void OnGUI()
         {
             int yPos = 20;
@@ -243,5 +165,81 @@ namespace ModLoaderSolution
                     return true; // player is in line of view
             return false;
         }
+        public void LoadFromFile()
+        {
+            string filePath = Path.Combine(Application.persistentDataPath, "cameras.txt");
+
+            if (File.Exists(filePath))
+            {
+                cameras.Clear(); // Clear the existing data before loading from file
+
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string[] values = line.Split(',');
+
+                        if (values.Length == 7)
+                        {
+                            float x, y, z, proximity, panSpeed, zoomAmount;
+                            bool shouldZoom;
+
+                            if (float.TryParse(values[0], out x) &&
+                                float.TryParse(values[1], out y) &&
+                                float.TryParse(values[2], out z) &&
+                                float.TryParse(values[3], out proximity) &&
+                                float.TryParse(values[4], out panSpeed) &&
+                                bool.TryParse(values[5], out shouldZoom) &&
+                                float.TryParse(values[6], out zoomAmount))
+                            {
+                                Cam loadedCam = new Cam();
+                                loadedCam.loc = new Vector3(x, y, z);
+                                loadedCam.proximity = proximity;
+                                loadedCam.panSpeed = panSpeed;
+                                loadedCam.shouldZoom = shouldZoom;
+                                loadedCam.zoomAmount = zoomAmount;
+                                cameras.Add(loadedCam);
+                            }
+                            else
+                            {
+                                Debug.LogWarning("Failed to parse line: " + line);
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Invalid line format: " + line);
+                        }
+                    }
+                }
+                Debug.Log("Cameras loaded from file.");
+            }
+            else
+            {
+                Debug.LogWarning("File not found: " + filePath);
+            }
+        }
+
+        public void SaveToFile()
+        {
+            // credit ChatGPT
+            string filePath = Path.Combine(Application.persistentDataPath, "cameras.txt");
+
+            // Ensure cameras has data to save
+            if (cameras.Count > 0)
+            {
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    foreach (Cam cam in cameras)
+                    {
+                        string line = $"{cam.loc.x},{cam.loc.y},{cam.loc.z},{cam.proximity},{cam.panSpeed},{cam.shouldZoom},{cam.zoomAmount}";
+                        writer.WriteLine(line);
+                    }
+                }
+                Debug.Log("cameras saved to file.");
+            }
+            else { Debug.LogWarning("No cameras data to save."); }
+        }
+
     }
 }
