@@ -19,8 +19,10 @@ namespace ModLoaderSolution
     public class FollowCamSystem : MonoBehaviour
     {
         public GameObject subject;
-        public List<Cam> cameras = new List<Cam>() { };
-        public Cam currentCam;
+        private List<Cam> cameras = new List<Cam>() { };
+        private Cam currentCam;
+        private bool shouldSnap = false;
+        private bool bother = true;
         public void LoadFromFile()
         {
             // credit ChatGPT
@@ -145,8 +147,6 @@ namespace ModLoaderSolution
             myButtonStyle2.fontSize = 30;
             GUI.Label(new Rect(Screen.width - 300, Screen.height - 80, 300, 80), Camera.main.transform.position.ToString(), myButtonStyle2);
         }
-        bool shouldSnap = false;
-        bool bother = true;
         public Cam GetBestCamera()
         {
             float closest = Mathf.Infinity;
@@ -178,8 +178,7 @@ namespace ModLoaderSolution
             try
             {
                 subject = Utilities.instance.GetNetworkedPlayers()[0];
-            }
-            catch (Exception e) { }
+            } catch (Exception e) { }
             Utilities.instance.DisableControlledCam();
 
             Cam bestCam = GetBestCamera();
