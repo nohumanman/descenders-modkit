@@ -12,7 +12,7 @@ namespace ModLoaderSolution
     public class Cam
     {
         public Vector3 loc; // the location of the camera
-        public float panSpeed; // the speed the camera follows the player rotationally
+        public float panSpeed = 20; // the speed the camera follows the player rotationally
         public float proximity; // the range a camera can see
         public bool shouldZoom; // whether the camera should zoom to correct FOV
     }
@@ -99,29 +99,22 @@ namespace ModLoaderSolution
             foreach (string key in title)
             {
                 GUI.Label(new Rect(xPos, yPos, 60, 20), key);
-                xPos += 60;
+                xPos += 65;
             }
             yPos += 20;
             foreach (Cam cam in cameras)
             {
                 Vector3 vector3 = cam.loc;
-                Dictionary<string, string> fields = new Dictionary<string, string>() {
-                    { "X", cam.loc.x.ToString() },
-                    { "Y", cam.loc.y.ToString() },
-                    { "Z", cam.loc.z.ToString() },
-                    { "PanSpeed", cam.panSpeed.ToString() },
-                    { "ShouldZoom", cam.shouldZoom.ToString() },
-                    { "Proximity", cam.proximity.ToString() }
-                };
                 xPos = 20;
-                foreach (string field in fields.Values) {
-                    GUI.TextField(new Rect(xPos, yPos, 60, 20), field);
-                    xPos += 60;
-                }
+                cam.loc.x = float.Parse(GUI.TextField(new Rect(xPos, yPos, 60, 20), cam.loc.x.ToString())); xPos += 65;
+                cam.loc.y = float.Parse(GUI.TextField(new Rect(xPos, yPos, 60, 20), cam.loc.y.ToString())); xPos += 65;
+                cam.loc.z = float.Parse(GUI.TextField(new Rect(xPos, yPos, 60, 20), cam.loc.z.ToString())); xPos += 65;
+                cam.panSpeed = float.Parse(GUI.TextField(new Rect(xPos, yPos, 60, 20), cam.panSpeed.ToString())); xPos += 65;
+                cam.shouldZoom = GUI.Toggle(new Rect(xPos, yPos, 60, 20), cam.shouldZoom, "shouldZoom"); xPos += 65;
+                cam.proximity = float.Parse(GUI.TextField(new Rect(xPos, yPos, 60, 20), cam.proximity.ToString())); xPos += 65;
+
                 if (GUI.Button(new Rect(xPos, yPos, 60, 20), "SET"))
                     cameras[i].loc = Camera.main.transform.position;
-                //else
-                //    cameras[i].loc = new Vector3(float.Parse(x), float.Parse(y), float.Parse(z));
                 xPos += 60;
                 if (GUI.Button(new Rect(xPos, yPos, 60, 20), "GOTO"))
                     Camera.main.transform.position = vector3;
