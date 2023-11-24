@@ -172,38 +172,6 @@ namespace ModLoaderSolution
         }
         public void Update()
         {
-            if (Input.GetKeyDown(KeyCode.P))
-            {
-                Utilities.instance.GetNetworkedPlayers();
-                foreach(Cam cam in cameras)
-                {
-                    Vector3 v = cam.loc;
-                    GameObject obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    GameObject objCenter = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    MeshRenderer r = obj.GetComponent<MeshRenderer>();
-                    obj.GetComponent<SphereCollider>().enabled = false;
-                    Material mat = r.material;
-                    mat.SetFloat("_Mode", 2);
-                    Color color = Color.blue;
-                    color.a = 0.1f;
-                    mat.color = color;
-
-                    // shit from the google
-                    // Update material properties for changes to take effect
-                    mat.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-                    mat.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-                    mat.SetInt("_ZWrite", 0);
-                    mat.DisableKeyword("_ALPHATEST_ON");
-                    mat.EnableKeyword("_ALPHABLEND_ON");
-                    mat.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-                    mat.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
-
-                    objCenter.transform.position = v;
-
-                    obj.transform.position = v;
-                    obj.transform.localScale = Vector3.one * 100;
-                }
-            }
             if (!bother)
                 return;
             subject = Utilities.instance.GetPlayer();
