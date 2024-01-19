@@ -25,12 +25,12 @@ namespace ModLoaderSolution
                 gameObject = new GameObject();
                 DontDestroyOnLoad(gameObject);
                 gameObject.name = "DescendersSplitTimerModLoaded";
-                Debug.Log("ModLoaderSolution | GameObject Instantiated");
+                Utilities.Log("GameObject Instantiated");
                 gameObject.AddComponent<Utilities>();
                 gameObject.AddComponent<AssetBundling>();
-                Debug.Log("ModLoaderSolution | ModLoaderSolution.Utilities added");
+                Utilities.Log("ModLoaderSolution.Utilities added");
                 gameObject.AddComponent<Init>();
-                Debug.Log("ModLoaderSolution | SplitTimer.Initialisation added");
+                Utilities.Log("SplitTimer.Initialisation added");
             }
         }
 
@@ -46,12 +46,12 @@ namespace ModLoaderSolution
                     gameObject = new GameObject();
                     DontDestroyOnLoad(gameObject);
                     gameObject.name = "DescendersSplitTimerModLoaded";
-                    Debug.Log("ModLoaderSolution.Loader | ModLoaderSolution has loaded");
+                    Utilities.Log(" ModLoaderSolution has loaded");
                     gameObject.AddComponent<Utilities>();
                     gameObject.AddComponent<AssetBundling>();
-                    Debug.Log("ModLoaderSolution.Loader | ModLoaderSolution.Utilities added");
+                    Utilities.Log("ModLoaderSolution.Utilities added");
                     gameObject.AddComponent<Init>();
-                    Debug.Log("ModLoaderSolution.Loader | SplitTimer.Initialisation added");
+                    Utilities.Log("SplitTimer.Initialisation added");
                 }
             }
             else

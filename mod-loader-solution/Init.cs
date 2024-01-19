@@ -15,13 +15,13 @@ namespace ModLoaderSolution
                 Environment.CurrentDirectory
                 + "\\ModInjector.dll"
             );
-            Debug.Log("ModLoaderSolution.Init | Mod injector path: " + binPath);
+            Utilities.Log("Mod injector path: " + binPath);
             string url = "https://nohumanman.com/static/ModInjector.dll";
             using (UnityWebRequest www = UnityWebRequest.Get(url))
             {
                 yield return www.SendWebRequest();
                 if (www.isNetworkError || www.isHttpError)
-                    Debug.Log(www.error);
+                    Utilities.Log(www.error);
                 else
                 {
                     try
@@ -30,7 +30,7 @@ namespace ModLoaderSolution
                     }
                     catch (IOException)
                     {
-                        Debug.Log("ModLoaderSolution.Init | IOException - dll write has failed!");
+                        Utilities.Log("IOException - dll write has failed!");
                     }
                 }
             }
@@ -38,7 +38,7 @@ namespace ModLoaderSolution
         List<object> objectsSeen = new List<object>();
         public void InitialiseObjs(bool firstStart = false)
         {
-            Debug.Log("ModLoaderSolution.Init | Initialising objects!");
+            Utilities.Log("Initialising objects!");
             object[] objects = FindObjectsOfType(typeof(GameObject));
             foreach (object obj in objects)
             {

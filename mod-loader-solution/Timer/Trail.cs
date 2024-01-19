@@ -17,7 +17,7 @@ namespace ModLoaderSolution
         public float clientTime = 0f;
         public void Start()
         {
-            Debug.Log("ModLoaderSolution.Trail | Found Trail '" + name + "'");
+            Utilities.Log("Found Trail '" + name + "'");
             AddScripts();
             autoLeaderboardText.GetComponent<TextMesh>().text = "Not connected to server.";
         }
@@ -32,7 +32,7 @@ namespace ModLoaderSolution
                     boun.trail = this;
                     boundaryList.Add(boundaryObj);
                 }
-                Debug.Log("ModLoaderSolution.Trail | '" + this.name + "' has " + boundaryList.Count.ToString() + " boundaries.");
+                Utilities.Log("'" + this.name + "' has " + boundaryList.Count.ToString() + " boundaries.");
                 foreach (Transform checkpoint in startCheckpoint.transform.parent)
                 {
                     GameObject checkpointObj = checkpoint.gameObject;

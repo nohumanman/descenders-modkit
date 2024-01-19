@@ -388,9 +388,10 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetPath)" "C:\Users\point\AppData\LocalLow\RageSquid\Descenders\ModLoaderSolution.bin" &amp;&amp; echo Copied to C:\Users\point\AppData\LocalLow\RageSquid\Descenders\ModLoaderSolution.bin
+
 copy "$(TargetPath)" "D:\SteamLibrary\steamapps\common\Descenders\Mods\50to01 Line\ModLoaderSolution.bin"  &amp;&amp; echo Copied to D:\SteamLibrary\steamapps\common\Descenders\Mods\50to01 Line\ModLoaderSolution.bin
 
-
+copy "$(TargetPath)" "D:\SteamLibrary\steamapps\common\Descenders\Mods\Fort William 4x (race)\ModLoaderSolution.bin"
 </PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -12,7 +12,7 @@ namespace ModLoaderSolution
 
         public void ToBike(string bike, string id)
         {
-            Debug.Log("ModLoaderSolution.BikeSwitcher | id " + id + " switching to bike '" + bike + "'");
+            Utilities.Log("id " + id + " switching to bike '" + bike + "'");
             StartCoroutine(_ToBike(bike, id));
         }
         IEnumerator _ToBike(string bike, string id)
@@ -54,7 +54,7 @@ namespace ModLoaderSolution
                                 foreach (AnimationClip ourAnim in bikeReplacement.GetComponentInChildren<Animator>().runtimeAnimatorController.animationClips)
                                     if (ourAnim.name == descAnim.name)
                                     {
-                                        Debug.Log("Replacing anim " + descAnim.name + " with our custom one");
+                                        Utilities.Log("Replacing anim " + descAnim.name + " with our custom one");
                                         anims.Add(new KeyValuePair<AnimationClip, AnimationClip>(descAnim, ourAnim));
                                     }
                             }
@@ -68,7 +68,7 @@ namespace ModLoaderSolution
                             foreach(Gesture gesture in gestures)
                             {
                                 // change gesture animations here!
-                                Debug.Log(gesture.trickName);
+                                Utilities.Log(gesture.trickName);
                             }
                             // replace gestures
                             typeof(Cyclist).GetField(gesturesField).SetValue(
@@ -109,9 +109,9 @@ namespace ModLoaderSolution
             Animation currentBikeAnim = GetBikeModelAnim(PlayerObject);
             if (currentBikeAnim == null)
             {
-                Debug.Log("Aaiosjdopiasjdpoajsdopjaspodjaposdjpoasjd==123=1-23=1-293=-1203=-102=3-012=3");
+                Utilities.Log("Aaiosjdopiasjdpoajsdopjaspodjaposdjpoasjd==123=1-23=1-293=-1203=-102=3-012=3");
             }
-            Debug.Log("bikeObject:" + BikeObject);
+            Utilities.Log("bikeObject:" + BikeObject);
             currentBikeAnim.Stop();
             foreach (AnimationClip q in animToAnimStates(newAnimation))
             {

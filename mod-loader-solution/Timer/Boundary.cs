@@ -25,7 +25,7 @@ namespace ModLoaderSolution
         public void Start()
         {
             boundaryHash = GetHash(20, 50);
-            // Debug.Log("Boundary | Boundary added to " + this.gameObject.name);
+            // Utilities.Log("Boundary | Boundary added to " + this.gameObject.name);
         }
         public void OnTriggerStay(Collider other)
         {

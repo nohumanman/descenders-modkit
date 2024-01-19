@@ -20,17 +20,17 @@ namespace ModLoaderSolution
             {
                 yield return www.SendWebRequest();
                 if (www.isNetworkError || www.isHttpError)
-                    Debug.Log(www.error);
+                    Utilities.Log(www.error);
                 else
                 {
-                    Debug.Log("ModLoaderInstaller.Installer | Saving new ModLoaderSolution.bin");
+                    Utilities.Log("ModLoaderInstaller.Installer | Saving new ModLoaderSolution.bin");
                     try
                     {
                         System.IO.File.WriteAllBytes(bundlePath, www.downloadHandler.data);
                     }
                     catch (IOException)
                     {
-                        Debug.Log("ModLoaderInstaller.Installer | IOException - bin write has failed!");
+                        Utilities.Log("ModLoaderInstaller.Installer | IOException - bin write has failed!");
                     }
                     LoadBundle(bundlePath);
                 }
