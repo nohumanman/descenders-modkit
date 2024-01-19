@@ -45,7 +45,7 @@ namespace ModLoaderSolution
 		void Update()
         {
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.P))
-				Application.OpenURL("https://modkit.nohumanman.com/trails/");
+				Application.OpenURL("https://modkit.nohumanman.com/trails");
 			if (Input.GetKey(KeyCode.I) && Input.GetKey(KeyCode.O) && Input.GetKey(KeyCode.L) && Input.GetKeyDown(KeyCode.KeypadEnter))
 				DontDestroyOnLoad(this.gameObject);
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
