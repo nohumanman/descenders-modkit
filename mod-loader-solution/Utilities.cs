@@ -576,6 +576,8 @@ namespace ModLoaderSolution
         }
         public static void Log(string log)
         {
+            if (NetClient.DebugType == DebugType.RELEASE)
+                return;
             MethodBase caller = new StackFrame(1, false).GetMethod();
             string prefix = caller.ReflectedType.FullName + "." + caller.Name;
             // we'll try to make the prefix length
