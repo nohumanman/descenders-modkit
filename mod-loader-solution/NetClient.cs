@@ -207,6 +207,15 @@ namespace ModLoaderSolution
 				);
 				StartCoroutine(UploadReplay(replayLocation, time_id));
 			}
+			// example call: SYNC|SET_BOOL|True|Object (3)|
+			if (message.StartsWith("SYNC|SET_BOOL"))
+            {
+				string new_value = message.Split('|')[2];
+				string object_name = message.Split('|')[3];
+				foreach (Object_Syncing.SyncedBool syncedBool in FindObjectsOfType<Object_Syncing.SyncedBool>())
+					if (syncedBool.name == object_name)
+						syncedBool.SetBool(bool.Parse(new_value), true);
+			}
 			if (message.StartsWith("GET_POS"))
             {
 				Vector3 pos = Utilities.instance.GetPlayer().transform.position;
