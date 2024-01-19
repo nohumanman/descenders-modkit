@@ -700,7 +700,7 @@ namespace ModLoaderSolution
             GameObject player = GetPlayerFromId(id);
             if (player == null)
                 return;
-            FindObjectOfType<FollowCamSystem>().subject = player;
+            //FindObjectOfType<FollowCamSystem>().subject = player;
         }
         public void SpectatePlayer(int id)
         {

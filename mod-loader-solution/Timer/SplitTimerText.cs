@@ -29,11 +29,13 @@ namespace ModLoaderSolution
 		}
 		IEnumerator DisableCheckpoint()
         {
+			StopCoroutine("DisableCheckpoint");
 			yield return new WaitForSeconds(5f);
 			checkpointTime = "";
         }
 		public IEnumerator DisableTimerText(float tim)
         {
+			StopCoroutine("DisableTimerText");
 			yield return new WaitForSeconds(tim);
 			SetText("");
 		}
@@ -62,7 +64,7 @@ namespace ModLoaderSolution
         {
 			textToSet = textToSet.Replace("\\n", "\n");
 			if (uiEnabled)
-				text.text = textToSet;
+				text.text = textToSet + "\n";
 			else
 				text.text = "";
 		}
@@ -92,7 +94,7 @@ namespace ModLoaderSolution
 				yield return new WaitForEndOfFrame();
 			}
 		}
-		private string FormatTime(float time)
+		public string FormatTime(float time)
 		{
 			int intTime = (int)time;
 			int minutes = intTime / 60;

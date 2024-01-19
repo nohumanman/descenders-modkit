@@ -19,7 +19,8 @@ namespace ModLoaderSolution
 		bool PlayerCollision = false;
 		List<string> messages = new List<string>();
 		public int port = 65432;
-		public string ip = "18.132.81.187";
+		//public string ip = "18.132.81.187";
+		public string ip = "0.0.0.0";
 		void Awake(){
 			DontDestroyOnLoad(this.gameObject.transform.root);
 			if (Instance != null && Instance != this) 

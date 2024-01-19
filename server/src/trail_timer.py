@@ -58,6 +58,12 @@ class TrailTimer():
                 self.timer_info.auto_verify = False
                 await self.network_player.send("SPLIT_TIME|Time will be reviewed")
 
+    def reset_boundaries(self):
+        """
+        Reset the list of boundaries encountered during a run.
+        """
+        self.__boundaries = []
+
     async def start_timer(self, total_checkpoints: int):
         """ Start the timer. """
         logging.info(

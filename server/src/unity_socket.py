@@ -406,6 +406,7 @@ class UnitySocket():
     async def on_boundry_enter(self, trail_name: str, boundry_guid: str):
         """ Called when a player enters a boundry. """
         trail = await self.get_trail(trail_name)
+        
         await trail.add_boundary(boundry_guid)
 
     async def on_boundry_exit(self, trail_name: str, boundry_guid: str):
@@ -443,6 +444,7 @@ class UnitySocket():
 
     async def on_map_enter(self, map_name: str):
         """ Called when a player enters a map. """
+        self.trails = {}
         self.info.world_name = map_name
         self.info.time_started = time.time()
         await self.update_concurrent_users()

@@ -67,6 +67,12 @@ class UnitySocketServer():
                 return player
         return None
 
+    async def riders_gate(self):
+        while True:
+            for player in self.players:
+                await player.send("RIDERSGATE|2")
+            time.sleep(10)
+
     async def create_client(self, reader: StreamReader, writer: StreamWriter):
         """ Creates a client from their socket and address """
         logging.info("create_client")
@@ -96,4 +102,5 @@ class UnitySocketServer():
                 logging.error("Player is None")
                 return
             for mess in message.split("\n"):
+                logging.info("%s '%s' - %s", player.info.steam_id, player.info.steam_name, mess)
                 await player.handle_data(mess)

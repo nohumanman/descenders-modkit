@@ -60,6 +60,7 @@ namespace ModLoaderSolution
                     if (removeTerrainjson != "" && removeTerrainjson != null)
                         JsonUtility.FromJsonOverwrite(removeTerrainjson, g.AddComponent<RemoveTerrainBoundaries>());
                     string json = JsonUtility.ToJson(g.GetComponent("TimerInfo"));
+                    Debug.Log("json " + json + " on " + ((GameObject)obj).name);
                     if (json != "" && json != null)
                         JsonUtility.FromJsonOverwrite(json, g.AddComponent<Trail>());
                     string timerText = JsonUtility.ToJson(g.GetComponent("TimerText"));
@@ -74,6 +75,9 @@ namespace ModLoaderSolution
                     string jsonRidersGate = JsonUtility.ToJson(g.GetComponent("JsonRidersGate"));
                     if (jsonRidersGate != "" && jsonRidersGate != null)
                         JsonUtility.FromJsonOverwrite(jsonRidersGate, g.AddComponent<RidersGate>());
+                    string json3dTimer = JsonUtility.ToJson(g.GetComponent("ThreeDTimerJson"));
+                    if (json3dTimer != "" && json3dTimer != null)
+                        JsonUtility.FromJsonOverwrite(json3dTimer, g.AddComponent<ThreeDTimer>());
                     string jsonRespawn = JsonUtility.ToJson(g.GetComponent("CustomRespawnJson"));
                     if (jsonRespawn != "" && jsonRespawn != null)
                         JsonUtility.FromJsonOverwrite(jsonRespawn, g.AddComponent<CustomTeleporter>());
@@ -105,7 +109,7 @@ namespace ModLoaderSolution
                 gameObject.AddComponent<UserInterface>();
                 gameObject.AddComponent<ChaosMod>();
                 gameObject.AddComponent<Chat>();
-                gameObject.AddComponent<FollowCamSystem>();
+                //gameObject.AddComponent<FollowCamSystem>();
             }
             if (AssetBundling.Instance != null && AssetBundling.Instance.bundle != null && ModLoaderSolution.Utilities.instance.isMod() && GameObject.Find("Map_Name") == null)
             {

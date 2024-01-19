@@ -30,3 +30,6 @@ C:\Users\point\Documents\git\github\descenders-modkit\mod-loader-solution\obj\De
 C:\Users\point\Documents\git\github\descenders-modkit\mod-loader-solution\obj\Debug\ModLoaderSolution.csproj.CoreCompileInputs.cache
 C:\Users\point\Documents\git\github\descenders-modkit\mod-loader-solution\obj\Debug\ModLoaderSolution.dll
 C:\Users\point\Documents\git\github\descenders-modkit\mod-loader-solution\obj\Debug\ModLoaderSolution.pdb
+C:\Users\point\Documents\git\github\descenders-modkit\mod-loader-solution\bin\Debug\ModLoaderSolution.dll
+C:\Users\point\Documents\git\github\descenders-modkit\mod-loader-solution\bin\Debug\ModLoaderSolution.pdb
+C:\Users\point\Documents\git\github\descenders-modkit\mod-loader-solution\obj\Debug\ModLoaderSolution.csproj.CopyComplete

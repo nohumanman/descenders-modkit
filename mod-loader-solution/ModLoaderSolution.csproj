@@ -30,6 +30,9 @@
   <PropertyGroup>
     <RootNamespace>ModLoaderSolution</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssetBundling.cs" />
     <Compile Include="BikeSwitcher.cs" />
@@ -63,6 +66,7 @@
     <Compile Include="Timer\LeaderboardInfo.cs" />
     <Compile Include="Timer\MedalSystem.cs" />
     <Compile Include="Timer\SplitTimerText.cs" />
+    <Compile Include="Timer\ThreeDTimer.cs" />
     <Compile Include="Timer\Trail.cs" />
     <Compile Include="TrickCapturer.cs" />
     <Compile Include="UserInterface.cs" />

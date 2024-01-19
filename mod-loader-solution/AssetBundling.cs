@@ -62,6 +62,7 @@ namespace ModLoaderSolution
 
             GameObject TimerCanvasAsset = bundle.LoadAsset<GameObject>("TimerCanvas");
             GameObject TimerCanvas = Instantiate(TimerCanvasAsset);
+            TimerCanvas.transform.position -= new Vector3(0, 1000);
             foreach(Transform child in TimerCanvas.transform)
             {
                 foreach(Transform childs_child in child)
