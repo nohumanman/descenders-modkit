@@ -314,6 +314,7 @@ class Webserver():
                 "last_trick": player.info.last_trick,
                 "version": player.info.version,
                 "bike_type": player.info.bike_type,
+                "trail_info": str(player.trails),
                 "address": ""#(lambda: player.addr if self.permission() == "AUTHORISED" else "")()
             } for player in self.socket_server.players
         ]

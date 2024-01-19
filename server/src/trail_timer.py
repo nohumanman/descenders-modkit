@@ -30,11 +30,16 @@ class TrailTimer():
         )
         self.__boundaries = []
 
+    def __str__(self):
+        return f"Trail {self.trail_name} for player {self.network_player.info.steam_name} in boundary_num={len(self.__boundaries)},starting_speed={self.timer_info.starting_speed},times={self.timer_info.times}"
+
+    __repr__  = __str__ # so dict/list serialisation uses __str__
+
     async def add_boundary(self, boundary_guid):
         """
         Add a boundary to the list of boundaries encountered during a run.
 
-        If the list of boundaries is empty and a run has started, it sets the 'auto_verify' flag to
+        If the list of boundard a run has started, it sets the 'auto_verify' flag to
         False and sends a message to the network player indicating that their time will be reviewed
         due to cuts.
         """
@@ -216,7 +221,7 @@ class TrailTimer():
         comment = "verified" if self.timer_info.auto_verify else "awaiting review"
         secs_str = TrailTimer.secs_to_str(client_time)
         await self.network_player.send(
-            f"TIMER_FINISH|{secs_str}\\n{comment}"
+            f"TIMER_FINISH|{secs_str}\\n{comment} - press SHIFT-P to see leaderboard"
         )
         # send the time to the discord server if it is a new fastest time
         global_fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)

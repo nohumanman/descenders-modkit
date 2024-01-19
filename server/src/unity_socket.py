@@ -444,10 +444,13 @@ class UnitySocket():
 
     async def on_map_enter(self, map_name: str):
         """ Called when a player enters a map. """
-        self.trails = {}
         self.info.world_name = map_name
         self.info.time_started = time.time()
         await self.update_concurrent_users()
+        # invalidate all trails
+        await self.send(f"INVALIDATE_TIME|\\n")
+        # remove all trails
+        self.trails = {} # FIXES reentry cheat
         if (self.info.bike_type == "" or self.info.bike_type is None):
             self.info.bike_type = await self.get_default_bike()
         if self.info.steam_id is not None:
