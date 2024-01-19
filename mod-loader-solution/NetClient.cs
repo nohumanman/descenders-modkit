@@ -322,7 +322,8 @@ namespace ModLoaderSolution
 				string[] gate = message.Split('|');
 				float randomTime = float.Parse(gate[1]);
 				foreach (RidersGate ridersGate in ridersGates)
-					ridersGate.TriggerGate(randomTime);
+					if (!Utilities.instance.isInPauseMenu()) // not in pause menu
+						ridersGate.TriggerGate(randomTime);
 			}
 			if (message.StartsWith("LOG_GAMEOBJECTS"))
 			{
