@@ -12,6 +12,7 @@ using ModTool.Shared;
 using ModTool;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
+using System.Diagnostics;
 using TMPro;
 using InControl;
 
@@ -562,6 +563,14 @@ namespace ModLoaderSolution
             return trick;
         }
 
+        public static void Log(string log)
+        {
+            MethodBase caller = new StackFrame(1, false).GetMethod();
+            string callerMethodName = caller.Name;
+            string calledMethodName = MethodBase.GetCurrentMethod().Name;
+            Debug.Log(callerMethodName);
+            Debug.Log(calledMethodName);
+        }
         public string GetPlayerCurrentTrick()
         {
             //---UI_RepPopup : label_repCashIn #Untagged
@@ -1072,27 +1081,6 @@ namespace ModLoaderSolution
             PlayerInfoImpact pi = GetPlayerInfoImpact() ;
             pi.RespawnAtStartLine();
             Debug.Log("Utilities.RespawnAtStartline");
-        }
-
-        public void Log(string text)
-        {
-            Debug.Log(text);
-            if (LogUI == null || !LogUI.gameObject.activeSelf)
-                return;
-            LogUI.text = "";
-            history.Add(text);
-            int length = history.Count;
-            int max = length - maxLines;
-            int counter = 0;
-            foreach (var item in history)
-            {
-                counter++;
-                if (max <= 0 || counter >= max)
-                    LogUI.text = LogUI.text + item + "\n";
-            }
-            ShowLog();
-            StopCoroutine("HideLog");
-            StartCoroutine("HideLog");
         }
 
         public void ShowLog()

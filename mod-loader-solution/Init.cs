@@ -46,49 +46,49 @@ namespace ModLoaderSolution
                 {
                     objectsSeen.Add(obj);
                     GameObject g = (GameObject)obj;
-                    string bikeswitcherenablerjson = JsonUtility.ToJson(g.GetComponent("BikeSwitcherEnabler"));
-                    if (bikeswitcherenablerjson != "" && bikeswitcherenablerjson != null)
-                        Destroy((GameObject)obj);
-                    if (((GameObject)obj).name.Contains("BikeSwitcherCanvas"))
+
+                    // create dict of unity-side component names to injected-side components
+                    Dictionary<string, Type> string_to_component = new Dictionary<string, Type>()
                     {
-                        Destroy((GameObject)obj);
+                        { "RemoveTerrainBoundary", typeof(RemoveTerrainBoundaries) },
+                        { "TimerInfo", typeof(Trail) },
+                        { "SwitchBikeOnEnterMdTl", typeof(SwitchBikeOnEnter) },
+                        { "CameraProps", typeof(CameraModifier) },
+                        { "JsonRidersGate", typeof(RidersGate) },
+                        { "ThreeDTimerJson", typeof(ThreeDTimer) },
+                        { "CustomRespawnJson", typeof(CustomTeleporter) },
+                        { "MedalSystemInfo", typeof(MedalSystem) },
+                        { "SlipModInfo", typeof(SlipModifier) }
+                    };
+                    // use dict to populate our scripts
+                    foreach (KeyValuePair<string, Type> entry in string_to_component)
+                    {
+                        Component comp = g.GetComponent(entry.Key);
+                        // get the class as a string
+                        string jsonString = JsonUtility.ToJson(comp);
+                        // if the class is not empty and not null
+                        if (jsonString != "" && jsonString != null)
+                            JsonUtility.FromJsonOverwrite(jsonString, g.AddComponent(entry.Value));
                     }
-                    string mapInfoJson = JsonUtility.ToJson(g.GetComponent("JsonMapInfo"));
-                    if (mapInfoJson != "" && mapInfoJson != null)
-                        Destroy(g);
-                    string removeTerrainjson = JsonUtility.ToJson(g.GetComponent("RemoveTerrainBoundary"));
-                    if (removeTerrainjson != "" && removeTerrainjson != null)
-                        JsonUtility.FromJsonOverwrite(removeTerrainjson, g.AddComponent<RemoveTerrainBoundaries>());
-                    string json = JsonUtility.ToJson(g.GetComponent("TimerInfo"));
-                    Debug.Log("json " + json + " on " + ((GameObject)obj).name);
-                    if (json != "" && json != null)
-                        JsonUtility.FromJsonOverwrite(json, g.AddComponent<Trail>());
-                    string timerText = JsonUtility.ToJson(g.GetComponent("TimerText"));
-                    if (timerText != "" && timerText != null)
-                        Destroy(g);
-                    string switchBikeOnEnterJson = JsonUtility.ToJson(g.GetComponent("SwitchBikeOnEnterMdTl"));
-                    if (switchBikeOnEnterJson != "" && switchBikeOnEnterJson != null)
-                        JsonUtility.FromJsonOverwrite(switchBikeOnEnterJson, g.AddComponent<SwitchBikeOnEnter>());
-                    string cameraPropsText = JsonUtility.ToJson(g.GetComponent("CameraProps"));
-                    if (cameraPropsText != "" && cameraPropsText != null)
-                        JsonUtility.FromJsonOverwrite(cameraPropsText, g.AddComponent<CameraModifier>());
-                    string jsonRidersGate = JsonUtility.ToJson(g.GetComponent("JsonRidersGate"));
-                    if (jsonRidersGate != "" && jsonRidersGate != null)
-                        JsonUtility.FromJsonOverwrite(jsonRidersGate, g.AddComponent<RidersGate>());
-                    string json3dTimer = JsonUtility.ToJson(g.GetComponent("ThreeDTimerJson"));
-                    if (json3dTimer != "" && json3dTimer != null)
-                        JsonUtility.FromJsonOverwrite(json3dTimer, g.AddComponent<ThreeDTimer>());
-                    string jsonRespawn = JsonUtility.ToJson(g.GetComponent("CustomRespawnJson"));
-                    if (jsonRespawn != "" && jsonRespawn != null)
-                        JsonUtility.FromJsonOverwrite(jsonRespawn, g.AddComponent<CustomTeleporter>());
-                    string jsonMedalSystem = JsonUtility.ToJson(g.GetComponent("MedalSystemInfo"));
-                    if (jsonMedalSystem != "" && jsonMedalSystem != null)
-                        JsonUtility.FromJsonOverwrite(jsonMedalSystem, g.AddComponent<MedalSystem>());
+
+                    // objects that need to be destroyed
+                    List<string> depricated_objects = new List<string>() { "BikeSwitcherCanvas" };
+                    foreach(string depricated_object in depricated_objects)
+                    {
+                        if (((GameObject)obj).name.Contains(depricated_object))
+                            Destroy((GameObject)obj);
+                    }
+                    // objects with components that need destroying
+                    List<string> depricated_components = new List<string>() { "BikeSwitcherEnabler", "JsonMapInfo", "TimerText" };
+                    foreach(string depricated_component in depricated_components)
+                    {
+                        string jsonString = JsonUtility.ToJson(g.GetComponent(depricated_component));
+                        if (jsonString != "" && jsonString != null)
+                                Destroy((GameObject)obj);
+                    }
+
                     if (g.name == "SLOZONE")
                         g.AddComponent<SloMoZone>();
-                    string jsonSlipModInfo = JsonUtility.ToJson(g.GetComponent("SlipModInfo"));
-                    if (jsonSlipModInfo != "" && jsonSlipModInfo != null)
-                        JsonUtility.FromJsonOverwrite(jsonSlipModInfo, g.AddComponent<SlipModifier>());
                 }                
             }
             if (GameObject.Find("SpeedTrapTrigger") != null)
@@ -96,20 +96,16 @@ namespace ModLoaderSolution
             if (firstStart)
             {
                 DontDestroyOnLoad(gameObject.transform.root);
-                gameObject.AddComponent<PlayerManagement>();
-                gameObject.AddComponent<NetClient>();
-                gameObject.AddComponent<BikeSwitcher>();
-                gameObject.AddComponent<TimeModifier>();
-                gameObject.AddComponent<TrickCapturer>();
-                gameObject.AddComponent<GimbalCam>();
-                gameObject.AddComponent<MovableCam>();
-                gameObject.AddComponent<TeleportAtCursor>();
-                //gameObject.AddComponent<RainbowLight>();
-                gameObject.AddComponent<StatsModification>();
-                gameObject.AddComponent<UserInterface>();
-                gameObject.AddComponent<ChaosMod>();
-                gameObject.AddComponent<Chat>();
-                //gameObject.AddComponent<FollowCamSystem>();
+                List<Type> firstStartComponents = new List<Type>()
+                {
+                    typeof(PlayerManagement), typeof(NetClient), typeof(BikeSwitcher), typeof(TimeModifier),
+                    typeof(TrickCapturer), typeof(GimbalCam), typeof(MovableCam), typeof(TeleportAtCursor),
+                    typeof(StatsModification), typeof(UserInterface), typeof(ChaosMod), typeof(Chat)//, tpeof(FollowCamSystem)
+
+                };
+                // add all components to be added on first load
+                foreach(Type component in firstStartComponents)
+                    gameObject.AddComponent(component);
             }
             if (AssetBundling.Instance != null && AssetBundling.Instance.bundle != null && ModLoaderSolution.Utilities.instance.isMod() && GameObject.Find("Map_Name") == null)
             {

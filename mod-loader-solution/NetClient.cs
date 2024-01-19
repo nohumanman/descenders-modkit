@@ -5,11 +5,14 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
-using ModLoaderSolution;
 using UnityEngine.Networking;
 
 namespace ModLoaderSolution
 {
+	public enum DebugType
+    {
+		DEBUG, RELEASE
+    }
 	public class NetClient : MonoBehaviour {
 		public static NetClient Instance { get; private set; }
 		public RidersGate[] ridersGates;
@@ -19,8 +22,8 @@ namespace ModLoaderSolution
 		bool PlayerCollision = false;
 		List<string> messages = new List<string>();
 		public int port = 65432;
-		//public string ip = "18.132.81.187";
-		public string ip = "0.0.0.0";
+		public string ip = "18.132.81.187";
+		public static DebugType DebugType = DebugType.DEBUG;
 		void Awake(){
 			DontDestroyOnLoad(this.gameObject.transform.root);
 			if (Instance != null && Instance != this) 
