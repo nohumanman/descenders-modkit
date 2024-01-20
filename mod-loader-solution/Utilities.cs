@@ -438,6 +438,9 @@ namespace ModLoaderSolution
                 allobjs += x.name + "\n";
             File.WriteAllText(loc, allobjs);
         }
+        /**
+         * VERY SLOW METHOD!
+         */
         public bool isInPauseMenu()
         {
             string[] menus = { "UI_Pause", "UI_Options", "UI_OptionsGameplay", "UI_OptionsVideo", "UI_OptionsAudio", "UI_OptionsKeyBindings", "UI_OptionsLanguages" };
