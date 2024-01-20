@@ -17,7 +17,7 @@ namespace ModLoaderSolution.Object_Syncing {
             foreach (PlayerInfo player in allPlayers)
                 allPlayerNames += Utilities.FromPlayerInfo(player).steamID + ","; // add to our csv
             // send updated player names to lobby
-            NetClient.Instance.SendData("SYNC|LOBBY_UPDATE|" + allPlayerNames); // e.g. SYNC|LOBBY_UPDATE|nohumanman,BBB171,antgrass,
+            NetClient.Instance.SendData("SYNC.LOBBY_UPDATE|" + allPlayerNames); // e.g. SYNC.LOBBY_UPDATE|nohumanman,BBB171,antgrass,
         }
         public void SetBool(bool newBool, bool isServer)
         {
@@ -30,7 +30,7 @@ namespace ModLoaderSolution.Object_Syncing {
                 syncedBool = newBool;
                 UpdateLobby();
                 // send new bool to server
-                NetClient.Instance.SendData("SYNC|SET_BOOL|" + newBool.ToString() + "|" + name); // e.g. SYNC|SET_BOOL|True|Cube (3)
+                NetClient.Instance.SendData("SYNC.SET_BOOL|" + newBool.ToString() + "|" + name); // e.g. SYNC.SET_BOOL|True|Cube (3)
             }
         }
         public void SetBool(bool newBool)
@@ -45,7 +45,7 @@ namespace ModLoaderSolution.Object_Syncing {
         {
             // request bool resync from server
             UpdateLobby(); // update lobby so it knows who's bools we're requesting
-            NetClient.Instance.SendData("SYNC|REQUEST_BOOL|" + name); // e.g. SYNC|REQUEST_BOOL|Cube (3)
+            NetClient.Instance.SendData("SYNC.REQUEST_BOOL|" + name); // e.g. SYNC.REQUEST_BOOL|Cube (3)
         }
         public void Start()
         {
