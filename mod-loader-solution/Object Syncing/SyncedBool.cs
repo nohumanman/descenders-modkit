@@ -52,17 +52,10 @@ namespace ModLoaderSolution.Object_Syncing {
             // resync bool on net start
             NetClient.Instance.onNetStart += ResyncBool;
         }
-
-        bool wasInPauseMenu = false;
         public void Update()
         {
-            if (wasInPauseMenu && !Utilities.instance.isInPauseMenu())
-            {
+            if (Input.GetKeyDown("joystick button 0") || Input.GetKeyDown(KeyCode.Escape))
                 ResyncBool(); // WHEN UNPAUSED WE MUST RESYNC BOOL
-                wasInPauseMenu = false;
-            }
-            if (Utilities.instance.isInPauseMenu())
-                wasInPauseMenu = true;
         }
     }
 }
