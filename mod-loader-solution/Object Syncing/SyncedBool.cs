@@ -8,7 +8,17 @@ namespace ModLoaderSolution.Object_Syncing {
     */
     public class SyncedBool : MonoBehaviour
     {
+        // the bool to sync
         bool syncedBool = false;
+        public void UpdateLobby()
+        {
+            PlayerInfo[] allPlayers = Utilities.instance.GetAllPlayers();
+            string allPlayerNames = "";
+            foreach (PlayerInfo player in allPlayers)
+                allPlayerNames += Utilities.FromPlayerInfo(player).steamID + ","; // add to our csv
+            // send updated player names to lobby
+            NetClient.Instance.SendData("SYNC|LOBBY_UPDATE|" + allPlayerNames); // e.g. SYNC|LOBBY_UPDATE|nohumanman,BBB171,antgrass,
+        }
         public void SetBool(bool newBool, bool isServer)
         {
             if (isServer)
@@ -18,13 +28,7 @@ namespace ModLoaderSolution.Object_Syncing {
                 if (syncedBool == newBool)
                     return;
                 syncedBool = newBool;
-                // get all networked players in lobby as csv
-                PlayerInfo[] allPlayers = Utilities.instance.GetAllPlayers();
-                string allPlayerNames = "";
-                foreach (PlayerInfo player in allPlayers)
-                    allPlayerNames += Utilities.FromPlayerInfo(player).playerName + ",";
-                // send updated player names to lobby
-                NetClient.Instance.SendData("SYNC|LOBBY_UPDATE|" + allPlayerNames); // e.g. SYNC|LOBBY_UPDATE|nohumanman,BBB171,antgrass,
+                UpdateLobby();
                 // send new bool to server
                 NetClient.Instance.SendData("SYNC|SET_BOOL|" + newBool.ToString() + "|" + name); // e.g. SYNC|SET_BOOL|True|Cube (3)
             }
@@ -33,23 +37,32 @@ namespace ModLoaderSolution.Object_Syncing {
         {
             SetBool(newBool, false);
         }
-
+        public bool GetBool()
+        {
+            return syncedBool;
+        }
         public void ResyncBool()
         {
             // request bool resync from server
+            UpdateLobby(); // update lobby so it knows who's bools we're requesting
             NetClient.Instance.SendData("SYNC|REQUEST_BOOL|" + name); // e.g. SYNC|REQUEST_BOOL|Cube (3)
         }
         public void Start()
         {
-            // resync bool on first join
-            ResyncBool();
+            // resync bool on net start
+            NetClient.Instance.onNetStart += ResyncBool;
         }
 
         bool wasInPauseMenu = false;
         public void Update()
         {
             if (wasInPauseMenu && !Utilities.instance.isInPauseMenu())
+            {
                 ResyncBool(); // WHEN UNPAUSED WE MUST RESYNC BOOL
+                wasInPauseMenu = false;
+            }
+            if (Utilities.instance.isInPauseMenu())
+                wasInPauseMenu = true;
         }
     }
 }
