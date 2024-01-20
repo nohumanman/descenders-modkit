@@ -49,13 +49,19 @@ namespace ModLoaderSolution.Object_Syncing {
         }
         public void Start()
         {
-            // resync bool on net start
-            NetClient.Instance.onNetStart += ResyncBool;
+            StartCoroutine(CheckLobbyEnter());
         }
-        public void Update()
+        int playerLength = 0;
+        public IEnumerator CheckLobbyEnter()
         {
-            if (Input.GetKeyDown("joystick button 0") || Input.GetKeyDown(KeyCode.Escape))
-                ResyncBool(); // WHEN UNPAUSED WE MUST RESYNC BOOL
+            while (true)
+            {
+                int newPlayerLength = Utilities.instance.GetAllPlayers().Length;
+                if (newPlayerLength != 1 && playerLength == 1) // if we joined a lobby
+                    ResyncBool();
+                playerLength = newPlayerLength;
+                yield return new WaitForSeconds(5);
+            }
         }
     }
 }
