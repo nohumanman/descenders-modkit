@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Events;
 
 namespace ModLoaderSolution
 {
@@ -24,6 +25,11 @@ namespace ModLoaderSolution
 		public int port = 65432;
 		public string ip = "18.132.81.187";
 		public static DebugType DebugType = DebugType.DEBUG;
+		// Define the delegate CHATGPT
+		public delegate void NetStartEventHandler();
+		// Define the event using the delegate. CHATGPT
+		public event NetStartEventHandler onNetStart;
+
 		void Awake(){
 			DontDestroyOnLoad(this.gameObject.transform.root);
 			if (Instance != null && Instance != this) 
@@ -177,6 +183,7 @@ namespace ModLoaderSolution
 		}
 		public void NetStart()
         {
+			onNetStart();
 			PlayerManagement.Instance.NetStart();
 			foreach (MedalSystem medalSystem in FindObjectsOfType<MedalSystem>())
 				medalSystem.NetStart();
