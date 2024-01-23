@@ -19,7 +19,7 @@ namespace ModLoaderSolution
 			if (Input.GetKeyDown(KeyCode.G))
 			{
 				ToggleGate();
-				UserInterface.Instance.SpecialNotif("Gates toggled: " + (!gateEnabled).ToString());
+				UserInterface.Instance.SpecialNotif("Gates toggled: " + gateEnabled.ToString());
 			}
         }
 		Coroutine gateTriggerCoroutine = null;
