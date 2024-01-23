@@ -20,7 +20,10 @@ namespace ModLoaderSolution
         void Update()
         {
             if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Y))
+            {
+                UserInterface.Instance.SpecialNotif("Slow-Mo on joystick: " + (!enabled).ToString());
                 enabled = !enabled;
+            }
             if (!enabled)
             {
                 speed = 1f;

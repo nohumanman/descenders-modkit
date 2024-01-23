@@ -43,6 +43,7 @@ namespace ModLoaderSolution
         {
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.U))
 			{
+				UserInterface.Instance.SpecialNotif("UI Toggled: " + (!uiEnabled).ToString());
 				uiEnabled = !uiEnabled;
 				text.text = "";
 			}

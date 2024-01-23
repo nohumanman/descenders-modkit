@@ -46,10 +46,9 @@ namespace ModLoaderSolution
         {
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.P))
 				Application.OpenURL("https://modkit.nohumanman.com/trails");
-			if (Input.GetKey(KeyCode.I) && Input.GetKey(KeyCode.O) && Input.GetKey(KeyCode.L) && Input.GetKeyDown(KeyCode.KeypadEnter))
-				DontDestroyOnLoad(this.gameObject);
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
             {
+				UserInterface.Instance.SpecialNotif("Collisions enabled: " + (!PlayerCollision).ToString());
 				Physics.IgnoreLayerCollision(8, 8, PlayerCollision);
 				PlayerCollision = !PlayerCollision;
 			}
