@@ -119,6 +119,8 @@ namespace ModLoaderSolution
 			// if map_name is 0 we are in lobby
 			if (map_name == "0")
 				Destroy(GameObject.Find("sign_modoftheyear"));
+			if (Utilities.instance.isMod()) // only do this to mods to not mess things up
+				Utilities.instance.NormaliseModSongs();
 		}
 		public void OnMapExit(){
 			NetClient.Instance.SendData("MAP_EXIT");

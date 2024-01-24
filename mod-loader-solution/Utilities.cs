@@ -84,10 +84,21 @@ namespace ModLoaderSolution
         //        test(obj.transform.position);
         //    }
         //}
+        bool normalised = false;
+
+        public void Awake()
+        {
+            NormaliseModSongs();
+        }
         public void Update()
         {
             if (isFlying)
                 SetVel(20f);
+            if (!normalised && FindObjectOfType<GameData>() != null)
+            {
+                NormaliseModSongs();
+                normalised = true;
+            }
         }
         public Gesture[] gestures = new Gesture[0] {};
         public void GetGestures()
@@ -107,6 +118,103 @@ namespace ModLoaderSolution
                 x.releaseRightHand = true;
                 x.releaseRightFoot = true;
             }
+        }
+
+        public void NormaliseModSongs()
+        {
+            // Function to put proper playlist instead of 'Descenders' song on mod maps
+            
+            /*
+            GameData gData = FindObjectOfType<GameData>();
+            FieldInfo playlists = typeof(GameData).GetField("yzY\u0083jnm"); // 
+            MusicPlaylist[] musicPlaylists = (MusicPlaylist[])playlists.GetValue(gData);
+            foreach (MusicPlaylist x in musicPlaylists)
+            {
+                Debug.Log("for " + x.world + ":");
+
+                foreach (SongEntry ent in x.songs)
+                    Debug.Log("    " + ent.name);
+            }
+            // add music playlist for None (Mod maps)
+            List<MusicPlaylist> musicPlaylistList = musicPlaylists.ToList();
+            MusicPlaylist playlistOfModMaps = musicPlaylistList[0];
+            playlistOfModMaps.world = World.None;
+            musicPlaylistList.Add(playlistOfModMaps);
+            musicPlaylists = musicPlaylistList.ToArray();
+            playlists.SetValue(gData, musicPlaylists);
+            */
+
+
+
+            // dirty the current session (to force a playlist re-load)
+
+            /*FieldInfo currentSessionField = typeof(SessionManager).GetField("\u0083ESVMoz");
+            AudioManager
+            Session session = (Session)currentSessionField.GetValue(FindObjectOfType<SessionManager>());
+            FieldInfo worldMapField = typeof(Session).GetField("WnRr]U`"); // world map
+            //WorldMap worldMap = worldMapField.GetValue(session);
+            worldMapField.SetValue(session, null);
+            //WorldMap test = new WorldMap();
+            //test.world = World.Hell;
+            // session.worldMap = null; // set WorldMap to not null so 
+            currentSessionField.SetValue(FindObjectOfType<SessionManager>(), session);*/
+
+            /*
+             * The check in AudioManager to reset the playlist is:
+             * if (Singleton<SessionManager>.SP.GetWorld() != oldWorld) // (basically at least)
+             * so we need to change the result of GetWorld() somehow without breaking anything.
+             * 
+             * 
+             *  public World GetWorld()
+                {
+                    if (!SessionStarted())
+                    {
+                        return World.Overworld;
+                    }
+
+                    if (currentSession.worldMap != null)
+                    {
+                        return currentSession.worldMap.world;
+                    }
+
+                    if (currentSession.level != null)
+                    {
+                        return currentSession.level.world;
+                    }
+
+                    return World.None;
+                }
+             * } -> at the minute returns World.None
+             */
+
+            // dirty the current session (to force a playlist re-load)
+            FieldInfo currentSessionField = typeof(SessionManager).GetField("\u0083ESVMoz"); // currentSession field
+            object session = currentSessionField.GetValue(FindObjectOfType<SessionManager>()); // currentSession value
+            FieldInfo worldMapField = session.GetType().GetField("WnRr]U`"); // worldMap
+            WorldMap worldMap = new WorldMap(); // worldMap will be null, so we need to make one up
+            worldMap.world = World.Glaciers; // set the world to glaciers (not World.None), this will play glaciers playlist
+            Debug.Log("L6");
+            worldMapField.SetValue(session, worldMap);
+            Debug.Log("L7");
+            // worldMap 
+            Debug.Log(worldMap);
+            FieldInfo worldWorldMapField = worldMap.GetType().GetField("world");
+            Debug.Log("L6");
+            worldWorldMapField.SetValue(worldMap, World.Forest);
+            Debug.Log(session);
+
+            //FieldInfo worldMapField = typeof(Session).GetField("WnRr]U`"); // worldMap field
+            //WorldMap worldMap = (WorldMap)worldMapField.GetValue(session); // worldMap value
+            // just debug to see if worldMap is none
+            //Debug.Log("worldMap:" + worldMap);
+            // set world on worldMap to none
+
+            //worldMapField.SetValue(session, null);
+            //WorldMap test = new WorldMap();
+            //test.world = World.Hell;
+            // session.worldMap = null; // set WorldMap to not null so 
+            //currentSessionField.SetValue(FindObjectOfType<SessionManager>(), session);
+
         }
         public void Start()
         {
