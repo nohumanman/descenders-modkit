@@ -100,8 +100,8 @@ namespace ModLoaderSolution
                 {
                     typeof(PlayerManagement), typeof(NetClient), typeof(BikeSwitcher), typeof(TimeModifier),
                     typeof(TrickCapturer), typeof(GimbalCam), typeof(MovableCam), typeof(TeleportAtCursor),
-                    typeof(StatsModification), typeof(UserInterface), typeof(ChaosMod), typeof(Chat)//, tpeof(FollowCamSystem)
-
+                    typeof(StatsModification), typeof(UserInterface), typeof(ChaosMod), typeof(Chat),//, tpeof(FollowCamSystem),
+                    typeof(CustomDebug)
                 };
                 // add all components to be added on first load
                 foreach(Type component in firstStartComponents)
