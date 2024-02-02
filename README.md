@@ -32,7 +32,7 @@ There are 3 main parts to this modkit:
 Please see the READMEs in each folder for more information.
 
 ## Implementations
-This timer is implemented, to some capacity, on 
+This modkit is implemented, to some capacity, on 
 - **[Igloo Bike Park](https://mod.io/g/descenders/m/igloo-bike-park)** by *[antgrass](https://mod.io/g/descenders/u/antgrass)* (70K+ downloads)
 - **[Montcerf](https://mod.io/g/descenders/m/montcerf)** by *[antgrass](https://mod.io/g/descenders/u/antgrass)*
 - **[Hedgecock](https://mod.io/g/descenders/m/hedgecock)** by *[antgrass](https://mod.io/g/descenders/u/antgrass)*
