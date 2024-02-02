@@ -8,7 +8,6 @@ from discord_bot import DiscordBot
 from tokens import DISCORD_TOKEN
 from webserver import Webserver
 from dbms import DBMS
-from discord_bot import DiscordBot
 
 def setup_logging(log_file):
     """ Setup logging for the server """
@@ -22,9 +21,9 @@ def setup_logging(log_file):
         )
     )
 
-UNITY_SOCKET_IP = "127.0.0.1"
-UNITY_SOCKET_PORT = 65434
-WEBSITE_IP = "127.0.0.1"
+UNITY_SOCKET_IP = "0.0.0.0"
+UNITY_SOCKET_PORT = 65432
+WEBSITE_IP = "0.0.0.0"
 WEBSITE_PORT = 8081
 
 
@@ -47,8 +46,7 @@ server_coro = asyncio.start_server(
     unity_socket_server.port,
 )
 
-#server = loop.run_until_complete(server_coro)
-loop.create_task(server_coro)
+server = loop.run_until_complete(server_coro)
 loop.create_task(unity_socket_server.riders_gate())
 # - Website Server -
 webserver = Webserver(unity_socket_server, dbms_instance)
@@ -62,15 +60,14 @@ webserver.discord_bot = discord_bot
 
 print("running forever")
 
-threading.Thread(target=loop.run_forever).start()
+#loop.run_forever()
 
-import time
-time.sleep(5)
+threading.Thread(target=loop.run_forever).start()
 
 # run webserver
 if __name__ == "__main__":
     webserver.webserver_app.run(
-         WEBSITE_IP, port=WEBSITE_PORT,
+        WEBSITE_IP, port=WEBSITE_PORT,
         debug=True, ssl_context='adhoc'
     )
     print("Server available from https://localhost:8080/")
