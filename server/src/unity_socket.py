@@ -355,7 +355,7 @@ class UnitySocket():
         try:
             self.writer.write((data + "\n").encode("utf-8"))
             await self.writer.drain()
-        except (BrokenPipeError, ConnectionResetError) as e:
+        except (BrokenPipeError, ConnectionResetError):
             logging.info(
                 "%s '%s'\t- connection closed '%s'", self.info.steam_id, self.info.steam_name, data
             )
