@@ -47,7 +47,7 @@ class TrailTimer():
         if len(self.__boundaries) == 0 and self.timer_info.started:
             # note we cannot verify this user instantly
             self.timer_info.auto_verify = False
-            await self.network_player.send("SPLIT_TIME|Time will be reviewed")
+            await self.network_player.send("SPLIT_TIME|Time requires review")
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
 
@@ -61,7 +61,7 @@ class TrailTimer():
             if self.timer_info.started:
                 # note we cannot verify this user instantly
                 self.timer_info.auto_verify = False
-                await self.network_player.send("SPLIT_TIME|Time will be reviewed")
+                await self.network_player.send("SPLIT_TIME|Time requires review")
 
     def reset_boundaries(self):
         """
