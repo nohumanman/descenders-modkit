@@ -155,7 +155,6 @@ class TrailTimer():
             return
         await self.network_player.send(f"INVALIDATE_TIME|{reason}\\n")
         self.timer_info.started = False
-        self.timer_info.times = []
 
     async def update_medals(self):
         """ Update the medals for the player. """
@@ -255,7 +254,6 @@ class TrailTimer():
         await self.update_leaderboards()
         await self.update_medals()
         # reset the timer
-        self.timer_info.times = []
         self.timer_info.auto_verify = True
 
     async def potential_cheat(self, client_time: float):

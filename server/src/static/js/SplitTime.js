@@ -6,8 +6,7 @@ var app = new Vue({
     }),
     data : {
         currentTime: 0,
-        spectated_player: null,
-        trail_name: "Snowbird Speed and Style"
+        started: false,
     },
     methods: {
         secs_to_str(secs){
@@ -28,28 +27,26 @@ var app = new Vue({
             return d_mins + ":" + d_secs + "." + fraction
         },
         updateTime(){
-            trails = app.spectated_player?.trails
-            if (trails != null){
-                trails.forEach(
-                    function(data){
-                        if (data.trail_name == app.trail_name){
-                            if (data.started){
-                                app.currentTime = Date.now()/1000 - data.time_started;
-                                if (app.currentTime < 0)
-                                    app.currentTime = 0;
-                            }
-                            else
-                                app.currentTime = data.last_time;
-                        }
-                    }
-                )
+            if (this.started){
+                if (app.start_time == 0 || app.start_time == undefined)
+                    return;
+                app.currentTime = Date.now()/1000 - app.start_time;
+                if (app.currentTime < 0)
+                    app.currentTime = 0;
             }
+            else
+                app.currentTime = app.start_time;
         },
-        getSpectatedInfo(){
-            $.get("/get-spectated", function(data){
-                app.spectated_player = data;
-            })
+        updateTimeFromServer(){
+            $.get("/api/spectating/get-time", data={"my_id": this.getSelf()}, function(data){
+                app.started = data.started;
+                app.start_time = data.time;
+            });
         },
+        getSelf(){
+            const params = new URLSearchParams(window.location.search)
+            return params.get('id')
+        }
     }
 });
 
@@ -62,9 +59,7 @@ setInterval(() => {
     app.updateTime();
 }, 1);
 
-setInterval(() =>{
-    app.getSpectatedInfo();
-}, 500)
-
-
+setInterval(() => {
+    app.updateTimeFromServer();
+}, 1000);
 
