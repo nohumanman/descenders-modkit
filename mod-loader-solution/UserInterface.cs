@@ -79,7 +79,7 @@ namespace ModLoaderSolution
                 myButtonStyle2.normal.background = MakeTex(5, 5, new Color(0.2f, 0.06f, 0.12f));
                 myButtonStyle2.fontSize = 60;
                 GUI.Label(new Rect((Screen.width/2)-750, Screen.height- 80, 1500, 80), "scripts made with love by nohumanman :D", myButtonStyle2);
-                GUI.Label(new Rect((Screen.width / 2) - 750, Screen.height - 400, 1500, 80), Utilities.instance.playerObject.transform.position.ToString(), myButtonStyle2);
+                GUI.Label(new Rect((Screen.width / 2) - 750, Screen.height - 400, 1500, 80), Camera.main.transform.position.ToString(), myButtonStyle2);
                 hasBeenActive = true;
                 GUIStyle myButtonStyle = new GUIStyle(GUI.skin.button);
                 myButtonStyle.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");

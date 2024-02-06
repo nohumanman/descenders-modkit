@@ -4,46 +4,163 @@ using UnityEngine;
 using UnityEngine.UI;
 using ModLoaderSolution;
 using System;
+using System.IO;
+
 
 namespace ModLoaderSolution
 {
+    public class Cam
+    {
+        public Vector3 loc = Vector3.zero; // the location of the camera
+        public float panSpeed = 13; // the speed the camera follows the player rotationally
+        public float proximity = 100; // the range a camera can see
+        public float zoomAmount = 5f; // the amount the camera should be zoomed to the player
+        public bool shouldZoom = true; // whether the camera should zoom to correct FOV
+    }
     public class FollowCamSystem : MonoBehaviour
     {
         public GameObject subject;
-        public List<Vector3> camLocations = new List<Vector3>() { new Vector3(5, 210, 525), new Vector3(41, 197, 507), new Vector3(57, 201, 511), new Vector3(109, 193, 508) };
-        public Vector3 currentCamLoc = Vector3.zero;
-        public void Update()
+        private List<Cam> cameras = new List<Cam>() { };
+        private Cam currentCam;
+        private bool shouldSnap = false;
+        public bool bother = false;
+        bool edit = false;
+        public void OnGUI()
         {
-            if (subject == null)
+            if (!edit)
                 return;
-            Utilities.instance.DisableControlledCam();
+            int yPos = 20;
+            int i = 0;
+            List<string> title = new List<string>() { "X", "Y", "Z", "PanSpeed", "ShouldZoom", "Proximity", "zoomAmount"};
+            float xPos = 20;
+            foreach (string key in title)
+            {
+                GUI.Label(new Rect(xPos, yPos, 60, 20), key);
+                xPos += 65;
+            }
+            yPos += 20;
+            foreach (Cam cam in cameras)
+            {
+                Vector3 vector3 = cam.loc;
+                xPos = 20;
+                cam.loc.x = float.Parse(GUI.TextField(new Rect(xPos, yPos, 60, 20), cam.loc.x.ToString())); xPos += 65;
+                cam.loc.y = float.Parse(GUI.TextField(new Rect(xPos, yPos, 60, 20), cam.loc.y.ToString())); xPos += 65;
+                cam.loc.z = float.Parse(GUI.TextField(new Rect(xPos, yPos, 60, 20), cam.loc.z.ToString())); xPos += 65;
+                cam.panSpeed = float.Parse(GUI.TextField(new Rect(xPos, yPos, 60, 20), cam.panSpeed.ToString())); xPos += 65;
+                cam.shouldZoom = GUI.Toggle(new Rect(xPos, yPos, 60, 20), cam.shouldZoom, "shouldZoom"); xPos += 65;
+                cam.proximity = float.Parse(GUI.TextField(new Rect(xPos, yPos, 60, 20), cam.proximity.ToString())); xPos += 65;
+                cam.zoomAmount = float.Parse(GUI.TextField(new Rect(xPos, yPos, 60, 20), cam.zoomAmount.ToString())); xPos += 65;
+                
+                if (GUI.Button(new Rect(xPos, yPos, 60, 20), "SET"))
+                    cameras[i].loc = Camera.main.transform.position;
+                xPos += 60;
+                if (GUI.Button(new Rect(xPos, yPos, 60, 20), "GOTO"))
+                    Camera.main.transform.position = vector3;
+                xPos += 60;
+                if (GUI.Button(new Rect(xPos, yPos, 60, 20), "DEL"))
+                    cameras.RemoveAt(i);
+                yPos += 22;
+                i++;
+            }
+            xPos = 20;
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Toggle Follow Cam"))
+                bother = !bother;
+            yPos += 22;
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Look at me once"))
+                Camera.main.transform.LookAt(Utilities.instance.GetPlayer().transform);
+            yPos += 22;
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Add Camera"))
+                cameras.Add(new Cam());
+            yPos += 22;
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Save to cameras.txt"))
+                SaveToFile();
+            yPos += 22;
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Load from cameras.txt"))
+                LoadFromFile();
+            GUIStyle myButtonStyle2 = new GUIStyle(GUI.skin.button);
+            myButtonStyle2.normal.textColor = Color.white;
+            myButtonStyle2.normal.background = UserInterface.MakeTex(5, 5, new Color(0.2f, 0.06f, 0.12f));
+            myButtonStyle2.fontSize = 30;
+            GUI.Label(new Rect(Screen.width - 300, Screen.height - 80, 300, 80), Camera.main.transform.position.ToString(), myButtonStyle2);
+        }
+        public Cam GetBestCamera()
+        {
+            return cameras[0];
             float closest = Mathf.Infinity;
-            bool anyValid = false;
-            foreach (Vector3 vector3 in camLocations)
-                if (IsValid(vector3)){ // if camera is valid
+            Cam closestCam = cameras[0];
+            float switchThreshold = 2f;
+            foreach (Cam cam in cameras)
+            {
+                Vector3 vector3 = cam.loc;
+                if (IsValid(vector3))
+                {
                     float distanceToCam = Vector3.Distance(vector3, subject.transform.position);
-                    // if this is the closest to our player
-                    if (distanceToCam < closest)
+                    if (distanceToCam < closest - switchThreshold) // if this is the closest to our player
                     {
-                        anyValid = true;
                         closest = distanceToCam; // set as closest
-                        currentCamLoc = vector3; // set as the one
+                        closestCam = cam;
                     }
                 }
-            if (!anyValid)
-                currentCamLoc = subject.transform.position - subject.transform.forward*3;
-            if (currentCamLoc != Vector3.zero)
+            }
+            if (closestCam.loc == Vector3.zero)
+                return null;
+            return closestCam;
+        }
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.M) && Input.GetKey(KeyCode.C))
+                edit = !edit;
+
+            if (!bother)
+                return;
+
+            if (Input.GetKey(KeyCode.LeftControl))
+                Cursor.visible = true;
+
+            // if no subject, subject is us.
+            if (subject == null)
+                return;
+
+            Utilities.instance.DisableControlledCam();
+
+            Cam bestCam = GetBestCamera();
+            Vector3 bestLoc = bestCam.loc;
+            if (currentCam == null)
+                currentCam = bestCam;
+            if (bestLoc != currentCam.loc && bestLoc != Vector3.zero)
+            {
+                currentCam = bestCam;
+                shouldSnap = true;
+            }
+            if (currentCam.loc != Vector3.zero)
             {
                 foreach(Camera cam in FindObjectsOfType<Camera>())
                 {
-                    // set position of camera to current camera location
-                    cam.transform.position = currentCamLoc;
-                    // temporarily just set the rotation to look at player
-                    cam.transform.LookAt(subject.transform);
+                    cam.transform.position = currentCam.loc; // set position of camera to current camera location
+                    if (shouldSnap)
+                    {
+                        cam.transform.LookAt(subject.transform.position);
+                    }
+                    else
+                    {
+                        Quaternion targetRotation = Quaternion.LookRotation(subject.transform.position - cam.transform.position);
+                        cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, targetRotation, 13 * Time.deltaTime);
+                    }
+
+                    float distanceToSubject = Vector3.Distance(cam.transform.position, subject.transform.position);
+                    float someConstant = currentCam.zoomAmount;
+                    // Calculate FOV based on distance (adjust this formula based on your needs)
+                    float desiredFOV = Mathf.Atan(someConstant / distanceToSubject) * Mathf.Rad2Deg * 2f;
+
+                    // Set the FOV within some defined range (e.g., between 20 and 100)
+                    cam.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, desiredFOV, currentCam.panSpeed * Time.deltaTime);//Mathf.Clamp(desiredFOV, 20, 100);
+
+
                 }
+                shouldSnap = false;
             }
         }
-        public bool IsValid(Vector3 camPos, int proximity = 5000)
+        public bool IsValid(Vector3 camPos, int proximity = 100)
         {
             if (subject == null)
                 return false;
@@ -57,5 +174,81 @@ namespace ModLoaderSolution
                     return true; // player is in line of view
             return false;
         }
+        public void LoadFromFile()
+        {
+            string filePath = Path.Combine(Application.persistentDataPath, "cameras.txt");
+
+            if (File.Exists(filePath))
+            {
+                cameras.Clear(); // Clear the existing data before loading from file
+
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string[] values = line.Split(',');
+
+                        if (values.Length == 7)
+                        {
+                            float x, y, z, proximity, panSpeed, zoomAmount;
+                            bool shouldZoom;
+
+                            if (float.TryParse(values[0], out x) &&
+                                float.TryParse(values[1], out y) &&
+                                float.TryParse(values[2], out z) &&
+                                float.TryParse(values[3], out proximity) &&
+                                float.TryParse(values[4], out panSpeed) &&
+                                bool.TryParse(values[5], out shouldZoom) &&
+                                float.TryParse(values[6], out zoomAmount))
+                            {
+                                Cam loadedCam = new Cam();
+                                loadedCam.loc = new Vector3(x, y, z);
+                                loadedCam.proximity = proximity;
+                                loadedCam.panSpeed = panSpeed;
+                                loadedCam.shouldZoom = shouldZoom;
+                                loadedCam.zoomAmount = zoomAmount;
+                                cameras.Add(loadedCam);
+                            }
+                            else
+                            {
+                                Debug.LogWarning("Failed to parse line: " + line);
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Invalid line format: " + line);
+                        }
+                    }
+                }
+                Debug.Log("Cameras loaded from file.");
+            }
+            else
+            {
+                Debug.LogWarning("File not found: " + filePath);
+            }
+        }
+
+        public void SaveToFile()
+        {
+            // credit ChatGPT
+            string filePath = Path.Combine(Application.persistentDataPath, "cameras.txt");
+
+            // Ensure cameras has data to save
+            if (cameras.Count > 0)
+            {
+                using (StreamWriter writer = new StreamWriter(filePath))
+                {
+                    foreach (Cam cam in cameras)
+                    {
+                        string line = $"{cam.loc.x},{cam.loc.y},{cam.loc.z},{cam.proximity},{cam.panSpeed},{cam.shouldZoom},{cam.zoomAmount}";
+                        writer.WriteLine(line);
+                    }
+                }
+                Debug.Log("cameras saved to file.");
+            }
+            else { Debug.LogWarning("No cameras data to save."); }
+        }
+
     }
 }

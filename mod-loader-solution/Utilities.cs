@@ -244,6 +244,16 @@ namespace ModLoaderSolution
         {
 
         }
+        // Note: VERY INNEFFICIENT
+        public List<GameObject> GetNetworkedPlayers()
+        {
+            List<GameObject> networkedPlayers = new List<GameObject>();
+            foreach (GameObject x in FindObjectsOfType<GameObject>()) {
+                if (x.name == "Player_Networked")
+                    networkedPlayers.Add(x);
+            }
+            return networkedPlayers;
+        }
         public void RestartReplay()
         {
             Utilities.Log("Utilities | RestartReplay()");
@@ -831,7 +841,8 @@ namespace ModLoaderSolution
             GameObject player = GetPlayerFromId(id);
             if (player == null)
                 return;
-            //FindObjectOfType<FollowCamSystem>().subject = player;
+            FindObjectOfType<FollowCamSystem>().subject = player;
+            FindObjectOfType<FollowCamSystem>().bother = true;
         }
         public void SpectatePlayer(int id)
         {
