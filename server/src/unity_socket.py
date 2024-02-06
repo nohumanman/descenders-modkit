@@ -455,7 +455,7 @@ class UnitySocket():
         self.info.time_started = time.time()
         await self.update_concurrent_users()
         # invalidate all trails
-        await self.send(f"INVALIDATE_TIME|\\n")
+        await self.send("INVALIDATE_TIME|\\n")
         # remove all trails
         self.trails = {} # FIXES reentry cheat
         if (self.info.bike_type == "" or self.info.bike_type is None):
