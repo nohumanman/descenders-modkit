@@ -213,9 +213,12 @@ class Webserver():
     async def spectate(self):
         """ Function to spectate a player """
         # get our player id
-        our_id = self.get_our_steam_id()
+        our_id = await self.get_our_steam_id()
         # get us
-        us = self.socket_server.get_player_by_id(our_id)
+        try:
+            us = self.socket_server.get_player_by_id(str(our_id))
+        except PlayerNotFound:
+            return f"Failed to find you! your id : {our_id}"
         target_id = request.args.get("target_id")
         us.info.spectating = self.socket_server.get_player_by_id(
             target_id
@@ -420,30 +423,14 @@ class Webserver():
         session['oauth2_token'] = token
 
     async def get_our_steam_id(self):
-        discord = self.make_session(
-            state=session.get('oauth2_state')
-        )
-        token = discord.fetch_token(
-            TOKEN_URL,
-            client_secret=OAUTH2_CLIENT_SECRET,
-            authorization_response=request.url
-        )
-        session['oauth2_token'] = token
-        user = discord.get(
-            API_BASE_URL + '/users/@me'
-        ).json()
+        discord = self.make_session(token=session.get('oauth2_token'))
         connections = discord.get(
             API_BASE_URL + '/users/@me/connections'
         ).json()
-        try:
-            try:
-                for connection in connections:
-                    if connection['type'] == "steam":
-                        return connection['id']
-            except KeyError:
-                logging.info("Steam ID Not Found")
-        except (IndexError, KeyError) as e:
-            logging.info("User %s with error %s", user, str(e))
+        for connection in connections:
+            if connection["type"] == "steam":
+                return connection["id"]
+        return "None"
 
     # routes
     async def callback(self):

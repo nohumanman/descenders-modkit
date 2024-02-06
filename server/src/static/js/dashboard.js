@@ -190,7 +190,7 @@ var app = new Vue({
         },
         Spectate(id){
             $.get("/api/spectate", data={
-                "target_id": id.id
+                "target_id": id
             });
         },
         timestamp_to_date(unix_timestamp){
