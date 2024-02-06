@@ -74,6 +74,7 @@ class Player:
     reputation: int
     version: str
     time_started: float
+    spectating: str
 
 class UnitySocket():
     """ Used to handle the connection to the descenders unity client """
@@ -97,7 +98,8 @@ class UnitySocket():
             avatar_src="",
             bike_type="", world_name="",
             last_trick="", reputation=0,
-            version="OUTDATED", time_started=time.time()
+            version="OUTDATED", time_started=time.time(),
+            spectating=""
         )
 
     async def send_leaderboard(self, trail_name: str):
