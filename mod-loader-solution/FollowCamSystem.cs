@@ -23,9 +23,12 @@ namespace ModLoaderSolution
         private List<Cam> cameras = new List<Cam>() { };
         private Cam currentCam;
         private bool shouldSnap = false;
-        private bool bother = true;
+        public bool bother = false;
+        bool edit = false;
         public void OnGUI()
         {
+            if (!edit)
+                return;
             int yPos = 20;
             int i = 0;
             List<string> title = new List<string>() { "X", "Y", "Z", "PanSpeed", "ShouldZoom", "Proximity", "zoomAmount"};
@@ -63,7 +66,7 @@ namespace ModLoaderSolution
             if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Toggle Follow Cam"))
                 bother = !bother;
             yPos += 22;
-            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Look at me"))
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Look at me once"))
                 Camera.main.transform.LookAt(Utilities.instance.GetPlayer().transform);
             yPos += 22;
             if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Add Camera"))
@@ -105,13 +108,19 @@ namespace ModLoaderSolution
         }
         public void Update()
         {
+            if (Input.GetKeyDown(KeyCode.M) && Input.GetKey(KeyCode.C))
+                edit = !edit;
+
             if (!bother)
                 return;
-            subject = Utilities.instance.GetPlayer();
-            try
-            {
-                subject = Utilities.instance.GetNetworkedPlayers()[0];
-            } catch (Exception e) { }
+
+            if (Input.GetKey(KeyCode.LeftControl))
+                Cursor.visible = true;
+
+            // if no subject, subject is us.
+            if (subject == null)
+                return;
+
             Utilities.instance.DisableControlledCam();
 
             Cam bestCam = GetBestCamera();

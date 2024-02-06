@@ -711,6 +711,7 @@ namespace ModLoaderSolution
             if (player == null)
                 return;
             FindObjectOfType<FollowCamSystem>().subject = player;
+            FindObjectOfType<FollowCamSystem>().bother = true;
         }
         public void SpectatePlayer(int id)
         {
