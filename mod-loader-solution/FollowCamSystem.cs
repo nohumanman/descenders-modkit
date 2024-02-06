@@ -85,7 +85,6 @@ namespace ModLoaderSolution
         }
         public Cam GetBestCamera()
         {
-            return cameras[0];
             float closest = Mathf.Infinity;
             Cam closestCam = cameras[0];
             float switchThreshold = 2f;
@@ -111,11 +110,11 @@ namespace ModLoaderSolution
             if (Input.GetKeyDown(KeyCode.M) && Input.GetKey(KeyCode.C))
                 edit = !edit;
 
-            if (!bother)
-                return;
-
             if (Input.GetKey(KeyCode.LeftControl))
                 Cursor.visible = true;
+
+            if (!bother)
+                return;
 
             // if no subject, subject is us.
             if (subject == null)
