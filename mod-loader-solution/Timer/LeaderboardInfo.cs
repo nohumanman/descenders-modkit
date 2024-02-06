@@ -54,7 +54,7 @@ namespace ModLoaderSolution
                 else
                     leaderboardString += placeNum + ". " + MakeLengthOf(TruncateText(name[i], nameMaxLen), maxNameLength) + " | " + FormatTime(time[i]) + "   ~" + (Mathf.Round(pen[i] * 10) / 10) + " pen\n";
             }
-            //Debug.Log("'" + leaderboardString + "'");
+            //Utilities.Log("'" + leaderboardString + "'");
             return leaderboardString;
         }
         private string FormatTime(float time)

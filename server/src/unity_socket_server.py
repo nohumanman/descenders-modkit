@@ -25,6 +25,12 @@ class UnitySocketServer():
         self.discord_bot : DiscordBot | None = None
         self.players: list[UnitySocket] = []
 
+    def get_discord_bot(self) -> 'DiscordBot':
+        """ Returns the discord bot """
+        if self.discord_bot is None:
+            raise RuntimeError("Discord bot not set")
+        return self.discord_bot
+
     def delete_player(self, player: UnitySocket):
         """ Deletes the player from the socket server """
         self.players.remove(player)
@@ -35,7 +41,8 @@ class UnitySocketServer():
         """ Deletes players that have timed out """
         for player in self.players:
             if (time.time() - player.last_contact) > self.timeout:
-                logging.info("%s '%s' - contact timeout disconnect", player.info.steam_id, player.info.steam_name)
+                logging.info("%s '%s' - contact timeout disconnect",
+                             player.info.steam_id, player.info.steam_name)
                 self.delete_player(player)
 
     def get_player_by_id(self, _id: str) -> UnitySocket:
@@ -60,6 +67,12 @@ class UnitySocketServer():
                 return player
         return None
 
+    async def riders_gate(self):
+        while True:
+            for player in self.players:
+                await player.send("RIDERSGATE|2")
+            time.sleep(10)
+
     async def create_client(self, reader: StreamReader, writer: StreamWriter):
         """ Creates a client from their socket and address """
         logging.info("create_client")
@@ -74,7 +87,8 @@ class UnitySocketServer():
             try:
                 data = await asyncio.wait_for(reader.read(1024), timeout=120)
             except asyncio.TimeoutError:
-                logging.info("%s '%s' - asyncio timeout", player.info.steam_id, player.info.steam_name)
+                logging.info("%s '%s' - asyncio timeout",
+                             player.info.steam_id, player.info.steam_name)
                 self.delete_player(player)
                 return
             if data == b'':
@@ -88,4 +102,5 @@ class UnitySocketServer():
                 logging.error("Player is None")
                 return
             for mess in message.split("\n"):
+                logging.info("%s '%s' - %s", player.info.steam_id, player.info.steam_name, mess)
                 await player.handle_data(mess)

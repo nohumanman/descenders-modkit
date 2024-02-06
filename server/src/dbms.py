@@ -1,9 +1,9 @@
 """ Database Management System """
-import aiosqlite
 import time
 import os
 from datetime import datetime, timedelta
 import logging
+import aiosqlite
 
 script_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -15,8 +15,8 @@ def daterange(start_date: datetime, end_date: datetime):
 
 class DBMS():
     """ A simple Database Management System (DBMS) class for managing data. """
-    def __init__(self):
-        self.db_file = script_path + "/modkit.db"
+    def __init__(self, db_file: str = "modkit.db"):
+        self.db_file = script_path + f"/{db_file}"
         self.wait = False
 
     async def execute_sql(self, statement: str, write=False):
@@ -61,6 +61,18 @@ class DBMS():
         '''
         return self.execute_sql(statement)
 
+    async def get_replay_name_from_id(self, time_id):
+        """ Get the replay name associated with a given time. """
+        vals = (await self.execute_sql(
+            f'''
+            SELECT Player.steam_name
+            FROM Time
+            INNER JOIN Player ON Time.steam_id = Player.steam_id
+            WHERE time_id = {time_id}
+            '''
+        ))
+        return f"{vals[0][0]}_{time_id}"
+
     async def get_webhooks(self, trail_name):
         """ Get the webhooks associated with a given trail. """
         return self.execute_sql(
@@ -93,7 +105,7 @@ class DBMS():
             ''', write=True
         )
 
-    async def get_personal_fastest_split_times(self, trail_name, steam_id):
+    async def get_personal_fastest_split_times(self, trail_name: str, steam_id: int):
         """ Get the fastest split times for a given player on a given trail. """
         statement = f'''
             SELECT
@@ -130,7 +142,7 @@ class DBMS():
                 checkpoint_num
             '''
         )
-        split_times = [time[2] for time in times]
+        split_times = [float(time[2]) for time in times]
         return split_times
 
     async def get_fastest_split_times(self,
@@ -412,6 +424,68 @@ class DBMS():
             })
         return values
 
+    async def get_to_verify(self, trail_name):
+        """ Get runs that would be in the top 10 """
+        statement = f'''
+            SELECT * FROM (
+                SELECT
+                    starting_speed,
+                    steam_name,
+                    bike_type,
+                    MIN(checkpoint_time),
+                    Time.version,
+                    Time.penalty,
+                    Time.verified,
+                    Time.time_id
+                FROM
+                    Time
+                    INNER JOIN
+                        SplitTime ON SplitTime.time_id = Time.time_id
+                    INNER JOIN
+                        (
+                            SELECT
+                                max(checkpoint_num) AS max_checkpoint
+                            FROM
+                                SplitTime
+                                INNER JOIN
+                                    Time ON Time.time_id = SplitTime.time_id
+                                WHERE LOWER(Time.trail_name) = LOWER(
+                                    "{trail_name}"
+                                )
+                        ) ON SplitTime.time_id=Time.time_id
+                    INNER JOIN
+                        Player ON Player.steam_id = Time.steam_id
+                WHERE
+                    LOWER(trail_name) = LOWER("{trail_name}")
+                    AND
+                    checkpoint_num = max_checkpoint
+                    AND
+                    (Time.ignore = "False")
+                GROUP BY
+                    trail_name,
+                    Player.steam_id
+                ORDER BY
+                    checkpoint_time ASC
+                LIMIT 10
+            ) as dat
+            WHERE dat.verified = 0
+        '''
+        result = await self.execute_sql(statement)
+        return [
+            {
+                "place": i + 1,
+                "time": time[3],
+                "name": time[1],
+                "bike": time[2],
+                "starting_speed": time[0],
+                "version": time[4],
+                "penalty": time[5],
+                "verified": str(time[6]),
+                "time_id": str(time[7])
+            }
+            for i, time in enumerate(result)
+        ]
+
     async def get_leaderboard(self, trail_name, num=10, steam_id="") -> list:
         """ Get the leaderboard for a given trail. """
         statement = f'''
@@ -447,8 +521,8 @@ class DBMS():
                 AND
                 checkpoint_num = max_checkpoint
                 AND
-                (Time.ignore = "False" OR Time.ignore is NULL)
-                AND (Time.verified = "1" OR Time.steam_id = "{steam_id}")
+                (Time.ignore = "False")
+                AND (Time.verified = 1 OR Time.steam_id = "{steam_id}")
             GROUP BY
                 trail_name,
                 Player.steam_id
@@ -671,7 +745,7 @@ class DBMS():
                 "{steam_id}", "{time_id}", {time.time()},
                 "{current_world}", "{trail_name}",
                 "{str(being_monitored)}", "{bike_type}",
-                "False", "{starting_speed}", "{version}", {penalty}, "{verified}"
+                "False", {starting_speed}, "{version}", {penalty}, {verified}
             )
             ''',
             write=True

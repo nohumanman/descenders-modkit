@@ -5,11 +5,14 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using UnityEngine;
-using ModLoaderSolution;
 using UnityEngine.Networking;
 
 namespace ModLoaderSolution
 {
+	public enum DebugType
+    {
+		DEBUG, RELEASE
+    }
 	public class NetClient : MonoBehaviour {
 		public static NetClient Instance { get; private set; }
 		public RidersGate[] ridersGates;
@@ -20,6 +23,7 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
+		public static DebugType DebugType = DebugType.DEBUG;
 		void Awake(){
 			DontDestroyOnLoad(this.gameObject.transform.root);
 			if (Instance != null && Instance != this) 
@@ -30,7 +34,7 @@ namespace ModLoaderSolution
 			Application.logMessageReceived += Log;
 		}
 		void Start () {
-			Debug.Log("ModLoaderSolution.NetClient | Connecting to tcp server port " + port.ToString() + " with ip '" + ip + "'");
+			Utilities.Log("Connecting to tcp server port " + port.ToString() + " with ip '" + ip + "'");
 			ConnectToTcpServer();
 			ridersGates = FindObjectsOfType<RidersGate>();
 			if (new PlayerIdentification.SteamIntegration().getName() == "Descender")
@@ -40,16 +44,17 @@ namespace ModLoaderSolution
 		}
 		void Update()
         {
-			if (Input.GetKey(KeyCode.I) && Input.GetKey(KeyCode.O) && Input.GetKey(KeyCode.L) && Input.GetKeyDown(KeyCode.KeypadEnter))
-				DontDestroyOnLoad(this.gameObject);
+			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.P))
+				Application.OpenURL("https://modkit.nohumanman.com/trails");
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
             {
+				UserInterface.Instance.SpecialNotif("Collisions enabled: " + (!PlayerCollision).ToString());
 				Physics.IgnoreLayerCollision(8, 8, PlayerCollision);
 				PlayerCollision = !PlayerCollision;
 			}
 			if (Time.time - hasStarted > 30 && (socketConnection == null || !socketConnection.Connected))
             {
-				Debug.Log("ModLoaderSolution.NetClient | Disconnected! Reconecting now...");
+				Utilities.Log("Disconnected! Reconecting now...");
                 // SplitTimerText.Instance.count = false;
                 SplitTimerText.Instance.text.color = Color.red;
 				SplitTimerText.Instance.checkpointTime = "";
@@ -70,11 +75,11 @@ namespace ModLoaderSolution
 			}
 			catch (InvalidOperationException)
             {
-				// Debug.Log("ModLoaderSolution.NetClient | Message was recieved while messages were being read - cancelled reading.");
+				Utilities.Log("Message was recieved while messages were being read - cancelled reading.");
             }
 		}
 		private void ConnectToTcpServer () {
-			Debug.Log("ModLoaderSolution.NetClient | Connecting to TCP Server");
+			Utilities.Log("Connecting to TCP Server");
 			hasStarted = Time.time;
 			try {
 				clientReceiveThread = new Thread (new ThreadStart(ListenForData));
@@ -83,7 +88,7 @@ namespace ModLoaderSolution
 				hasStarted = Time.time;
 			}
 			catch (Exception e) {
-				Debug.Log("ModLoaderSolution.NetClient | On client connect exception " + e); 		
+				Utilities.Log("On client connect exception " + e); 		
 			}
 		}
 		public void Log(string logString, string stackTrace, LogType type)
@@ -103,7 +108,7 @@ namespace ModLoaderSolution
 			form.AddBinaryData("replay", bytes, "replay");
 
 			using (UnityWebRequest www = UnityWebRequest.Post(
-				"https://split-timer.nohumanman.com/upload-outputlog",
+				"https://modkit.nohumanman.com/upload-outputlog",
 				form
 			))
 			{
@@ -111,11 +116,11 @@ namespace ModLoaderSolution
 
 				if (www.isNetworkError || www.isHttpError)
 				{
-					Debug.Log(www.error);
+					Utilities.Log(www.error);
 				}
 				else
 				{
-					Debug.Log("Upload complete!");
+					Utilities.Log("Upload complete!");
 				}
 			}
 		}
@@ -129,7 +134,7 @@ namespace ModLoaderSolution
 			form.AddBinaryData("replay", bytes, "replay");
 
 			using (UnityWebRequest www = UnityWebRequest.Post(
-				"https://split-timer.nohumanman.com/upload-replay",
+				"https://modkit.nohumanman.com/upload-replay",
 				form
 			))
 			{
@@ -137,19 +142,19 @@ namespace ModLoaderSolution
 
 				if (www.isNetworkError || www.isHttpError)
 				{
-					Debug.Log(www.error);
+					Utilities.Log(www.error);
 				}
 				else
 				{
-					Debug.Log("Upload complete!");
+					Utilities.Log("Upload complete!");
 				}
 			}
         }
 		private void ListenForData() {
 			try {
-				Debug.Log("ModLoaderSolution.NetClient | Creating TcpClient()");
+				Utilities.Log("Creating TcpClient()");
 				socketConnection = new TcpClient(ip, port);
-				Debug.Log("ModLoaderSolution.NetClient | TcpClient created!");
+				Utilities.Log("TcpClient created!");
 				Byte[] bytes = new Byte[1024];
 				while (true) {
 					using (NetworkStream stream = socketConnection.GetStream()) { 					
@@ -166,7 +171,7 @@ namespace ModLoaderSolution
 				}
 			}
 			catch {             
-				Debug.Log("ModLoaderSolution.NetClient | Socket exception in ListenForData()");         
+				Utilities.Log("Socket exception in ListenForData()");         
 			}
 		}
 		public void NetStart()
@@ -181,7 +186,7 @@ namespace ModLoaderSolution
 		private void MessageRecieved(string message) {
 			if (message == "")
 				return;
-			Debug.Log("ModLoaderSolution.NetClient | Message Recieved: " + message);
+			Utilities.Log("Message Recieved: " + message);
 			if (message == "SUCCESS") {
 				NetStart();
 			}
@@ -204,7 +209,7 @@ namespace ModLoaderSolution
 			if (message.StartsWith("GET_POS"))
             {
 				Vector3 pos = Utilities.instance.GetPlayer().transform.position;
-				Debug.Log("Current Position: " + pos.ToString());
+				Utilities.Log("Current Position: " + pos.ToString());
 				SendData("POS|" + pos.x + "|" + pos.y + "|" + pos.z);
             }
 			
@@ -316,12 +321,13 @@ namespace ModLoaderSolution
 				string[] gate = message.Split('|');
 				float randomTime = float.Parse(gate[1]);
 				foreach (RidersGate ridersGate in ridersGates)
-					ridersGate.TriggerGate(randomTime);
+					if (!Utilities.instance.isInPauseMenu()) // not in pause menu
+						ridersGate.TriggerGate(randomTime);
 			}
 			if (message.StartsWith("LOG_GAMEOBJECTS"))
 			{
 				foreach (GameObject go in FindObjectsOfType<GameObject>())
-					Debug.Log(go);
+					Utilities.Log(go);
 			}
 			if (message.StartsWith("TOGGLE_SPECTATOR"))
             {
@@ -343,7 +349,7 @@ namespace ModLoaderSolution
 			if (message.StartsWith("GET_IDS"))
             {
 				foreach (global::PlayerInfo inf in Singleton<PlayerManager>.SP.GetAllPlayers())
-                    Debug.Log(Utilities.FromPlayerInfo(inf).steamID);
+                    Utilities.Log(Utilities.FromPlayerInfo(inf).steamID);
 			}
 			if (message.StartsWith("FREEZE_PLAYER"))
             {
@@ -456,13 +462,13 @@ namespace ModLoaderSolution
 				DevCommandsGameplay.LockItem(int.Parse(code));
 			}
 			SendData("pong");
-			// Debug.Log("ModLoaderSolution.NetClient | Message Processed: " + message);
+			Utilities.Log("Message Processed: " + message);
 		}
 		public void SendData(string clientMessage) {
-			//Debug.Log("ModLoaderSolution.NetClient | Client sending message: " + clientMessage);
+			// Utilities.Log("Client sending message: " + clientMessage);
 			clientMessage = clientMessage + "\n";
 			if (socketConnection == null) {
-				Debug.Log("ModLoaderSolution.NetClient | SendData cancelled, socket not connected!");
+				Utilities.Log("SendData cancelled, socket not connected!");
 				return;
 			}
 			try
@@ -476,7 +482,7 @@ namespace ModLoaderSolution
 			}
 			catch (SocketException socketException)
 			{
-				Debug.Log("ModLoaderSolution.NetClient | Socket exception: " + socketException);
+				Utilities.Log("Socket exception: " + socketException);
 			}
 		}
 		public void OnDestroy()

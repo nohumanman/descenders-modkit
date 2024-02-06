@@ -119,7 +119,7 @@ class DiscordBot(commands.Bot):
             await message.channel.send(out)
             out = (
                 "Replay should be found at "
-                f"https://split-timer.nohumanman.com/static/replays/{time_id}.replay\n"
+                f"https://modkit.nohumanman.com/static/replays/{time_id}.replay\n"
                 )
             await message.channel.send(out)
         if message.content.startswith(self.command_prefix + "totaltime"):
@@ -163,7 +163,7 @@ class DiscordBot(commands.Bot):
                 leaderboard_str += f"{num} - {time1} - {name}"
                 time_id = player['time_id']
                 if not verified:
-                    replay_url = "https://split-timer.nohumanman.com/static/replays/"
+                    replay_url = "https://modkit.nohumanman.com/static/replays/"
                     leaderboard_str += f"--⚠️ [UNVERIFIED]({replay_url}{time_id}.replay) ⚠️ --||"
                 leaderboard_str += "\n"
             try:

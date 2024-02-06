@@ -16,6 +16,7 @@ namespace ModLoaderSolution
         bool isActive;
         bool hasBeenActive = false;
         public PlayerInfoImpact[] players;
+        public static UserInterface Instance { get; private set; }
 
         bool __COMMANDS__ = false;
         bool __CHECKPOINTS__ = false;
@@ -24,6 +25,26 @@ namespace ModLoaderSolution
         bool __QoL__ = false;
         bool __TRICKS__ = false;
         Vector2 scrollPosition = Vector2.zero;
+        public void Awake()
+        {
+            Instance = this;
+        }
+        Coroutine specialNotifCoro = null;
+        string specialNotif = "";
+        public void SpecialNotif(string specialNotif)
+        {
+            if (specialNotifCoro != null)
+            {
+                ((MonoBehaviour)this).StopCoroutine(specialNotifCoro);
+            }
+            specialNotifCoro = ((MonoBehaviour)this).StartCoroutine(CoroSpecialNotif(specialNotif));
+        }
+        private IEnumerator CoroSpecialNotif(string _specialNotif)
+        {
+            specialNotif = _specialNotif;
+            yield return (object)new WaitForSeconds(1.5f);
+            specialNotif = "";
+        }
         public static Texture2D MakeTex(int width, int height, Color col)
         {
             Color[] pix = new Color[width * height];
@@ -36,6 +57,10 @@ namespace ModLoaderSolution
         }
         void OnGUI()
         {
+            if (specialNotif != "")
+            {
+                GUI.Label(new Rect((float)(Screen.width / 2 - 750), (float)(Screen.height - 80), 1500f, 80f), specialNotif);
+            }
             if (!StatsModification.instance.IfStatsAreDefault())
             {
                 GUIStyle myButtonStyle2 = new GUIStyle(GUI.skin.button);
@@ -218,9 +243,6 @@ namespace ModLoaderSolution
                     foreach (Checkpoint x in allCheckpoints)
                         x.doesWork = false;
             }
-            if (Input.GetKey(KeyCode.P) && Input.GetKey(KeyCode.Alpha0) && Input.GetKeyDown(KeyCode.V))
-                foreach (Checkpoint x in allCheckpoints)
-                    x.doesWork = true;
         }
     }
 }

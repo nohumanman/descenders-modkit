@@ -12,6 +12,7 @@ using ModTool.Shared;
 using ModTool;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
+using System.Diagnostics;
 using TMPro;
 using InControl;
 
@@ -83,10 +84,21 @@ namespace ModLoaderSolution
         //        test(obj.transform.position);
         //    }
         //}
+        bool normalised = false;
+
+        public void Awake()
+        {
+            NormaliseModSongs();
+        }
         public void Update()
         {
             if (isFlying)
                 SetVel(20f);
+            if (!normalised && FindObjectOfType<GameData>() != null)
+            {
+                NormaliseModSongs();
+                normalised = true;
+            }
         }
         public Gesture[] gestures = new Gesture[0] {};
         public void GetGestures()
@@ -106,6 +118,103 @@ namespace ModLoaderSolution
                 x.releaseRightHand = true;
                 x.releaseRightFoot = true;
             }
+        }
+
+        public void NormaliseModSongs()
+        {
+            // Function to put proper playlist instead of 'Descenders' song on mod maps
+            
+            /*
+            GameData gData = FindObjectOfType<GameData>();
+            FieldInfo playlists = typeof(GameData).GetField("yzY\u0083jnm"); // 
+            MusicPlaylist[] musicPlaylists = (MusicPlaylist[])playlists.GetValue(gData);
+            foreach (MusicPlaylist x in musicPlaylists)
+            {
+                Debug.Log("for " + x.world + ":");
+
+                foreach (SongEntry ent in x.songs)
+                    Debug.Log("    " + ent.name);
+            }
+            // add music playlist for None (Mod maps)
+            List<MusicPlaylist> musicPlaylistList = musicPlaylists.ToList();
+            MusicPlaylist playlistOfModMaps = musicPlaylistList[0];
+            playlistOfModMaps.world = World.None;
+            musicPlaylistList.Add(playlistOfModMaps);
+            musicPlaylists = musicPlaylistList.ToArray();
+            playlists.SetValue(gData, musicPlaylists);
+            */
+
+
+
+            // dirty the current session (to force a playlist re-load)
+
+            /*FieldInfo currentSessionField = typeof(SessionManager).GetField("\u0083ESVMoz");
+            AudioManager
+            Session session = (Session)currentSessionField.GetValue(FindObjectOfType<SessionManager>());
+            FieldInfo worldMapField = typeof(Session).GetField("WnRr]U`"); // world map
+            //WorldMap worldMap = worldMapField.GetValue(session);
+            worldMapField.SetValue(session, null);
+            //WorldMap test = new WorldMap();
+            //test.world = World.Hell;
+            // session.worldMap = null; // set WorldMap to not null so 
+            currentSessionField.SetValue(FindObjectOfType<SessionManager>(), session);*/
+
+            /*
+             * The check in AudioManager to reset the playlist is:
+             * if (Singleton<SessionManager>.SP.GetWorld() != oldWorld) // (basically at least)
+             * so we need to change the result of GetWorld() somehow without breaking anything.
+             * 
+             * 
+             *  public World GetWorld()
+                {
+                    if (!SessionStarted())
+                    {
+                        return World.Overworld;
+                    }
+
+                    if (currentSession.worldMap != null)
+                    {
+                        return currentSession.worldMap.world;
+                    }
+
+                    if (currentSession.level != null)
+                    {
+                        return currentSession.level.world;
+                    }
+
+                    return World.None;
+                }
+             * } -> at the minute returns World.None
+             */
+
+            // dirty the current session (to force a playlist re-load)
+            FieldInfo currentSessionField = typeof(SessionManager).GetField("\u0083ESVMoz"); // currentSession field
+            object session = currentSessionField.GetValue(FindObjectOfType<SessionManager>()); // currentSession value
+            FieldInfo worldMapField = session.GetType().GetField("WnRr]U`"); // worldMap
+            WorldMap worldMap = new WorldMap(); // worldMap will be null, so we need to make one up
+            worldMap.world = World.Glaciers; // set the world to glaciers (not World.None), this will play glaciers playlist
+            Debug.Log("L6");
+            worldMapField.SetValue(session, worldMap);
+            Debug.Log("L7");
+            // worldMap 
+            Debug.Log(worldMap);
+            FieldInfo worldWorldMapField = worldMap.GetType().GetField("world");
+            Debug.Log("L6");
+            worldWorldMapField.SetValue(worldMap, World.Forest);
+            Debug.Log(session);
+
+            //FieldInfo worldMapField = typeof(Session).GetField("WnRr]U`"); // worldMap field
+            //WorldMap worldMap = (WorldMap)worldMapField.GetValue(session); // worldMap value
+            // just debug to see if worldMap is none
+            //Debug.Log("worldMap:" + worldMap);
+            // set world on worldMap to none
+
+            //worldMapField.SetValue(session, null);
+            //WorldMap test = new WorldMap();
+            //test.world = World.Hell;
+            // session.worldMap = null; // set WorldMap to not null so 
+            //currentSessionField.SetValue(FindObjectOfType<SessionManager>(), session);
+
         }
         public void Start()
         {
@@ -147,22 +256,22 @@ namespace ModLoaderSolution
         }
         public void RestartReplay()
         {
-            Debug.Log("Utilities | RestartReplay()");
+            Utilities.Log("Utilities | RestartReplay()");
             GameObject.Find("Player_Human").GetComponent<VehicleReplay>().SendMessage("StartRecord");
         }
         public void SaveReplayToFile(string path)
         {
             string replayObfuscatedName = "Ym}\u0084upr";
-            Debug.Log("Utilities | SaveReplayToFile('" + path + "')");
+            Utilities.Log("Utilities | SaveReplayToFile('" + path + "')");
             Assembly a = Assembly.Load("Assembly-CSharp");
             Type replayType = a.GetType("l\u0080KRMtV");
             MethodInfo magicMethod = replayType.GetMethod("I\u0083tz]jk");
-            Debug.Log("Utilities | magicMethod found -" + magicMethod);
-            Debug.Log("Utilities | Vehicle Replay - " + GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
+            Utilities.Log("Utilities | magicMethod found -" + magicMethod);
+            Utilities.Log("Utilities | Vehicle Replay - " + GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
             object replayClassObject = typeof(VehicleReplay)
                 .GetField(replayObfuscatedName)
                 .GetValue(GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
-            Debug.Log("Utilities | replayClassObject found -" + replayClassObject);
+            Utilities.Log("Utilities | replayClassObject found -" + replayClassObject);
             magicMethod.Invoke(replayClassObject, new object[] { path });
         }
         public float AngleFromGround()
@@ -199,19 +308,19 @@ namespace ModLoaderSolution
                     StreamWriter sw = new StreamWriter(userFile);
                     sw.WriteLine(id);
                     sw.Close();
-                    // Debug.Log("ModLoaderSolution | Created " + file);
+                    // Utilities.Log("ModLoaderSolution | Created " + file);
                 }
                 else
                 {
                     id = File.ReadAllLines(userFile)[0];
                     id = id.Replace("\n", "");
-                    // Debug.Log("ModLoaderSolution | Found UserID " + id);
+                    // Utilities.Log("ModLoaderSolution | Found UserID " + id);
                 }
             }
             catch (Exception e)
             {
-                // Debug.Log("ModLoaderSolution | Could not read user file:");
-                // Debug.Log(e);
+                // Utilities.Log("ModLoaderSolution | Could not read user file:");
+                // Utilities.Log(e);
             }
 
             uniqueID = id;
@@ -394,7 +503,7 @@ namespace ModLoaderSolution
 
         //public void LoadMap(Mod mod)
         //{
-        //    Debug.Log("Utilities: Loading Mod " + mod.name);
+        //    Utilities.Log("Utilities: Loading Mod " + mod.name);
         //    UI_FreerideWorkshop ui = Get_UI_FreerideWorkshop();
         //    ui.StartMod(mod);
 
@@ -409,20 +518,20 @@ namespace ModLoaderSolution
         //    //    loadedMod.Unload();
         //    //}
         //    //mod.LoadAsync();
-        //    //Debug.Log("Utilities: loaded mod " + mod.name);
-        //    //Debug.Log("Utilities: loading scene");
+        //    //Utilities.Log("Utilities: loaded mod " + mod.name);
+        //    //Utilities.Log("Utilities: loading scene");
         //    //ModScene modScene = mod.scenes.FirstOrDefault<ModScene>();
         //    //if (modScene != null)
         //    //{
         //    //    modScene.LoadAsync();
         //    //}
-        //    //Debug.Log("Utilities: loaded scene");
+        //    //Utilities.Log("Utilities: loaded scene");
 
         //}
 
         //public void LoadMap(string seed)
         //{
-        //    Debug.Log("Utilities: Loading seed " + seed);
+        //    Utilities.Log("Utilities: Loading seed " + seed);
         //    SessionManager sessionManager = Singleton<SessionManager>.SP;
         //    //dZDR\u0081XK
         //    //object gameMode = sessionManager.GetType().GetField("dZDR\u0081XK").GetValue(sessionManager);
@@ -434,7 +543,7 @@ namespace ModLoaderSolution
         //    //{
         //    //    object value = enumValues.GetValue(i);
         //    //    object underlyingValue = System.Convert.ChangeType(value, enumUnderlyingType);
-        //    //    Debug.Log(underlyingValue);
+        //    //    Utilities.Log(underlyingValue);
         //    //}
         //    //sessionManager.StartNewSession(seed, global::GameMode.Sandbox);
         //}
@@ -571,7 +680,29 @@ namespace ModLoaderSolution
             }
             return trick;
         }
-
+        public static void Log(GameObject obj)
+        {
+            Log(obj.ToString());
+        }
+        public static void Log(System.Exception exc)
+        {
+            Log(exc.ToString());
+        }
+        public static void Log(float exc)
+        {
+            Log(exc.ToString());
+        }
+        public static void Log(string log)
+        {
+            if (NetClient.DebugType == DebugType.RELEASE)
+                return;
+            MethodBase caller = new StackFrame(1, false).GetMethod();
+            string prefix = caller.ReflectedType.FullName + "." + caller.Name;
+            // we'll try to make the prefix length
+            while (prefix.Length < 50)
+                prefix = " " + prefix;
+            Debug.Log(prefix + " - " + log);
+        }
         public string GetPlayerCurrentTrick()
         {
             //---UI_RepPopup : label_repCashIn #Untagged
@@ -733,7 +864,7 @@ namespace ModLoaderSolution
             if (player != null)
                 SpectatePlayer(Array.IndexOf(allPlayers, player));
             else
-                Debug.Log("Player not found: " + name);
+                Utilities.Log("Player not found: " + name);
         }
         public int GetBike()
         {
@@ -979,7 +1110,7 @@ namespace ModLoaderSolution
             }
             catch (Exception e)
             {
-                Debug.Log(e);
+                Utilities.Log(e);
             }
             return !bailed;
         }
@@ -1011,13 +1142,13 @@ namespace ModLoaderSolution
         {
             MultiManager mm = MonoBehaviour.FindObjectOfType<MultiManager>();
             mm.SwitchToSpectate();
-            Debug.Log("utilities.SwitchSpectate");
+            Utilities.Log("utilities.SwitchSpectate");
         }
         public void ToggleSpectator()
         {
             MultiManager mm = MonoBehaviour.FindObjectOfType<MultiManager>();
             mm.ToggleSpectator();
-            Debug.Log("utilities.SwitchSpectate");
+            Utilities.Log("utilities.SwitchSpectate");
         }
         public void ClearSessionMarker()
         {
@@ -1026,14 +1157,14 @@ namespace ModLoaderSolution
         }
         public void ResetPlayer()
         {
-            Debug.Log("utilities.ResetPlayer");
+            Utilities.Log("utilities.ResetPlayer");
             // activeModifiers uT`Xbuc
             PlayerInfoImpact pi = GetPlayerInfoImpact();
             List<GameModifier> activeModifiers = (List<GameModifier>)pi.GetType().GetField("uT`Xbuc").GetValue(pi);
             List<GameModifier> setModifiers = new List<GameModifier>();
             foreach (GameModifier gameModifier in activeModifiers)
             {
-                Debug.Log(gameModifier.name);
+                Utilities.Log(gameModifier.name);
                 if (!GameModifiers.gameModifiers.Contains(gameModifier.name))
                 {
                     setModifiers.Add(gameModifier);
@@ -1042,7 +1173,7 @@ namespace ModLoaderSolution
             pi.ResetPlayer();
             if (setModifiers.Count > 0)
             {
-                Debug.Log("Keeping " + setModifiers.Count + " modifiers");
+                Utilities.Log("Keeping " + setModifiers.Count + " modifiers");
                 pi.GetType().GetField("uT`Xbuc").SetValue(pi, setModifiers);
             }
         }
@@ -1076,34 +1207,13 @@ namespace ModLoaderSolution
         {
             PlayerInfoImpact pi = GetPlayerInfoImpact();
             pi.RespawnOnTrack();
-            Debug.Log("Utilities.RespawnOnTrack");
+            Utilities.Log("Utilities.RespawnOnTrack");
         }
         public void RespawnAtStartline()
         {
             PlayerInfoImpact pi = GetPlayerInfoImpact() ;
             pi.RespawnAtStartLine();
-            Debug.Log("Utilities.RespawnAtStartline");
-        }
-
-        public void Log(string text)
-        {
-            Debug.Log(text);
-            if (LogUI == null || !LogUI.gameObject.activeSelf)
-                return;
-            LogUI.text = "";
-            history.Add(text);
-            int length = history.Count;
-            int max = length - maxLines;
-            int counter = 0;
-            foreach (var item in history)
-            {
-                counter++;
-                if (max <= 0 || counter >= max)
-                    LogUI.text = LogUI.text + item + "\n";
-            }
-            ShowLog();
-            StopCoroutine("HideLog");
-            StartCoroutine("HideLog");
+            Utilities.Log("Utilities.RespawnAtStartline");
         }
 
         public void ShowLog()

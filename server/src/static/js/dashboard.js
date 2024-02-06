@@ -83,6 +83,13 @@ var app = new Vue({
                 });
             }
         },
+        TimeStateToColour(time){
+            if (time.ignore == "True")
+                return "red"
+            if (time.verified == "0")
+                return "yellow"
+            return ""
+        },
         SilentUrlSwitch(url){
             const nextURL = url;
             const nextTitle = 'Descenders Modkit';
@@ -91,10 +98,32 @@ var app = new Vue({
             // This will create a new entry in the browser's history, without reloading
             window.history.pushState(nextState, nextTitle, nextURL);
         },
+        GetTabByURL(){
+            var url = window.location.href;
+            url_split = url.split("/");
+            var _tab = url_split[url_split.length - 1];
+            switch (_tab){
+                case "dashboard":
+                    return 0;
+                case "times":
+                    return 1;
+                case "trails":
+                    return 2;
+            }
+            app.SilentUrlSwitch('dashboard')
+            return 2;
+        },
         GetPlayerOutputLog(player){
             $.get("/get-output-log/" + player.id, function(data){
                 app.cached_output_log = data;
             });
+        },
+        GetTimeDiff(time, trail, index){
+            try{
+                if (index == 0)
+                    return 0;
+                return (time - trail.leaderboard[0].time).toFixed(2);
+            } catch(Exception){}
         },
         GetTrails(){
             $.get("/get-trails", function(data){
@@ -289,6 +318,7 @@ app.getSteamId();
 app.GetTrails();
 //app.GetWorlds();
 app.getLeaderboard();
+app.tab = app.GetTabByURL();
 
 app.items = [
     {

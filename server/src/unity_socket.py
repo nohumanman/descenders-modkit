@@ -5,6 +5,7 @@ import time
 import logging
 import os
 import asyncio
+import aiosqlite
 import requests
 import srcomapi
 import srcomapi.datatypes as dt
@@ -76,7 +77,11 @@ class Player:
 
 class UnitySocket():
     """ Used to handle the connection to the descenders unity client """
-    def __init__(self, addr, parent: 'UnitySocketServer', reader:  asyncio.StreamReader, writer: asyncio.StreamWriter):
+    def __init__(self,
+                 addr,
+                 parent: 'UnitySocketServer',
+                 reader:  asyncio.StreamReader,
+                 writer: asyncio.StreamWriter):
         logging.info(
             "%s- New Instance created", addr
         )
@@ -96,6 +101,7 @@ class UnitySocket():
         )
 
     async def send_leaderboard(self, trail_name: str):
+        """ Send the leaderboard data for a specific trail to the descenders unity client """
         await self.send(
             "SPEEDRUN_DOT_COM_LEADERBOARD|"
             + trail_name + "|"
@@ -105,6 +111,7 @@ class UnitySocket():
         )
 
     async def send_speedrun_leaderboard(self, trail_name: str):
+        """ Send the leaderboard data for a specific trail to the descenders unity client """
         await self.send(
             "LEADERBOARD|"
             + trail_name + "|"
@@ -163,7 +170,7 @@ class UnitySocket():
             self.info.steam_id, self.info.steam_name, starting_speed
         )
         for trail_name, trail in self.trails.items():
-            trail.starting_speed = starting_speed
+            trail.timer_info.starting_speed = starting_speed
             if starting_speed > await self.dbms.max_start_time(trail_name):
                 trail.invalidate_timer(
                     "You went through the start too fast!"
@@ -243,13 +250,16 @@ class UnitySocket():
             "https://api.steampowered.com/"
             "ISteamUser/GetPlayerSummaries"
             f"/v0002/?key={STEAM_API_KEY}"
-            f"&steamids={self.info.steam_id}"
+            f"&steamids={self.info.steam_id}", timeout=5
         )
         try:
             self.info.avatar_src = avatar_src_req.json()[
                 "response"]["players"][0]["avatarfull"]
         except (IndexError, KeyError):
-            self.info.avatar_src = await self.dbms.get_avatar(self.info.steam_id)
+            try:
+                self.info.avatar_src = await self.dbms.get_avatar(self.info.steam_id)
+            except aiosqlite.OperationalError:
+                self.info.avatar_src = ""
         return self.info.avatar_src
 
     async def set_steam_name(self, steam_name):
@@ -274,6 +284,11 @@ class UnitySocket():
 
     async def has_both_steam_name_and_id(self):
         """ Called when a player has both a steam name and id. """
+        await self.dbms.update_player(
+            self.info.steam_id,
+            self.info.steam_name,
+            await self.get_avatar_src()
+        )
         await self.dbms.submit_alias(self.info.steam_id, self.info.steam_name)
         for player in self.parent.players:
             if (
@@ -327,12 +342,7 @@ class UnitySocket():
             self.info.steam_name, world_name
         )
         self.info.world_name = world_name
-        await self.dbms.update_player(
-            self.info.steam_id,
-            self.info.steam_name,
-            self.get_avatar_src()
-        )
-        await self.dbms.submit_ip(self.info.steam_id, self.addr[0], self.addr[1])
+        #await self.dbms.submit_ip(self.info.steam_id, self.addr[0], self.addr[1])
 
     async def send(self, data: str):
         """ Send data to the descenders unity client """
@@ -396,6 +406,7 @@ class UnitySocket():
     async def on_boundry_enter(self, trail_name: str, boundry_guid: str):
         """ Called when a player enters a boundry. """
         trail = await self.get_trail(trail_name)
+        
         await trail.add_boundary(boundry_guid)
 
     async def on_boundry_exit(self, trail_name: str, boundry_guid: str):
@@ -423,7 +434,7 @@ class UnitySocket():
                 self.info.steam_id, self.info.steam_name, trail_name
             )
             return
-        trail.total_checkpoints = int(total_checkpoints)
+        trail.timer_info.total_checkpoints = int(total_checkpoints)
         if checkpoint_type == "Start":
             await trail.start_timer(total_checkpoints)
         if checkpoint_type == "Intermediate":
@@ -436,6 +447,10 @@ class UnitySocket():
         self.info.world_name = map_name
         self.info.time_started = time.time()
         await self.update_concurrent_users()
+        # invalidate all trails
+        await self.send(f"INVALIDATE_TIME|\\n")
+        # remove all trails
+        self.trails = {} # FIXES reentry cheat
         if (self.info.bike_type == "" or self.info.bike_type is None):
             self.info.bike_type = await self.get_default_bike()
         if self.info.steam_id is not None:

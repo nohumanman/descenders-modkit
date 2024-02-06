@@ -3,7 +3,6 @@ import threading
 import logging
 import asyncio
 import os
-import time
 from unity_socket_server import UnitySocketServer
 from discord_bot import DiscordBot
 from tokens import DISCORD_TOKEN
@@ -46,17 +45,9 @@ server_coro = asyncio.start_server(
     unity_socket_server.host,
     unity_socket_server.port,
 )
-server = loop.run_until_complete(server_coro)
-async def check_for_timeouts():
-    while True:
-        for player in unity_socket_server.players:
-            if time.time() - player.last_contact > 20:
-                unity_socket_server.delete_player(player)
-                logging.info("deleted player")
-            await asyncio.sleep(0.5)
-        await asyncio.sleep(1)
-#loop.create_task(check_for_timeouts())
 
+server = loop.run_until_complete(server_coro)
+loop.create_task(unity_socket_server.riders_gate())
 # - Website Server -
 webserver = Webserver(unity_socket_server, dbms_instance)
 

@@ -11,7 +11,7 @@ namespace ModLoaderSolution
         public bool doesWork = true;
         public void Start()
         {
-            // Debug.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
+            // Utilities.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
         }
         void Update()
         {
@@ -24,7 +24,7 @@ namespace ModLoaderSolution
                 return;
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human" && doesWork)
             {
-                Debug.Log("SplitTimer.Checkpoint | Checkpoint '" + this.name + "' Entered");
+                Utilities.Log("SplitTimer.Checkpoint | Checkpoint '" + this.name + "' Entered");
                 if (!Utilities.instance.isInReplayMode())
                     PlayerManagement.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, SplitTimerText.Instance.time.ToString());
                 

@@ -106,7 +106,7 @@ namespace ModLoaderSolution
         }
         IEnumerator Respawn()
         {
-            Debug.Log("Respawning!");
+            Utilities.Log("Respawning!");
             respawning = true;
             yield return new WaitForSeconds(0.01f);
             PlayerHuman.transform.position = RespawnPos;
@@ -118,7 +118,7 @@ namespace ModLoaderSolution
             yield return new WaitForSecondsRealtime(5);
             TimeModifier.Instance.speed = 1f;
             respawning = false;
-            Debug.Log("Respawned!");
+            Utilities.Log("Respawned!");
         }
     }
 }

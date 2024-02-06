@@ -11,7 +11,8 @@ from flask import (
     request,
     redirect,
     jsonify,
-    render_template
+    render_template,
+    send_file
 )
 
 # Authlib imports
@@ -35,7 +36,7 @@ if TYPE_CHECKING:
     # Imports related to the Discord bot (if any)
     from discord_bot import DiscordBot
 
-OAUTH2_REDIRECT_URI = 'https://split-timer.nohumanman.com/callback'
+OAUTH2_REDIRECT_URI = 'https://modkit.nohumanman.com/callback'
 API_BASE_URL = os.environ.get('API_BASE_URL', 'https://discordapp.com/api')
 AUTHORIZATION_BASE_URL = API_BASE_URL + '/oauth2/authorize'
 TOKEN_URL = API_BASE_URL + '/oauth2/token'
@@ -88,7 +89,7 @@ class Webserver():
                 self.me, ["GET"]
             ),
             WebserverRoute(
-                "/split-time", "split_time",
+                "/streaming/split-time", "split_time",
                 self.split_time, ["GET"]
             ),
             WebserverRoute(
@@ -96,7 +97,7 @@ class Webserver():
                 self.permission, ["GET"]
             ),
             WebserverRoute(
-                "/tag", "tag",
+                "/streaming/tag", "tag",
                 self.tag, ["GET"]
             ),
             WebserverRoute(
@@ -185,6 +186,12 @@ class Webserver():
                 self.get_output_log,
                 ["GET"]
             ),
+            WebserverRoute(
+                "/static/replays/<time_id>",
+                "get_replay",
+                self.get_replay,
+                ["GET"]
+            ),
         ]
         self.tokens_and_ids = {}
         self.add_routes()
@@ -216,6 +223,16 @@ class Webserver():
                 return "Player not found"
             return ""
         return "FAILED - NOT VALID PERMISSIONS!", 401
+
+    async def get_replay(self, time_id):
+        time_id = time_id.split(".")[0]
+        try:
+            return send_file(
+                "static/replays/" + time_id + ".replay",
+                download_name=f"{await self.dbms.get_replay_name_from_id(time_id)}.replay"
+            )
+        except FileNotFoundError:
+            return "No replay found!"
 
     async def time_details(self, time_id):
         """ Function to get the details of a time with id time_id """
@@ -297,6 +314,7 @@ class Webserver():
                 "last_trick": player.info.last_trick,
                 "version": player.info.version,
                 "bike_type": player.info.bike_type,
+                "trail_info": str(player.trails),
                 "address": ""#(lambda: player.addr if self.permission() == "AUTHORISED" else "")()
             } for player in self.socket_server.players
         ]
@@ -308,9 +326,15 @@ class Webserver():
 
     async def ignore_time(self, time_id : int, value: str):
         """ Function to ignore a time with id time_id"""
-        if self.permission() == "AUTHORISED":
+        if await self.permission() == "AUTHORISED":
             # value should be 'False' or 'True
             await self.dbms.set_ignore_time(time_id, value)
+            if self.discord_bot is not None:
+                self.discord_bot.loop.run_until_complete(
+                    self.discord_bot.new_time(
+                        f"[Time](https://modkit.nohumanman.com/time/{time_id}) has been deleted."
+                    )
+                )
             return "success"
         return "INVALID_PERMS"
 
