@@ -471,6 +471,8 @@ class Webserver():
             API_BASE_URL + '/users/@me/connections'
         ).json()
         for connection in connections:
+            if not isinstance(connection, dict):
+                return "None"
             if connection["type"] == "steam":
                 return connection["id"]
         return "None"
@@ -481,6 +483,8 @@ class Webserver():
         try:
             if request.values.get('error'):
                 return request.values['error']
+            if session.get('oauth2_state') is None:
+                return "Invalid oauth2_state"
             discord = self.make_session(
                 state=session.get('oauth2_state')
             )
@@ -498,6 +502,10 @@ class Webserver():
             ).json()
             try:
                 user_id = user['id']
+            except IndexError:
+                return "User id not found on discord user?"
+            try:
+                user_id = user['id']
                 try:
                     email = user['email']
                 except KeyError:
@@ -511,10 +519,12 @@ class Webserver():
                 except KeyError:
                     logging.info("Steam ID Not Found")
                 await self.dbms.discord_login(user_id, username, email, steam_id)
-            except (IndexError, KeyError) as e:
+            except Exception as e:
                 logging.info("User %s with error %s", user, str(e))
             return redirect("/")
         except (IndexError, KeyError) as e:
+            return str(e)
+        except Exception as e:
             return str(e)
 
     async def me(self):
@@ -544,7 +554,7 @@ class Webserver():
             'scope',
             'identify email connections guilds guilds.join'
         )
-        scope = "identify"
+        scope = "identify connections"
         discord = self.make_session(scope=scope.split(' '))
         authorization_url, state = discord.create_authorization_url(
             AUTHORIZATION_BASE_URL

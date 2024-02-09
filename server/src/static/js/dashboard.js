@@ -87,7 +87,7 @@ var app = new Vue({
             if (time.ignore == "True")
                 return "red"
             if (time.verified == "0")
-                return "yellow"
+                return "pink"
             return ""
         },
         SilentUrlSwitch(url){
