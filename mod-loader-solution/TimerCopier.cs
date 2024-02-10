@@ -9,7 +9,7 @@ public class TimerCopier : ModBehaviour
     public Text textTo;
     void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(this.gameObject.transform.root);
         StartCoroutine(DelayedStart());
     }
     IEnumerator DelayedStart()

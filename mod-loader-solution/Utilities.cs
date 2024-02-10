@@ -169,22 +169,22 @@ namespace ModLoaderSolution
         }
         public void RestartReplay()
         {
-            Utilities.Log("Utilities | RestartReplay()");
+            Utilities.Log("RestartReplay()");
             GameObject.Find("Player_Human").GetComponent<VehicleReplay>().SendMessage("StartRecord");
         }
         public void SaveReplayToFile(string path)
         {
             string replayObfuscatedName = "Ym}\u0084upr";
-            Utilities.Log("Utilities | SaveReplayToFile('" + path + "')");
+            Utilities.Log("SaveReplayToFile('" + path + "')");
             Assembly a = Assembly.Load("Assembly-CSharp");
             Type replayType = a.GetType("l\u0080KRMtV");
             MethodInfo magicMethod = replayType.GetMethod("I\u0083tz]jk");
-            Utilities.Log("Utilities | magicMethod found -" + magicMethod);
-            Utilities.Log("Utilities | Vehicle Replay - " + GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
+            Utilities.Log("magicMethod found -" + magicMethod);
+            Utilities.Log("Vehicle Replay - " + GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
             object replayClassObject = typeof(VehicleReplay)
                 .GetField(replayObfuscatedName)
                 .GetValue(GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
-            Utilities.Log("Utilities | replayClassObject found -" + replayClassObject);
+            Utilities.Log("replayClassObject found -" + replayClassObject);
             magicMethod.Invoke(replayClassObject, new object[] { path });
         }
         public float AngleFromGround()

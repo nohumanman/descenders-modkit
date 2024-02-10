@@ -21,8 +21,6 @@ namespace ModLoaderSolution
         void OnTriggerEnter(Collider other)
         {
             // check if our other.transform.name is Bike so we're actually looking at the bike not arm or something
- 
-            Utilities.Log("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + "-" + other.transform.name + " - checkpoint '" + this.name + "' Entered");
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
                 Utilities.Log("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' Entered");

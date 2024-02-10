@@ -90,7 +90,7 @@ namespace ModLoaderSolution
 		}
 		public void Log(string logString, string stackTrace, LogType type)
 		{
-			SendData("LOG_LINE|" + logString);
+			//SendData("LOG_LINE|" + logString);
 		}
 		public IEnumerator UploadOutputLog()
 		{
@@ -460,20 +460,29 @@ namespace ModLoaderSolution
 			}
 			SendData("pong");
 		}
+		IEnumerator SendDataDelayed(string clientMessage, float time)
+        {
+			yield return new WaitForSeconds(time);
+			SendData(clientMessage);
+        }
 		public void SendData(string clientMessage) {
 			// Utilities.Log("Client sending message: " + clientMessage);
-			clientMessage = clientMessage + "\n";
-			if (socketConnection == null) {
-				Utilities.Log("SendData cancelled, socket not connected!");
+			if (!clientMessage.EndsWith("\n"))
+				clientMessage = clientMessage + "\n";
+			if (socketConnection == null || !socketConnection.Connected) {
+				StartCoroutine(SendDataDelayed(clientMessage, 1)); // wait a second
 				return;
 			}
 			try
 			{
+				if (clientMessage != "pong\n")
+					Utilities.Log("Sending data '" + clientMessage.Replace("\n", "\\n") + "'");
 				NetworkStream stream = socketConnection.GetStream();
 				if (stream.CanWrite)
 				{
 					byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(clientMessage);
 					stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
+					stream.Flush(); // Ensure data is flushed immediately (prevent truncation)
 				}
 			}
 			catch (SocketException socketException)
