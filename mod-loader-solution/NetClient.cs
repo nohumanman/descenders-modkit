@@ -52,9 +52,9 @@ namespace ModLoaderSolution
 				Physics.IgnoreLayerCollision(8, 8, PlayerCollision);
 				PlayerCollision = !PlayerCollision;
 			}
-			if (Time.time - hasStarted > 30 && (socketConnection == null || !socketConnection.Connected))
+			if (Time.time - hasStarted > 10 && (socketConnection == null || !socketConnection.Connected))
             {
-				Utilities.Log("Disconnected! Reconecting now...");
+				Utilities.Log("Disconnected! Reconnecting now...");
                 // SplitTimerText.Instance.count = false;
                 SplitTimerText.Instance.text.color = Color.red;
 				SplitTimerText.Instance.checkpointTime = "";
@@ -73,10 +73,7 @@ namespace ModLoaderSolution
 				}
 				messages.Clear();
 			}
-			catch (InvalidOperationException)
-            {
-				Utilities.Log("Message was recieved while messages were being read - cancelled reading.");
-            }
+			catch (InvalidOperationException){}
 		}
 		private void ConnectToTcpServer () {
 			Utilities.Log("Connecting to TCP Server");
@@ -462,7 +459,6 @@ namespace ModLoaderSolution
 				DevCommandsGameplay.LockItem(int.Parse(code));
 			}
 			SendData("pong");
-			Utilities.Log("Message Processed: " + message);
 		}
 		public void SendData(string clientMessage) {
 			// Utilities.Log("Client sending message: " + clientMessage);
