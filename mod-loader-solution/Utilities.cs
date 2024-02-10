@@ -240,6 +240,14 @@ namespace ModLoaderSolution
                     return false;
             return true;
         }
+        public bool hasBailed(GameObject networkPlayer)
+        {
+            // iterate through all children to find 'Cyclist'
+            foreach (Transform child in networkPlayer.transform)
+                if (child.name == "Cyclist")
+                    return false; // cyclist means we haven't bailed
+            return true;
+        }
         public void SpawnAtCursor()
         {
 

@@ -36,6 +36,8 @@ var app = new Vue({
             }
             else
                 app.currentTime = app.start_time;
+            if (app.currentTime == undefined)
+                app.currentTime = 0;
         },
         updateTimeFromServer(){
             $.get("/api/spectating/get-time", data={"my_id": this.getSelf()}, function(data){

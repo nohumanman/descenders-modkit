@@ -19,25 +19,16 @@ var app = new Vue({
     },
     methods: {
         updateSpectatedPlayer(){
-            $.get("/api/spectating/get-time", data={"our_id": this.getSelf()}, function(data){
-                app.spectating = data;
+            $.get("/api/get-spectated", data={"my_id": this.getSelf()}, function(data){
+                if (data.startsWith("Failed"))
+                    app.spectating = ""
+                else
+                    app.spectating = data;
             });
         },
         getSelf(){
-            return this.GetURLParameter("id");
-        },
-        GetURLParameter(sParam)
-        {
-            var sPageURL = window.location.search.substring(1);
-            var sURLVariables = sPageURL.split('&');
-            for (var i = 0; i < sURLVariables.length; i++) 
-            {
-                var sParameterName = sURLVariables[i].split('=');
-                if (sParameterName[0] == sParam) 
-                {
-                    return sParameterName[1];
-                }
-            }
+            const params = new URLSearchParams(window.location.search)
+            return params.get('id')
         }
     }
 });

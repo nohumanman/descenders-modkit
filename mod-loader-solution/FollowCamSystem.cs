@@ -85,13 +85,15 @@ namespace ModLoaderSolution
         }
         public Cam GetBestCamera()
         {
+            if (Utilities.instance.hasBailed(subject))
+                return null;
             float closest = Mathf.Infinity;
             Cam closestCam = cameras[0];
             float switchThreshold = 2f;
             foreach (Cam cam in cameras)
             {
                 Vector3 vector3 = cam.loc;
-                if (IsValid(vector3))
+                if (IsValid(vector3, (int)cam.proximity))
                 {
                     float distanceToCam = Vector3.Distance(vector3, subject.transform.position);
                     if (distanceToCam < closest - switchThreshold) // if this is the closest to our player
@@ -110,6 +112,12 @@ namespace ModLoaderSolution
             if (Input.GetKeyDown(KeyCode.M) && Input.GetKey(KeyCode.C))
                 edit = !edit;
 
+            if (Input.GetKeyDown(KeyCode.O) && Input.GetKey(KeyCode.C))
+            {
+                bother = !bother;
+                Utilities.instance.SetFreeCam();
+            }
+
             if (Input.GetKey(KeyCode.LeftControl))
                 Cursor.visible = true;
 
@@ -123,10 +131,16 @@ namespace ModLoaderSolution
             Utilities.instance.DisableControlledCam();
 
             Cam bestCam = GetBestCamera();
+            if (bestCam == null)
+                foreach (Camera cam in FindObjectsOfType<Camera>()){
+                    cam.transform.position = currentCam.loc; // set position of camera to current camera location
+                    Quaternion targetRotation = Quaternion.LookRotation(subject.transform.position - cam.transform.position);
+                    cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, targetRotation, 13 * Time.deltaTime);
+                }
             Vector3 bestLoc = bestCam.loc;
             if (currentCam == null)
                 currentCam = bestCam;
-            if (bestLoc != currentCam.loc && bestLoc != Vector3.zero)
+            if (bestCam != null && bestLoc != currentCam.loc && bestLoc != Vector3.zero)
             {
                 currentCam = bestCam;
                 shouldSnap = true;
@@ -137,9 +151,7 @@ namespace ModLoaderSolution
                 {
                     cam.transform.position = currentCam.loc; // set position of camera to current camera location
                     if (shouldSnap)
-                    {
                         cam.transform.LookAt(subject.transform.position);
-                    }
                     else
                     {
                         Quaternion targetRotation = Quaternion.LookRotation(subject.transform.position - cam.transform.position);
@@ -150,11 +162,8 @@ namespace ModLoaderSolution
                     float someConstant = currentCam.zoomAmount;
                     // Calculate FOV based on distance (adjust this formula based on your needs)
                     float desiredFOV = Mathf.Atan(someConstant / distanceToSubject) * Mathf.Rad2Deg * 2f;
-
                     // Set the FOV within some defined range (e.g., between 20 and 100)
                     cam.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, desiredFOV, currentCam.panSpeed * Time.deltaTime);//Mathf.Clamp(desiredFOV, 20, 100);
-
-
                 }
                 shouldSnap = false;
             }

@@ -12,7 +12,7 @@ namespace ModLoaderSolution
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
-		public string version = "0.2.47";
+		public string version = "0.2.48";
 		public float speed;
 		bool hasLoadedPlayer = false;
 		bool wasBailed = false;

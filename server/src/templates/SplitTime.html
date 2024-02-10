@@ -14,11 +14,11 @@
     <body class="transparent">
         <div id="app" class="transparent">
             <v-app class="transparent">
-                <v-container fill-height fluid>
+                <v-container fill-height fluid class="transparent">
                     <v-row align="center"
-                        justify="center">
-                        <div style="text-align: center; left:50%; width:100%; padding:50px;">
-                            <v-col style="font-family: Snowlatte; font-size: 100px;">[[secs_to_str(currentTime)]]</v-col>
+                        justify="center" class="transparent">
+                        <div style="text-align: center; left:50%; width:100%; padding:50px;" class="transparent">
+                            <v-col style=" font-size: 100px;"><h1>[[secs_to_str(currentTime)]]</h1></v-col>
                         </div>
                     </v-row>
                   </v-container>
@@ -26,10 +26,13 @@
         </div>
     </body>
     <style>
-        @font-face {
-            font-family: Snowlatte; 
-			src: url('/static/Snowlatte.otf');
+        * {
+            background-color: 	#00ff00;
+            color: white;
+            font-family: 'Share Tech Mono', monospace;
         }
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>

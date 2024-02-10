@@ -11,34 +11,31 @@
         <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     </head>
-    <body class="transparent">
-        <div id="app" class="transparent">
-            <v-app class="transparent">
-                <v-main class="transparent">
-                    <h1 class="transparent" style="text-align:center; font-size:70px; top:50%;">
+    <body>
+        <div id="app">
+            <v-app>
+                <v-main>
+                    <h1 style="text-align:center; font-size:70px; top:50%;">
                         [[spectating]]
                     </h1>
                     <h2 v-if="getSelf() == ''">
-                        INCORRECT SETUP, ADD
-                        <code>
-                            :root{
-                                --name: yoursteamname;
-                            }
-                        </code>
-                        TO CUSTOM CSS
+                        No spectating
                     </h2>
                 </v-main>
             </v-app>
         </div>
     </body>
     <style>
-        .transparent{
-            background-color:rgba(0, 0, 0, 0);
+        * {
+            background-color: #00ff00;;
             color: white;
+            font-family: 'Share Tech Mono', monospace;
         }
         @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-        *{
-            font-family: 'Roboto', sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+        @font-face {
+            font-family: Snowlatte; 
+			src: url('/static/Snowlatte.otf');
         }
         body {
             overflow-y: hidden; /* Hide vertical scrollbar */
