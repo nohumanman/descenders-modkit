@@ -85,7 +85,7 @@ class UnitySocketServer():
         await player.send("SUCCESS")
         while True:
             try:
-                data = await asyncio.wait_for(reader.read(1024), timeout=120)
+                data = await asyncio.wait_for(reader.read(1024), timeout=20)
             except asyncio.TimeoutError:
                 logging.info("%s '%s' - asyncio timeout",
                              player.info.steam_id, player.info.steam_name)

@@ -360,8 +360,10 @@ class UnitySocket():
                 "%s '%s'\t- connection closed '%s'", self.info.steam_id, self.info.steam_name, data
             )
             self.parent.delete_player(self)
-        except OSError:
-            pass
+        except Exception as e:
+            logging.info(
+                "%s '%s'\t- exception '%s'", self.info.steam_id, self.info.steam_name, e
+            )
 
     async def send_all(self, data: str):
         """ Send data to all players in the same session """
