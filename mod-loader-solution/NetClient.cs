@@ -480,14 +480,15 @@ namespace ModLoaderSolution
 			// Utilities.Log("Client sending message: " + clientMessage);
 			if (!clientMessage.EndsWith("\n"))
 				clientMessage = clientMessage + "\n";
-			if (socketConnection == null || !socketConnection.Connected) {
+			if (socketConnection == null || !socketConnection.Connected)
+			{
 				StartCoroutine(SendDataDelayed(clientMessage, 1)); // wait a second
 				return;
 			}
 			try
 			{
 				if (clientMessage != "pong\n" && !clientMessage.StartsWith("LOG_LINE"))
-					Utilities.Log("Sending data '" + clientMessage.Replace("\n", "\\n") + "'");
+					Utilities.Log("Sending data '" + clientMessage.Replace("\n", "") + "'");
 				NetworkStream stream = socketConnection.GetStream();
 				if (stream.CanWrite)
 				{
