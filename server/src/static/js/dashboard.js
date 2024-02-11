@@ -306,7 +306,7 @@ let startTime = new Date().getTime();
 //app.setSelf('UNKNOWN');
 app.updatePlayers();
 app.CheckStatus();
-setInterval(updatePlayers, 1000);
+setInterval(app.updatePlayers, 1000);
 //setInterval(app.CheckStatus, 1000);
 app.getSteamId();
 //setInterval(app.getSteamId, 500);

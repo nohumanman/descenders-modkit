@@ -24,7 +24,7 @@ namespace ModLoaderSolution
 		public int port = 65432;
 		public string ip = "18.132.81.187";
 		static string version = "0.2.51";
-		public static bool developerMode = false;
+		public static bool developerMode = true;
 		void Awake(){
 			if (developerMode)
 				ip = "localhost";

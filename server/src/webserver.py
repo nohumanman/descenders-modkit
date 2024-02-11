@@ -573,16 +573,12 @@ class Webserver():
 
     async def get_leaderboards(self):
         """ Function to get the leaderboard of the website"""
-        timestamp_str = request.args.get("timestamp")
-        if timestamp_str is None:
-            return jsonify({})
-        timestamp = float(timestamp_str)
+
         trail_name = request.args.get("trail_name")
         if trail_name is None:
             return jsonify({})
         return jsonify(
-            await self.dbms.get_times_after_timestamp(
-                timestamp,
+            await self.dbms.get_leaderboard(
                 trail_name
             )
         )

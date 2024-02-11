@@ -216,12 +216,11 @@ class UnitySocket():
                     "place": leaderboard["place"],
                     "time": leaderboard["time"],
                     "name": leaderboard["name"],
-                    "pen": float(leaderboard["penalty"]),
                     "bike": leaderboard["bike"],
                     "verified": leaderboard["verified"],
                 }
                 for leaderboard in await self.dbms.get_leaderboard(
-                    trail_name, steam_id=self.info.steam_id
+                    trail_name
                 )
             ]
         )
@@ -306,7 +305,7 @@ class UnitySocket():
             self.info.steam_name,
             await self.get_avatar_src()
         )
-        await self.dbms.submit_alias(self.info.steam_id, self.info.steam_name)
+        #await self.dbms.submit_alias(self.info.steam_id, self.info.steam_name)
         for player in self.parent.players:
             if (
                 player.info.steam_id == self.info.steam_id
@@ -324,13 +323,13 @@ class UnitySocket():
         for banned_name in banned_names:
             if self.info.steam_name.lower() == banned_name:
                 await self.ban("ILLEGAL")
-        ban_type = await self.dbms.get_ban_status(self.info.steam_id)
-        if ban_type == "CLOSE":
-            await self.ban("CLOSE")
-        elif ban_type == "CRASH":
-            await self.ban("CRASH")
-        elif ban_type == "ILLEGAL":
-            await self.ban("ILLEGAL")
+        #ban_type = await self.dbms.get_ban_status(self.info.steam_id)
+        #if ban_type == "CLOSE":
+        #    await self.ban("CLOSE")
+        #elif ban_type == "CRASH":
+        #    await self.ban("CRASH")
+        #elif ban_type == "ILLEGAL":
+        #    await self.ban("ILLEGAL")
 
     async def set_steam_id(self, steam_id : str):
         """ Set the steam id of a player and invalidate timers if necessary """
@@ -345,7 +344,7 @@ class UnitySocket():
     async def get_default_bike(self):
         """ Get the async default bike for a player. """
         if self.info.world_name is not None:
-            start_bike = await self.dbms.get_start_bike(self.info.world_name)
+            start_bike = "downhill" #await self.dbms.get_start_bike(self.info.world_name)
             if start_bike is None:
                 return "enduro"
             return start_bike

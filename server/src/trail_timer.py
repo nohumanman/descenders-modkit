@@ -115,7 +115,6 @@ class TrailTimer():
                 )
             if time_diff != 0:
                 mess += " WR"
-
             fastest = await self.network_player.dbms.get_personal_fastest_split_times(
                 self.trail_name,
                 self.network_player.info.steam_id
@@ -206,13 +205,11 @@ class TrailTimer():
             self.network_player.info.steam_id,
             self.timer_info.times,
             self.trail_name,
-            False,
             self.network_player.info.world_name,
             self.network_player.info.bike_type,
             self.timer_info.starting_speed,
-            str(self.network_player.info.version),
-            0,
-            "1" if self.timer_info.auto_verify else "0"
+            self.network_player.info.version,
+            self.timer_info.auto_verify
         )
         # ask client to upload replay
         await self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
