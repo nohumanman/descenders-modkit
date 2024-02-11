@@ -24,30 +24,34 @@ def setup_logging(log_file):
 UNITY_SOCKET_IP = "0.0.0.0"
 UNITY_SOCKET_PORT = 65432
 WEBSITE_IP = "0.0.0.0"
-WEBSITE_PORT = 8081
+WEBSITE_PORT = 8080
 
-
-""" Main function of descenders-modkit server """
+# Set the working directory to the script path
 script_path = os.path.dirname(os.path.realpath(__file__))
 os.chdir(script_path)
-
+# Set the log file path
 _log_file = os.path.join(script_path, "modkit.log")
 setup_logging(_log_file)
-
+# - Database Management System -
 dbms_instance = DBMS()
 
 # - Unity Socket Server -
-unity_socket_server = UnitySocketServer(UNITY_SOCKET_IP, UNITY_SOCKET_PORT, dbms_instance)
-
-loop = asyncio.get_event_loop()
-server_coro = asyncio.start_server(
+unity_socket_server = UnitySocketServer(
+    UNITY_SOCKET_IP,
+    UNITY_SOCKET_PORT,
+    dbms_instance
+) # create the server instance
+loop = asyncio.get_event_loop() # get the event loop
+server_coroutine = asyncio.start_server(
     unity_socket_server.create_client,
     unity_socket_server.host,
     unity_socket_server.port,
-)
+) # create the server coroutine
+server = loop.run_until_complete(server_coroutine) # run the server coroutine
 
-server = loop.run_until_complete(server_coro)
+# Set riders gate to run
 loop.create_task(unity_socket_server.riders_gate())
+
 # - Website Server -
 webserver = Webserver(unity_socket_server, dbms_instance)
 
@@ -58,16 +62,14 @@ discord_bot = DiscordBot(DISCORD_TOKEN, "!", unity_socket_server, dbms_instance)
 unity_socket_server.discord_bot = discord_bot
 webserver.discord_bot = discord_bot
 
-print("running forever")
-
-#loop.run_forever()
-
+# run loop in a new thread (so it doesn't block the main thread)
 threading.Thread(target=loop.run_forever).start()
 
 # run webserver
 if __name__ == "__main__":
+    # NOTE: when debug=True, flask initialises twice! Causes issues with the unity socket server
     webserver.webserver_app.run(
         WEBSITE_IP, port=WEBSITE_PORT,
-        debug=True, ssl_context='adhoc'
+        debug=False, ssl_context='adhoc'
     )
     print("Server available from https://localhost:8080/")
