@@ -607,8 +607,6 @@ namespace ModLoaderSolution
         }
         public static void Log(string log)
         {
-            if (NetClient.DebugType == DebugType.RELEASE)
-                return;
             MethodBase caller = new StackFrame(1, false).GetMethod();
             string prefix = caller.ReflectedType.FullName + "." + caller.Name;
             Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);
