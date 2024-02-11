@@ -18,7 +18,7 @@ namespace ModLoaderSolution
 		public static PlayerManagement Instance { get; private set; }
 		void Awake(){
 			Utilities.Log("LocalApplicationData '" + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "'");
-			Utilities.Log("Version number " + NetClient.Instance.version);
+			Utilities.Log("Version number " + NetClient.GetVersion());
 			if (Instance != null && Instance != this) 
 				Destroy(this); 
 			else
@@ -29,7 +29,7 @@ namespace ModLoaderSolution
 			OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
 			//OnMapEnter("IDHERE", MapInfo.Instance.ModName);
 			//NetClient.Instance.SendData("SET_BIKE|" + Utilities.instance.GetBike());
-			NetClient.Instance.SendData("VERSION|" + NetClient.Instance.version);
+			NetClient.Instance.SendData("VERSION|" + NetClient.GetVersion());
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
 			foreach (Trail trail in FindObjectsOfType<Trail>())

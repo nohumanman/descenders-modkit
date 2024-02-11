@@ -23,15 +23,11 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
-		public string version = "0.2.51";
-		public static DebugType DebugType = DebugType.DEBUG;
+		static string version = "0.2.51";
 		public static bool developerMode = true;
 		void Awake(){
 			if (developerMode)
-			{
 				ip = "localhost";
-				version += "-dev";
-			}
 			DontDestroyOnLoad(this.gameObject.transform.root);
 			if (Instance != null && Instance != this) 
 				Destroy(this); 
@@ -41,6 +37,13 @@ namespace ModLoaderSolution
 			Utilities.Log("Version number " + version);
 			Application.logMessageReceived += Log;
 		}
+		public static string GetVersion()
+        {
+			if (developerMode)
+				return version + "-dev";
+			else
+				return version;
+        }
 		void Start () {
 			Utilities.Log("Connecting to tcp server port " + port.ToString() + " with ip '" + ip + "'");
 			ConnectToTcpServer();
