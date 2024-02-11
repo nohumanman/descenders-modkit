@@ -83,6 +83,7 @@ class UnitySocketServer():
             self.players.append(player)
         logging.info("Created player")
         await player.send("SUCCESS")
+        message_buffer = ""
         while True:
             try:
                 data = await asyncio.wait_for(reader.readline(), timeout=20)
@@ -95,13 +96,19 @@ class UnitySocketServer():
                 logging.info("%s '%s' - eof timeout", player.info.steam_id, player.info.steam_name)
                 self.delete_player(player)
                 return
-            message = data.decode()
-            #addr = writer.get_extra_info('peername')
-            #logging.info(f"Received {message!r} from {addr!r}")
-            if player is None:
-                logging.error("Player is None")
-                return
-            for mess in message.split("\n"):
-                if (mess != "" and not(mess.startswith("LOG_LINE") and not(mess.startswith("pong")))):
-                    logging.info("%s '%s' - %s", player.info.steam_id, player.info.steam_name, mess)
-                await player.handle_data(mess)
+            message = message_buffer + data.decode()
+            if message[-1] != "\n":
+                # message not complete, wait for next message
+                message_buffer += message # store the message
+            else:
+                message_buffer = ""
+                if player is None:
+                    logging.error("Player is None")
+                    return
+                for mess in message.split("\n"):
+                    if (mess != "" and not(mess.startswith("LOG_LINE") and not(mess.startswith("pong")))):
+                        logging.info("%s '%s' - %s", player.info.steam_id, player.info.steam_name, mess)
+                    try:
+                        asyncio.create_task(player.handle_data(mess)) # asyncronously handle the data
+                    except Exception as e:
+                        logging.error(e)

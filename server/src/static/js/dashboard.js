@@ -87,7 +87,7 @@ var app = new Vue({
             if (time.ignore == "True")
                 return "red"
             if (time.verified == "0")
-                return "pink"
+                return "#fa5c67"
             return ""
         },
         SilentUrlSwitch(url){
@@ -306,7 +306,7 @@ let startTime = new Date().getTime();
 //app.setSelf('UNKNOWN');
 app.updatePlayers();
 app.CheckStatus();
-//setInterval(updatePlayers, 1000);
+setInterval(updatePlayers, 1000);
 //setInterval(app.CheckStatus, 1000);
 app.getSteamId();
 //setInterval(app.getSteamId, 500);

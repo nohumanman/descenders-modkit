@@ -12,14 +12,13 @@ namespace ModLoaderSolution
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
-		public string version = "0.2.50";
 		public float speed;
 		bool hasLoadedPlayer = false;
 		bool wasBailed = false;
 		public static PlayerManagement Instance { get; private set; }
 		void Awake(){
 			Utilities.Log("LocalApplicationData '" + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "'");
-			Utilities.Log("Version number " + version);
+			Utilities.Log("Version number " + NetClient.GetVersion());
 			if (Instance != null && Instance != this) 
 				Destroy(this); 
 			else
@@ -30,7 +29,7 @@ namespace ModLoaderSolution
 			OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
 			//OnMapEnter("IDHERE", MapInfo.Instance.ModName);
 			//NetClient.Instance.SendData("SET_BIKE|" + Utilities.instance.GetBike());
-			NetClient.Instance.SendData("VERSION|" + version);
+			NetClient.Instance.SendData("VERSION|" + NetClient.GetVersion());
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
 			foreach (Trail trail in FindObjectsOfType<Trail>())

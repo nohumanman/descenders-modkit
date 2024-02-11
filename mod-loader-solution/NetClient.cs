@@ -23,16 +23,27 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
-		public static DebugType DebugType = DebugType.DEBUG;
+		static string version = "0.2.51";
+		public static bool developerMode = true;
 		void Awake(){
+			if (developerMode)
+				ip = "localhost";
 			DontDestroyOnLoad(this.gameObject.transform.root);
 			if (Instance != null && Instance != this) 
 				Destroy(this); 
 			else
 				Instance = this;
 			this.gameObject.AddComponent<Utilities>();
+			Utilities.Log("Version number " + version);
 			Application.logMessageReceived += Log;
 		}
+		public static string GetVersion()
+        {
+			if (developerMode)
+				return version + "-dev";
+			else
+				return version;
+        }
 		void Start () {
 			Utilities.Log("Connecting to tcp server port " + port.ToString() + " with ip '" + ip + "'");
 			ConnectToTcpServer();
@@ -469,14 +480,15 @@ namespace ModLoaderSolution
 			// Utilities.Log("Client sending message: " + clientMessage);
 			if (!clientMessage.EndsWith("\n"))
 				clientMessage = clientMessage + "\n";
-			if (socketConnection == null || !socketConnection.Connected) {
+			if (socketConnection == null || !socketConnection.Connected)
+			{
 				StartCoroutine(SendDataDelayed(clientMessage, 1)); // wait a second
 				return;
 			}
 			try
 			{
 				if (clientMessage != "pong\n" && !clientMessage.StartsWith("LOG_LINE"))
-					Utilities.Log("Sending data '" + clientMessage.Replace("\n", "\\n") + "'");
+					Utilities.Log("Sending data '" + clientMessage.Replace("\n", "") + "'");
 				NetworkStream stream = socketConnection.GetStream();
 				if (stream.CanWrite)
 				{
