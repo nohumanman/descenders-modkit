@@ -59,6 +59,8 @@ operations = {
         lambda netPlayer, data: netPlayer.set_version(str(data[1])),
     "GET_MEDALS":
         lambda netPlayer, data: netPlayer.get_medals(str(data[1])),
+    "LOG_LINE":
+        lambda netPlayer, data: netPlayer.log_line(str(data[0:])),
 }
 
 
@@ -102,6 +104,18 @@ class UnitySocket():
             version="OUTDATED", time_started=time.time(),
             spectating="", spectating_id = ""
         )
+
+    async def log_line(self, line: str):
+        """ Log a line of text to the server log """
+        if self.info.steam_id == "":
+            return
+        # remove existing output_log if too large (over 1MB)
+        if os.path.exists(f"{script_path}/output_log/{self.info.steam_id}.txt"):
+            if os.path.getsize(f"{script_path}/output_log/{self.info.steam_id}.txt") > 1000000:
+                os.remove(f"{script_path}/output_log/{self.info.steam_id}.txt")
+        # save to output_log/{steam_id}.txt
+        with open(f"{script_path}/output_log/{self.info.steam_id}.txt", "a") as file:
+            file.write(line + "\n")
 
     async def send_leaderboard(self, trail_name: str):
         """ Send the leaderboard data for a specific trail to the descenders unity client """

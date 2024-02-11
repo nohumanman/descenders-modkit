@@ -348,7 +348,7 @@ class Webserver():
             lines = ""
             try:
                 with open(
-                    f"{os.getcwd()}/output_logs/{player_id}.txt",
+                    f"{os.getcwd()}/output_log/{player_id}.txt",
                     "rt",
                     encoding="utf-8"
                 ) as my_file:

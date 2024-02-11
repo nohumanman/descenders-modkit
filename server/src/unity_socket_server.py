@@ -102,5 +102,6 @@ class UnitySocketServer():
                 logging.error("Player is None")
                 return
             for mess in message.split("\n"):
-                logging.info("%s '%s' - %s", player.info.steam_id, player.info.steam_name, mess)
+                if (mess != "" and not(mess.startswith("LOG_LINE") and not(mess.startswith("pong")))):
+                    logging.info("%s '%s' - %s", player.info.steam_id, player.info.steam_name, mess)
                 await player.handle_data(mess)
