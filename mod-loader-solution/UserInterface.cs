@@ -13,6 +13,7 @@ namespace ModLoaderSolution
         public GameObject Player;
     }
     public class UserInterface : MonoBehaviour {
+        public GUIStyle customButton;
         bool isActive;
         bool hasBeenActive = false;
         public PlayerInfoImpact[] players;
@@ -28,6 +29,18 @@ namespace ModLoaderSolution
         public void Awake()
         {
             Instance = this;
+
+        }
+        public void InitGUI()
+        {
+            // only call this from within OnGUI
+            customButton = new GUIStyle(GUI.skin.button);
+            customButton.normal.textColor = Color.white;
+            customButton.hover.textColor = Color.cyan;
+            customButton.fontSize = 20;
+            customButton.alignment = TextAnchor.MiddleCenter;
+            //customButton.normal.background = MakeTex(2, 2, new Color(0.2f, 0.2f, 0.2f, 1.0f));
+            //customButton.hover.background = MakeTex(2, 2, new Color(0.1f, 0.1f, 0.1f, 1.0f));
         }
         Coroutine specialNotifCoro = null;
         string specialNotif = "";
@@ -57,6 +70,7 @@ namespace ModLoaderSolution
         }
         void OnGUI()
         {
+            InitGUI();
             if (specialNotif != "")
             {
                 GUI.Label(new Rect((float)(Screen.width / 2 - 750), (float)(Screen.height - 80), 1500f, 80f), specialNotif);
