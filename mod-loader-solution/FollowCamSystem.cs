@@ -168,20 +168,40 @@ namespace ModLoaderSolution
                 shouldSnap = false;
             }
         }
-        public bool IsValid(Vector3 camPos, int proximity = 100)
+        public bool IsValid(Vector3 camPos, int proximity = 100, float coneAngle = 45f)
         {
             if (subject == null)
                 return false;
+
+            // Check distance
             if (Vector3.Distance(subject.transform.position, camPos) > proximity)
                 return false;
-            // if player is in line of sight of camera
-            Vector3 directionToPlayer = subject.transform.position - camPos;
-            RaycastHit hit;
-            if (Physics.Raycast(camPos, directionToPlayer, out hit, proximity))
-                if (hit.collider.gameObject.transform.root.gameObject == subject)  // root of collider is player_human
-                    return true; // player is in line of view
+
+            // Check if the subject or any of its children is in the cone of vision
+            Collider[] colliders = Physics.OverlapSphere(camPos, proximity);
+            foreach (Collider collider in colliders)
+            {
+                Vector3 directionToCollider = collider.transform.position - camPos;
+                Vector3 directionToPlayer = subject.transform.position - camPos;
+
+                // Check if the angle between the direction to the collider and the direction to the player is within the cone angle
+                float angle = Vector3.Angle(directionToCollider, directionToPlayer);
+                if (angle < coneAngle)
+                {
+                    RaycastHit hit;
+                    if (Physics.Raycast(camPos, directionToCollider, out hit, proximity))
+                    {
+                        // Check if the collider belongs to the subject or its children and is visible
+                        if (hit.collider == collider && hit.collider.gameObject.transform.root.gameObject == subject)
+                            return true;
+                    }
+                }
+            }
+
             return false;
         }
+
+
         public void LoadFromFile()
         {
             string filePath = Path.Combine(Application.persistentDataPath, "cameras.txt");
