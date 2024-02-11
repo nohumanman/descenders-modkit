@@ -110,8 +110,8 @@ namespace ModLoaderSolution
 		public void OnBoundryExit(string trail_name, string boundry_guid, string boundry_obj_name){
 			NetClient.Instance.SendData("BOUNDRY_EXIT|" + trail_name + "|" + boundry_guid + "|" + boundry_obj_name);
 		}
-		public void OnCheckpointEnter(string trail_name, string type, int total_checkpoints, string client_time){
-			NetClient.Instance.SendData("CHECKPOINT_ENTER|" + trail_name + "|" + type + "|" + total_checkpoints.ToString() + "|" + client_time);
+		public void OnCheckpointEnter(string trail_name, string type, int total_checkpoints, string client_time, string hash){
+			NetClient.Instance.SendData("CHECKPOINT_ENTER|" + trail_name + "|" + type + "|" + total_checkpoints.ToString() + "|" + client_time + "|" + hash);
 		}
 		public void OnMapEnter(string map_id, string map_name){
 			NetClient.Instance.SendData("MAP_ENTER|" + map_id + "|" + map_name);

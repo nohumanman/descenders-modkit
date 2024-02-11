@@ -33,7 +33,8 @@ operations = {
             data[1],
             data[2],
             int(data[3]),
-            float(data[4])
+            float(data[4]),
+            data[5]
         ),
     "RESPAWN":
         lambda netPlayer, data: netPlayer.on_respawn(),
@@ -441,7 +442,8 @@ class UnitySocket():
         trail_name: str,
         checkpoint_type: str,
         total_checkpoints: int,
-        client_time: float
+        client_time: float,
+        checkpoint_hash: str
     ):
         """ Called when a player enters a checkpoint. """
         logging.info(
@@ -460,7 +462,7 @@ class UnitySocket():
         if checkpoint_type == "Start":
             await trail.start_timer(total_checkpoints)
         if checkpoint_type == "Intermediate":
-            await trail.checkpoint(client_time)
+            await trail.checkpoint(client_time, checkpoint_hash)
         if checkpoint_type == "Finish":
             await trail.end_timer(client_time)
 

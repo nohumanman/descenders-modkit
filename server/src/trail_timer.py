@@ -29,6 +29,7 @@ class TrailTimer():
             total_checkpoints=0, time_started=0
         )
         self.__boundaries = []
+        self.__checkpoints = []
 
     def __str__(self):
         return f"Trail {self.trail_name} for player {self.network_player.info.steam_name} in boundary_num={len(self.__boundaries)},starting_speed={self.timer_info.starting_speed},times={self.timer_info.times}"
@@ -75,6 +76,7 @@ class TrailTimer():
             "%s '%s'\t- started timer with checkpoints %s", self.network_player.info.steam_id,
             self.network_player.info.steam_name, total_checkpoints
         )
+        self.__checkpoints = [] # reset the checkpoints
         self.timer_info.auto_verify = True
         if len(self.__boundaries) == 0:
             await self.invalidate_timer("OUT OF BOUNDS!", always=True)
@@ -84,13 +86,15 @@ class TrailTimer():
             self.timer_info.time_started = time.time()
             self.timer_info.times = []
 
-    async def checkpoint(self, client_time: float):
+    async def checkpoint(self, client_time: float, checkpoint_hash: str):
         """ Log a checkpoint. """
         logging.info(
             "%s '%s'\t- entered checkpoint with client time %s", self.network_player.info.steam_id,
             self.network_player.info.steam_name, client_time
         )
-        if self.timer_info.started:
+        self.__checkpoints.append(checkpoint_hash) # add the checkpoint to the list
+        # if the timer has started and the checkpoint is not in the list (i.e. it is a new checkpoint)
+        if self.timer_info.started and checkpoint_hash not in self.__checkpoints:
             self.timer_info.times.append(float(client_time))
             fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
             try:
