@@ -49,10 +49,7 @@ namespace ModLoaderSolution
                 string placeNum = place[i].ToString();
                 if (placeNum.Length == 1)
                     placeNum = " " + placeNum;
-                if (verified[i] == "1")
-                    leaderboardString += placeNum + ". " + MakeLengthOf(TruncateText(name[i], nameMaxLen), maxNameLength) + " ₸ " + FormatTime(time[i]) + "   ~" + (Mathf.Round(pen[i] * 10) / 10) + " pen\n";
-                else
-                    leaderboardString += placeNum + ". " + MakeLengthOf(TruncateText(name[i], nameMaxLen), maxNameLength) + " | " + FormatTime(time[i]) + "   ~" + (Mathf.Round(pen[i] * 10) / 10) + " pen\n";
+                leaderboardString += placeNum + ". " + MakeLengthOf(TruncateText(name[i], nameMaxLen), maxNameLength) + " - "+ FormatTime(time[i]) + " \n";
             }
             //Utilities.Log("'" + leaderboardString + "'");
             return leaderboardString;

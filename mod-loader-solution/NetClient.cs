@@ -90,7 +90,7 @@ namespace ModLoaderSolution
 		}
 		public void Log(string logString, string stackTrace, LogType type)
 		{
-			//SendData("LOG_LINE|" + logString);
+			SendData("LOG_LINE|" + logString);
 		}
 		public IEnumerator UploadOutputLog()
 		{
@@ -284,7 +284,7 @@ namespace ModLoaderSolution
 					{
 						string leaderboardJson = leaderboard[2];
 						LeaderboardInfo leaderboardInfo = JsonUtility.FromJson<LeaderboardInfo>(leaderboardJson.Replace("'", "\""));
-						trail.autoLeaderboardText.GetComponent<TextMesh>().text = trailName + " (₸ is verified)\n" + leaderboardInfo.LeaderboardAsString();
+						trail.autoLeaderboardText.GetComponent<TextMesh>().text = trailName + "\n" + leaderboardInfo.LeaderboardAsString();
 					}
 				}
 			}
@@ -475,7 +475,7 @@ namespace ModLoaderSolution
 			}
 			try
 			{
-				if (clientMessage != "pong\n")
+				if (clientMessage != "pong\n" && !clientMessage.StartsWith("LOG_LINE"))
 					Utilities.Log("Sending data '" + clientMessage.Replace("\n", "\\n") + "'");
 				NetworkStream stream = socketConnection.GetStream();
 				if (stream.CanWrite)
