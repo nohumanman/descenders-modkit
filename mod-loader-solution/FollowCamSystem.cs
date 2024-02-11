@@ -27,6 +27,7 @@ namespace ModLoaderSolution
         bool edit = false;
         public void OnGUI()
         {
+            UserInterface.Instance.InitGUI();
             if (!edit)
                 return;
             int yPos = 20;
@@ -62,20 +63,21 @@ namespace ModLoaderSolution
                 yPos += 22;
                 i++;
             }
-            xPos = 20;
-            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Toggle Follow Cam"))
+            xPos = 800;
+            yPos = 22;
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Toggle Follow Cam", UserInterface.Instance.customButton))
                 bother = !bother;
             yPos += 22;
-            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Look at me once"))
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Look at me once", UserInterface.Instance.customButton))
                 Camera.main.transform.LookAt(Utilities.instance.GetPlayer().transform);
             yPos += 22;
-            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Add Camera"))
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Add Camera", UserInterface.Instance.customButton))
                 cameras.Add(new Cam());
             yPos += 22;
-            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Save to cameras.txt"))
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Save to cameras.txt", UserInterface.Instance.customButton))
                 SaveToFile();
             yPos += 22;
-            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Load from cameras.txt"))
+            if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Load from cameras.txt", UserInterface.Instance.customButton))
                 LoadFromFile();
             GUIStyle myButtonStyle2 = new GUIStyle(GUI.skin.button);
             myButtonStyle2.normal.textColor = Color.white;
