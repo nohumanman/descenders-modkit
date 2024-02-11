@@ -221,7 +221,7 @@ class UnitySocket():
                     "verified": leaderboard["verified"],
                 }
                 for leaderboard in await self.dbms.get_leaderboard(
-                    trail_name, steam_id=self.info.steam_id
+                    trail_name
                 )
             ]
         )
