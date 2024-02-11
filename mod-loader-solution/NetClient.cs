@@ -24,7 +24,10 @@ namespace ModLoaderSolution
 		public int port = 65432;
 		public string ip = "18.132.81.187";
 		public static DebugType DebugType = DebugType.DEBUG;
+		public static bool developerMode = false;
 		void Awake(){
+			if (developerMode)
+				ip = "localhost";
 			DontDestroyOnLoad(this.gameObject.transform.root);
 			if (Instance != null && Instance != this) 
 				Destroy(this); 
