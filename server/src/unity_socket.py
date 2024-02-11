@@ -306,7 +306,7 @@ class UnitySocket():
             self.info.steam_name,
             await self.get_avatar_src()
         )
-        await self.dbms.submit_alias(self.info.steam_id, self.info.steam_name)
+        #await self.dbms.submit_alias(self.info.steam_id, self.info.steam_name)
         for player in self.parent.players:
             if (
                 player.info.steam_id == self.info.steam_id
@@ -345,7 +345,7 @@ class UnitySocket():
     async def get_default_bike(self):
         """ Get the async default bike for a player. """
         if self.info.world_name is not None:
-            start_bike = await self.dbms.get_start_bike(self.info.world_name)
+            start_bike = "downhill" #await self.dbms.get_start_bike(self.info.world_name)
             if start_bike is None:
                 return "enduro"
             return start_bike
