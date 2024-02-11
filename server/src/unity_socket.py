@@ -216,7 +216,6 @@ class UnitySocket():
                     "place": leaderboard["place"],
                     "time": leaderboard["time"],
                     "name": leaderboard["name"],
-                    "pen": float(leaderboard["penalty"]),
                     "bike": leaderboard["bike"],
                     "verified": leaderboard["verified"],
                 }
@@ -324,13 +323,13 @@ class UnitySocket():
         for banned_name in banned_names:
             if self.info.steam_name.lower() == banned_name:
                 await self.ban("ILLEGAL")
-        ban_type = await self.dbms.get_ban_status(self.info.steam_id)
-        if ban_type == "CLOSE":
-            await self.ban("CLOSE")
-        elif ban_type == "CRASH":
-            await self.ban("CRASH")
-        elif ban_type == "ILLEGAL":
-            await self.ban("ILLEGAL")
+        #ban_type = await self.dbms.get_ban_status(self.info.steam_id)
+        #if ban_type == "CLOSE":
+        #    await self.ban("CLOSE")
+        #elif ban_type == "CRASH":
+        #    await self.ban("CRASH")
+        #elif ban_type == "ILLEGAL":
+        #    await self.ban("ILLEGAL")
 
     async def set_steam_id(self, steam_id : str):
         """ Set the steam id of a player and invalidate timers if necessary """
