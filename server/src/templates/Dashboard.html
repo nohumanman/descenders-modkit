@@ -203,7 +203,7 @@
                                                 >
                                                     <v-row>
                                                         <v-col><v-btn @click="controlled_player = player; GetPlayerOutputLog(controlled_player)">Control</v-btn></v-col>
-                                                        <v-col><v-btn>Spectate</v-btn></v-col>
+                                                        <v-col><v-btn @click="Spectate(player.id)">Spectate</v-btn></v-col>
                                                     </v-row>
                                                 </v-overlay>
                                             </v-fade-transition>

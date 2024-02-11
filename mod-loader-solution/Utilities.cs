@@ -24,10 +24,6 @@ namespace ModLoaderSolution
     {
         public static Utilities instance;
         public string uniqueID;
-        public Text LogUI;
-        public int maxLines = 6;
-        List<string> history = new List<string>();
-        private Camera mainCamera;
         private float GameTime = 0f;
         public readonly Dictionary<string, string> seeds = new Dictionary<string, string>() {
                 { "0", "Lobby" },
@@ -76,16 +72,12 @@ namespace ModLoaderSolution
 
         UI_MultiplayerNotifications multiplayerNotifications;
         RigidbodyConstraints constraints;
-        //void Update()
-        //{
-        //    if (Input.GetKeyDown(KeyCode.Numlock))
-        //    {
-        //        GameObject obj = GetPlayer();
-        //        test(obj.transform.position);
-        //    }
-        //}
-        bool normalised = false;
 
+        bool normalised = false;
+        public void Start()
+        {
+            instance = this;
+        }
         public void Awake()
         {
             NormaliseModSongs();
@@ -119,106 +111,19 @@ namespace ModLoaderSolution
                 x.releaseRightFoot = true;
             }
         }
-
         public void NormaliseModSongs()
         {
             // Function to put proper playlist instead of 'Descenders' song on mod maps
-            
-            /*
-            GameData gData = FindObjectOfType<GameData>();
-            FieldInfo playlists = typeof(GameData).GetField("yzY\u0083jnm"); // 
-            MusicPlaylist[] musicPlaylists = (MusicPlaylist[])playlists.GetValue(gData);
-            foreach (MusicPlaylist x in musicPlaylists)
-            {
-                Debug.Log("for " + x.world + ":");
-
-                foreach (SongEntry ent in x.songs)
-                    Debug.Log("    " + ent.name);
-            }
-            // add music playlist for None (Mod maps)
-            List<MusicPlaylist> musicPlaylistList = musicPlaylists.ToList();
-            MusicPlaylist playlistOfModMaps = musicPlaylistList[0];
-            playlistOfModMaps.world = World.None;
-            musicPlaylistList.Add(playlistOfModMaps);
-            musicPlaylists = musicPlaylistList.ToArray();
-            playlists.SetValue(gData, musicPlaylists);
-            */
-
-
-
-            // dirty the current session (to force a playlist re-load)
-
-            /*FieldInfo currentSessionField = typeof(SessionManager).GetField("\u0083ESVMoz");
-            AudioManager
-            Session session = (Session)currentSessionField.GetValue(FindObjectOfType<SessionManager>());
-            FieldInfo worldMapField = typeof(Session).GetField("WnRr]U`"); // world map
-            //WorldMap worldMap = worldMapField.GetValue(session);
-            worldMapField.SetValue(session, null);
-            //WorldMap test = new WorldMap();
-            //test.world = World.Hell;
-            // session.worldMap = null; // set WorldMap to not null so 
-            currentSessionField.SetValue(FindObjectOfType<SessionManager>(), session);*/
-
-            /*
-             * The check in AudioManager to reset the playlist is:
-             * if (Singleton<SessionManager>.SP.GetWorld() != oldWorld) // (basically at least)
-             * so we need to change the result of GetWorld() somehow without breaking anything.
-             * 
-             * 
-             *  public World GetWorld()
-                {
-                    if (!SessionStarted())
-                    {
-                        return World.Overworld;
-                    }
-
-                    if (currentSession.worldMap != null)
-                    {
-                        return currentSession.worldMap.world;
-                    }
-
-                    if (currentSession.level != null)
-                    {
-                        return currentSession.level.world;
-                    }
-
-                    return World.None;
-                }
-             * } -> at the minute returns World.None
-             */
-
             // dirty the current session (to force a playlist re-load)
             FieldInfo currentSessionField = typeof(SessionManager).GetField("\u0083ESVMoz"); // currentSession field
             object session = currentSessionField.GetValue(FindObjectOfType<SessionManager>()); // currentSession value
             FieldInfo worldMapField = session.GetType().GetField("WnRr]U`"); // worldMap
             WorldMap worldMap = new WorldMap(); // worldMap will be null, so we need to make one up
             worldMap.world = World.Glaciers; // set the world to glaciers (not World.None), this will play glaciers playlist
-            Debug.Log("L6");
             worldMapField.SetValue(session, worldMap);
-            Debug.Log("L7");
             // worldMap 
-            Debug.Log(worldMap);
             FieldInfo worldWorldMapField = worldMap.GetType().GetField("world");
-            Debug.Log("L6");
             worldWorldMapField.SetValue(worldMap, World.Forest);
-            Debug.Log(session);
-
-            //FieldInfo worldMapField = typeof(Session).GetField("WnRr]U`"); // worldMap field
-            //WorldMap worldMap = (WorldMap)worldMapField.GetValue(session); // worldMap value
-            // just debug to see if worldMap is none
-            //Debug.Log("worldMap:" + worldMap);
-            // set world on worldMap to none
-
-            //worldMapField.SetValue(session, null);
-            //WorldMap test = new WorldMap();
-            //test.world = World.Hell;
-            // session.worldMap = null; // set WorldMap to not null so 
-            //currentSessionField.SetValue(FindObjectOfType<SessionManager>(), session);
-
-        }
-        public void Start()
-        {
-            instance = this;
         }
         AudioSource[] audioSources;
         public bool MapAudioActive = true;
@@ -240,6 +145,14 @@ namespace ModLoaderSolution
                     return false;
             return true;
         }
+        public bool hasBailed(GameObject networkPlayer)
+        {
+            // iterate through all children to find 'Cyclist'
+            foreach (Transform child in networkPlayer.transform)
+                if (child.name == "Cyclist")
+                    return false; // cyclist means we haven't bailed
+            return true;
+        }
         public void SpawnAtCursor()
         {
 
@@ -256,22 +169,22 @@ namespace ModLoaderSolution
         }
         public void RestartReplay()
         {
-            Utilities.Log("Utilities | RestartReplay()");
+            Utilities.Log("RestartReplay()");
             GameObject.Find("Player_Human").GetComponent<VehicleReplay>().SendMessage("StartRecord");
         }
         public void SaveReplayToFile(string path)
         {
             string replayObfuscatedName = "Ym}\u0084upr";
-            Utilities.Log("Utilities | SaveReplayToFile('" + path + "')");
+            Utilities.Log("SaveReplayToFile('" + path + "')");
             Assembly a = Assembly.Load("Assembly-CSharp");
             Type replayType = a.GetType("l\u0080KRMtV");
             MethodInfo magicMethod = replayType.GetMethod("I\u0083tz]jk");
-            Utilities.Log("Utilities | magicMethod found -" + magicMethod);
-            Utilities.Log("Utilities | Vehicle Replay - " + GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
+            Utilities.Log("magicMethod found -" + magicMethod);
+            Utilities.Log("Vehicle Replay - " + GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
             object replayClassObject = typeof(VehicleReplay)
                 .GetField(replayObfuscatedName)
                 .GetValue(GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
-            Utilities.Log("Utilities | replayClassObject found -" + replayClassObject);
+            Utilities.Log("replayClassObject found -" + replayClassObject);
             magicMethod.Invoke(replayClassObject, new object[] { path });
         }
         public float AngleFromGround()
@@ -698,10 +611,7 @@ namespace ModLoaderSolution
                 return;
             MethodBase caller = new StackFrame(1, false).GetMethod();
             string prefix = caller.ReflectedType.FullName + "." + caller.Name;
-            // we'll try to make the prefix length
-            while (prefix.Length < 50)
-                prefix = " " + prefix;
-            Debug.Log(prefix + " - " + log);
+            Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);
         }
         public string GetPlayerCurrentTrick()
         {
@@ -900,33 +810,6 @@ namespace ModLoaderSolution
             catch (Exception)
             {
             }
-            //UI_BikeSelection bs = new UI_BikeSelection();
-            //try
-            //{
-            //    bs.HoverButtonBike(bike);
-            //}
-            //catch (Exception){ }
-
-            //Destroy(bs);
-
-            //try
-            //{
-            //    PlayerInfoImpact[] allPlayers = FindObjectsOfType<PlayerInfoImpact>();
-            //    PlayerCustomization[] allCPlayers = FindObjectsOfType<PlayerCustomization>();
-            //    GameData gameData = FindObjectOfType<GameData>();
-            //    BikeType[] bikeTypes = gameData.bikeTypes;
-
-            //    foreach (PlayerInfoImpact player in allPlayers)
-            //    {
-            //        player.bikeType = bikeTypes[bike];
-            //    }
-
-            //    foreach (PlayerCustomization player in allCPlayers)
-            //    {
-            //        player.RefreshBikeMesh();
-            //    }
-            //}
-            //catch (Exception) { }
         }
 
         public string GetBikeName(int bike)
@@ -1114,7 +997,6 @@ namespace ModLoaderSolution
             }
             return !bailed;
         }
-
         public void ToggleControl(bool set)
         {
             VehicleController vc = GetPlayer().GetComponent<VehicleController>();
@@ -1215,17 +1097,6 @@ namespace ModLoaderSolution
             pi.RespawnAtStartLine();
             Utilities.Log("Utilities.RespawnAtStartline");
         }
-
-        public void ShowLog()
-        {
-            LogUI.gameObject.SetActive(true);
-        }
-
-        IEnumerator HideLog()
-        {
-            yield return new WaitForSeconds(5f);
-            LogUI.gameObject.SetActive(false);
-        }
         public bool bailEnabled = false;
         public void EnableStats()
         {
@@ -1266,7 +1137,6 @@ namespace ModLoaderSolution
             SpeedWobbles, TweakSpeed, WheelieBalance
         };
     }
-
     public enum GameMode
     {
         None,

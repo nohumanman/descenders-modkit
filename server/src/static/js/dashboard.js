@@ -87,7 +87,7 @@ var app = new Vue({
             if (time.ignore == "True")
                 return "red"
             if (time.verified == "0")
-                return "yellow"
+                return "pink"
             return ""
         },
         SilentUrlSwitch(url){
@@ -189,13 +189,9 @@ var app = new Vue({
                 return true;
         },
         Spectate(id){
-            $.get("/spectate", data={
-                "steam_id" : app.self,
-                "target_id": id.id,
-                "player_name" : id.name
+            $.get("/api/spectate", data={
+                "target_id": id
             });
-
-            app.SubmitEval(app.self, ["SPECTATE|" + id.name]);
         },
         timestamp_to_date(unix_timestamp){
             var s = new Date(unix_timestamp * 1000).toLocaleDateString("en-UK")

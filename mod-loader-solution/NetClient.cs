@@ -52,9 +52,9 @@ namespace ModLoaderSolution
 				Physics.IgnoreLayerCollision(8, 8, PlayerCollision);
 				PlayerCollision = !PlayerCollision;
 			}
-			if (Time.time - hasStarted > 30 && (socketConnection == null || !socketConnection.Connected))
+			if (Time.time - hasStarted > 10 && (socketConnection == null || !socketConnection.Connected))
             {
-				Utilities.Log("Disconnected! Reconecting now...");
+				Utilities.Log("Disconnected! Reconnecting now...");
                 // SplitTimerText.Instance.count = false;
                 SplitTimerText.Instance.text.color = Color.red;
 				SplitTimerText.Instance.checkpointTime = "";
@@ -73,10 +73,7 @@ namespace ModLoaderSolution
 				}
 				messages.Clear();
 			}
-			catch (InvalidOperationException)
-            {
-				Utilities.Log("Message was recieved while messages were being read - cancelled reading.");
-            }
+			catch (InvalidOperationException){}
 		}
 		private void ConnectToTcpServer () {
 			Utilities.Log("Connecting to TCP Server");
@@ -287,7 +284,7 @@ namespace ModLoaderSolution
 					{
 						string leaderboardJson = leaderboard[2];
 						LeaderboardInfo leaderboardInfo = JsonUtility.FromJson<LeaderboardInfo>(leaderboardJson.Replace("'", "\""));
-						trail.autoLeaderboardText.GetComponent<TextMesh>().text = trailName + " (₸ is verified)\n" + leaderboardInfo.LeaderboardAsString();
+						trail.autoLeaderboardText.GetComponent<TextMesh>().text = trailName + "\n" + leaderboardInfo.LeaderboardAsString();
 					}
 				}
 			}
@@ -462,22 +459,30 @@ namespace ModLoaderSolution
 				DevCommandsGameplay.LockItem(int.Parse(code));
 			}
 			SendData("pong");
-			Utilities.Log("Message Processed: " + message);
 		}
+		IEnumerator SendDataDelayed(string clientMessage, float time)
+        {
+			yield return new WaitForSeconds(time);
+			SendData(clientMessage);
+        }
 		public void SendData(string clientMessage) {
 			// Utilities.Log("Client sending message: " + clientMessage);
-			clientMessage = clientMessage + "\n";
-			if (socketConnection == null) {
-				Utilities.Log("SendData cancelled, socket not connected!");
+			if (!clientMessage.EndsWith("\n"))
+				clientMessage = clientMessage + "\n";
+			if (socketConnection == null || !socketConnection.Connected) {
+				StartCoroutine(SendDataDelayed(clientMessage, 1)); // wait a second
 				return;
 			}
 			try
 			{
+				if (clientMessage != "pong\n" && !clientMessage.StartsWith("LOG_LINE"))
+					Utilities.Log("Sending data '" + clientMessage.Replace("\n", "\\n") + "'");
 				NetworkStream stream = socketConnection.GetStream();
 				if (stream.CanWrite)
 				{
 					byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(clientMessage);
 					stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
+					stream.Flush(); // Ensure data is flushed immediately (prevent truncation)
 				}
 			}
 			catch (SocketException socketException)

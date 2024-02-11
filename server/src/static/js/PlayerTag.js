@@ -15,30 +15,23 @@ var app = new Vue({
     },
     }),
     data : {
-        self: null,
         spectating: "",
-        players: []
     },
     methods: {
-        setSelf(steam_id){
-            this.self = steam_id
-        },
-        updatePlayers(){
-            $.get("/get", function(data){
-                app.players = data["ids"];
+        updateSpectatedPlayer(){
+            $.get("/api/get-spectated", data={"my_id": this.getSelf()}, function(data){
+                if (data.startsWith("Failed"))
+                    app.spectating = ""
+                else
+                    app.spectating = data;
             });
         },
-        updateSpectatedPlayer(){
-            if (app.self != null){
-                $.get("/get-spectated", data={"steam_id": app.self}, function(data){
-                    app.spectating = data;
-                });
-            }
+        getSelf(){
+            const params = new URLSearchParams(window.location.search)
+            return params.get('id')
         }
     }
 });
 
-setInterval(app.updatePlayers, 500);
-
 app.updateSpectatedPlayer();
-setInterval(app.updateSpectatedPlayer, 500);
+setInterval(app.updateSpectatedPlayer, 1000);

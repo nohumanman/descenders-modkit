@@ -20,11 +20,14 @@ namespace ModLoaderSolution
         }
         void OnTriggerEnter(Collider other)
         {
-            if (Utilities.instance.isInReplayMode())
-                return;
-            if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human" && doesWork)
+            // check if our other.transform.name is Bike so we're actually looking at the bike not arm or something
+            if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-                Utilities.Log("SplitTimer.Checkpoint | Checkpoint '" + this.name + "' Entered");
+                Utilities.Log("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' Entered");
+                if (Utilities.instance.isInReplayMode())
+                    return;
+                if (!doesWork)
+                    return;
                 if (!Utilities.instance.isInReplayMode())
                     PlayerManagement.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, SplitTimerText.Instance.time.ToString());
                 
@@ -37,6 +40,7 @@ namespace ModLoaderSolution
                 }
                 else if (this.checkpointType == CheckpointType.Finish)
                 {
+                    Utilities.instance.SaveReplayToFile("tmp");
                     SplitTimerText.Instance.StopTimer();
                 }
             }

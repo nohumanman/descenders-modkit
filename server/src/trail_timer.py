@@ -155,7 +155,6 @@ class TrailTimer():
             return
         await self.network_player.send(f"INVALIDATE_TIME|{reason}\\n")
         self.timer_info.started = False
-        self.timer_info.times = []
 
     async def update_medals(self):
         """ Update the medals for the player. """
@@ -218,10 +217,10 @@ class TrailTimer():
         # ask client to upload replay
         await self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
         # send the submitted time to the client
-        comment = "verified" if self.timer_info.auto_verify else "awaiting review"
+        comment = "verified" if self.timer_info.auto_verify else "requires review"
         secs_str = TrailTimer.secs_to_str(client_time)
         await self.network_player.send(
-            f"TIMER_FINISH|{secs_str}\\n{comment} - press SHIFT-P to see leaderboard"
+            f"TIMER_FINISH|{secs_str}\\n{comment}"
         )
         # send the time to the discord server if it is a new fastest time
         global_fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
@@ -255,7 +254,6 @@ class TrailTimer():
         await self.update_leaderboards()
         await self.update_medals()
         # reset the timer
-        self.timer_info.times = []
         self.timer_info.auto_verify = True
 
     async def potential_cheat(self, client_time: float):

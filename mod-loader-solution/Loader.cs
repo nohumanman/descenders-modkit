@@ -23,7 +23,7 @@ namespace ModLoaderSolution
             if (_netCl == null)
             {
                 gameObject = new GameObject();
-                DontDestroyOnLoad(gameObject);
+                DontDestroyOnLoad(gameObject.transform.root);
                 gameObject.name = "DescendersSplitTimerModLoaded";
                 Utilities.Log("GameObject Instantiated");
                 gameObject.AddComponent<Utilities>();
@@ -44,7 +44,7 @@ namespace ModLoaderSolution
                 if (_netCl == null)
                 {
                     gameObject = new GameObject();
-                    DontDestroyOnLoad(gameObject);
+                    DontDestroyOnLoad(gameObject.transform.root);
                     gameObject.name = "DescendersSplitTimerModLoaded";
                     Utilities.Log(" ModLoaderSolution has loaded");
                     gameObject.AddComponent<Utilities>();

@@ -141,6 +141,10 @@ class Webserver():
                 self.get, ["GET"]
             ),
             WebserverRoute(
+                "/api/get-spectated", "get_spectated",
+                self.get_spectated, ["GET"]
+            ),
+            WebserverRoute(
                 "/eval/<player_id>", "eval",
                 self.eval, ["GET"]
             ),
@@ -155,6 +159,14 @@ class Webserver():
             WebserverRoute(
                 "/login", "login",
                 self.login, ["GET"]
+            ),
+            WebserverRoute(
+                "/api/spectate", "spectate",
+                self.spectate, ["GET"]
+            ),
+            WebserverRoute(
+                "/api/spectating/get-time", "get_spectating_time",
+                self.get_spectating_time, ["GET"]
             ),
             WebserverRoute(
                 "/concurrency", "concurrency",
@@ -206,6 +218,24 @@ class Webserver():
                 methods=route.methods
             )
 
+    async def spectate(self):
+        """ Function to spectate a player """
+        # get our player id
+        our_id = await self.get_our_steam_id()
+        # get us
+        try:
+            us = self.socket_server.get_player_by_id(str(our_id))
+        except PlayerNotFound:
+            return f"Failed to find you! your id : {our_id}"
+        target_id = request.args.get("target_id")
+        us.info.spectating = self.socket_server.get_player_by_id(
+            target_id
+        ).info.steam_name
+        us.info.spectating_id = target_id
+        # send the spectate command
+        await us.send(f"SPECTATE|{target_id}")
+        return "Success"
+
     async def eval(self, player_id):
         """ Function to evaluate commands sent to player with id player_id """
         if await self.permission() == "AUTHORISED":
@@ -233,6 +263,40 @@ class Webserver():
             )
         except FileNotFoundError:
             return "No replay found!"
+
+    async def get_spectated(self):
+        """ Function to get the player we are spectating """
+        our_id = request.args.get("my_id")
+        try:
+            us = self.socket_server.get_player_by_id(str(our_id))
+        except PlayerNotFound:
+            return f"Failed to find you! your id : {our_id}"
+        return us.info.spectating
+
+    async def get_spectating_time(self):
+        """ Function to get the times of the player we are spectating """
+        our_id = request.args.get("my_id")
+        try:
+            us = self.socket_server.get_player_by_id(str(our_id))
+        except PlayerNotFound:
+            return f"Failed to find you! your id : {our_id}"
+        try:
+            spectating = self.socket_server.get_player_by_id(us.info.spectating_id)
+        except PlayerNotFound:
+            return "Failed to find player you are spectating"
+        # get time
+        res = {}
+        time_started = 0
+        for trail_name in spectating.trails:
+            trail = await spectating.get_trail(trail_name)
+            if trail.timer_info.started:
+                return jsonify({"time": trail.timer_info.time_started, "started": True})
+            if trail.timer_info.time_started > time_started:
+                if len(trail.timer_info.times) != 0:
+                    res = jsonify({"time": trail.timer_info.times[-1], "started": False})
+                time_started = trail.timer_info.time_started
+        # otherwise, return most recently finished
+        return res
 
     async def time_details(self, time_id):
         """ Function to get the details of a time with id time_id """
@@ -284,7 +348,7 @@ class Webserver():
             lines = ""
             try:
                 with open(
-                    f"{os.getcwd()}/output_logs/{player_id}.txt",
+                    f"{os.getcwd()}/output_log/{player_id}.txt",
                     "rt",
                     encoding="utf-8"
                 ) as my_file:
@@ -401,12 +465,26 @@ class Webserver():
         """ Function to update the token """
         session['oauth2_token'] = token
 
+    async def get_our_steam_id(self):
+        discord = self.make_session(token=session.get('oauth2_token'))
+        connections = discord.get(
+            API_BASE_URL + '/users/@me/connections'
+        ).json()
+        for connection in connections:
+            if not isinstance(connection, dict):
+                return "None"
+            if connection["type"] == "steam":
+                return connection["id"]
+        return "None"
+
     # routes
     async def callback(self):
         """ Function to handle the callback of the website """
         try:
             if request.values.get('error'):
                 return request.values['error']
+            if session.get('oauth2_state') is None:
+                return "Invalid oauth2_state"
             discord = self.make_session(
                 state=session.get('oauth2_state')
             )
@@ -424,6 +502,10 @@ class Webserver():
             ).json()
             try:
                 user_id = user['id']
+            except IndexError:
+                return "User id not found on discord user?"
+            try:
+                user_id = user['id']
                 try:
                     email = user['email']
                 except KeyError:
@@ -437,10 +519,12 @@ class Webserver():
                 except KeyError:
                     logging.info("Steam ID Not Found")
                 await self.dbms.discord_login(user_id, username, email, steam_id)
-            except (IndexError, KeyError) as e:
+            except Exception as e:
                 logging.info("User %s with error %s", user, str(e))
             return redirect("/")
         except (IndexError, KeyError) as e:
+            return str(e)
+        except Exception as e:
             return str(e)
 
     async def me(self):
@@ -470,7 +554,7 @@ class Webserver():
             'scope',
             'identify email connections guilds guilds.join'
         )
-        scope = "identify"
+        scope = "identify connections"
         discord = self.make_session(scope=scope.split(' '))
         authorization_url, state = discord.create_authorization_url(
             AUTHORIZATION_BASE_URL

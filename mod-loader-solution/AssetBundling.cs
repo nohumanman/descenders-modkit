@@ -45,7 +45,7 @@ namespace ModLoaderSolution
         {
             GameObject asst = bundle.LoadAsset<GameObject>("BikeSwitcherRadial");
             GameObject bikeSwitcherRadial = Instantiate(asst);
-            DontDestroyOnLoad(bikeSwitcherRadial);
+            DontDestroyOnLoad(bikeSwitcherRadial.transform.root);
             bikeSwitcherRadial.AddComponent<ObjEnabler>();
             foreach (Transform chil in bikeSwitcherRadial.transform.GetComponentsInChildren<Transform>())
                 if (chil.parent == bikeSwitcherRadial.transform)
