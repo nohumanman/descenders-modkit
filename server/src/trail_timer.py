@@ -194,16 +194,13 @@ class TrailTimer():
         }
         for error_message, error in errors.items():
             if error():
-                await self.invalidate_timer(error_message)
+                await self.invalidate_timer(error_message + "\nLive Racers: This time is still logged!")
                 return False
         return True
 
     async def end_timer(self, client_time: float):
         """ End the timer. """
         self.timer_info.times.append(float(client_time)) # add the final time
-        # check if we can end the timer
-        if not await self.can_end():
-            return
         # submit the time to the database
         time_id = await self.network_player.dbms.submit_time(
             self.network_player.info.steam_id,
@@ -213,7 +210,8 @@ class TrailTimer():
             self.network_player.info.bike_type,
             self.timer_info.starting_speed,
             self.network_player.info.version,
-            self.timer_info.auto_verify
+            self.timer_info.auto_verify,
+            await self.can_end()
         )
         # ask client to upload replay
         await self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
