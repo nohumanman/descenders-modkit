@@ -412,7 +412,9 @@ class UnitySocket():
     async def on_respawn(self):
         """ Called when a player respawns """
         logging.info("%s '%s'\t- respawned", self.info.steam_id, self.info.steam_name)
-        await self.invalidate_all_trails("Respawn/death Detected")
+        for trail_name, trail in self.trails.items():
+            if trail_name in self.trails:
+                trail_name.timer_info.auto_verify = False
 
     async def get_trail(self, trail_name) -> TrailTimer:
         """ Get a trail timer for a player. """
