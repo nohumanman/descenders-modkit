@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
+using System.IO;
 
 namespace ModLoaderSolution
 {
@@ -24,6 +25,7 @@ namespace ModLoaderSolution
 		public int port = 65432;
 		public string ip = "18.132.81.187";
 		static string version = "0.2.52";
+		static string patchNotes = "- Greatly improved server connection quality; failed runs should be far less common.\n- Massive backend database improvements\n- Respawns globally do not count as invalidations\n\nYours,\n- nohumanman"; // that which has changed since the last version.
 		public static bool developerMode = true;
 		void Awake(){
 			if (developerMode)
@@ -57,8 +59,32 @@ namespace ModLoaderSolution
         {
 			return socketConnection != null && socketConnection.Connected;
 		}
+		bool poppedUp = false;
+		bool introSequenceWasHere = false;
 		void Update()
         {
+			if (!introSequenceWasHere && GameObject.Find("Map_Name") != null)
+				introSequenceWasHere = true;
+			if (!poppedUp && GameObject.Find("Map_Name") == null && introSequenceWasHere)
+            {
+				string lastVersion = "";
+				try
+				{
+					lastVersion = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Low\\RageSquid\\Descenders\\last_version.txt");
+				}
+				catch(Exception e){
+				}
+				if (lastVersion != NetClient.version)
+                {
+					try
+					{
+						Utilities.instance.PopUp("Modkit patch notes " + NetClient.version, NetClient.patchNotes);
+						poppedUp = true;
+					}
+					catch (Exception e) { }
+				}
+				File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Low\\RageSquid\\Descenders\\last_version.txt", NetClient.version);
+			}
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.P))
 				Application.OpenURL("https://modkit.nohumanman.com/trails");
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.C))
