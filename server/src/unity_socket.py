@@ -190,7 +190,7 @@ class UnitySocket():
         for trail_name, trail in self.trails.items():
             trail.timer_info.starting_speed = starting_speed
             if starting_speed > await self.dbms.max_start_time(trail_name):
-                trail.invalidate_timer(
+                await trail.invalidate_timer(
                     "You went through the start too fast!"
                 )
 
@@ -399,7 +399,7 @@ class UnitySocket():
             if data.startswith(operator):
                 await function(self, data_list)
 
-    async def invalidate_all_trails(self, reason: str):
+    async def invalidate_all_trails(self, reason: str, exception = ""):
         """ Invalidate all trails for a player. """
         logging.info(
             "%s '%s'\t- all trails invalidated due to '%s'",
@@ -407,7 +407,8 @@ class UnitySocket():
         )
         for trail_name, trail in self.trails.items():
             if trail_name in self.trails:
-                await trail.invalidate_timer(reason)
+                if (trail_name != exception):
+                    await trail.invalidate_timer(reason)
 
     async def on_respawn(self):
         """ Called when a player respawns """
