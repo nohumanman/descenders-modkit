@@ -9,7 +9,7 @@ namespace ModLoaderSolution
     {
         public static TimeModifier Instance { get; private set; }
         public float speed = 1f;
-        public bool enabled = true;
+        public bool enabled = false;
         void Awake()
         {
             if (Instance != null && Instance != this)
