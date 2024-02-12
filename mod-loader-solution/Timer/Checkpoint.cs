@@ -39,9 +39,8 @@ namespace ModLoaderSolution
                     return;
                 if (!doesWork)
                     return;
-                if (!Utilities.instance.isInReplayMode())
-                    PlayerManagement.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, SplitTimerText.Instance.time.ToString(), hash);
                 
+                PlayerManagement.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, SplitTimerText.Instance.time.ToString(), hash);
                 if (this.checkpointType == CheckpointType.Start)
                 {
                     Utilities.instance.RestartReplay();
