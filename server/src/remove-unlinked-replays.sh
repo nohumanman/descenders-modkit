@@ -21,7 +21,8 @@ mkdir -p archived-replays/
 
 # delete all replays that are not in the database
 for file in *.replay; do
-    if ! grep -q -- "$file" ../../modkit.db; then
+    valid=$(sqlite3 "../../modkit.db" "SELECT * FROM Time WHERE time_id = ${file%.*};");
+    if [ -z "$valid" ]; then
         echo "Replay $file not found in database. Deleting now."
         mv -- "$file" archived-replays/
     fi
