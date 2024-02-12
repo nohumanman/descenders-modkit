@@ -54,7 +54,10 @@ namespace ModLoaderSolution
 				wasConnected = false;
 			}
 			else if (!wasConnected)
+			{
 				TextColToDefault();
+				wasConnected = true;
+			}
 		}
 		public void TextColToDefault()
         {
