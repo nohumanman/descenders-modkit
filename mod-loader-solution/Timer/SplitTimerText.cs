@@ -39,6 +39,7 @@ namespace ModLoaderSolution
 			yield return new WaitForSeconds(tim);
 			SetText("");
 		}
+		bool wasConnected = false;
 		public void Update()
         {
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.U))
@@ -47,6 +48,13 @@ namespace ModLoaderSolution
 				uiEnabled = !uiEnabled;
 				text.text = "";
 			}
+			if (!NetClient.Instance.IsConnected())
+			{
+				text.color = new Color32(247, 56, 42, 255);
+				wasConnected = false;
+			}
+			else if (!wasConnected)
+				TextColToDefault();
 		}
 		public void TextColToDefault()
         {
