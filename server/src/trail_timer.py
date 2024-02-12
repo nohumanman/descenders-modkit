@@ -29,6 +29,7 @@ class TrailTimer():
             total_checkpoints=0, time_started=0
         )
         self.__boundaries = []
+        self.__checkpoints = []
 
     def __str__(self):
         return f"Trail {self.trail_name} for player {self.network_player.info.steam_name} in boundary_num={len(self.__boundaries)},starting_speed={self.timer_info.starting_speed},times={self.timer_info.times}"
@@ -75,6 +76,7 @@ class TrailTimer():
             "%s '%s'\t- started timer with checkpoints %s", self.network_player.info.steam_id,
             self.network_player.info.steam_name, total_checkpoints
         )
+        self.__checkpoints = [] # reset the checkpoints
         self.timer_info.auto_verify = True
         if len(self.__boundaries) == 0:
             await self.invalidate_timer("OUT OF BOUNDS!", always=True)
@@ -84,13 +86,15 @@ class TrailTimer():
             self.timer_info.time_started = time.time()
             self.timer_info.times = []
 
-    async def checkpoint(self, client_time: float):
+    async def checkpoint(self, client_time: float, checkpoint_hash: str):
         """ Log a checkpoint. """
         logging.info(
             "%s '%s'\t- entered checkpoint with client time %s", self.network_player.info.steam_id,
             self.network_player.info.steam_name, client_time
         )
-        if self.timer_info.started:
+        # if the timer has started and the checkpoint is not in the list (i.e. it is a new checkpoint)
+        if self.timer_info.started and checkpoint_hash not in self.__checkpoints:
+            self.__checkpoints.append(checkpoint_hash) # add the checkpoint to the list
             self.timer_info.times.append(float(client_time))
             fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
             try:
@@ -190,16 +194,14 @@ class TrailTimer():
         }
         for error_message, error in errors.items():
             if error():
-                await self.invalidate_timer(error_message)
-                return False
-        return True
+                await self.invalidate_timer(error_message + "")
+                return (False, error_message)
+        return (True, "No errors")
 
     async def end_timer(self, client_time: float):
         """ End the timer. """
         self.timer_info.times.append(float(client_time)) # add the final time
-        # check if we can end the timer
-        if not await self.can_end():
-            return
+        can_end = await self.can_end()
         # submit the time to the database
         time_id = await self.network_player.dbms.submit_time(
             self.network_player.info.steam_id,
@@ -209,16 +211,22 @@ class TrailTimer():
             self.network_player.info.bike_type,
             self.timer_info.starting_speed,
             self.network_player.info.version,
-            self.timer_info.auto_verify
+            self.timer_info.auto_verify and can_end[0],
+            not can_end[0]
         )
         # ask client to upload replay
         await self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
         # send the submitted time to the client
         comment = "verified" if self.timer_info.auto_verify else "requires review"
         secs_str = TrailTimer.secs_to_str(client_time)
-        await self.network_player.send(
-            f"TIMER_FINISH|{secs_str}\\n{comment}"
-        )
+        if can_end[0]:
+            await self.network_player.send(
+                f"TIMER_FINISH|{secs_str}\\n{comment}"
+            )
+        else:
+            await self.network_player.send(
+                f"TIMER_FINISH|{secs_str}\\n{can_end[1]}\\nLive Racers: This time is still logged!\\n"
+            )
         # send the time to the discord server if it is a new fastest time
         global_fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
         if client_time < global_fastest[len(global_fastest)-1]:

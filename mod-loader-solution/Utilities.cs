@@ -819,7 +819,23 @@ namespace ModLoaderSolution
                 name = "Hardtail";
             return name;
         }
-
+        public void PopUp(string titleText, string bodyText)
+        {
+            int lineLimit = 12;
+            int lines = 0;
+            foreach(char c in bodyText)
+                if (c == '\n')
+                    lines++;
+            if (lines > lineLimit)
+                return;
+            UI_PopUp_TextBoxSmall uI_PopUp_TextBoxSmall = FindObjectOfType<PermaGUI>().SpawnPopUp<UI_PopUp_TextBoxSmall>();
+            // label_titleText = f`r}tXQ
+            TMPro.TextMeshProUGUI label_titleText = (TMPro.TextMeshProUGUI)uI_PopUp_TextBoxSmall.GetType().GetField("f`r}tXQ").GetValue(uI_PopUp_TextBoxSmall);
+            label_titleText.text = titleText;
+            // label_bodyText = oZtLHbT
+            TMPro.TextMeshProUGUI label_bodyText = (TMPro.TextMeshProUGUI)uI_PopUp_TextBoxSmall.GetType().GetField("oZtLHbT").GetValue(uI_PopUp_TextBoxSmall);
+            label_bodyText.text = bodyText;
+        }
         public void SetCameraTarget(PlayerInfoImpact player, bool something=true)
         {
             Singleton<CameraManager>.SP.SetCameraTarget(player, something);

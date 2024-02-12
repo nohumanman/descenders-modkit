@@ -222,7 +222,8 @@ class DBMS():
         bike_type: str,
         starting_speed: float,
         version: str,
-        verified: bool
+        verified: bool,
+        ignored: bool
     ):
         """ Submit a time to the database. """
         time_id = hash(
@@ -243,9 +244,9 @@ class DBMS():
                 starting_speed=float(starting_speed),
                 version=str(version),
                 verified=lambda: 1 if %s else 0,
-                ignored=%s
+                ignored=%s,
             ''', steam_id, time_id, time.time(), current_world,
-            trail_name, bike_type, verified, 0
+            trail_name, bike_type, verified, ignored
         )
         async with aiosqlite.connect(self.db_file) as db:
             # pylint: disable=no-member
@@ -260,7 +261,7 @@ class DBMS():
                 starting_speed=float(starting_speed),
                 version=str(version),
                 verified= 1 if verified else 0,
-                ignored=0
+                ignored= 1 if ignored else 0
             )
             for n, split_time in enumerate(split_times):
                 # pylint: disable=no-member

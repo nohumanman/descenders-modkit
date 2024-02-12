@@ -284,7 +284,7 @@
                             <br>
                             <v-row>
                                 <v-col v-for="trail in trails" style="padding:30px;">
-                                    <v-card width="400" :color="colorFromNameUsingHash(trail.world_name)">
+                                    <v-card width="500" :color="colorFromNameUsingHash(trail.world_name)">
                                         <v-img :src="trail.src">
                                             <div style="background:rgba(0, 0, 0, 0.543);">
                                                 <v-col align="center" style="text-align:center;">
@@ -302,7 +302,7 @@
                                             <tr v-for="player, index in trail.leaderboard" style="text-align:center">
                                                 <td style="padding-right:10px;">[[player.place]].</td>
                                                 <td style="text-align:left;">[[player.name]]</td>
-                                                <td style="padding-left:20px;">[[secs_to_str(player.time)]]</td>
+                                               <td style="padding-left:20px;"><a style="color: grey;" :href="'/time/' + player.time_id">[[secs_to_str(player.time)]]</a></td>
                                                 <td style="padding-left:20px;">+[[GetTimeDiff(player.time, trail, index)]]</td>
                                             </tr>
                                             <tr v-for="x in 10-trail.leaderboard.length">

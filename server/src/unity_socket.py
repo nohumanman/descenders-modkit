@@ -33,7 +33,8 @@ operations = {
             data[1],
             data[2],
             int(data[3]),
-            float(data[4])
+            float(data[4]),
+            data[5]
         ),
     "RESPAWN":
         lambda netPlayer, data: netPlayer.on_respawn(),
@@ -189,7 +190,7 @@ class UnitySocket():
         for trail_name, trail in self.trails.items():
             trail.timer_info.starting_speed = starting_speed
             if starting_speed > await self.dbms.max_start_time(trail_name):
-                trail.invalidate_timer(
+                await trail.invalidate_timer(
                     "You went through the start too fast!"
                 )
 
@@ -398,7 +399,7 @@ class UnitySocket():
             if data.startswith(operator):
                 await function(self, data_list)
 
-    async def invalidate_all_trails(self, reason: str):
+    async def invalidate_all_trails(self, reason: str, exception = ""):
         """ Invalidate all trails for a player. """
         logging.info(
             "%s '%s'\t- all trails invalidated due to '%s'",
@@ -406,12 +407,16 @@ class UnitySocket():
         )
         for trail_name, trail in self.trails.items():
             if trail_name in self.trails:
-                await trail.invalidate_timer(reason)
+                if (trail_name != exception):
+                    await trail.invalidate_timer(reason)
 
     async def on_respawn(self):
         """ Called when a player respawns """
         logging.info("%s '%s'\t- respawned", self.info.steam_id, self.info.steam_name)
-        await self.invalidate_all_trails("Respawn/death Detected")
+        for trail_name, trail in self.trails.items():
+            if trail_name in self.trails:
+                trail.timer_info.auto_verify = False
+                await self.send("SPLIT_TIME|Time requires review")
 
     async def get_trail(self, trail_name) -> TrailTimer:
         """ Get a trail timer for a player. """
@@ -441,7 +446,8 @@ class UnitySocket():
         trail_name: str,
         checkpoint_type: str,
         total_checkpoints: int,
-        client_time: float
+        client_time: float,
+        checkpoint_hash: str
     ):
         """ Called when a player enters a checkpoint. """
         logging.info(
@@ -460,7 +466,7 @@ class UnitySocket():
         if checkpoint_type == "Start":
             await trail.start_timer(total_checkpoints)
         if checkpoint_type == "Intermediate":
-            await trail.checkpoint(client_time)
+            await trail.checkpoint(client_time, checkpoint_hash)
         if checkpoint_type == "Finish":
             await trail.end_timer(client_time)
 

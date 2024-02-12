@@ -84,7 +84,7 @@ var app = new Vue({
             }
         },
         TimeStateToColour(time){
-            if (time.ignore == "True")
+            if (time.ignore == "1")
                 return "red"
             if (time.verified == "0")
                 return "#fa5c67"
