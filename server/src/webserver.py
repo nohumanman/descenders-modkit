@@ -306,16 +306,16 @@ class Webserver():
                 "Time.html",
                 steam_id=details[0],
                 steam_name=details[1],
-                timestamp=details[5],
-                time_id=details[6],
-                total_time=details[8],
-                trail_name=details[9],
-                world_name=details[10],
-                ignore=details[12],
-                bike_type=details[13],
-                starting_speed=details[14],
-                version=details[15],
-                verified=details[17]
+                timestamp=details[3],
+                time_id=details[4],
+                total_time=details[5],
+                trail_name=details[6],
+                world_name=details[7],
+                ignore=details[8],
+                bike_type=details[9],
+                starting_speed=details[10],
+                version=details[12],
+                verified=details[13]
             )
         except IndexError:
             return "No time found!"
