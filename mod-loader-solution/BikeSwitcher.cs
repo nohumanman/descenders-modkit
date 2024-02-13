@@ -9,7 +9,7 @@ namespace ModLoaderSolution
 	public class BikeSwitcher : MonoBehaviour
 	{
         public string oldBike;
-
+	public string unusedVar;
         public void ToBike(string bike, string id)
         {
             Utilities.Log("id " + id + " switching to bike '" + bike + "'");
