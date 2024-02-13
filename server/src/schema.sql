@@ -98,5 +98,8 @@ CREATE VIEW "TrailInfo" AS SELECT
         AVG(Time.starting_speed) as average_start_speed,
         TrailIcon.trail_icon
 FROM Time
-LEFT JOIN TrailIcon ON TrailIcon.trail_name = Time.trail_name WHERE Time.ignored = 0 AND Time.verified = 1 GROUP BY Time.trail_name ORDER BY Time.trail_name DESC
+LEFT JOIN TrailIcon ON TrailIcon.trail_name = Time.trail_name
+WHERE Time.ignored = 0 AND Time.verified = 1
+GROUP BY Time.trail_name
+ORDER BY Time.trail_name DESC;
 /* TrailInfo(trail_name,world_name,times_ridden,average_start_speed,trail_icon) */;
