@@ -15,15 +15,23 @@ jobs:
     runs-on: windows-2019
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        path: ./mod-loader-solution
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.5.0
-    - name: Restore dependencies
+    - uses: actions/checkout@v2
+    
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1.0.2
+
+    - name: Navigate to Workspace
+      run: cd $GITHUB_WORKSPACE/mod-loader-solution
+
+    - name: Create Build Directory
+      run: mkdir _build
+      
+    - name: Restore Packages
       run: nuget restore ModLoaderSolution.sln
-    - name: Build
-      run: msbuild /p:Configuration=Release ModLoaderSolution.sln
+
+    - name: Build Solution
+      run: |
+        msbuild.exe ModLoaderSolution.sln
