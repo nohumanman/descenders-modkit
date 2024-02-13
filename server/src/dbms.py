@@ -81,7 +81,7 @@ class DBMS():
         """ Get the valid Discord IDs. """
         async with aiosqlite.connect(self.db_file) as db:
             # pylint: disable=no-member
-            return await self.queries.get_authenitcated_discord_ids(db)
+            return await self.queries.get_authenticated_discord_ids(db)
 
     async def get_steam_id(self, discord_id):
         """ Get the Steam ID associated with a given Discord ID. """
