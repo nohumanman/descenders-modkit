@@ -9,29 +9,14 @@ on:
   pull_request:
     branches: [ "main" ]
 
+
 jobs:
   build:
-
     runs-on: windows-2019
-
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Setup MSBuild
-      uses: microsoft/setup-msbuild@v1
-
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.2
-
-    - name: Navigate to Workspace
-      run: cd $GITHUB_WORKSPACE/mod-loader-solution
-
-    - name: Create Build Directory
-      run: mkdir _build
-      
-    - name: Restore Packages
-      run: nuget restore ModLoaderSolution.sln
-
-    - name: Build Solution
-      run: |
-        msbuild.exe ModLoaderSolution.sln
+      - name: checkout
+        uses: actions/checkout@v1
+      - name: Build DotNET35
+        run: |
+           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
+           .\MSBuild.exe $Env:GITHUB_WORKSPACE\mod-loader-solution\ModLoaderSolution.sln
