@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 import dataclasses
 import time
 import logging
+import asyncio
 import nest_asyncio # Used to fix RuntimeError in using async from thread
 nest_asyncio.apply()
 
@@ -225,6 +226,18 @@ class TrailTimer():
         # send the submitted time to the client
         comment = "verified" if self.timer_info.auto_verify else "requires review"
         secs_str = TrailTimer.secs_to_str(client_time)
+        async def send_popup():
+            if not self.timer_info.auto_verify:
+                time.sleep(2)
+                await self.network_player.send(
+                        "POPUP|Time requires verification|Great! You've completed"
+                        f" a time of {secs_str}, but for it to show up on leaderboards,"
+                        " it needs to be verified by a moderator. You can ask for a"
+                        " verification in the #races channel on the Descenders"
+                        " Discord server if you think your run is valid."
+                        "\n\nYours,\nNohumanman"
+                )
+        asyncio.create_task(send_popup())
         if can_end[0]:
             await self.network_player.send(
                 f"TIMER_FINISH|{secs_str}\\n{comment}"
