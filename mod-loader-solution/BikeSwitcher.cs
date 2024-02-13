@@ -37,17 +37,18 @@ namespace ModLoaderSolution
                 if (bike == "enduro")
                 {
                     FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", 0);
-                    gameObject.GetComponent<Utilities>().SetBike(0);
+                    //gameObject.GetComponent<Utilities>().SetBike(0);
+                    Utilities.instance.SetBike(Utilities.GetPlayerInfoImpactFromId(id), 0);
                 }
                 else if (bike == "downhill")
                 {
                     FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", 1);
-                    gameObject.GetComponent<Utilities>().SetBike(1);
+                    Utilities.instance.SetBike(Utilities.GetPlayerInfoImpactFromId(id), 1);
                 }
                 else if (bike == "hardtail")
                 {
                     FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", 2);
-                    gameObject.GetComponent<Utilities>().SetBike(2);
+                    Utilities.instance.SetBike(Utilities.GetPlayerInfoImpactFromId(id), 2);
                 }
                 else
                 {
@@ -105,7 +106,8 @@ namespace ModLoaderSolution
                     oldBike = bike;
                 }
             }
-            
+            Utilities.instance.SetFreeCam();
+            Utilities.instance.SetBikeCamera();
         }
         public Animator GetPlayerAnim(GameObject PlayerObject)
         {
