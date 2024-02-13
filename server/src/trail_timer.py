@@ -235,7 +235,6 @@ class TrailTimer():
                         " it needs to be verified by a moderator. You can ask for a"
                         " verification in the #races channel on the Descenders"
                         " Discord server if you think your run is valid."
-                        "\n\nYours,\nNohumanman"
                 )
         asyncio.create_task(send_popup())
         if can_end[0]:
