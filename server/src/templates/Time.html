@@ -1,64 +1,116 @@
-<html>
-    <head>
-        <meta property="og:image" content="/static/images/Descenders Competitive Logo.png">
-        <meta property="og:title" content="Time by {{steam_name}} ({{steam_id}})"/>
-        <meta property="og:description" content="Time on trail {{trail_name}} at {{total_time}} with version {{version}}" />
-    </head>
-    <body>
-        <h1>This is in beta. Don't complain.</h1>
-        <table>
-            <tr>
-                <th>Steam ID</th>
-                <td>{{steam_id}}</td>
-            </tr>
-            <tr>
-                <th>Steam Name</th>
-                <td>{{steam_name}}</td>
-            </tr>
-            <tr>
-                <th>Timestamp</th>
-                <td>{{timestamp}}</td>
-            </tr>
-            <tr>
-                <th>Time ID</th>
-                <td>{{time_id}}</td>
-            </tr>
-            <tr>
-                <th>Replay</th>
-                <td><a href="/static/replays/{{time_id}}.replay">Replay</a></td>
-            </tr>
-            <tr>
-                <th>Total Time</th>
-                <td>{{total_time}}</td>
-            </tr>
-            <tr>
-                <th>Trail Name</th>
-                <td>{{trail_name}}</td>
-            </tr>
-            <tr>
-                <th>World Name</th>
-                <td>{{world_name}}</td>
-            </tr>
-            <tr>
-                <th>Ignored</th>
-                <td>{{ignore}} -> <a target="_blank" href="/ignore-time/{{time_id}}/True">ignore this time</a></td>
-            </tr>
-            <tr>
-                <th>Bike Type</th>
-                <td>{{bike_type}}</td>
-            </tr>
-            <tr>
-                <th>Starting Speed</th>
-                <td>{{starting_speed}}</td>
-            </tr>
-            <tr>
-                <th>Version</th>
-                <td>{{version}}</td>
-            </tr>
-            <tr>
-                <th>Verified</th>
-                <td>{{verified}} - <a target="_blank" href="/verify_time/{{time_id}}">verify this time</a></td>
-            </tr>
-        </table>        
-    </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time by {{steam_name}} ({{steam_id}})</title>
+    <meta property="og:image" content="/static/images/Descenders Competitive Logo.png">
+    <meta property="og:title" content="Time by {{steam_name}} ({{steam_id}})"/>
+    <meta property="og:description" content="Time on trail {{trail_name}} at {{total_time}} with version {{version}}" />
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .beta-icon {
+            display: inline-block;
+            background-color: #3692f4;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            text-align: right;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Time Details <span class="beta-icon">Beta</span></h1>
+    </header>
+    <table>
+        <tr>
+            <th>Steam ID</th>
+            <td>{{steam_id}}</td>
+        </tr>
+        <tr>
+            <th>Steam Name</th>
+            <td>{{steam_name}}</td>
+        </tr>
+        <tr>
+            <th>Timestamp</th>
+            <td>{{timestamp}}, {{timestamp_to_time}}</td>
+        </tr>
+        <tr>
+            <th>Time ID</th>
+            <td>{{time_id}}</td>
+        </tr>
+        <tr>
+            <th>Replay</th>
+            <td><a href="/static/replays/{{time_id}}.replay">Replay</a></td>
+        </tr>
+        <tr>
+            <th>Total Time</th>
+            <td>{{total_time}}</td>
+        </tr>
+        <tr>
+            <th>Trail Name</th>
+            <td>{{trail_name}}</td>
+        </tr>
+        <tr>
+            <th>World Name</th>
+            <td>{{world_name}}</td>
+        </tr>
+        <tr>
+            <th>Ignored</th>
+            <td>{{ignore}} -> <a target="_blank" href="/ignore-time/{{time_id}}/True">ignore this time</a></td>
+        </tr>
+        <tr>
+            <th>Bike Type</th>
+            <td>{{bike_type}}</td>
+        </tr>
+        <tr>
+            <th>Starting Speed</th>
+            <td>{{starting_speed}}</td>
+        </tr>
+        <tr>
+            <th>Version</th>
+            <td>{{version}}</td>
+        </tr>
+        <tr>
+            <th>Verified</th>
+            <td>{{verified}} - <a target="_blank" href="/verify_time/{{time_id}}">verify this time</a></td>
+        </tr>
+    </table>        
+</body>
 </html>
