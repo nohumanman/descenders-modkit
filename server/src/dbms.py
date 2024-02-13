@@ -193,7 +193,7 @@ class DBMS():
         """ Get the avatar for a given Steam ID. """
         async with aiosqlite.connect(self.db_file) as db:
             # pylint: disable=no-member
-            return await self.queries.get_avatar(db, steam_id=steam_id)
+            return await self.queries.get_player_avatar(db, steam_id=steam_id)
 
     async def discord_login(self, discord_id: str, discord_name: str, email: str, steam_id: int):
         """ Log in to Discord. """
