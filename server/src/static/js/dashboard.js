@@ -19,6 +19,7 @@ var app = new Vue({
         items: [],
         item_to_gift: "",
         bike_types : [{"name" : "Enduro", "val" : 0},  {"name" : "Hardtail", "val" : 2}, {"name" : "Downhill", "val" : 1}],
+        showDeleted: false,
         commands: [
             {"evals" : ["RESPAWN_AT_START"], "name": "Respawn at Start", "risk": "high"},
             {"evals": ["RESPAWN_ON_TRACK"], "name": "Respawn on Track", "risk": "high"},
