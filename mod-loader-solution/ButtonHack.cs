@@ -9,4 +9,9 @@ public class ButtonHack : MonoBehaviour
     {
         this.GetComponent<Image>().alphaHitTestMinimumThreshold = alphaThreshold;
     }
+    public void deez()
+    {
+        int x = 0;
+        x = x;   // CS1717  
+    }
 }
