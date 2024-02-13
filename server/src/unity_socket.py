@@ -464,6 +464,10 @@ class UnitySocket():
             return
         trail.timer_info.total_checkpoints = int(total_checkpoints)
         if checkpoint_type == "Start":
+            # stop all other timers
+            for tr in self.trails:
+                if trail_name != tr:
+                    self.trails[tr].timer_info.started = False
             await trail.start_timer(total_checkpoints)
         if checkpoint_type == "Intermediate":
             await trail.checkpoint(client_time, checkpoint_hash)
