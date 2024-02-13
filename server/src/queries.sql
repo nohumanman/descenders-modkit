@@ -124,7 +124,7 @@ WHERE
 -- Get all times for a given trail
 SELECT *
 FROM all_times
-LIMIT :limit;
+LIMIT :lim;
 
 -- name: get_all_players
 -- Get all players
@@ -183,7 +183,7 @@ GROUP BY
     Player.steam_id
 ORDER BY
     checkpoint_time ASC
-LIMIT :limit;
+LIMIT :lim;
 
 -- name: get_player_avatar^
 -- Get the player's avatar

@@ -116,7 +116,7 @@ class DBMS():
             # pylint: disable=no-member
             result = await self.queries.get_all_times(
                 db,
-                limit=limit
+                lim=limit
             )
         return [
             {
@@ -180,7 +180,7 @@ class DBMS():
                     "time_id": str(time[6])
                 } for i, time in enumerate(
                     await self.queries.get_leaderboard(
-                        db, trail_name=trail_name, limit=num
+                        db, trail_name=trail_name, lim=num
                     )
                 )
             ]
