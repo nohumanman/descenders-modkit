@@ -78,6 +78,7 @@ class TrailTimer():
         )
         self.__checkpoints = [] # reset the checkpoints
         self.timer_info.auto_verify = True
+        self.timer_info.starting_speed = 0
         if len(self.__boundaries) == 0:
             await self.invalidate_timer("OUT OF BOUNDS!", always=True)
         else:
@@ -216,6 +217,11 @@ class TrailTimer():
         )
         # ask client to upload replay
         await self.network_player.send(f"UPLOAD_REPLAY|{time_id}")
+        # if the timer has not started, return
+        # this is to prevent the timer from ending multiple times, but retain
+        # all times in the database. Important for live racing
+        if not self.timer_info.started:
+            return
         # send the submitted time to the client
         comment = "verified" if self.timer_info.auto_verify else "requires review"
         secs_str = TrailTimer.secs_to_str(client_time)
