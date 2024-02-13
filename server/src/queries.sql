@@ -74,26 +74,26 @@ REPLACE INTO Player (
 )
 VALUES (
     :steam_id, :steam_name, :avatar_src
-)
+);
 
 -- name: get_replay_name^
 -- Get the replay name associated with a given time.
 SELECT ('replay_' || Time.time_id || '_' || Player.steam_name || '.replay') AS value
 FROM Time
 INNER JOIN Player ON Time.steam_id = Player.steam_id
-WHERE time_id = :time_id
+WHERE time_id = :time_id;
 
 -- name: player_id_from_name^
 -- Get the player id from the player name.
 SELECT Player.steam_id AS value
 FROM Player
-WHERE steam_name = :steam_name
+WHERE steam_name = :steam_name;
 
 -- name: player_name_from_id^
 -- Get the 
 SELECT steam_name AS value
 FROM Player
-WHERE steam_id = :steam_id
+WHERE steam_id = :steam_id;
 
 
 -- name: get_authenticated_discord_ids
@@ -103,13 +103,13 @@ SELECT
 FROM
     User
 WHERE
-    valid = "TRUE"
+    valid = "TRUE";
 
 -- name: get_discord_steam_connetion^
 -- get steam ID associated with given discord id
 SELECT steam_id AS value
 FROM User
-WHERE discord_id = :discord_id
+WHERE discord_id = :discord_id;
 
 -- name: get_time_details^
 -- Get the time details for a given time id.
@@ -118,12 +118,13 @@ SELECT
 FROM
     all_times
 WHERE
-    all_times.time_id = :time_id
+    all_times.time_id = :time_id;
 
 -- name: get_all_times
 -- Get all times for a given trail
-SELECT * FROM all_times
-LIMIT :limit
+SELECT *
+FROM all_times
+LIMIT :limit;
 
 -- name: get_all_players
 -- Get all players
@@ -131,17 +132,17 @@ SELECT Player.steam_id, Player.steam_name, Player.avatar_src, Rep.rep, max(Rep.t
 FROM Player
 INNER JOIN Rep on Rep.steam_id = Player.steam_id
 GROUP BY Player.steam_id
-ORDER BY Player.steam_name ASC
+ORDER BY Player.steam_name ASC;
 
 -- name: get_all_trails
 -- Get all trails
-SELECT * FROM TrailInfo
+SELECT * FROM TrailInfo;
 
 -- name: get_all_worlds
 -- Get all worlds
 SELECT world_name
 FROM Time
-GROUP BY world_name
+GROUP BY world_name;
 
 -- name: get_leaderboard
 -- Get the leaderboard for a given trail
@@ -182,13 +183,13 @@ GROUP BY
     Player.steam_id
 ORDER BY
     checkpoint_time ASC
-LIMIT :limit
+LIMIT :limit;
 
 -- name: get_player_avatar^
 -- Get the player's avatar
 SELECT avatar_src
 FROM Player
-WHERE steam_id = :steam_id
+WHERE steam_id = :steam_id;
 
 -- name: submit_discord_details
 -- Submit the discord details
@@ -199,13 +200,13 @@ VALUES(
     :steam_id,
     :discord_name,
     :email
-)
+);
 
 -- name: verify_time
 -- Verify a time
 UPDATE Time
 SET verified = 1
-WHERE time_id = :time_id
+WHERE time_id = :time_id;
 
 -- name: submit_time
 -- Submit a time
@@ -232,7 +233,7 @@ VALUES (
 	:version, -- TEXT
 	:verified, -- INT NOT NULL
 	:ignored -- INT NOT NULL
-)
+);
 
 -- name: submit_split
 -- Submit a split time
@@ -246,4 +247,4 @@ VALUES (
     :time_id,
     :checkpoint_num,
     :checkpoint_time
-)
+);

@@ -37,8 +37,9 @@ jobs:
     - name: Lint with sqlfluff
       run: |
         # install sqlfluff
-        #python -m pip install sqlfluff
-        #sqlfluff lint server/src/queries.sql --dialect sqlite
+        python -m pip install sqlfluff
+        # run tests using .sqlfluff as config
+        sqlfluff lint server/src/queries.sql --config .sqlfluff --dialect sqlite
     - name: Test with unittest
       run: |
         cd server
