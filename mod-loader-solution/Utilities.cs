@@ -167,6 +167,7 @@ namespace ModLoaderSolution
             }
             return networkedPlayers;
         }
+
         public void RestartReplay()
         {
             Utilities.Log("RestartReplay()");
@@ -768,6 +769,11 @@ namespace ModLoaderSolution
         }
         public int GetBike()
         {
+            string oldBike = FindObjectOfType<BikeSwitcher>().oldBike;
+            if (oldBike == "downhill")
+                return 1;
+            else if (oldBike == "hardtail")
+                return 2;
             return 0;
         }
         public void SetBike(int steam_id, int bike)

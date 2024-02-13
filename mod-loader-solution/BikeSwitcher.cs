@@ -13,6 +13,8 @@ namespace ModLoaderSolution
         public void ToBike(string bike, string id)
         {
             Utilities.Log("id " + id + " switching to bike '" + bike + "'");
+            if (Utilities.instance.isInReplayMode())
+                return;
             StartCoroutine(_ToBike(bike, id));
         }
         IEnumerator _ToBike(string bike, string id)
@@ -31,12 +33,22 @@ namespace ModLoaderSolution
                 }
                 if (!IsDescBike(oldBike) && IsDescBike(bike))
                     yield return DelicatePlayerRespawn(id, PlayerObject, Utilities.GetPlayerInfoImpactFromId(id));
+                
                 if (bike == "enduro")
+                {
+                    FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", 0);
                     gameObject.GetComponent<Utilities>().SetBike(0);
+                }
                 else if (bike == "downhill")
+                {
+                    FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", 1);
                     gameObject.GetComponent<Utilities>().SetBike(1);
+                }
                 else if (bike == "hardtail")
+                {
+                    FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", 2);
                     gameObject.GetComponent<Utilities>().SetBike(2);
+                }
                 else
                 {
                     if (AssetBundling.Instance.bundle != null)
@@ -65,7 +77,7 @@ namespace ModLoaderSolution
                             Gesture[] gestures = new Gesture[0] { };
                             string gesturesField = "EL\u0080\u007f\u0084\u0080o";
                             gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(Utilities.instance.GetPlayer().GetComponent<Cyclist>());
-                            foreach(Gesture gesture in gestures)
+                            foreach (Gesture gesture in gestures)
                             {
                                 // change gesture animations here!
                                 Utilities.Log(gesture.trickName);
