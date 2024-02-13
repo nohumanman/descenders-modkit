@@ -207,6 +207,7 @@ class Webserver():
         ]
         self.tokens_and_ids = {}
         self.add_routes()
+        self.register_error_handlers()
 
     def add_routes(self):
         """ Adds the routes to the flask app """
@@ -217,6 +218,18 @@ class Webserver():
                 view_func=route.view_func,
                 methods=route.methods
             )
+
+    def register_error_handlers(self):
+        """ Register error handlers for 404 and 500 errors """
+        # Custom 404 error handler
+        @self.webserver_app.errorhandler(404)
+        def page_not_found(e):
+            return render_template('404.html'), 404
+
+        # Custom 500 error handler
+        @self.webserver_app.errorhandler(500)
+        def internal_server_error(e):
+            return render_template('500.html'), 500
 
     async def spectate(self):
         """ Function to spectate a player """

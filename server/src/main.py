@@ -14,7 +14,7 @@ def setup_logging(log_file):
     # Prevent logging from outputting to stdout
     logging.basicConfig(
         filename=log_file,
-        level=logging.ERROR,
+        level=logging.WARNING,
         format=(
             '%(asctime)s - %(name)s\t - %(levelname)s\t'
             ' - %(filename)s\t - Line %(lineno)d:\t %(message)s'
