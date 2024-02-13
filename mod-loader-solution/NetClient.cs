@@ -26,7 +26,7 @@ namespace ModLoaderSolution
 		public string ip = "18.132.81.187";
 		static string version = "0.2.52";
 		static string patchNotes = "- Greatly improved server connection quality; failed runs should be far less common.\n- Slo-mo disabled by default\n- Respawns globally do not count as invalidations\n\nYours,\n- nohumanman"; // that which has changed since the last version.
-		public static bool developerMode = true;
+		public static bool developerMode = false;
 		void Awake(){
 			if (developerMode)
 				ip = "localhost";
@@ -392,6 +392,12 @@ namespace ModLoaderSolution
 			if (message.StartsWith("FREEZE_PLAYER"))
             {
 				Utilities.instance.FreezePlayer();
+			}
+			if (message.StartsWith("POPUP"))
+			{
+				string title = message.Split('|')[1];
+				string body = message.Split('|')[2];
+				Utilities.instance.PopUp(title, body);
 			}
 			if (message.StartsWith("TOGGLE_CONTROL"))
             {
