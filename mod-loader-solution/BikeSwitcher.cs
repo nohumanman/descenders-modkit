@@ -15,6 +15,10 @@ namespace ModLoaderSolution
             Utilities.Log("id " + id + " switching to bike '" + bike + "'");
             StartCoroutine(_ToBike(bike, id));
         }
+	void d(){
+	    string x = "";
+            x = x;
+ 	}
         IEnumerator _ToBike(string bike, string id)
         {
             GameObject PlayerObject = Utilities.GetPlayerFromId(id);
