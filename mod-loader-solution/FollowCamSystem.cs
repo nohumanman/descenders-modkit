@@ -126,11 +126,23 @@ namespace ModLoaderSolution
             if (!bother)
                 return;
 
-            // if no subject, subject is us.
-            if (subject == null)
-                return;
-
             Utilities.instance.DisableControlledCam();
+
+            // if no subject, pan slightly #117
+            if (subject == null)
+            {
+                foreach (Camera cam in FindObjectsOfType<Camera>())
+                {
+                    Vector3 currentRot = cam.transform.rotation.eulerAngles;
+
+                    if (currentRot.y > 350)
+                        currentRot.y = 0;
+                    currentRot.y += 20;
+                    Quaternion targetRotation = Quaternion.Euler(currentRot);
+                    cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, targetRotation, 0.2f * Time.deltaTime);
+                }
+                return;
+            }
 
             Cam bestCam = GetBestCamera();
             if (bestCam == null)
