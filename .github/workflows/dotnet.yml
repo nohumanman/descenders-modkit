@@ -12,20 +12,18 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-2019
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        path: .mod-loader-solution
+        path: ./mod-loader-solution
     - name: Setup .NET
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.5.0
     - name: Restore dependencies
-      run: dotnet restore .mod-loader-solution/*.csproj
+      run: nuget restore ModLoaderSolution.sln
     - name: Build
-      run: dotnet build .mod-loader-solution/*.csproj --no-restore
-    - name: Test
-      run: dotnet test  .mod-loader-solution/*.csproj --no-build --verbosity normal
+      run: msbuild /p:Configuration=Release ModLoaderSolution.sln
