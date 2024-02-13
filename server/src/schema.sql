@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS "TrailMedal" (
 CREATE TABLE IF NOT EXISTS "TrailIcon" (
         "trail_name"    TEXT UNIQUE,
         "trail_icon"    TEXT
-);
+);s
 CREATE TABLE IF NOT EXISTS "WorldInfo" (
         "world_name"    TEXT,
         "start_bike"    TEXT,
