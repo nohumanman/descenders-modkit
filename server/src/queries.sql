@@ -24,7 +24,7 @@ WHERE
         ORDER BY
             SplitTime.checkpoint_num DESC, SplitTime.checkpoint_time ASC
         LIMIT 1
-    )
+    )s
 GROUP BY
     SplitTime.checkpoint_num
 ORDER BY
