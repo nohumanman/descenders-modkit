@@ -319,16 +319,19 @@ class Webserver():
                 "Time.html",
                 steam_id=details[0],
                 steam_name=details[1],
+                avatar_src=details[2],
                 timestamp=details[3],
                 time_id=details[4],
-                total_time=details[5],
-                trail_name=details[6],
-                world_name=details[7],
-                ignore=details[8],
-                bike_type=details[9],
-                starting_speed=details[10],
+                total_checkpoints=details[5],
+                total_time=details[6],
+                trail_name=details[7],
+                world_name=details[8],
+                ignore=details[9],
+                bike_type=details[10],
+                starting_speed=details[11],
                 version=details[12],
-                verified=details[13]
+                verified=details[14],
+                timestamp_to_time=datetime.fromtimestamp(details[3])
             )
         except IndexError:
             return "No time found!"
