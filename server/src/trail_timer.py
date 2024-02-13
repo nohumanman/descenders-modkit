@@ -229,7 +229,7 @@ class TrailTimer():
             )
         # send the time to the discord server if it is a new fastest time
         global_fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
-        if client_time < global_fastest[len(global_fastest)-1]:
+        if client_time < global_fastest[len(global_fastest)-1] and self.timer_info.auto_verify and can_end[0]:
             await self.__new_fastest_time(secs_str)
         # send the time to the discord server if it is a new fastest time
         our_fastest = await self.network_player.dbms.get_personal_fastest_split_times(
