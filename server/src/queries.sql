@@ -96,7 +96,7 @@ FROM Player
 WHERE steam_id = :steam_id
 
 
--- name: get_authenitcated_discord_ids^
+-- name: get_authenticated_discord_ids
 -- Get the valid Discord IDs.
 SELECT
     discord_id
