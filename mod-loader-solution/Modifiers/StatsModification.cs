@@ -8,10 +8,6 @@ using ModLoaderSolution;
 
 namespace ModLoaderSolution
 {
-    struct StatStruct
-    {
-        public string Name;
-    }
     public enum StatType
     {
         Vehicle, Wheel

@@ -230,7 +230,7 @@ namespace ModLoaderSolution
                     // Utilities.Log("ModLoaderSolution | Found UserID " + id);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 // Utilities.Log("ModLoaderSolution | Could not read user file:");
                 // Utilities.Log(e);
@@ -292,14 +292,6 @@ namespace ModLoaderSolution
         {
             string currentMap = GetCurrentMap();
             return currentMap.Contains("-");
-
-            List<Mod> mods = GetAllMods();
-            foreach (Mod mod in mods)
-            {
-                if (mod.name + "-" + mod.modInfo.version == currentMap)
-                    return true;
-            }
-            return false;
         }
 
         public bool isBikePark()
@@ -778,6 +770,22 @@ namespace ModLoaderSolution
         {
             return 0;
         }
+        public void SetBike(int steam_id, int bike)
+        {
+            PlayerInfoImpact[] array = FindObjectsOfType<PlayerInfoImpact>();
+            PlayerCustomization[] array2 = FindObjectsOfType<PlayerCustomization>();
+            GameData gameData = FindObjectOfType<GameData>();
+            BikeType[] array3 = (BikeType[])gameData.GetType().GetField("bx}n\u0080PQ").GetValue(gameData);
+            foreach (PlayerInfoImpact playerInfoImpact in array)
+            {
+                Debug.Log(steam_id);
+                playerInfoImpact.GetType().GetField("dzQf\u0082nw").SetValue(playerInfoImpact, array3[bike]);
+            }
+            foreach (PlayerCustomization playerCustomization in array2)
+            {
+                playerCustomization.RefreshBikeMesh();
+            }
+        }
         public void SetBike(int bike)
         {
             UI_BikeSelection ui_BikeSelection = new UI_BikeSelection();
@@ -785,29 +793,8 @@ namespace ModLoaderSolution
             {
                 ui_BikeSelection.HoverButtonBike(bike);
             }
-            catch (Exception)
-            {
-            }
+            catch (Exception){}
             Destroy(ui_BikeSelection);
-            return;
-            try
-            {
-                PlayerInfoImpact[] array = FindObjectsOfType<PlayerInfoImpact>();
-                PlayerCustomization[] array2 = FindObjectsOfType<PlayerCustomization>();
-                GameData gameData = FindObjectOfType<GameData>();
-                BikeType[] array3 = (BikeType[])gameData.GetType().GetField("bx}n\u0080PQ").GetValue(gameData);
-                foreach (PlayerInfoImpact playerInfoImpact in array)
-                {
-                    playerInfoImpact.GetType().GetField("dzQf\u0082nw").SetValue(playerInfoImpact, array3[bike]);
-                }
-                foreach (PlayerCustomization playerCustomization in array2)
-                {
-                    playerCustomization.RefreshBikeMesh();
-                }
-            }
-            catch (Exception)
-            {
-            }
         }
 
         public string GetBikeName(int bike)
