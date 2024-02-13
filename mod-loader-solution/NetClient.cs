@@ -24,8 +24,8 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
-		static string version = "0.2.52";
-		static string patchNotes = "- Greatly improved server connection quality; failed runs should be far less common.\n- Slo-mo disabled by default\n- Respawns globally do not count as invalidations\n\nYours,\n- nohumanman"; // that which has changed since the last version.
+		static string version = "0.2.54";
+		static string patchNotes = "- Improved replay compatibility with bike switcher\n- Explanation added for how to verify runs when run isn't verified.\n- Improve support for network bike switching\n\nYours,\n- nohumanman"; // that which has changed since the last version.
 		public static bool developerMode = false;
 		void Awake(){
 			if (developerMode)
