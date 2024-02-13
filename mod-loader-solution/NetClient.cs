@@ -72,7 +72,7 @@ namespace ModLoaderSolution
 				{
 					lastVersion = File.ReadAllText(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Low\\RageSquid\\Descenders\\last_version.txt");
 				}
-				catch(Exception e){
+				catch(Exception){
 				}
 				if (lastVersion != NetClient.version)
                 {
@@ -81,7 +81,7 @@ namespace ModLoaderSolution
 						Utilities.instance.PopUp("Modkit patch notes " + NetClient.version, NetClient.patchNotes);
 						poppedUp = true;
 					}
-					catch (Exception e) { }
+					catch (Exception) { }
 				}
 				File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Low\\RageSquid\\Descenders\\last_version.txt", NetClient.version);
 			}
@@ -110,7 +110,7 @@ namespace ModLoaderSolution
 						MessageRecieved(message);
 						messages.Remove(message);
 					}
-					catch (Exception ex){ }
+					catch (Exception){ }
 				}
 				messages.Clear();
 			}

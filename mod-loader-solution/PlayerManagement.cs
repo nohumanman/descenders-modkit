@@ -13,7 +13,6 @@ namespace ModLoaderSolution
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
 		public float speed;
-		bool hasLoadedPlayer = false;
 		bool wasBailed = false;
 		public static PlayerManagement Instance { get; private set; }
 		void Awake(){
@@ -83,7 +82,6 @@ namespace ModLoaderSolution
 			if (PlayerHuman != null){
 				//if (!hasLoadedPlayer)
 				//	GetComponent<BikeSwitcher>().ToEnduro();
-				hasLoadedPlayer = true;
 				if (Vector3.Distance(
 						PlayerHuman.transform.position,
 						PreviousPos
