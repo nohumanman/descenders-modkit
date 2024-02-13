@@ -167,10 +167,31 @@ namespace ModLoaderSolution
             }
             return networkedPlayers;
         }
+        public void RefreshBikeOnReplay()
+        {
+            return;
+            // set replay to current bike type
+            // VehicleReplay.replay.bikeType = 0/1/2
+            string replayObfuscatedName = "Ym}\u0084upr";
+            object replayClassObject = typeof(VehicleReplay)
+                .GetField(replayObfuscatedName)
+                .GetValue(GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
+            Debug.Log("PRIORITY MESSAGE :" + replayClassObject.GetType().GetField("dzQf\u0082nw").GetValue(replayClassObject));
+            Debug.Log("writing " + GetBike());
+            replayClassObject.GetType().GetField("dzQf\u0082nw").SetValue(replayClassObject, GetBike());// GetBike());
+            Debug.Log("PRIORITY MESSAGE2:" + replayClassObject.GetType().GetField("dzQf\u0082nw").GetValue(replayClassObject));
+            //VehicleReplay
+            /*typeof(VehicleReplay)
+                .GetField(replayObfuscatedName)
+                .SetValue(GameObject.Find("Player_Human").GetComponent<VehicleReplay>(), replayClassObject);*/
+            
+        }
         public void RestartReplay()
         {
             Utilities.Log("RestartReplay()");
+            RefreshBikeOnReplay();
             GameObject.Find("Player_Human").GetComponent<VehicleReplay>().SendMessage("StartRecord");
+            RefreshBikeOnReplay();
         }
         public void SaveReplayToFile(string path)
         {
@@ -768,6 +789,11 @@ namespace ModLoaderSolution
         }
         public int GetBike()
         {
+            string oldBike = FindObjectOfType<BikeSwitcher>().oldBike;
+            if (oldBike == "downhill")
+                return 1;
+            else if (oldBike == "hardtail")
+                return 2;
             return 0;
         }
         public void SetBike(int steam_id, int bike)
