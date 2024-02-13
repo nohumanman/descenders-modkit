@@ -822,7 +822,19 @@ namespace ModLoaderSolution
             catch (Exception){}
             Destroy(ui_BikeSelection);
         }
+        public void SetBike(PlayerInfoImpact playerInfoImpact, int bike)
+        {
+            // bikeType = GameData.SP.bikeTypes[num];
+            //dzQf\u0082nw = GameData.[~qsVD|.bx}n\u0080PQ[cVpqe^E];
 
+            // playerInfoImpact.bikeType = FindObjectOfType<GameData>().bikeTypes[bike];
+            BikeType[] bikeTypes = (BikeType[])typeof(GameData).GetField("bx}n\u0080PQ").GetValue(FindObjectOfType<GameData>());
+            typeof(PlayerInfoImpact).GetField("dzQf\u0082nw").SetValue(playerInfoImpact, bikeTypes[bike]);
+
+            // playerCustomization = hUP\u007fi\u0084d
+            PlayerCustomization playerCustomization = (PlayerCustomization)typeof(PlayerInfoImpact).GetField("hUP\u007fi\u0084d").GetValue(playerInfoImpact);
+            playerCustomization.RefreshBikeMesh();
+        }
         public string GetBikeName(int bike)
         {
             string name = "Enduro";
