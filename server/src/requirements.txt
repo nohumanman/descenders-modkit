@@ -34,4 +34,4 @@ srcomapi==0.3.3
 urllib3==2.0.7
 Werkzeug==3.0.1
 yarl==1.9.2
-aiosql==0.7.0
+aiosql==9.0
