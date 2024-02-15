@@ -3,6 +3,8 @@ from unittest.mock import AsyncMock
 from src.trail_timer import TrailTimer
 import asyncio
 
+# pylint: disable=missing-function-docstring, no-member, attribute-defined-outside-init, line-too-long, protected-access
+
 class TestTrailTimer(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         self.network_player = AsyncMock()
@@ -33,6 +35,17 @@ class TestTrailTimer(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(self.timer.timer_info.auto_verify)
         self.timer.network_player.send.assert_called_with("SPLIT_TIME|Time requires review")
 
+    async def test_checkpoint(self):
+        self.timer.timer_info.started = True
+        self.timer._TrailTimer__checkpoints = ["checkpoint1", "checkpoint2"]
+        self.timer.timer_info.times = [1.0, 2.0]
+        self.timer.network_player.send = AsyncMock()
+        # set async functions that return [1, 2, 3, 4] and [1, 2, 4, 5]
+        self.timer.network_player.dbms.get_fastest_split_times = AsyncMock(return_value=[1, 2, 3, 4])
+        self.timer.network_player.dbms.get_personal_fastest_split_times = AsyncMock(return_value=[2, 3, 4, 5])
+        await self.timer.checkpoint(5, "checkpoint3")
+        self.assertEqual(len(self.timer._TrailTimer__checkpoints), 3)
+        self.timer.network_player.send.assert_called_with("SPLIT_TIME|<color=red>+2.0</color> WR  <color=red>+1.0</color> PB")
 
     async def test_reset_boundaries(self):
         self.timer._TrailTimer__boundaries = ["boundary1", "boundary2"]
