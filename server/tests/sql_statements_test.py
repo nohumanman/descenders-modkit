@@ -84,7 +84,11 @@ class TestTrailTimer(unittest.TestCase):
         self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (3, 1, 125)")
         self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (3, 2, 128)")
         self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (3, 3, 140)")
-        leaderboard = list(self.queries.get_leaderboard(self.conn, world_name="world", trail_name="trail", bike_type="bike", version="version", lim=10))
+        leaderboard = list(self.queries.get_leaderboard(
+            self.conn, world_name="world",
+            trail_name="trail", bike_type="bike",
+            version="version", lim=10
+        ))
         # returns starting_speed, steam_name, bike_type, version, verified, time_id, min_checkpoint_time
         self.assertEqual(leaderboard, [(1, 'Player123', 'bike', 'version', 1, 1, 130), (1, 'Player123', 'bike', 'version', 1, 2, 140)])
 

@@ -171,13 +171,13 @@ class DBMS():
             return [
                 {
                     "place": i + 1,
-                    "time": time[3],
+                    "starting_speed": time[0],
                     "name": time[1],
                     "bike": time[2],
-                    "starting_speed": time[0],
-                    "version": time[4],
-                    "verified": str(time[5]),
-                    "time_id": str(time[6])
+                    "version": time[3],
+                    "verified": str(time[4]),
+                    "time_id": str(time[5]),
+                    "time": time[6]
                 } for i, time in enumerate(
                     await self.queries.get_leaderboard(
                         db, trail_name=trail_name, lim=num
