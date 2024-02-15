@@ -167,13 +167,13 @@ INNER JOIN
         WHERE LOWER(Time.trail_name) = LOWER(
             :trail_name
         )
-    ) ON SplitTime.time_id = Time.time_id
+    ) AS max_checkpoint_table ON SplitTime.time_id = Time.time_id
 INNER JOIN Player
     ON Player.steam_id = Time.steam_id
 WHERE
     LOWER(Time.trail_name) = LOWER(:trail_name)
     AND
-    SplitTime.checkpoint_num = max_checkpoint
+    SplitTime.checkpoint_num = max_checkpoint_table.max_checkpoint
     AND
     Time.ignored = 0 AND Time.verified = 1
 GROUP BY
