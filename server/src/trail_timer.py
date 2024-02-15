@@ -89,66 +89,64 @@ class TrailTimer():
             self.timer_info.times = []
 
     async def checkpoint(self, client_time: float, checkpoint_hash: str):
-        """ Log a checkpoint. """
+        """Log a checkpoint."""
+        steam_id = self.network_player.info.steam_id
+        steam_name = self.network_player.info.steam_name
+
         logging.info(
-            "%s '%s'\t- entered checkpoint with client time %s", self.network_player.info.steam_id,
-            self.network_player.info.steam_name, client_time
+            "%s '%s'\t- entered checkpoint with client time %s",
+            steam_id, steam_name, client_time
         )
-        # if the timer has started and the checkpoint is not in the list (i.e. it is a new checkpoint)
+
         if self.timer_info.started and checkpoint_hash not in self.__checkpoints:
-            self.__checkpoints.append(checkpoint_hash) # add the checkpoint to the list
+            self.__checkpoints.append(checkpoint_hash)
             self.timer_info.times.append(float(client_time))
-            fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
-            try:
-                time_diff = (
-                    fastest[len(self.timer_info.times)-1]
-                    - float(client_time)
-                )
-            except IndexError:
-                time_diff = 0
-            mess = ""
-            if time_diff > 0:
-                mess = (
-                    "<color=lime>-"
-                    + str(round(abs(time_diff), 3))
-                    + "</color>"
-                )
-            elif time_diff < 0:
-                mess = (
-                    "<color=red>+"
-                    + str(round(abs(time_diff), 3))
-                    + "</color>"
-                )
-            if time_diff != 0:
-                mess += " WR"
-            fastest = await self.network_player.dbms.get_personal_fastest_split_times(
-                self.trail_name,
-                self.network_player.info.steam_id
+
+            wr = await self.network_player.dbms.get_fastest_split_times(
+                self.trail_name
             )
-            try:
-                time_diff_local = (
-                    fastest[len(self.timer_info.times)-1]
-                    - float(client_time)
-                )
-            except IndexError:
-                time_diff_local = 0
-            if time_diff_local > 0:
-                mess += (
-                    "  <color=lime>-"
-                    + str(round(abs(time_diff_local), 3))
-                    + "</color>"
-                )
-            elif time_diff_local < 0:
-                mess += (
-                    "  <color=red>+"
-                    + str(round(abs(time_diff_local), 3))
-                    + "</color>"
-                )
-            if time_diff_local != 0:
-                mess += " PB"
-            if mess == "":
-                mess = self.secs_to_str(float(client_time))
+            pb = await self.network_player.dbms.get_personal_fastest_split_times(
+                self.trail_name, self.network_player.info.steam_id
+            )
+
+            index = len(self.timer_info.times) - 1
+            time_diff = (
+                wr[index] - float(client_time) if index < len(wr)
+                else 0
+            )
+            time_diff_local = (
+                pb[index] - float(client_time) if index < len(pb)
+                else 0
+            )
+
+            mess = self.calculate_split_message(time_diff, time_diff_local, client_time)
             await self.network_player.send(f"SPLIT_TIME|{mess}")
+
+    def calculate_split_message(self, time_diff: float, time_diff_local: float, client_time: float) -> str:
+        """Calculate split time message."""
+        mess = ""
+
+        if time_diff > 0:
+            mess += f"<color=lime>-{round(abs(time_diff), 3)}</color>"
+        elif time_diff < 0:
+            mess += f"<color=red>+{round(abs(time_diff), 3)}</color>"
+
+        if time_diff != 0:
+            mess += " WR"
+
+        if time_diff_local > 0:
+            mess += f"  <color=lime>-{round(abs(time_diff_local), 3)}</color>"
+        elif time_diff_local < 0:
+            mess += f"  <color=red>+{round(abs(time_diff_local), 3)}</color>"
+
+        if time_diff_local != 0:
+            mess += " PB"
+
+        if not mess:
+            mess = self.secs_to_str(float(client_time))
+
+        return mess
+
 
     async def invalidate_timer(self, reason: str, always=False):
         """ Invalidate the timer. """

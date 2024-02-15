@@ -247,3 +247,43 @@ VALUES (
     :checkpoint_num,
     :checkpoint_time
 );
+
+-- name: get_player_medals
+-- Get the medals for a given trail
+SELECT
+    CASE WHEN MIN(SplitTime.checkpoint_time) <= (
+        SELECT time FROM TrailMedal
+        WHERE trail_name = LOWER(:trail_name) AND medal_type = 'rainbow'
+    ) THEN TRUE ELSE FALSE END AS rainbow,
+    CASE WHEN MIN(SplitTime.checkpoint_time) <= (
+        SELECT time FROM TrailMedal
+        WHERE trail_name = LOWER(:trail_name) AND medal_type = 'gold'
+    ) THEN TRUE ELSE FALSE END AS gold,
+    CASE WHEN MIN(SplitTime.checkpoint_time) <= (
+        SELECT time FROM TrailMedal
+        WHERE trail_name = LOWER(:trail_name) AND medal_type = 'silver'
+    ) THEN TRUE ELSE FALSE END AS silver,
+    CASE WHEN MIN(SplitTime.checkpoint_time) <= (
+        SELECT time FROM TrailMedal
+        WHERE trail_name = LOWER(:trail_name) AND medal_type = 'bronze'
+    ) THEN TRUE ELSE FALSE END AS bronze
+FROM
+    Time
+INNER JOIN SplitTime ON SplitTime.time_id = Time.time_id
+INNER JOIN (
+    SELECT MAX(SplitTime.checkpoint_num) AS max_checkpoint
+    FROM SplitTime
+    INNER JOIN Time ON SplitTime.time_id = Time.time_id
+    WHERE LOWER(Time.trail_name) = LOWER(:trail_name)
+) AS max_checkpoints ON SplitTime.time_id = Time.time_id
+INNER JOIN Player ON Player.steam_id = Time.steam_id
+WHERE
+    LOWER(Time.trail_name) = LOWER(:trail_name)
+    AND SplitTime.checkpoint_num = max_checkpoints.max_checkpoint
+    AND (Time.ignored = 0 AND Time.verified = 1)
+    AND Player.steam_id = :steam_id
+GROUP BY
+    Time.trail_name,
+    Player.steam_id
+ORDER BY
+    MIN(SplitTime.checkpoint_time) ASC;
