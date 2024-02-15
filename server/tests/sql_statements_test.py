@@ -3,7 +3,7 @@ import unittest
 import sqlite3
 import aiosql
 
-# pylint: disable=missing-function-docstring, no-member
+# pylint: disable=missing-function-docstring, no-member, attribute-defined-outside-init, line-too-long
 
 class TestTrailTimer(unittest.TestCase):
     """ Used to test the trail timer class """
@@ -13,7 +13,7 @@ class TestTrailTimer(unittest.TestCase):
         self.conn = sqlite3.connect(':memory:')
         self.cur = self.conn.cursor()
         # Read the contents of the schema file
-        with open('server/src/schema.sql', 'r') as schema_file:
+        with open('server/src/schema.sql', 'r', encoding='utf-8') as schema_file:
             schema_sql = schema_file.read()
         # Execute the schema SQL commands
         self.cur.executescript(schema_sql)
