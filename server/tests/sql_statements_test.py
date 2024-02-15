@@ -33,13 +33,6 @@ class TestTrailTimer(unittest.TestCase):
         with self.assertRaises(sqlite3.IntegrityError):
             self.cur.execute("INSERT INTO Player (steam_id, steam_name, avatar_src) VALUES ('123', 'Player123', 'avatar')")
 
-    def test_update_player(self):
-        self.test_setup()
-        self.cur.execute("INSERT INTO Player (steam_id, steam_name, avatar_src) VALUES ('76561198282799591', 'Player123', 'avatar')")
-        self.queries.update_player(self.conn, steam_id="76561198282799591", steam_name="Player123", avatar_src="avatar")
-        self.cur.execute("SELECT * FROM Player WHERE steam_id = '76561198282799591'")
-        self.assertEqual(self.cur.fetchone(), ('76561198282799591', 'Player123', 'avatar'))
-
     def test_get_authenticated_discord_ids(self):
         self.test_setup()
         self.cur.execute("INSERT INTO User (discord_id, valid, steam_id, discord_name, email) VALUES ('123', 'TRUE', '76561198282799591', 'Player123', 'email')")
@@ -59,13 +52,18 @@ class TestTrailTimer(unittest.TestCase):
         self.test_setup()
         self.cur.execute("INSERT INTO Player (steam_id, steam_name, avatar_src) VALUES ('76561198282799591', 'Player123', 'avatar')")
         self.queries.update_player(self.conn, steam_id="76561198282799591", steam_name="differentplayername", avatar_src="differnetavatar")
+        self.conn.commit()  # Commit changes to the database
         self.cur.execute("SELECT * FROM Player WHERE steam_id = '76561198282799591'")
-        self.assertEqual(self.cur.fetchone(), ('76561198282799591', 'differentplayername', 'differnetavatar'))
+        updated_player = self.cur.fetchone()
+        self.assertEqual(
+            updated_player,
+            ('76561198282799591', 'differentplayername', 'differnetavatar')
+        )
 
     def test_get_player_name_from_id(self):
         self.test_setup()
-        self.cur.execute("INSERT INTO Player (steam_id, steam_name, avatar_src) VALUES ('76561198282799591', 'Player123', 'avatar')")
-        steam_name = self.queries.player_name_from_id(self.conn, steam_id="76561198282799591")
+        self.cur.execute("INSERT INTO Player (steam_id, steam_name, avatar_src) VALUES ('76561198282722222', 'Player123', 'avatar')")
+        steam_name = self.queries.player_name_from_id(self.conn, steam_id="76561198282722222")
         self.assertEqual(steam_name[0], 'Player123')
 
 if __name__ == '__main__':
