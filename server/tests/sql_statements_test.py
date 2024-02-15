@@ -128,6 +128,30 @@ class TestTrailTimer(unittest.TestCase):
         ))
         self.assertEqual(splits, [(1, 123), (2, 125), (3, 130)])
 
+    def test_get_wr_split_times(self):
+        self.test_setup()
+        # add our player
+        self.cur.execute("INSERT INTO Player (steam_id, steam_name, avatar_src) VALUES ('76561198282799591', 'Player123', 'avatar')")
+        # add the time
+        self.cur.execute("INSERT INTO Time (steam_id, time_id, timestamp, world_name, trail_name, bike_type, starting_speed, version, verified, ignored) VALUES('76561198282799591', 1, 123, 'world', 'trail', 'bike', 1, 'version', 1, 0)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (1, 1, 123)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (1, 2, 125)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (1, 3, 128)")
+        # add another time
+        self.cur.execute("INSERT INTO Time (steam_id, time_id, timestamp, world_name, trail_name, bike_type, starting_speed, version, verified, ignored) VALUES('76561198282799591', 2, 123, 'world', 'trail', 'bike', 1, 'version', 1, 0)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (2, 1, 123)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (2, 2, 125)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (2, 3, 130)")
+        # add another player
+        self.cur.execute("INSERT INTO Player (steam_id, steam_name, avatar_src) VALUES ('76561198282799592', 'Player123', 'avatar')")
+        # add the time
+        self.cur.execute("INSERT INTO Time (steam_id, time_id, timestamp, world_name, trail_name, bike_type, starting_speed, version, verified, ignored) VALUES('76561198282799592', 3, 123, 'world', 'trail', 'bike', 1, 'version', 1, 0)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (3, 1, 123)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (3, 2, 125)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (3, 3, 130)")
+        # get the wr split times
+        splits = list(self.queries.get_wr_split_times(self.conn, trail_name="trail"))
+        self.assertEqual(splits, [(1, 123), (2, 125), (3, 128)])
 
 if __name__ == '__main__':
     unittest.main()
