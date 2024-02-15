@@ -16,10 +16,10 @@ def daterange(start_date: datetime, end_date: datetime):
 
 class DBMS():
     """ A simple Database Management System (DBMS) class for managing data. """
-    def __init__(self, db_file: str = "modkit.db"):
+    def __init__(self, db_file: str = "modkit.db", queries_file: str = "queries.sql"):
         self.db_file = script_path + f"/{db_file}"
         self.wait = False
-        self.queries = aiosql.from_path("queries.sql", "aiosqlite")
+        self.queries = aiosql.from_path(queries_file, "aiosqlite")
 
     async def execute_sql(self, statement: str, write=False):
         """ Execute an SQL statement on a database """

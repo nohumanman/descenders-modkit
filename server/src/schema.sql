@@ -1,4 +1,3 @@
-CREATE TABLE sqlite_sequence(name,seq);
 CREATE TABLE IF NOT EXISTS "User" (
         "discord_id"    INTEGER UNIQUE,
         "valid" TEXT,

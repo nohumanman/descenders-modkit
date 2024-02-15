@@ -42,5 +42,4 @@ jobs:
         sqlfluff lint server/src/queries.sql --config .sqlfluff --exclude-rules CP02,AM04 --dialect sqlite
     - name: Test with unittest
       run: |
-        cd server
         pytest
