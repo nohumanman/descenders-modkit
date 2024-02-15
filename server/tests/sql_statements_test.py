@@ -66,5 +66,29 @@ class TestTrailTimer(unittest.TestCase):
         steam_name = self.queries.player_name_from_id(self.conn, steam_id="76561198282722222")
         self.assertEqual(steam_name[0], 'Player123')
 
+    def test_get_leaderboard(self):
+        self.test_setup()
+        self.cur.execute("INSERT INTO Player (steam_id, steam_name, avatar_src) VALUES ('76561198282799591', 'Player123', 'avatar')")
+        self.cur.execute("INSERT INTO Time (steam_id, time_id, timestamp, world_name, trail_name, bike_type, starting_speed, version, verified, ignored) VALUES('76561198282799591', 1, 123, 'world', 'trail', 'bike', 1, 'version', 1, 0)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (1, 1, 123)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (1, 2, 125)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (1, 3, 130)")
+        self.cur.execute("INSERT INTO Player (steam_id, steam_name, avatar_src) VALUES ('76561198282799592', 'Player123', 'avatar')")
+        self.cur.execute("INSERT INTO Time (steam_id, time_id, timestamp, world_name, trail_name, bike_type, starting_speed, version, verified, ignored) VALUES('76561198282799592', 2, 150, 'world', 'trail', 'bike', 1, 'version', 1, 0)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (2, 1, 125)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (2, 2, 128)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (2, 3, 140)")
+        # add a time that is ignored
+        self.cur.execute("INSERT INTO Player (steam_id, steam_name, avatar_src) VALUES ('76561198282799593', 'Player123', 'avatar')")
+        self.cur.execute("INSERT INTO Time (steam_id, time_id, timestamp, world_name, trail_name, bike_type, starting_speed, version, verified, ignored) VALUES('76561198282799593', 3, 150, 'world', 'trail', 'bike', 1, 'version', 1, 1)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (3, 1, 125)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (3, 2, 128)")
+        self.cur.execute("INSERT INTO SplitTime (time_id, checkpoint_num, checkpoint_time) VALUES (3, 3, 140)")
+        leaderboard = list(self.queries.get_leaderboard(self.conn, world_name="world", trail_name="trail", bike_type="bike", version="version", lim=10))
+        # returns starting_speed, steam_name, bike_type, version, verified, time_id, min_checkpoint_time
+        self.assertEqual(leaderboard, [(1, 'Player123', 'bike', 'version', 1, 1, 130), (1, 'Player123', 'bike', 'version', 1, 2, 140)])
+
+    
+
 if __name__ == '__main__':
     unittest.main()

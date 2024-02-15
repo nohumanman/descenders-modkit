@@ -173,7 +173,7 @@ INNER JOIN Player
 WHERE
     LOWER(Time.trail_name) = LOWER(:trail_name)
     AND
-    SplitTime.checkpoint_num = SplitTime.max_checkpoint
+    SplitTime.checkpoint_num = max_checkpoint
     AND
     Time.ignored = 0 AND Time.verified = 1
 GROUP BY
