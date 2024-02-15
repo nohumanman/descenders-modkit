@@ -278,8 +278,10 @@ class DBMS():
         """ Get the medals for a given trail. """
         async with aiosqlite.connect(self.db_file) as db:
             # pylint: disable=no-member
-            return await self.queries.get_player_medals(
+            medals = await self.queries.get_player_medals(
                 db,
                 steam_id=steam_id,
                 trail_name=trail_name
             )
+            if len(medals) == 0:
+                return (0, 0, 0, 0)
