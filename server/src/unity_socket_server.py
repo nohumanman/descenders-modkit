@@ -33,6 +33,8 @@ class UnitySocketServer():
 
     def delete_player(self, player: UnitySocket):
         """ Deletes the player from the socket server """
+        if player not in self.players:
+            return # player already deleted
         self.players.remove(player)
         player.writer.close()
         del player
