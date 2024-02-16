@@ -306,8 +306,12 @@ class UnitySocket():
             self.info.steam_name,
             await self.get_avatar_src()
         )
-        if self.info.steam_id in [player.info.steam_id for player in self.parent.players]:
-            self.parent.players.remove(self)
+        for player in self.parent.players:
+            if (
+                player.info.steam_id == self.info.steam_id
+                and self is not player
+            ):
+                self.parent.players.remove(player)
         if self.info.steam_id in ["OFFLINE", ""]:
             await self.ban("ILLEGAL")
         banned_names = ["descender", "goldberg", "skidrow", "player"]
