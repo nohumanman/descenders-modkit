@@ -39,7 +39,7 @@ class UnitySocketServer():
         player.writer.close()
         del player
 
-    def delete_timed_out_players(self):
+    async def delete_timed_out_players(self):
         """ Deletes players that have timed out """
         for player in self.players:
             await player.sanity_check()

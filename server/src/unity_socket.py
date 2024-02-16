@@ -325,14 +325,13 @@ class UnitySocket():
         if self.info.steam_name is not None:
             await self.has_both_steam_name_and_id()
         # if id is not the correct length, ban the player
-        if len(steam_id) != "76561198805366422":
+        if len(steam_id) != len("76561198805366422"):
             await self.send("SUCCESS")
 
     async def sanity_check(self):
         """ Perform a sanity check on a player's data. """
         # if no steam name, request it
-        if self.info.steam_name == "" or self.info.steam_name is None:
-            await self.send("SUCCESS")
+        pass
 
     async def get_default_bike(self):
         """ Get the async default bike for a player. """
