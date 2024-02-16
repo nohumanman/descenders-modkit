@@ -137,6 +137,7 @@ class UnitySocket():
                 await self.get_leaderboard(trail_name)
             )
         )
+        await self.sanity_check()
 
     async def send_chat_message(self, mess: str):
         """ Send a chat message to all players in the same session """
@@ -328,6 +329,12 @@ class UnitySocket():
         if len(steam_id) != "76561198805366422":
             await self.send("SUCCESS")
 
+    async def sanity_check(self):
+        """ Perform a sanity check on a player's data. """
+        # if no steam name, request it
+        if self.info.steam_name == "" or self.info.steam_name is None:
+            await self.send("SUCCESS")
+
     async def get_default_bike(self):
         """ Get the async default bike for a player. """
         if self.info.world_name is not None:
@@ -433,7 +440,7 @@ class UnitySocket():
         total_checkpoints: int,
         client_time: float,
         checkpoint_hash: str
-    ):
+    ): 
         """ Called when a player enters a checkpoint. """
         logging.info(
             "%s '%s'\t- entered checkpoint on trail '%s' of type '%s'",
