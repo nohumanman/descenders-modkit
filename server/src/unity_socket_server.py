@@ -89,7 +89,7 @@ class UnitySocketServer():
         while True:
             try:
                 data = await asyncio.wait_for(reader.readline(), timeout=20)
-            except asyncio.TimeoutError:
+            except (asyncio.TimeoutError, ConnectionResetError):
                 logging.info("%s '%s' - asyncio timeout",
                              player.info.steam_id, player.info.steam_name)
                 self.delete_player(player)
