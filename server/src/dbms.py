@@ -63,7 +63,7 @@ class DBMS():
                 trail_name=trail_name,
                 steam_id=steam_id
             )
-        return [float(time[0]) for time in splits]
+        return [float(time[1]) for time in splits]
 
     async def get_fastest_split_times(self,
         trail_name
@@ -75,7 +75,7 @@ class DBMS():
                 conn,
                 trail_name=trail_name
             )
-        return [float(time[0]) for time in splits]
+        return [float(time[1]) for time in splits]
 
     async def get_valid_ids(self):
         """ Get the valid Discord IDs. """
@@ -193,7 +193,10 @@ class DBMS():
         """ Get the avatar for a given Steam ID. """
         async with aiosqlite.connect(self.db_file) as db:
             # pylint: disable=no-member
-            return (await self.queries.get_player_avatar(db, steam_id=steam_id))[0]
+            avatars = await self.queries.get_player_avatar(db, steam_id=steam_id)
+            if avatars is None:
+                return "https://www.gravatar.com/avatar/"
+            return avatars[0]
 
     async def discord_login(self, discord_id: str, discord_name: str, email: str, steam_id: int):
         """ Log in to Discord. """
@@ -283,5 +286,5 @@ class DBMS():
                 steam_id=steam_id,
                 trail_name=trail_name
             )
-            if len(medals) == 0:
+            if len(medals) == 0 or medals is None:
                 return (0, 0, 0, 0)
