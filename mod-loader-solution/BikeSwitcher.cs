@@ -9,13 +9,23 @@ namespace ModLoaderSolution
 	public class BikeSwitcher : MonoBehaviour
 	{
         public string oldBike;
-
+        public void Start(){
+            oldBike = GetBike();
+        }
         public void ToBike(string bike, string id)
         {
             Utilities.Log("id " + id + " switching to bike '" + bike + "'");
             if (Utilities.instance.isInReplayMode())
                 return;
             StartCoroutine(_ToBike(bike, id));
+        }
+        public string GetBike(){
+            int pref = FindObjectOfType<PrefsManager>().GetInt("PREFERREDBIKE");
+            if (pref == 1)
+                return "downhill";
+            else if (pref == 2)
+                return "hardtail";
+            return "enduro";
         }
         IEnumerator _ToBike(string bike, string id)
         {
