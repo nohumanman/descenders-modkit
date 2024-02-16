@@ -63,7 +63,7 @@ class DBMS():
                 trail_name=trail_name,
                 steam_id=steam_id
             )
-        return [float(time[0]) for time in splits]
+        return [float(time[1]) for time in splits]
 
     async def get_fastest_split_times(self,
         trail_name
@@ -75,7 +75,7 @@ class DBMS():
                 conn,
                 trail_name=trail_name
             )
-        return [float(time[0]) for time in splits]
+        return [float(time[1]) for time in splits]
 
     async def get_valid_ids(self):
         """ Get the valid Discord IDs. """
