@@ -27,6 +27,13 @@ class TestTrailTimer(unittest.TestCase):
         print(avatar_src)
         self.assertEqual(avatar_src[0], 'avatar')
 
+    def test_get_player_avatar_with_no_avatar(self):
+        """ Tests the started function """
+        self.test_setup()
+        avatar_src = self.queries.get_player_avatar(self.conn, steam_id="76561198282799591")
+        print(avatar_src)
+        self.assertEqual(avatar_src, None)
+
     def test_check_restraint(self):
         self.test_setup()
         # we want to test if the restraint is working
