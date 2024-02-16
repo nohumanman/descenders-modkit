@@ -288,3 +288,4 @@ class DBMS():
             )
             if len(medals) == 0 or medals is None:
                 return (0, 0, 0, 0)
+            return medals
