@@ -295,5 +295,7 @@ ORDER BY
 -- Get the average start time for a given trail
 SELECT AVG(starting_speed) AS value
 FROM Time
-WHERE trail_name = :trail_name
-and ignored = 0 and verified = 1;
+WHERE
+    trail_name = :trail_name
+    AND ignored = 0
+    AND verified = 1;
