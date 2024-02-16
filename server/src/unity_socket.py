@@ -306,31 +306,14 @@ class UnitySocket():
             self.info.steam_name,
             await self.get_avatar_src()
         )
-        #await self.dbms.submit_alias(self.info.steam_id, self.info.steam_name)
-        for player in self.parent.players:
-            if (
-                player.info.steam_id == self.info.steam_id
-                and self is not player
-            ):
-                logging.warning(
-                    "%s '%s'\t- duplicate steam id!",
-                    self.info.steam_id, self.info.steam_name
-                )
-                self.parent.players.remove(player)
-                del player
-        if self.info.steam_id == "OFFLINE" or self.info.steam_id == "":
-            await self.send("TOGGLE_GOD")
+        if self.info.steam_id in [player.info.steam_id for player in self.parent.players]:
+            self.parent.players.remove(self)
+        if self.info.steam_id in ["OFFLINE", ""]:
+            await self.ban("ILLEGAL")
         banned_names = ["descender", "goldberg", "skidrow", "player"]
         for banned_name in banned_names:
             if self.info.steam_name.lower() == banned_name:
                 await self.ban("ILLEGAL")
-        #ban_type = await self.dbms.get_ban_status(self.info.steam_id)
-        #if ban_type == "CLOSE":
-        #    await self.ban("CLOSE")
-        #elif ban_type == "CRASH":
-        #    await self.ban("CRASH")
-        #elif ban_type == "ILLEGAL":
-        #    await self.ban("ILLEGAL")
 
     async def set_steam_id(self, steam_id : str):
         """ Set the steam id of a player and invalidate timers if necessary """
@@ -495,14 +478,6 @@ class UnitySocket():
             if trail_name in self.trails:
                 trail.invalidate_time()
         self.trails = {}
-        await self.dbms.end_session(
-            self.info.steam_id,
-            self.info.time_started,
-            time.time(),
-            self.info.world_name
-        )
-        print("CLSOE CONNECTION")
-        #self.conn.close()
 
     async def update_concurrent_users(self):
         """ Update the discord bot's presence with the number of concurrent users. """
