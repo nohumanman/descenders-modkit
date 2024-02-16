@@ -290,10 +290,10 @@ class DBMS():
         """ Get the average starting time for a given trail. """
         async with aiosqlite.connect(self.db_file) as db:
             # pylint: disable=no-member
-            average = await self.queries.get_average_start_time(
+            average = (await self.queries.get_average_start_time(
                 db,
                 trail_name=trail_name
-            )[0]
+            ))[0]
             if average is None:
                 return 100_000
             return average
