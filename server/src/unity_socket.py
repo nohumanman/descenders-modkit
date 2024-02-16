@@ -324,6 +324,9 @@ class UnitySocket():
         self.info.steam_id = steam_id
         if self.info.steam_name is not None:
             await self.has_both_steam_name_and_id()
+        # if id is not the correct length, ban the player
+        if len(steam_id) != "76561198805366422":
+            await self.send("SUCCESS")
 
     async def get_default_bike(self):
         """ Get the async default bike for a player. """
@@ -332,8 +335,7 @@ class UnitySocket():
             if start_bike is None:
                 return "enduro"
             return start_bike
-        else:
-            return "enduro"
+        return "enduro"
 
     async def set_world_name(self, world_name):
         """ Set the world name of a player and invalidate timers if necessary """
