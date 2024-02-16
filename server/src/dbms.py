@@ -185,10 +185,6 @@ class DBMS():
                 )
             ]
 
-    async def max_start_time(self, trail_time: str) -> float:
-        """ Get the maximum starting time for a given trail. """
-        return 10
-
     async def get_avatar(self, steam_id):
         """ Get the avatar for a given Steam ID. """
         async with aiosqlite.connect(self.db_file) as db:
@@ -300,4 +296,4 @@ class DBMS():
             )[0]
             if average is None:
                 return 100_000
-            return average + 2
+            return average
