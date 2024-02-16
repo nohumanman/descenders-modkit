@@ -286,5 +286,5 @@ class DBMS():
                 steam_id=steam_id,
                 trail_name=trail_name
             )
-            if len(medals) == 0:
+            if len(medals) == 0 or medals is None:
                 return (0, 0, 0, 0)
