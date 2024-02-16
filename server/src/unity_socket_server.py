@@ -42,6 +42,7 @@ class UnitySocketServer():
     def delete_timed_out_players(self):
         """ Deletes players that have timed out """
         for player in self.players:
+            await player.sanity_check()
             if (time.time() - player.last_contact) > self.timeout:
                 logging.info("%s '%s' - contact timeout disconnect",
                              player.info.steam_id, player.info.steam_name)
@@ -78,7 +79,7 @@ class UnitySocketServer():
     async def create_client(self, reader: StreamReader, writer: StreamWriter):
         """ Creates a client from their socket and address """
         logging.info("create_client")
-        self.delete_timed_out_players()
+        await self.delete_timed_out_players()
         player = self.get_player_by_addr(writer.get_extra_info('peername'))
         if player is None:
             player = UnitySocket(writer.get_extra_info('peername'), self, reader, writer)

@@ -137,7 +137,6 @@ class UnitySocket():
                 await self.get_leaderboard(trail_name)
             )
         )
-        await self.sanity_check()
 
     async def send_chat_message(self, mess: str):
         """ Send a chat message to all players in the same session """
