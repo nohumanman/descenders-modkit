@@ -287,3 +287,13 @@ GROUP BY
     Player.steam_id
 ORDER BY
     MIN(SplitTime.checkpoint_time) ASC;
+
+
+
+
+-- name: get_average_start_time^
+-- Get the average start time for a given trail
+SELECT AVG(starting_speed) AS value
+FROM Time
+WHERE trail_name = :trail_name
+and ignored = 0 and verified = 1;
