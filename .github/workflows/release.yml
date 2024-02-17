@@ -45,6 +45,7 @@ jobs:
           path: ${{ github.workspace }}/static/ModLoaderSolution.bin
 
       - name: Push to nohumanman.com
+        run: |
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
           git add .
