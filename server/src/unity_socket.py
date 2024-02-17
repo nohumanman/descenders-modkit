@@ -487,7 +487,7 @@ class UnitySocket():
         await self.update_concurrent_users()
         for trail_name, trail in self.trails.items():
             if trail_name in self.trails:
-                trail.invalidate_time()
+                trail.invalidate_timer()
         self.trails = {}
 
     async def update_concurrent_users(self):
