@@ -31,16 +31,22 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: nohumanman.com
+          ref: 'main'
+          token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
           name: ModLoaderSolution
-          path: ${{ github.workspace }}/ModLoaderSolution.bin
+          path: ${{ github.workspace }}/static/ModLoaderSolution.bin
 
-      - name: Push to repository
-        uses: actions/upload-artifact@v2
-        with:
-          repository: nohumanman.com
-          token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
-          path: ${{ github.workspace }}/ModLoaderSolution.bin
-          name: static/ModLoaderSolution.bin
+      - name: Push to nohumanman.com
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          git add .
+          git commit -m "Update ModLoaderSolution"
+          git push origin master
