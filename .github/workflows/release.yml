@@ -34,7 +34,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          repository: nohumanman.com
+          repository: nohumanman/nohumanman.com
           ref: 'main'
           token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
