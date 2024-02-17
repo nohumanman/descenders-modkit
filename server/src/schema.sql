@@ -93,7 +93,7 @@ ORDER BY Time.timestamp DESC
 CREATE VIEW "TrailInfo" AS SELECT
         Time.trail_name,
         Time.world_name,
-        COUNT(Time.trail_name) as times_ridden,
+        COUNT(CASE WHEN Time.ignored = 0 AND Time.verified = 1 THEN Time.trail_name END) as times_ridden,
         AVG(Time.starting_speed) as average_start_speed,
         TrailIcon.trail_icon
 FROM Time
