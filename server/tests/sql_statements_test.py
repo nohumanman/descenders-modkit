@@ -204,5 +204,20 @@ class TestTrailTimer(unittest.TestCase):
         splits = list(self.queries.get_wr_split_times(self.conn, trail_name="trail"))
         self.assertEqual(splits, [(1, 123), (2, 125), (3, 128)])
 
+    def test_get_average_start_time(self):
+        self.test_setup()
+        trail_name = "Flyup 4x"
+        # insert a time
+        self.cur.execute("INSERT INTO Time VALUES('76561199021447014',-9221862019472422221,1669097164.452960968,'Flyup 4x','Flyup 4x','None',6.8090590000000004167,'0.2.10',1,0);")
+        self.conn.commit()
+        average = self.queries.get_average_start_time(self.conn, trail_name=trail_name)[0]
+        self.assertEqual(average, 6.8090590000000004167)
+        # add more times
+        self.cur.execute("INSERT INTO Time VALUES('76561199021447014',-9221862019472422222,1669097164.452960968,'Flyup 4x','Flyup 4x','None',6.8090590000000004167,'0.2.10',1,0);")
+        self.cur.execute("INSERT INTO Time VALUES('76561199021447014',-9221862019472422223,1669097164.452960968,'Flyup 4x','Flyup 4x','None',9.2090590000000004167,'0.2.10',1,0);")
+        self.cur.execute("INSERT INTO Time VALUES('76561199021447014',-9221862019472422224,1669097164.452960968,'Flyup 4x','Flyup 4x','None',2.3090590000000004167,'0.2.10',1,0);")
+        average = self.queries.get_average_start_time(self.conn, trail_name)[0]
+        self.assertEqual(average, 6.284059000000001)
+
 if __name__ == '__main__':
     unittest.main()

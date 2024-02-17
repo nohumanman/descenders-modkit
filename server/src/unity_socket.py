@@ -189,7 +189,7 @@ class UnitySocket():
         )
         for trail_name, trail in self.trails.items():
             trail.timer_info.starting_speed = starting_speed
-            if starting_speed > await self.dbms.max_start_time(trail_name):
+            if starting_speed > await self.dbms.get_average_start_time(trail_name)+2:
                 await trail.invalidate_timer(
                     "You went through the start too fast!"
                 )
