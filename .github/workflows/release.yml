@@ -53,4 +53,4 @@ jobs:
           git config user.email "<>"
           git add .
           git commit -m "Update ModLoaderSolution"
-          git push origin master
+          git push origin main
