@@ -25,7 +25,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ModLoaderSolution
-          path: ${{ github.workspace }}/ModLoaderSolution.bin
+          path: ${{ github.workspace }}\ModLoaderSolution.bin
 
   deploy:
     needs: build
