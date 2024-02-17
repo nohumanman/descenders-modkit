@@ -6,9 +6,6 @@ name: Release ModLoaderSolution
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
 jobs:
   build:
     runs-on: windows-2019
