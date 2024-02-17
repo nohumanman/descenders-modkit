@@ -36,7 +36,7 @@ jobs:
           token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
       - name: Delete existing ModLoaderSolution
-        run: rm ${{ github.workspace }}/static/ModLoaderSolution.bin
+        run: rm -r ${{ github.workspace }}/static/ModLoaderSolution.bin
 
       - name: Download artifact
         uses: actions/download-artifact@v2
