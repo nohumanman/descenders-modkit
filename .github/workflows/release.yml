@@ -42,10 +42,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: ModLoaderSolution
-          path: ${{ github.workspace }}/static/ModLoaderSolution.bin
+          path: ${{ github.workspace }}/static/ModLoaderSolutionFiles
 
       - name: Push to nohumanman.com
         run: |
+          mv ${{ github.workspace }}/static/ModLoaderSolutionFiles/ModLoaderSolution.bin ${{ github.workspace }}/static/ModLoaderSolution.bin
+          rm -r ${{ github.workspace }}/static/ModLoaderSolutionFiles/
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
           git add .
