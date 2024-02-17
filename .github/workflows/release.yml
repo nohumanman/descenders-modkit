@@ -6,7 +6,6 @@ name: Release ModLoaderSolution
 on:
   push:
     branches: [ "main" ]
-
 jobs:
   build:
     runs-on: windows-2019
@@ -18,7 +17,7 @@ jobs:
            cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
            $warnings = .\MSBuild.exe $Env:GITHUB_WORKSPACE\mod-loader-solution\ModLoaderSolution.sln /p:WarningsAsErrors=true /p:WarningLevel=4  /nologo /v:q
            if ($warnings -gt 0) { exit 1 }
-           mv $Env:GITHUB_WORKSPACE\mod-loader-solution\bin\Debug\ModLoaderSolution.dll .\ModLoaderSolution.bin
+           mv $Env:GITHUB_WORKSPACE\mod-loader-solution\bin\Debug\ModLoaderSolution.dll $Env:GITHUB_WORKSPACE\ModLoaderSolution.bin
       - name: Upload solution
         uses: actions/upload-artifact@v2
         with:
@@ -29,16 +28,26 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: nohumanman/nohumanman.com
+          ref: 'main'
+          token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+
+      - name: Delete existing ModLoaderSolution
+        run: rm ${{ github.workspace }}/static/ModLoaderSolution.bin
+
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
           name: ModLoaderSolution
-          path: ${{ github.workspace }}
+          path: ${{ github.workspace }}/static/ModLoaderSolution.bin
 
-      - name: Push to repository
-        uses: actions/upload-artifact@v2
-        with:
-          repository: nohumanman.com
-          token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
-          path: ${{ github.workspace }}/ModLoaderSolution.bin
-          name: static/ModLoaderSolution.bin
+      - name: Push to nohumanman.com
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          git add .
+          git commit -m "Update ModLoaderSolution"
+          git push origin main
