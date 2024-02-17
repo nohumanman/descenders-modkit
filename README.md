@@ -3,6 +3,7 @@
 # Descenders Modkit
 
 [![Python application][python-application-svg-url]][python-application-url]
+[![Release ModLoaderSolution](https://github.com/nohumanman/descenders-modkit/actions/workflows/release.yml/badge.svg)](https://github.com/nohumanman/descenders-modkit/actions/workflows/release.yml)
 [![License: GPL v3][gpg-license-svg-url]][gpg-license-url]
 
 [python-application-svg-url]: https://github.com/nohumanman/descenders-modkit/actions/workflows/python-app.yml/badge.svg 
