@@ -20,12 +20,12 @@ jobs:
            cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
            $warnings = .\MSBuild.exe $Env:GITHUB_WORKSPACE\mod-loader-solution\ModLoaderSolution.sln /p:WarningsAsErrors=true /p:WarningLevel=4  /nologo /v:q
            if ($warnings -gt 0) { exit 1 }
-           mv $Env:GITHUB_WORKSPACE\mod-loader-solution\bin\Debug\ModLoaderSolution.dll "C:\ModLoaderSolution.bin"
+           mv $Env:GITHUB_WORKSPACE\mod-loader-solution\bin\Debug\ModLoaderSolution.dll $Env:GITHUB_WORKSPACE\ModLoaderSolution.bin
       - name: Upload solution
         uses: actions/upload-artifact@v2
         with:
           name: ModLoaderSolution
-          path: "C:\ModLoaderSolution.bin"
+          path: ${{ github.workspace }}/ModLoaderSolution.bin
 
   deploy:
     needs: build
