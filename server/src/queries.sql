@@ -167,6 +167,8 @@ INNER JOIN
         WHERE LOWER(Time.trail_name) = LOWER(
             :trail_name
         )
+        AND Time.verified = 1
+        AND Time.ignored = 0
     ) AS max_checkpoint_table
     ON SplitTime.time_id = Time.time_id
 INNER JOIN Player
