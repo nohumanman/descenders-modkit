@@ -1,0 +1,33 @@
+# This workflow will build a .NET project and push it to release
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Release ModLoaderSolution
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Build Solution
+        run: |
+           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
+           $warnings = .\MSBuild.exe $Env:GITHUB_WORKSPACE\mod-loader-solution\ModLoaderSolution.sln /p:WarningsAsErrors=true /p:WarningLevel=4  /nologo /v:q
+           if ($warnings -gt 0) { exit 1 }
+           mv $Env:GITHUB_WORKSPACE\mod-loader-solution\bin\Debug\ModLoaderSolution.dll .
+      - name: Upload solution
+        uses: actions/checkout@v3
+        with:
+          repository: nohumanman.com
+          ref: 'master'
+          token:  ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+      - name: setup git config
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          # make changes
+          git push origin master
