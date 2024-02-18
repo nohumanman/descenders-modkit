@@ -47,14 +47,11 @@ jobs:
           name: ModLoaderSolution
           path: ${{ github.workspace }}/static/ModLoaderSolutionFiles
 
-      - name: Get build commit hash
+      - name: Push to nohumanman.com
         run: |
           url="https://api.github.com/repos/nohumanman/descenders-modkit/commits/main"
           response=$(curl -s -H "Accept: application/vnd.github.v3+json" $url)
           commit_hash=$(echo $response | jq -r '.sha')
-
-      - name: Push to nohumanman.com
-        run: |
           mv ${{ github.workspace }}/static/ModLoaderSolutionFiles/ModLoaderSolution.bin ${{ github.workspace }}/static/ModLoaderSolution.bin
           rm -r ${{ github.workspace }}/static/ModLoaderSolutionFiles/
           git config user.name "GitHub Actions Bot"
