@@ -35,6 +35,9 @@ jobs:
           ref: 'main'
           token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
 
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
       - name: Delete existing ModLoaderSolution
         run: rm -r ${{ github.workspace }}/static/ModLoaderSolution.bin
 
@@ -44,6 +47,12 @@ jobs:
           name: ModLoaderSolution
           path: ${{ github.workspace }}/static/ModLoaderSolutionFiles
 
+      - name: Get build commit hash
+        run: |
+          url="https://api.github.com/repos/nohumanman/descenders-modkit/commits/main"
+          response=$(curl -s -H "Accept: application/vnd.github.v3+json" $url)
+          commit_hash=$(echo $response | jq -r '.sha')
+
       - name: Push to nohumanman.com
         run: |
           mv ${{ github.workspace }}/static/ModLoaderSolutionFiles/ModLoaderSolution.bin ${{ github.workspace }}/static/ModLoaderSolution.bin
@@ -51,5 +60,5 @@ jobs:
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
           git add .
-          git commit -m "Update ModLoaderSolution"
+          git commit -m "Update ModLoaderSolution from $commit_hash"
           git push origin main
