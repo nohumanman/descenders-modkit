@@ -3,6 +3,7 @@ import threading
 import logging
 import asyncio
 import os
+from website_socket_server import WebsiteSocketServer
 from unity_socket_server import UnitySocketServer
 from discord_bot import DiscordBot
 from tokens import DISCORD_TOKEN
@@ -25,6 +26,8 @@ UNITY_SOCKET_IP = "0.0.0.0"
 UNITY_SOCKET_PORT = 65432
 WEBSITE_IP = "0.0.0.0"
 WEBSITE_PORT = 8080
+WEBSITE_SOCKET_IP = "0.0.0.0"
+WEBSITE_SOCKET_PORT = 65430
 
 # Set the working directory to the script path
 script_path = os.path.dirname(os.path.realpath(__file__))
@@ -34,6 +37,20 @@ _log_file = os.path.join(script_path, "modkit.log")
 setup_logging(_log_file)
 # - Database Management System -
 dbms_instance = DBMS()
+
+# - Website Socket Server -
+website_socket_server = WebsiteSocketServer(
+    WEBSITE_SOCKET_IP,
+    WEBSITE_SOCKET_PORT,
+    dbms_instance
+)
+loop = asyncio.get_event_loop() # get the event loop
+server_coroutine = asyncio.start_server(
+    unity_socket_server.create_client,
+    unity_socket_server.host,
+    unity_socket_server.port,
+) # create the server coroutine
+loop.run_until_complete(server_coroutine) # run the server coroutine
 
 # - Unity Socket Server -
 unity_socket_server = UnitySocketServer(
@@ -47,13 +64,13 @@ server_coroutine = asyncio.start_server(
     unity_socket_server.host,
     unity_socket_server.port,
 ) # create the server coroutine
-server = loop.run_until_complete(server_coroutine) # run the server coroutine
+loop.run_until_complete(server_coroutine) # run the server coroutine
 
 # Set riders gate to run
 loop.create_task(unity_socket_server.riders_gate())
 
 # - Website Server -
-webserver = Webserver(unity_socket_server, dbms_instance)
+Webserver(unity_socket_server, dbms_instance)
 
 # - Discord Bot -
 discord_bot = DiscordBot(DISCORD_TOKEN, "!", unity_socket_server, dbms_instance)
