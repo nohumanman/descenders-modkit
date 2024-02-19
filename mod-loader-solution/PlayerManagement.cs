@@ -24,13 +24,11 @@ namespace ModLoaderSolution
 				Instance = this; 
 		}
 		public void NetStart(){
-			NetClient.Instance.SendData("BIKE_TYPE|" + GetComponent<BikeSwitcher>().oldBike);
 			OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
-			//OnMapEnter("IDHERE", MapInfo.Instance.ModName);
-			//NetClient.Instance.SendData("SET_BIKE|" + Utilities.instance.GetBike());
-			NetClient.Instance.SendData("VERSION|" + NetClient.GetVersion());
-			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
-			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
+			NetClient.Instance.SendData("BIKE_TYPE", GetComponent<BikeSwitcher>().GetBike());
+			NetClient.Instance.SendData("VERSION", NetClient.GetVersion());
+			NetClient.Instance.SendData("STEAM_ID", steamIntegration.getSteamId());
+			NetClient.Instance.SendData("STEAM_NAME", steamIntegration.getName());
 			foreach (Trail trail in FindObjectsOfType<Trail>())
             {
 				Utilities.Log("Looking for leaderboard texts on trail '" + trail.name + "'");
