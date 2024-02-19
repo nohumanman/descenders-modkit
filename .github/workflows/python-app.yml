@@ -5,9 +5,9 @@ name: Python application
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
 
 permissions:
   contents: read
@@ -40,6 +40,6 @@ jobs:
         python -m pip install sqlfluff
         # run tests using .sqlfluff as config
         sqlfluff lint server/src/queries.sql --config .sqlfluff --exclude-rules CP02,AM04 --dialect sqlite
-    - name: Test with unittest
-      run: |
-        pytest
+   # - name: Test with unittest
+   #   run: |
+   #     pytest

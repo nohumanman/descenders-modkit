@@ -35,3 +35,4 @@ urllib3==2.0.7
 Werkzeug==3.0.1
 yarl==1.9.2
 aiosql==9.0
+twitch-chat-irc==0.0.4
