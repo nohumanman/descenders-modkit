@@ -1,0 +1,1 @@
+TWITCH_TOKEN = "oauth:blank"
