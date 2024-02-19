@@ -6,12 +6,23 @@ namespace ModLoaderSolution
 {
     public class Checkpoint : MonoBehaviour
     {
+        string hash;
+        public string GetHash(int minCharAmount, int maxCharAmount)
+        {
+            string glyphs = "abcdefghijklmnopqrstuvwxyz1234567890";
+            int charAmount = UnityEngine.Random.Range(minCharAmount, maxCharAmount); //set those to the minimum and maximum length of your string
+            string myString = "";
+            for (int i = 0; i < charAmount; i++)
+                myString += glyphs[UnityEngine.Random.Range(0, glyphs.Length)];
+            return myString;
+        }
         public CheckpointType checkpointType;
         public Trail trail;
         public bool doesWork = true;
         public void Start()
         {
-            // Debug.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
+            hash = GetHash(20, 50);
+            // Utilities.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
         }
         void Update()
         {
@@ -20,14 +31,16 @@ namespace ModLoaderSolution
         }
         void OnTriggerEnter(Collider other)
         {
-            if (Utilities.instance.isInReplayMode())
-                return;
-            if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human" && doesWork)
+            // check if our other.transform.name is Bike so we're actually looking at the bike not arm or something
+            if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-                Debug.Log("SplitTimer.Checkpoint | Checkpoint '" + this.name + "' Entered");
-                if (!Utilities.instance.isInReplayMode())
-                    PlayerManagement.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, SplitTimerText.Instance.time.ToString());
+                Utilities.Log("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' Entered");
+                if (Utilities.instance.isInReplayMode())
+                    return;
+                if (!doesWork)
+                    return;
                 
+                PlayerManagement.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, SplitTimerText.Instance.time.ToString(), hash);
                 if (this.checkpointType == CheckpointType.Start)
                 {
                     Utilities.instance.RestartReplay();
@@ -37,6 +50,7 @@ namespace ModLoaderSolution
                 }
                 else if (this.checkpointType == CheckpointType.Finish)
                 {
+                    Utilities.instance.SaveReplayToFile("tmp");
                     SplitTimerText.Instance.StopTimer();
                 }
             }

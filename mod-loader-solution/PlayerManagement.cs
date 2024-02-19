@@ -12,14 +12,12 @@ namespace ModLoaderSolution
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
 		Vector3 PreviousPos;
-		public string version = "0.2.40";
 		public float speed;
-		bool hasLoadedPlayer = false;
 		bool wasBailed = false;
 		public static PlayerManagement Instance { get; private set; }
 		void Awake(){
-			//Debug.Log("ModLoaderSolution.PlayerInfo | LocalApplicationData '" + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "'");
-			Debug.Log("ModLoaderSolution.PlayerInfo | Version number " + version);
+			Utilities.Log("LocalApplicationData '" + Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "'");
+			Utilities.Log("Version number " + NetClient.GetVersion());
 			if (Instance != null && Instance != this) 
 				Destroy(this); 
 			else
@@ -30,21 +28,21 @@ namespace ModLoaderSolution
 			OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
 			//OnMapEnter("IDHERE", MapInfo.Instance.ModName);
 			//NetClient.Instance.SendData("SET_BIKE|" + Utilities.instance.GetBike());
-			NetClient.Instance.SendData("VERSION|" + version);
+			NetClient.Instance.SendData("VERSION|" + NetClient.GetVersion());
 			NetClient.Instance.SendData("STEAM_ID|" + steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME|" + steamIntegration.getName());
 			foreach (Trail trail in FindObjectsOfType<Trail>())
             {
-				Debug.Log("ModLoaderSolution.PlayerInfo | Looking for leaderboard texts on trail '" + trail.name + "'");
+				Utilities.Log("Looking for leaderboard texts on trail '" + trail.name + "'");
 				//trail.leaderboardText.GetComponent<TextMesh>().font = AssetBundling.Instance.bundle.LoadAsset<UnityEngine.UI.Text>("");
 				if (trail.leaderboardText != null)
                 {
-					Debug.Log("ModLoaderSolution.PlayerInfo | Found Speedrun.com Leaderboard for '" + trail.name + "'");
+					Utilities.Log("Found Speedrun.com Leaderboard for '" + trail.name + "'");
 					NetClient.Instance.SendData("SPEEDRUN_DOT_COM_LEADERBOARD|" + trail.name);
 				}
 				if (trail.autoLeaderboardText != null)
                 {
-					Debug.Log("ModLoaderSolution.PlayerInfo | Found auto Leaderboard for '" + trail.name + "'");
+					Utilities.Log("Found auto Leaderboard for '" + trail.name + "'");
 					NetClient.Instance.SendData("LEADERBOARD|" + trail.name);
 				}
             }
@@ -63,7 +61,7 @@ namespace ModLoaderSolution
 			if (Utilities.instance.GetCurrentMap() != prevMap)
             {
 				StartCoroutine(ChangeMapPresence(Utilities.instance.GetCurrentMap()));
-				Debug.Log("ModLoaderSolution.PlayerInfo | Map Change Detected");
+				Utilities.Log("Map Change Detected");
 				OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
 				// if not a bike park or a mod
 				if (!Utilities.instance.isBikePark() && !Utilities.instance.isMod() && !(Utilities.instance.GetCurrentMap() == "0"))
@@ -84,7 +82,6 @@ namespace ModLoaderSolution
 			if (PlayerHuman != null){
 				//if (!hasLoadedPlayer)
 				//	GetComponent<BikeSwitcher>().ToEnduro();
-				hasLoadedPlayer = true;
 				if (Vector3.Distance(
 						PlayerHuman.transform.position,
 						PreviousPos
@@ -95,9 +92,9 @@ namespace ModLoaderSolution
 				speed = Vector3.Distance(PlayerHuman.transform.position, PreviousPos) / Time.deltaTime;
 				PreviousPos = PlayerHuman.transform.position;
 			}
-			//Debug.Log(PhotonNetwork.CloudRegion);
-			//Debug.Log(PhotonNetwork.CreateRoom("6969"));
-			//Debug.Log(PhotonNetwork.JoinRoom("6969"));
+			//Utilities.Log(PhotonNetwork.CloudRegion);
+			//Utilities.Log(PhotonNetwork.CreateRoom("6969"));
+			//Utilities.Log(PhotonNetwork.JoinRoom("6969"));
 		}
 		public void OnRespawn(){
 			NetClient.Instance.SendData("RESPAWN");
@@ -111,14 +108,16 @@ namespace ModLoaderSolution
 		public void OnBoundryExit(string trail_name, string boundry_guid, string boundry_obj_name){
 			NetClient.Instance.SendData("BOUNDRY_EXIT|" + trail_name + "|" + boundry_guid + "|" + boundry_obj_name);
 		}
-		public void OnCheckpointEnter(string trail_name, string type, int total_checkpoints, string client_time){
-			NetClient.Instance.SendData("CHECKPOINT_ENTER|" + trail_name + "|" + type + "|" + total_checkpoints.ToString() + "|" + client_time);
+		public void OnCheckpointEnter(string trail_name, string type, int total_checkpoints, string client_time, string hash){
+			NetClient.Instance.SendData("CHECKPOINT_ENTER|" + trail_name + "|" + type + "|" + total_checkpoints.ToString() + "|" + client_time + "|" + hash);
 		}
 		public void OnMapEnter(string map_id, string map_name){
 			NetClient.Instance.SendData("MAP_ENTER|" + map_id + "|" + map_name);
 			// if map_name is 0 we are in lobby
 			if (map_name == "0")
 				Destroy(GameObject.Find("sign_modoftheyear"));
+			if (Utilities.instance.isMod()) // only do this to mods to not mess things up
+				Utilities.instance.NormaliseModSongs();
 		}
 		public void OnMapExit(){
 			NetClient.Instance.SendData("MAP_EXIT");

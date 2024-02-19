@@ -8,10 +8,6 @@ using ModLoaderSolution;
 
 namespace ModLoaderSolution
 {
-    struct StatStruct
-    {
-        public string Name;
-    }
     public enum StatType
     {
         Vehicle, Wheel
@@ -105,7 +101,7 @@ namespace ModLoaderSolution
                 x.currentVals[i] = stat.currentVal;
                 i++;
             }
-            Debug.Log("StatsModification | Saving stats to '" + savePath + "'");
+            Utilities.Log("StatsModification | Saving stats to '" + savePath + "'");
             System.IO.File.WriteAllText(savePath + "\\SavedStats.json", JsonUtility.ToJson(x, true));
         }
         public void LoadStats()
@@ -126,7 +122,7 @@ namespace ModLoaderSolution
                 }
             }
             catch {
-                Debug.Log("StatsModification | LoadStats() Failed! Maybe no file is present?");
+                Utilities.Log("StatsModification | LoadStats() Failed! Maybe no file is present?");
                 return;
             }
         }
@@ -215,8 +211,8 @@ namespace ModLoaderSolution
             GameModifier[] gameModifiers = (GameModifier[])typeof(GameData).GetField("\u0081jU\u0080h\u0084c").GetValue(FindObjectOfType<GameData>());
             foreach (GameModifier mod in gameModifiers)
             {
-                Debug.Log(mod.name);
-                Debug.Log(mod.modifiers[0].percentageValue);
+                Utilities.Log(mod.name);
+                Utilities.Log(mod.modifiers[0].percentageValue);
                 if (mod.name == "LANDINGIMPACT" || mod.name == "BUNNYHOP" || mod.name == "PUMPSTRENGTH")
                     mod.modifiers[0].percentageValue = 50000000;
                 //if (mod.name == "FAKIEBALANCE")

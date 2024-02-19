@@ -29,20 +29,34 @@ namespace ModLoaderSolution
 		}
 		IEnumerator DisableCheckpoint()
         {
+			StopCoroutine("DisableCheckpoint");
 			yield return new WaitForSeconds(5f);
 			checkpointTime = "";
         }
 		public IEnumerator DisableTimerText(float tim)
         {
+			StopCoroutine("DisableTimerText");
 			yield return new WaitForSeconds(tim);
 			SetText("");
 		}
+		bool wasConnected = false;
 		public void Update()
         {
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.U))
 			{
+				UserInterface.Instance.SpecialNotif("UI Toggled: " + (!uiEnabled).ToString());
 				uiEnabled = !uiEnabled;
 				text.text = "";
+			}
+			if (!NetClient.Instance.IsConnected())
+			{
+				text.color = new Color32(247, 56, 42, 255);
+				wasConnected = false;
+			}
+			else if (!wasConnected)
+			{
+				TextColToDefault();
+				wasConnected = true;
 			}
 		}
 		public void TextColToDefault()
@@ -62,7 +76,7 @@ namespace ModLoaderSolution
         {
 			textToSet = textToSet.Replace("\\n", "\n");
 			if (uiEnabled)
-				text.text = textToSet;
+				text.text = textToSet + "\n";
 			else
 				text.text = "";
 		}
@@ -92,7 +106,7 @@ namespace ModLoaderSolution
 				yield return new WaitForEndOfFrame();
 			}
 		}
-		private string FormatTime(float time)
+		public string FormatTime(float time)
 		{
 			int intTime = (int)time;
 			int minutes = intTime / 60;

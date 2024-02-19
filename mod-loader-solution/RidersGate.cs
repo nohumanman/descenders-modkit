@@ -12,15 +12,22 @@ namespace ModLoaderSolution
 		public bool gateEnabled = true;
 		public void TriggerGate(float randomTime){
 			if (gateEnabled)
-				StartCoroutine(TriggerGateCoro(randomTime));
+				gateTriggerCoroutine = StartCoroutine(TriggerGateCoro(randomTime));
 		}
 		public void Update()
         {
 			if (Input.GetKeyDown(KeyCode.G))
+			{
 				ToggleGate();
+				UserInterface.Instance.SpecialNotif("Gates toggled: " + gateEnabled.ToString());
+			}
         }
+		Coroutine gateTriggerCoroutine = null;
 		public void ToggleGate()
         {
+			StopCoroutine(gateTriggerCoroutine);
+			GetComponent<AudioSource>().Stop();
+			GetComponent<Animator>().StopPlayback();
 			if (gateEnabled)
 				GetComponent<Animator>().Play("Open");
 			else

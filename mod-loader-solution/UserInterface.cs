@@ -13,9 +13,11 @@ namespace ModLoaderSolution
         public GameObject Player;
     }
     public class UserInterface : MonoBehaviour {
+        public GUIStyle customButton;
         bool isActive;
         bool hasBeenActive = false;
         public PlayerInfoImpact[] players;
+        public static UserInterface Instance { get; private set; }
 
         bool __COMMANDS__ = false;
         bool __CHECKPOINTS__ = false;
@@ -24,6 +26,38 @@ namespace ModLoaderSolution
         bool __QoL__ = false;
         bool __TRICKS__ = false;
         Vector2 scrollPosition = Vector2.zero;
+        public void Awake()
+        {
+            Instance = this;
+
+        }
+        public void InitGUI()
+        {
+            // only call this from within OnGUI
+            customButton = new GUIStyle(GUI.skin.button);
+            customButton.normal.textColor = Color.white;
+            customButton.hover.textColor = Color.cyan;
+            customButton.fontSize = 20;
+            customButton.alignment = TextAnchor.MiddleCenter;
+            //customButton.normal.background = MakeTex(2, 2, new Color(0.2f, 0.2f, 0.2f, 1.0f));
+            //customButton.hover.background = MakeTex(2, 2, new Color(0.1f, 0.1f, 0.1f, 1.0f));
+        }
+        Coroutine specialNotifCoro = null;
+        string specialNotif = "";
+        public void SpecialNotif(string specialNotif)
+        {
+            if (specialNotifCoro != null)
+            {
+                ((MonoBehaviour)this).StopCoroutine(specialNotifCoro);
+            }
+            specialNotifCoro = ((MonoBehaviour)this).StartCoroutine(CoroSpecialNotif(specialNotif));
+        }
+        private IEnumerator CoroSpecialNotif(string _specialNotif)
+        {
+            specialNotif = _specialNotif;
+            yield return (object)new WaitForSeconds(1.5f);
+            specialNotif = "";
+        }
         public static Texture2D MakeTex(int width, int height, Color col)
         {
             Color[] pix = new Color[width * height];
@@ -36,6 +70,11 @@ namespace ModLoaderSolution
         }
         void OnGUI()
         {
+            InitGUI();
+            if (specialNotif != "")
+            {
+                GUI.Label(new Rect((float)(Screen.width / 2 - 750), (float)(Screen.height - 80), 1500f, 80f), specialNotif);
+            }
             if (!StatsModification.instance.IfStatsAreDefault())
             {
                 GUIStyle myButtonStyle2 = new GUIStyle(GUI.skin.button);
@@ -54,7 +93,7 @@ namespace ModLoaderSolution
                 myButtonStyle2.normal.background = MakeTex(5, 5, new Color(0.2f, 0.06f, 0.12f));
                 myButtonStyle2.fontSize = 60;
                 GUI.Label(new Rect((Screen.width/2)-750, Screen.height- 80, 1500, 80), "scripts made with love by nohumanman :D", myButtonStyle2);
-                GUI.Label(new Rect((Screen.width / 2) - 750, Screen.height - 400, 1500, 80), Utilities.instance.playerObject.transform.position.ToString(), myButtonStyle2);
+                GUI.Label(new Rect((Screen.width / 2) - 750, Screen.height - 400, 1500, 80), Camera.main.transform.position.ToString(), myButtonStyle2);
                 hasBeenActive = true;
                 GUIStyle myButtonStyle = new GUIStyle(GUI.skin.button);
                 myButtonStyle.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");
@@ -218,9 +257,6 @@ namespace ModLoaderSolution
                     foreach (Checkpoint x in allCheckpoints)
                         x.doesWork = false;
             }
-            if (Input.GetKey(KeyCode.P) && Input.GetKey(KeyCode.Alpha0) && Input.GetKeyDown(KeyCode.V))
-                foreach (Checkpoint x in allCheckpoints)
-                    x.doesWork = true;
         }
     }
 }

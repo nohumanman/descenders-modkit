@@ -20,17 +20,17 @@ namespace ModLoaderSolution
             {
                 yield return www.SendWebRequest();
                 if (www.isNetworkError || www.isHttpError)
-                    Debug.Log(www.error);
+                    Utilities.Log(www.error);
                 else
                 {
-                    Debug.Log("ModLoaderInstaller.Installer | Saving new ModLoaderSolution.bin");
+                    Utilities.Log("ModLoaderInstaller.Installer | Saving new ModLoaderSolution.bin");
                     try
                     {
                         System.IO.File.WriteAllBytes(bundlePath, www.downloadHandler.data);
                     }
                     catch (IOException)
                     {
-                        Debug.Log("ModLoaderInstaller.Installer | IOException - bin write has failed!");
+                        Utilities.Log("ModLoaderInstaller.Installer | IOException - bin write has failed!");
                     }
                     LoadBundle(bundlePath);
                 }
@@ -45,7 +45,7 @@ namespace ModLoaderSolution
         {
             GameObject asst = bundle.LoadAsset<GameObject>("BikeSwitcherRadial");
             GameObject bikeSwitcherRadial = Instantiate(asst);
-            DontDestroyOnLoad(bikeSwitcherRadial);
+            DontDestroyOnLoad(bikeSwitcherRadial.transform.root);
             bikeSwitcherRadial.AddComponent<ObjEnabler>();
             foreach (Transform chil in bikeSwitcherRadial.transform.GetComponentsInChildren<Transform>())
                 if (chil.parent == bikeSwitcherRadial.transform)
@@ -62,6 +62,7 @@ namespace ModLoaderSolution
 
             GameObject TimerCanvasAsset = bundle.LoadAsset<GameObject>("TimerCanvas");
             GameObject TimerCanvas = Instantiate(TimerCanvasAsset);
+            TimerCanvas.transform.position -= new Vector3(0, 1000);
             foreach(Transform child in TimerCanvas.transform)
             {
                 foreach(Transform childs_child in child)

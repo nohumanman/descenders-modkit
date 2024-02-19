@@ -12,6 +12,7 @@ using ModTool.Shared;
 using ModTool;
 using Debug = UnityEngine.Debug;
 using Object = UnityEngine.Object;
+using System.Diagnostics;
 using TMPro;
 using InControl;
 
@@ -23,10 +24,6 @@ namespace ModLoaderSolution
     {
         public static Utilities instance;
         public string uniqueID;
-        public Text LogUI;
-        public int maxLines = 6;
-        List<string> history = new List<string>();
-        private Camera mainCamera;
         private float GameTime = 0f;
         public readonly Dictionary<string, string> seeds = new Dictionary<string, string>() {
                 { "0", "Lobby" },
@@ -75,18 +72,25 @@ namespace ModLoaderSolution
 
         UI_MultiplayerNotifications multiplayerNotifications;
         RigidbodyConstraints constraints;
-        //void Update()
-        //{
-        //    if (Input.GetKeyDown(KeyCode.Numlock))
-        //    {
-        //        GameObject obj = GetPlayer();
-        //        test(obj.transform.position);
-        //    }
-        //}
+
+        bool normalised = false;
+        public void Start()
+        {
+            instance = this;
+        }
+        public void Awake()
+        {
+            NormaliseModSongs();
+        }
         public void Update()
         {
             if (isFlying)
                 SetVel(20f);
+            if (!normalised && FindObjectOfType<GameData>() != null)
+            {
+                NormaliseModSongs();
+                normalised = true;
+            }
         }
         public Gesture[] gestures = new Gesture[0] {};
         public void GetGestures()
@@ -107,9 +111,19 @@ namespace ModLoaderSolution
                 x.releaseRightFoot = true;
             }
         }
-        public void Start()
+        public void NormaliseModSongs()
         {
-            instance = this;
+            // Function to put proper playlist instead of 'Descenders' song on mod maps
+            // dirty the current session (to force a playlist re-load)
+            FieldInfo currentSessionField = typeof(SessionManager).GetField("\u0083ESVMoz"); // currentSession field
+            object session = currentSessionField.GetValue(FindObjectOfType<SessionManager>()); // currentSession value
+            FieldInfo worldMapField = session.GetType().GetField("WnRr]U`"); // worldMap
+            WorldMap worldMap = new WorldMap(); // worldMap will be null, so we need to make one up
+            worldMap.world = World.Glaciers; // set the world to glaciers (not World.None), this will play glaciers playlist
+            worldMapField.SetValue(session, worldMap);
+            // worldMap 
+            FieldInfo worldWorldMapField = worldMap.GetType().GetField("world");
+            worldWorldMapField.SetValue(worldMap, World.Forest);
         }
         AudioSource[] audioSources;
         public bool MapAudioActive = true;
@@ -131,28 +145,47 @@ namespace ModLoaderSolution
                     return false;
             return true;
         }
+        public bool hasBailed(GameObject networkPlayer)
+        {
+            // iterate through all children to find 'Cyclist'
+            foreach (Transform child in networkPlayer.transform)
+                if (child.name == "Cyclist")
+                    return false; // cyclist means we haven't bailed
+            return true;
+        }
         public void SpawnAtCursor()
         {
 
         }
+        // Note: VERY INNEFFICIENT
+        public List<GameObject> GetNetworkedPlayers()
+        {
+            List<GameObject> networkedPlayers = new List<GameObject>();
+            foreach (GameObject x in FindObjectsOfType<GameObject>()) {
+                if (x.name == "Player_Networked")
+                    networkedPlayers.Add(x);
+            }
+            return networkedPlayers;
+        }
+
         public void RestartReplay()
         {
-            Debug.Log("Utilities | RestartReplay()");
+            Utilities.Log("RestartReplay()");
             GameObject.Find("Player_Human").GetComponent<VehicleReplay>().SendMessage("StartRecord");
         }
         public void SaveReplayToFile(string path)
         {
             string replayObfuscatedName = "Ym}\u0084upr";
-            Debug.Log("Utilities | SaveReplayToFile('" + path + "')");
+            Utilities.Log("SaveReplayToFile('" + path + "')");
             Assembly a = Assembly.Load("Assembly-CSharp");
             Type replayType = a.GetType("l\u0080KRMtV");
             MethodInfo magicMethod = replayType.GetMethod("I\u0083tz]jk");
-            Debug.Log("Utilities | magicMethod found -" + magicMethod);
-            Debug.Log("Utilities | Vehicle Replay - " + GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
+            Utilities.Log("magicMethod found -" + magicMethod);
+            Utilities.Log("Vehicle Replay - " + GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
             object replayClassObject = typeof(VehicleReplay)
                 .GetField(replayObfuscatedName)
                 .GetValue(GameObject.Find("Player_Human").GetComponent<VehicleReplay>());
-            Debug.Log("Utilities | replayClassObject found -" + replayClassObject);
+            Utilities.Log("replayClassObject found -" + replayClassObject);
             magicMethod.Invoke(replayClassObject, new object[] { path });
         }
         public float AngleFromGround()
@@ -189,19 +222,19 @@ namespace ModLoaderSolution
                     StreamWriter sw = new StreamWriter(userFile);
                     sw.WriteLine(id);
                     sw.Close();
-                    // Debug.Log("ModLoaderSolution | Created " + file);
+                    // Utilities.Log("ModLoaderSolution | Created " + file);
                 }
                 else
                 {
                     id = File.ReadAllLines(userFile)[0];
                     id = id.Replace("\n", "");
-                    // Debug.Log("ModLoaderSolution | Found UserID " + id);
+                    // Utilities.Log("ModLoaderSolution | Found UserID " + id);
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                // Debug.Log("ModLoaderSolution | Could not read user file:");
-                // Debug.Log(e);
+                // Utilities.Log("ModLoaderSolution | Could not read user file:");
+                // Utilities.Log(e);
             }
 
             uniqueID = id;
@@ -260,14 +293,6 @@ namespace ModLoaderSolution
         {
             string currentMap = GetCurrentMap();
             return currentMap.Contains("-");
-
-            List<Mod> mods = GetAllMods();
-            foreach (Mod mod in mods)
-            {
-                if (mod.name + "-" + mod.modInfo.version == currentMap)
-                    return true;
-            }
-            return false;
         }
 
         public bool isBikePark()
@@ -384,7 +409,7 @@ namespace ModLoaderSolution
 
         //public void LoadMap(Mod mod)
         //{
-        //    Debug.Log("Utilities: Loading Mod " + mod.name);
+        //    Utilities.Log("Utilities: Loading Mod " + mod.name);
         //    UI_FreerideWorkshop ui = Get_UI_FreerideWorkshop();
         //    ui.StartMod(mod);
 
@@ -399,20 +424,20 @@ namespace ModLoaderSolution
         //    //    loadedMod.Unload();
         //    //}
         //    //mod.LoadAsync();
-        //    //Debug.Log("Utilities: loaded mod " + mod.name);
-        //    //Debug.Log("Utilities: loading scene");
+        //    //Utilities.Log("Utilities: loaded mod " + mod.name);
+        //    //Utilities.Log("Utilities: loading scene");
         //    //ModScene modScene = mod.scenes.FirstOrDefault<ModScene>();
         //    //if (modScene != null)
         //    //{
         //    //    modScene.LoadAsync();
         //    //}
-        //    //Debug.Log("Utilities: loaded scene");
+        //    //Utilities.Log("Utilities: loaded scene");
 
         //}
 
         //public void LoadMap(string seed)
         //{
-        //    Debug.Log("Utilities: Loading seed " + seed);
+        //    Utilities.Log("Utilities: Loading seed " + seed);
         //    SessionManager sessionManager = Singleton<SessionManager>.SP;
         //    //dZDR\u0081XK
         //    //object gameMode = sessionManager.GetType().GetField("dZDR\u0081XK").GetValue(sessionManager);
@@ -424,7 +449,7 @@ namespace ModLoaderSolution
         //    //{
         //    //    object value = enumValues.GetValue(i);
         //    //    object underlyingValue = System.Convert.ChangeType(value, enumUnderlyingType);
-        //    //    Debug.Log(underlyingValue);
+        //    //    Utilities.Log(underlyingValue);
         //    //}
         //    //sessionManager.StartNewSession(seed, global::GameMode.Sandbox);
         //}
@@ -561,7 +586,24 @@ namespace ModLoaderSolution
             }
             return trick;
         }
-
+        public static void Log(GameObject obj)
+        {
+            Log(obj.ToString());
+        }
+        public static void Log(System.Exception exc)
+        {
+            Log(exc.ToString());
+        }
+        public static void Log(float exc)
+        {
+            Log(exc.ToString());
+        }
+        public static void Log(string log)
+        {
+            MethodBase caller = new StackFrame(1, false).GetMethod();
+            string prefix = caller.ReflectedType.FullName + "." + caller.Name;
+            Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);
+        }
         public string GetPlayerCurrentTrick()
         {
             //---UI_RepPopup : label_repCashIn #Untagged
@@ -701,6 +743,7 @@ namespace ModLoaderSolution
             if (player == null)
                 return;
             FindObjectOfType<FollowCamSystem>().subject = player;
+            FindObjectOfType<FollowCamSystem>().bother = true;
         }
         public void SpectatePlayer(int id)
         {
@@ -722,11 +765,32 @@ namespace ModLoaderSolution
             if (player != null)
                 SpectatePlayer(Array.IndexOf(allPlayers, player));
             else
-                Debug.Log("Player not found: " + name);
+                Utilities.Log("Player not found: " + name);
         }
         public int GetBike()
         {
+            string oldBike = FindObjectOfType<BikeSwitcher>().oldBike;
+            if (oldBike == "downhill")
+                return 1;
+            else if (oldBike == "hardtail")
+                return 2;
             return 0;
+        }
+        public void SetBike(int steam_id, int bike)
+        {
+            PlayerInfoImpact[] array = FindObjectsOfType<PlayerInfoImpact>();
+            PlayerCustomization[] array2 = FindObjectsOfType<PlayerCustomization>();
+            GameData gameData = FindObjectOfType<GameData>();
+            BikeType[] array3 = (BikeType[])gameData.GetType().GetField("bx}n\u0080PQ").GetValue(gameData);
+            foreach (PlayerInfoImpact playerInfoImpact in array)
+            {
+                Debug.Log(steam_id);
+                playerInfoImpact.GetType().GetField("dzQf\u0082nw").SetValue(playerInfoImpact, array3[bike]);
+            }
+            foreach (PlayerCustomization playerCustomization in array2)
+            {
+                playerCustomization.RefreshBikeMesh();
+            }
         }
         public void SetBike(int bike)
         {
@@ -735,58 +799,22 @@ namespace ModLoaderSolution
             {
                 ui_BikeSelection.HoverButtonBike(bike);
             }
-            catch (Exception)
-            {
-            }
+            catch (Exception){}
             Destroy(ui_BikeSelection);
-            return;
-            try
-            {
-                PlayerInfoImpact[] array = FindObjectsOfType<PlayerInfoImpact>();
-                PlayerCustomization[] array2 = FindObjectsOfType<PlayerCustomization>();
-                GameData gameData = FindObjectOfType<GameData>();
-                BikeType[] array3 = (BikeType[])gameData.GetType().GetField("bx}n\u0080PQ").GetValue(gameData);
-                foreach (PlayerInfoImpact playerInfoImpact in array)
-                {
-                    playerInfoImpact.GetType().GetField("dzQf\u0082nw").SetValue(playerInfoImpact, array3[bike]);
-                }
-                foreach (PlayerCustomization playerCustomization in array2)
-                {
-                    playerCustomization.RefreshBikeMesh();
-                }
-            }
-            catch (Exception)
-            {
-            }
-            //UI_BikeSelection bs = new UI_BikeSelection();
-            //try
-            //{
-            //    bs.HoverButtonBike(bike);
-            //}
-            //catch (Exception){ }
-
-            //Destroy(bs);
-
-            //try
-            //{
-            //    PlayerInfoImpact[] allPlayers = FindObjectsOfType<PlayerInfoImpact>();
-            //    PlayerCustomization[] allCPlayers = FindObjectsOfType<PlayerCustomization>();
-            //    GameData gameData = FindObjectOfType<GameData>();
-            //    BikeType[] bikeTypes = gameData.bikeTypes;
-
-            //    foreach (PlayerInfoImpact player in allPlayers)
-            //    {
-            //        player.bikeType = bikeTypes[bike];
-            //    }
-
-            //    foreach (PlayerCustomization player in allCPlayers)
-            //    {
-            //        player.RefreshBikeMesh();
-            //    }
-            //}
-            //catch (Exception) { }
         }
+        public void SetBike(PlayerInfoImpact playerInfoImpact, int bike)
+        {
+            // bikeType = GameData.SP.bikeTypes[num];
+            //dzQf\u0082nw = GameData.[~qsVD|.bx}n\u0080PQ[cVpqe^E];
 
+            // playerInfoImpact.bikeType = FindObjectOfType<GameData>().bikeTypes[bike];
+            BikeType[] bikeTypes = (BikeType[])typeof(GameData).GetField("bx}n\u0080PQ").GetValue(FindObjectOfType<GameData>());
+            typeof(PlayerInfoImpact).GetField("dzQf\u0082nw").SetValue(playerInfoImpact, bikeTypes[bike]);
+
+            // playerCustomization = hUP\u007fi\u0084d
+            PlayerCustomization playerCustomization = (PlayerCustomization)typeof(PlayerInfoImpact).GetField("hUP\u007fi\u0084d").GetValue(playerInfoImpact);
+            playerCustomization.RefreshBikeMesh();
+        }
         public string GetBikeName(int bike)
         {
             string name = "Enduro";
@@ -796,7 +824,23 @@ namespace ModLoaderSolution
                 name = "Hardtail";
             return name;
         }
-
+        public void PopUp(string titleText, string bodyText)
+        {
+            int lineLimit = 12;
+            int lines = 0;
+            foreach(char c in bodyText)
+                if (c == '\n')
+                    lines++;
+            if (lines > lineLimit)
+                return;
+            UI_PopUp_TextBoxSmall uI_PopUp_TextBoxSmall = FindObjectOfType<PermaGUI>().SpawnPopUp<UI_PopUp_TextBoxSmall>();
+            // label_titleText = f`r}tXQ
+            TMPro.TextMeshProUGUI label_titleText = (TMPro.TextMeshProUGUI)uI_PopUp_TextBoxSmall.GetType().GetField("f`r}tXQ").GetValue(uI_PopUp_TextBoxSmall);
+            label_titleText.text = titleText;
+            // label_bodyText = oZtLHbT
+            TMPro.TextMeshProUGUI label_bodyText = (TMPro.TextMeshProUGUI)uI_PopUp_TextBoxSmall.GetType().GetField("oZtLHbT").GetValue(uI_PopUp_TextBoxSmall);
+            label_bodyText.text = bodyText;
+        }
         public void SetCameraTarget(PlayerInfoImpact player, bool something=true)
         {
             Singleton<CameraManager>.SP.SetCameraTarget(player, something);
@@ -968,11 +1012,10 @@ namespace ModLoaderSolution
             }
             catch (Exception e)
             {
-                Debug.Log(e);
+                Utilities.Log(e);
             }
             return !bailed;
         }
-
         public void ToggleControl(bool set)
         {
             VehicleController vc = GetPlayer().GetComponent<VehicleController>();
@@ -1000,13 +1043,13 @@ namespace ModLoaderSolution
         {
             MultiManager mm = MonoBehaviour.FindObjectOfType<MultiManager>();
             mm.SwitchToSpectate();
-            Debug.Log("utilities.SwitchSpectate");
+            Utilities.Log("utilities.SwitchSpectate");
         }
         public void ToggleSpectator()
         {
             MultiManager mm = MonoBehaviour.FindObjectOfType<MultiManager>();
             mm.ToggleSpectator();
-            Debug.Log("utilities.SwitchSpectate");
+            Utilities.Log("utilities.SwitchSpectate");
         }
         public void ClearSessionMarker()
         {
@@ -1015,14 +1058,14 @@ namespace ModLoaderSolution
         }
         public void ResetPlayer()
         {
-            Debug.Log("utilities.ResetPlayer");
+            Utilities.Log("utilities.ResetPlayer");
             // activeModifiers uT`Xbuc
             PlayerInfoImpact pi = GetPlayerInfoImpact();
             List<GameModifier> activeModifiers = (List<GameModifier>)pi.GetType().GetField("uT`Xbuc").GetValue(pi);
             List<GameModifier> setModifiers = new List<GameModifier>();
             foreach (GameModifier gameModifier in activeModifiers)
             {
-                Debug.Log(gameModifier.name);
+                Utilities.Log(gameModifier.name);
                 if (!GameModifiers.gameModifiers.Contains(gameModifier.name))
                 {
                     setModifiers.Add(gameModifier);
@@ -1031,7 +1074,7 @@ namespace ModLoaderSolution
             pi.ResetPlayer();
             if (setModifiers.Count > 0)
             {
-                Debug.Log("Keeping " + setModifiers.Count + " modifiers");
+                Utilities.Log("Keeping " + setModifiers.Count + " modifiers");
                 pi.GetType().GetField("uT`Xbuc").SetValue(pi, setModifiers);
             }
         }
@@ -1065,45 +1108,13 @@ namespace ModLoaderSolution
         {
             PlayerInfoImpact pi = GetPlayerInfoImpact();
             pi.RespawnOnTrack();
-            Debug.Log("Utilities.RespawnOnTrack");
+            Utilities.Log("Utilities.RespawnOnTrack");
         }
         public void RespawnAtStartline()
         {
             PlayerInfoImpact pi = GetPlayerInfoImpact() ;
             pi.RespawnAtStartLine();
-            Debug.Log("Utilities.RespawnAtStartline");
-        }
-
-        public void Log(string text)
-        {
-            Debug.Log(text);
-            if (LogUI == null || !LogUI.gameObject.activeSelf)
-                return;
-            LogUI.text = "";
-            history.Add(text);
-            int length = history.Count;
-            int max = length - maxLines;
-            int counter = 0;
-            foreach (var item in history)
-            {
-                counter++;
-                if (max <= 0 || counter >= max)
-                    LogUI.text = LogUI.text + item + "\n";
-            }
-            ShowLog();
-            StopCoroutine("HideLog");
-            StartCoroutine("HideLog");
-        }
-
-        public void ShowLog()
-        {
-            LogUI.gameObject.SetActive(true);
-        }
-
-        IEnumerator HideLog()
-        {
-            yield return new WaitForSeconds(5f);
-            LogUI.gameObject.SetActive(false);
+            Utilities.Log("Utilities.RespawnAtStartline");
         }
         public bool bailEnabled = false;
         public void EnableStats()
@@ -1145,7 +1156,6 @@ namespace ModLoaderSolution
             SpeedWobbles, TweakSpeed, WheelieBalance
         };
     }
-
     public enum GameMode
     {
         None,

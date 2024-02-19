@@ -9,11 +9,23 @@ namespace ModLoaderSolution
 	public class BikeSwitcher : MonoBehaviour
 	{
         public string oldBike;
-
+        public void Start(){
+            oldBike = GetBike();
+        }
         public void ToBike(string bike, string id)
         {
-            Debug.Log("ModLoaderSolution.BikeSwitcher | id " + id + " switching to bike '" + bike + "'");
+            Utilities.Log("id " + id + " switching to bike '" + bike + "'");
+            if (Utilities.instance.isInReplayMode())
+                return;
             StartCoroutine(_ToBike(bike, id));
+        }
+        public string GetBike(){
+            int pref = FindObjectOfType<PrefsManager>().GetInt("PREFERREDBIKE");
+            if (pref == 1)
+                return "downhill";
+            else if (pref == 2)
+                return "hardtail";
+            return "enduro";
         }
         IEnumerator _ToBike(string bike, string id)
         {
@@ -31,12 +43,23 @@ namespace ModLoaderSolution
                 }
                 if (!IsDescBike(oldBike) && IsDescBike(bike))
                     yield return DelicatePlayerRespawn(id, PlayerObject, Utilities.GetPlayerInfoImpactFromId(id));
+                
                 if (bike == "enduro")
-                    gameObject.GetComponent<Utilities>().SetBike(0);
+                {
+                    FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", 0);
+                    //gameObject.GetComponent<Utilities>().SetBike(0);
+                    Utilities.instance.SetBike(Utilities.GetPlayerInfoImpactFromId(id), 0);
+                }
                 else if (bike == "downhill")
-                    gameObject.GetComponent<Utilities>().SetBike(1);
+                {
+                    FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", 1);
+                    Utilities.instance.SetBike(Utilities.GetPlayerInfoImpactFromId(id), 1);
+                }
                 else if (bike == "hardtail")
-                    gameObject.GetComponent<Utilities>().SetBike(2);
+                {
+                    FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", 2);
+                    Utilities.instance.SetBike(Utilities.GetPlayerInfoImpactFromId(id), 2);
+                }
                 else
                 {
                     if (AssetBundling.Instance.bundle != null)
@@ -54,7 +77,7 @@ namespace ModLoaderSolution
                                 foreach (AnimationClip ourAnim in bikeReplacement.GetComponentInChildren<Animator>().runtimeAnimatorController.animationClips)
                                     if (ourAnim.name == descAnim.name)
                                     {
-                                        Debug.Log("Replacing anim " + descAnim.name + " with our custom one");
+                                        Utilities.Log("Replacing anim " + descAnim.name + " with our custom one");
                                         anims.Add(new KeyValuePair<AnimationClip, AnimationClip>(descAnim, ourAnim));
                                     }
                             }
@@ -65,10 +88,10 @@ namespace ModLoaderSolution
                             Gesture[] gestures = new Gesture[0] { };
                             string gesturesField = "EL\u0080\u007f\u0084\u0080o";
                             gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(Utilities.instance.GetPlayer().GetComponent<Cyclist>());
-                            foreach(Gesture gesture in gestures)
+                            foreach (Gesture gesture in gestures)
                             {
                                 // change gesture animations here!
-                                Debug.Log(gesture.trickName);
+                                Utilities.Log(gesture.trickName);
                             }
                             // replace gestures
                             typeof(Cyclist).GetField(gesturesField).SetValue(
@@ -91,9 +114,11 @@ namespace ModLoaderSolution
                 {
                     PlayerManagement.Instance.OnBikeSwitch(oldBike, bike);
                     oldBike = bike;
+                    // and reset camera to us
+                    Utilities.instance.SetFreeCam();
+                    Utilities.instance.SetBikeCamera();
                 }
             }
-            
         }
         public Animator GetPlayerAnim(GameObject PlayerObject)
         {
@@ -109,9 +134,9 @@ namespace ModLoaderSolution
             Animation currentBikeAnim = GetBikeModelAnim(PlayerObject);
             if (currentBikeAnim == null)
             {
-                Debug.Log("Aaiosjdopiasjdpoajsdopjaspodjaposdjpoasjd==123=1-23=1-293=-1203=-102=3-012=3");
+                Utilities.Log("Aaiosjdopiasjdpoajsdopjaspodjaposdjpoasjd==123=1-23=1-293=-1203=-102=3-012=3");
             }
-            Debug.Log("bikeObject:" + BikeObject);
+            Utilities.Log("bikeObject:" + BikeObject);
             currentBikeAnim.Stop();
             foreach (AnimationClip q in animToAnimStates(newAnimation))
             {

@@ -30,6 +30,27 @@
   <PropertyGroup>
     <RootNamespace>ModLoaderSolution</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="AssetBundling.cs" />
     <Compile Include="BikeSwitcher.cs" />
@@ -37,7 +58,9 @@
     <Compile Include="ChaosMod.cs" />
     <Compile Include="Chat.cs" />
     <Compile Include="CustomTeleporter.cs" />
+    <Compile Include="CustomDebug.cs" />
     <Compile Include="DisableOnAny.cs" />
+    <Compile Include="FollowCamSystem.cs" />
     <Compile Include="Init.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Modifiers\CameraModifier.cs" />
@@ -63,6 +86,7 @@
     <Compile Include="Timer\LeaderboardInfo.cs" />
     <Compile Include="Timer\MedalSystem.cs" />
     <Compile Include="Timer\SplitTimerText.cs" />
+    <Compile Include="Timer\ThreeDTimer.cs" />
     <Compile Include="Timer\Trail.cs" />
     <Compile Include="TrickCapturer.cs" />
     <Compile Include="UserInterface.cs" />
@@ -163,9 +187,6 @@
     </Reference>
     <Reference Include="MultiplayerImport">
       <HintPath>D:\Steam\steamapps\common\Descenders\Descenders_Data\Managed\MultiplayerImport.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>D:\Steam\steamapps\common\Descenders\Descenders_Data\Managed\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Path Painter">
       <HintPath>D:\Steam\steamapps\common\Descenders\Descenders_Data\Managed\Path Painter.dll</HintPath>
@@ -368,9 +389,6 @@
     <Reference Include="XboxOneCommonImport">
       <HintPath>D:\Steam\steamapps\common\Descenders\Descenders_Data\Managed\XboxOneCommonImport.dll</HintPath>
     </Reference>
-    <Reference Include="XGamingRuntime">
-      <HintPath>D:\Steam\steamapps\common\Descenders\Descenders_Data\Managed\XGamingRuntime.dll</HintPath>
-    </Reference>
     <Reference Include="XIMImport">
       <HintPath>D:\Steam\steamapps\common\Descenders\Descenders_Data\Managed\XIMImport.dll</HintPath>
     </Reference>
@@ -383,10 +401,10 @@
     <VisualStudio AllowExistingFolder="true" />
   </ProjectExtensions>
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\point\AppData\LocalLow\RageSquid\Descenders\ModLoaderSolution.bin" &amp;&amp; echo Copied to C:\Users\point\AppData\LocalLow\RageSquid\Descenders\ModLoaderSolution.bin
-copy "$(TargetPath)" "D:\SteamLibrary\steamapps\common\Descenders\Mods\50to01 Line\ModLoaderSolution.bin"  &amp;&amp; echo Copied to D:\SteamLibrary\steamapps\common\Descenders\Mods\50to01 Line\ModLoaderSolution.bin
+    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\point\AppData\LocalLow\RageSquid\Descenders\ModLoaderSolution.bin" &amp;&amp; echo Copied to C:\Users\point\AppData\LocalLow\RageSquid\Descenders\ModLoaderSolution.bin || exit /b 0
 
+copy "$(TargetPath)" "D:\SteamLibrary\steamapps\common\Descenders\Mods\50to01 Line\ModLoaderSolution.bin"  &amp;&amp; echo Copied to D:\SteamLibrary\steamapps\common\Descenders\Mods\50to01 Line\ModLoaderSolution.bin || exit /b 0
 
-</PostBuildEvent>
+copy "$(TargetPath)" "D:\SteamLibrary\steamapps\common\Descenders\Mods\Fort William 4x (race)\ModLoaderSolution.bin" || exit /b 0</PostBuildEvent>
   </PropertyGroup>
 </Project>
