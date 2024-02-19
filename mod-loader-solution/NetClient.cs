@@ -526,6 +526,7 @@ namespace ModLoaderSolution
 			string clientMessage = "";
 			foreach (string arg in data)
 				clientMessage += clean(arg) + "|";
+			SendData(clientMessage);
         }
 		public void SendData(string clientMessage) {
 			// Utilities.Log("Client sending message: " + clientMessage);
