@@ -304,6 +304,19 @@ var app = new Vue({
 
 let startTime = new Date().getTime();
 
+const socket = new WebSocket('wss://localhost:65430');
+
+socket.onopen = function(event) {
+    console.log('Connected to WebSocket server');
+};
+
+socket.onmessage = function(event) {
+    console.log('Received message:', event.data);
+};
+
+// You can send messages like this:
+socket.send('Hello, server!');
+
 //app.setSelf('UNKNOWN');
 app.updatePlayers();
 app.CheckStatus();
