@@ -1,0 +1,61 @@
+# This workflow will build a .NET project and push it to release
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: Release ModLoaderSolution
+
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Build Solution
+        run: |
+           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
+           $warnings = .\MSBuild.exe $Env:GITHUB_WORKSPACE\mod-loader-solution\ModLoaderSolution.sln /p:WarningsAsErrors=true /p:WarningLevel=4  /nologo /v:q
+           if ($warnings -gt 0) { exit 1 }
+           mv $Env:GITHUB_WORKSPACE\mod-loader-solution\bin\Debug\ModLoaderSolution.dll $Env:GITHUB_WORKSPACE\ModLoaderSolution.bin
+      - name: Upload solution
+        uses: actions/upload-artifact@v2
+        with:
+          name: ModLoaderSolution
+          path: ${{ github.workspace }}/ModLoaderSolution.bin
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          repository: nohumanman/nohumanman.com
+          ref: 'main'
+          token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
+
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Delete existing ModLoaderSolution
+        run: rm -r ${{ github.workspace }}/static/ModLoaderSolution.bin
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: ModLoaderSolution
+          path: ${{ github.workspace }}/static/ModLoaderSolutionFiles
+
+      - name: Push to nohumanman.com
+        run: |
+          url="https://api.github.com/repos/nohumanman/descenders-modkit/commits/main"
+          response=$(curl -s -H "Accept: application/vnd.github.v3+json" $url)
+          commit_hash=$(echo $response | jq -r '.sha')
+          mv ${{ github.workspace }}/static/ModLoaderSolutionFiles/ModLoaderSolution.bin ${{ github.workspace }}/static/ModLoaderSolution.bin
+          rm -r ${{ github.workspace }}/static/ModLoaderSolutionFiles/
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+          git add .
+          git commit -m "Update ModLoaderSolution from $commit_hash"
+          git push origin main

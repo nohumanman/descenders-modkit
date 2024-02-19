@@ -63,7 +63,7 @@ class DBMS():
                 trail_name=trail_name,
                 steam_id=steam_id
             )
-        return [float(time[0]) for time in splits]
+        return [float(time[1]) for time in splits]
 
     async def get_fastest_split_times(self,
         trail_name
@@ -75,7 +75,7 @@ class DBMS():
                 conn,
                 trail_name=trail_name
             )
-        return [float(time[0]) for time in splits]
+        return [float(time[1]) for time in splits]
 
     async def get_valid_ids(self):
         """ Get the valid Discord IDs. """
@@ -171,13 +171,13 @@ class DBMS():
             return [
                 {
                     "place": i + 1,
-                    "time": time[3],
+                    "starting_speed": time[0],
                     "name": time[1],
                     "bike": time[2],
-                    "starting_speed": time[0],
-                    "version": time[4],
-                    "verified": str(time[5]),
-                    "time_id": str(time[6])
+                    "version": time[3],
+                    "verified": str(time[4]),
+                    "time_id": str(time[5]),
+                    "time": time[6]
                 } for i, time in enumerate(
                     await self.queries.get_leaderboard(
                         db, trail_name=trail_name, lim=num
@@ -185,15 +185,14 @@ class DBMS():
                 )
             ]
 
-    async def max_start_time(self, trail_time: str) -> float:
-        """ Get the maximum starting time for a given trail. """
-        return 10
-
     async def get_avatar(self, steam_id):
         """ Get the avatar for a given Steam ID. """
         async with aiosqlite.connect(self.db_file) as db:
             # pylint: disable=no-member
-            return await self.queries.get_player_avatar(db, steam_id=steam_id)
+            avatars = await self.queries.get_player_avatar(db, steam_id=steam_id)
+            if avatars is None:
+                return "https://www.gravatar.com/avatar/"
+            return avatars[0]
 
     async def discord_login(self, discord_id: str, discord_name: str, email: str, steam_id: int):
         """ Log in to Discord. """
@@ -276,71 +275,25 @@ class DBMS():
 
     async def get_medals(self, steam_id, trail_name):
         """ Get the medals for a given trail. """
-        x = f'''
-            SELECT
-                starting_speed,
-                steam_name,
-                bike_type,
-                MIN(checkpoint_time),
-                Time.version
-            FROM
-                Time
-                INNER JOIN
-                    SplitTime ON SplitTime.time_id = Time.time_id
-                INNER JOIN
-                    (
-                        SELECT
-                            max(checkpoint_num) AS max_checkpoint
-                        FROM
-                            SplitTime
-                            INNER JOIN
-                                Time ON Time.time_id = SplitTime.time_id
-                            WHERE LOWER(Time.trail_name) = LOWER(
-                                "{trail_name}"
-                            )
-                    ) ON SplitTime.time_id=Time.time_id
-                INNER JOIN
-                    Player ON Player.steam_id = Time.steam_id
-            WHERE
-                LOWER(trail_name) = LOWER("{trail_name}")
-                AND
-                checkpoint_num = max_checkpoint
-                AND
-                (Time.ignored = 0 AND Time.verified = 1)
-                AND
-                Player.steam_id = {steam_id}
-            GROUP BY
-                trail_name,
-                Player.steam_id
-            ORDER BY
-                checkpoint_time ASC
-        '''
-        result = await self.execute_sql(x)
-        if len(result) == 0:
-            return [False, False, False, False]
-        y = f'''
-            SELECT medal_type, time
-            FROM TrailMedal
-            WHERE trail_name = "{trail_name}"
-        '''
-        rainbow_time = 0
-        gold_time = 0
-        silver_time = 0
-        bronze_time = 0
-        for medal in await self.execute_sql(y):
-            if medal[0] == "rainbow":
-                rainbow_time = float(medal[1])
-            elif medal[0] == "gold":
-                gold_time = float(medal[1])
-            elif medal[0] == "silver":
-                silver_time = float(medal[1])
-            elif medal[0] == "bronze":
-                bronze_time = float(medal[1])
-        # rainbow, gold, silver, bronze
-        to_return = [False, False, False, False]
-        for player_time in result:
-            to_return[0] = player_time[3] <= rainbow_time
-            to_return[1] = player_time[3] <= gold_time
-            to_return[2] = player_time[3] <= silver_time
-            to_return[3] = player_time[3] <= bronze_time
-        return to_return
+        async with aiosqlite.connect(self.db_file) as db:
+            # pylint: disable=no-member
+            medals = await self.queries.get_player_medals(
+                db,
+                steam_id=steam_id,
+                trail_name=trail_name
+            )
+            if len(medals) < 4 or medals is None:
+                return (0, 0, 0, 0)
+            return medals
+
+    async def get_average_start_time(self, trail_name):
+        """ Get the average starting time for a given trail. """
+        async with aiosqlite.connect(self.db_file) as db:
+            # pylint: disable=no-member
+            average = (await self.queries.get_average_start_time(
+                db,
+                trail_name=trail_name
+            ))[0]
+            if average is None:
+                return 100_000
+            return average

@@ -189,7 +189,7 @@ class UnitySocket():
         )
         for trail_name, trail in self.trails.items():
             trail.timer_info.starting_speed = starting_speed
-            if starting_speed > await self.dbms.max_start_time(trail_name):
+            if starting_speed > await self.dbms.get_average_start_time(trail_name)+2:
                 await trail.invalidate_timer(
                     "You went through the start too fast!"
                 )
@@ -306,31 +306,18 @@ class UnitySocket():
             self.info.steam_name,
             await self.get_avatar_src()
         )
-        #await self.dbms.submit_alias(self.info.steam_id, self.info.steam_name)
         for player in self.parent.players:
             if (
                 player.info.steam_id == self.info.steam_id
                 and self is not player
             ):
-                logging.warning(
-                    "%s '%s'\t- duplicate steam id!",
-                    self.info.steam_id, self.info.steam_name
-                )
                 self.parent.players.remove(player)
-                del player
-        if self.info.steam_id == "OFFLINE" or self.info.steam_id == "":
-            await self.send("TOGGLE_GOD")
+        if self.info.steam_id in ["OFFLINE", ""]:
+            await self.ban("ILLEGAL")
         banned_names = ["descender", "goldberg", "skidrow", "player"]
         for banned_name in banned_names:
             if self.info.steam_name.lower() == banned_name:
                 await self.ban("ILLEGAL")
-        #ban_type = await self.dbms.get_ban_status(self.info.steam_id)
-        #if ban_type == "CLOSE":
-        #    await self.ban("CLOSE")
-        #elif ban_type == "CRASH":
-        #    await self.ban("CRASH")
-        #elif ban_type == "ILLEGAL":
-        #    await self.ban("ILLEGAL")
 
     async def set_steam_id(self, steam_id : str):
         """ Set the steam id of a player and invalidate timers if necessary """
@@ -341,6 +328,14 @@ class UnitySocket():
         self.info.steam_id = steam_id
         if self.info.steam_name is not None:
             await self.has_both_steam_name_and_id()
+        # if id is not the correct length, ban the player
+        if len(steam_id) != len("76561198805366422"):
+            await self.send("SUCCESS")
+
+    async def sanity_check(self):
+        """ Perform a sanity check on a player's data. """
+        # if no steam name, request it
+        pass
 
     async def get_default_bike(self):
         """ Get the async default bike for a player. """
@@ -349,8 +344,7 @@ class UnitySocket():
             if start_bike is None:
                 return "enduro"
             return start_bike
-        else:
-            return "enduro"
+        return "enduro"
 
     async def set_world_name(self, world_name):
         """ Set the world name of a player and invalidate timers if necessary """
@@ -448,7 +442,7 @@ class UnitySocket():
         total_checkpoints: int,
         client_time: float,
         checkpoint_hash: str
-    ):
+    ): 
         """ Called when a player enters a checkpoint. """
         logging.info(
             "%s '%s'\t- entered checkpoint on trail '%s' of type '%s'",
@@ -493,16 +487,8 @@ class UnitySocket():
         await self.update_concurrent_users()
         for trail_name, trail in self.trails.items():
             if trail_name in self.trails:
-                trail.invalidate_time()
+                trail.invalidate_timer()
         self.trails = {}
-        await self.dbms.end_session(
-            self.info.steam_id,
-            self.info.time_started,
-            time.time(),
-            self.info.world_name
-        )
-        print("CLSOE CONNECTION")
-        #self.conn.close()
 
     async def update_concurrent_users(self):
         """ Update the discord bot's presence with the number of concurrent users. """

@@ -61,7 +61,7 @@ GROUP BY
 ORDER BY
     SplitTime.checkpoint_num ASC;
 
--- name: update_player
+-- name: update_player!
 -- Update the player's name and avatar
 REPLACE INTO Player (
     steam_id,
@@ -101,7 +101,7 @@ SELECT discord_id
 FROM
     User
 WHERE
-    valid = TRUE;
+    valid = 'TRUE';
 
 -- name: get_discord_steam_connetion^
 -- get steam ID associated with given discord id
@@ -128,11 +128,8 @@ LIMIT :lim;
 SELECT
     Player.steam_id,
     Player.steam_name,
-    Player.avatar_src,
-    Rep.rep,
-    MAX(Rep.timestamp) AS rep_timestamp
+    Player.avatar_src
 FROM Player
-INNER JOIN Rep ON Player.steam_id = Rep.steam_id
 GROUP BY Player.steam_id
 ORDER BY Player.steam_name ASC;
 
@@ -170,13 +167,16 @@ INNER JOIN
         WHERE LOWER(Time.trail_name) = LOWER(
             :trail_name
         )
-    ) ON SplitTime.time_id = Time.time_id
+        AND Time.verified = 1
+        AND Time.ignored = 0
+    ) AS max_checkpoint_table
+    ON SplitTime.time_id = Time.time_id
 INNER JOIN Player
     ON Player.steam_id = Time.steam_id
 WHERE
     LOWER(Time.trail_name) = LOWER(:trail_name)
     AND
-    SplitTime.checkpoint_num = SplitTime.max_checkpoint
+    SplitTime.checkpoint_num = max_checkpoint_table.max_checkpoint
     AND
     Time.ignored = 0 AND Time.verified = 1
 GROUP BY
@@ -192,7 +192,7 @@ SELECT avatar_src
 FROM Player
 WHERE steam_id = :steam_id;
 
--- name: submit_discord_details
+-- name: submit_discord_details!
 -- Submit the discord details
 REPLACE INTO User
 VALUES (
@@ -209,7 +209,7 @@ UPDATE Time
 SET verified = 1
 WHERE time_id = :time_id;
 
--- name: submit_time
+-- name: submit_time!
 -- Submit a time
 INSERT INTO Time (
     steam_id, -- TEXT
@@ -236,7 +236,7 @@ VALUES (
     :ignored -- INT NOT NULL
 );
 
--- name: submit_split
+-- name: submit_split!
 -- Submit a split time
 INSERT INTO
 SplitTime (
@@ -249,3 +249,55 @@ VALUES (
     :checkpoint_num,
     :checkpoint_time
 );
+
+-- name: get_player_medals
+-- Get the medals for a given trail
+SELECT
+    CASE WHEN MIN(SplitTime.checkpoint_time) <= (
+        SELECT time FROM TrailMedal
+        WHERE trail_name = LOWER(:trail_name) AND medal_type = 'rainbow'
+    ) THEN TRUE ELSE FALSE END AS rainbow,
+    CASE WHEN MIN(SplitTime.checkpoint_time) <= (
+        SELECT time FROM TrailMedal
+        WHERE trail_name = LOWER(:trail_name) AND medal_type = 'gold'
+    ) THEN TRUE ELSE FALSE END AS gold,
+    CASE WHEN MIN(SplitTime.checkpoint_time) <= (
+        SELECT time FROM TrailMedal
+        WHERE trail_name = LOWER(:trail_name) AND medal_type = 'silver'
+    ) THEN TRUE ELSE FALSE END AS silver,
+    CASE WHEN MIN(SplitTime.checkpoint_time) <= (
+        SELECT time FROM TrailMedal
+        WHERE trail_name = LOWER(:trail_name) AND medal_type = 'bronze'
+    ) THEN TRUE ELSE FALSE END AS bronze
+FROM
+    Time
+INNER JOIN SplitTime ON SplitTime.time_id = Time.time_id
+INNER JOIN (
+    SELECT MAX(SplitTime.checkpoint_num) AS max_checkpoint
+    FROM SplitTime
+    INNER JOIN Time ON SplitTime.time_id = Time.time_id
+    WHERE LOWER(Time.trail_name) = LOWER(:trail_name)
+) AS max_checkpoints ON SplitTime.time_id = Time.time_id
+INNER JOIN Player ON Player.steam_id = Time.steam_id
+WHERE
+    LOWER(Time.trail_name) = LOWER(:trail_name)
+    AND SplitTime.checkpoint_num = max_checkpoints.max_checkpoint
+    AND (Time.ignored = 0 AND Time.verified = 1)
+    AND Player.steam_id = :steam_id
+GROUP BY
+    Time.trail_name,
+    Player.steam_id
+ORDER BY
+    MIN(SplitTime.checkpoint_time) ASC;
+
+
+
+
+-- name: get_average_start_time^
+-- Get the average start time for a given trail
+SELECT AVG(starting_speed) AS value
+FROM Time
+WHERE
+    trail_name = :trail_name
+    AND ignored = 0
+    AND verified = 1;
