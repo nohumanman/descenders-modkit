@@ -5,6 +5,8 @@ import time
 import logging
 import asyncio
 import nest_asyncio # Used to fix RuntimeError in using async from thread
+from twitch_chat_irc import twitch_chat_irc
+from tokens import TWITCH_TOKEN
 nest_asyncio.apply()
 
 if TYPE_CHECKING: # for imports with intellisense
@@ -274,6 +276,10 @@ class TrailTimer():
         # update the leaderboards and medals on connected clients
         await self.update_leaderboards()
         await self.update_medals()
+        # if time being spectated
+        if self.network_player.info.steam_id in [network_player.info.spectating_id for network_player in self.network_player.parent.players]:
+            connection = twitch_chat_irc.TwitchChatIRC('nohumanman', TWITCH_TOKEN)
+            connection.send("bbb171", f"{secs_str}") # change to send to self.network_player.info.twitch_channel
         # reset the timer
         self.timer_info.auto_verify = True
 
