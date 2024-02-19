@@ -512,13 +512,24 @@ namespace ModLoaderSolution
 			yield return new WaitForSeconds(time);
 			SendData(clientMessage);
         }
+		public string clean(string mess)
+        {
+			foreach (char c in mess)
+			{
+				if (c < 32 || c > 126 || c == '|' || c == '\n')
+					mess = mess.Replace(c.ToString(), "?");
+			}
+			return mess;
+		}
+		public void SendData(params string[] data)
+        {
+			string clientMessage = "";
+			foreach (string arg in data)
+				clientMessage += clean(arg) + "|";
+        }
 		public void SendData(string clientMessage) {
 			// Utilities.Log("Client sending message: " + clientMessage);
 			// clean clientMessage
-			foreach(char c in clientMessage){
-				if (c < 32 || c > 126)
-					clientMessage = clientMessage.Replace(c.ToString(), "?");
-			}
 			if (!clientMessage.EndsWith("\n"))
 				clientMessage = clientMessage + "\n";
 			if (socketConnection == null || !socketConnection.Connected)
