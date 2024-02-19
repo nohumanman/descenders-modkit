@@ -25,7 +25,7 @@ namespace ModLoaderSolution
 		public int port = 65432;
 		public string ip = "18.132.81.187";
 		static string version = "0.2.55";
-		static string patchNotes = "- Fix camera when in shed\n- \n\nYours,\n- nohumanman"; // that which has changed since the last version.
+		static string patchNotes = "- Fix camera when in shed\n- Fix freecam\n- Fix non-standard characters breaking leaderboards\n\nYours,\n- nohumanman"; // that which has changed since the last version.
 		public static bool developerMode = false;
 		void Awake(){
 			if (developerMode)
@@ -514,6 +514,11 @@ namespace ModLoaderSolution
         }
 		public void SendData(string clientMessage) {
 			// Utilities.Log("Client sending message: " + clientMessage);
+			// clean clientMessage
+			foreach(char c in clientMessage){
+				if (c < 32 || c > 126)
+					clientMessage = clientMessage.Replace(c.ToString(), "?");
+			}
 			if (!clientMessage.EndsWith("\n"))
 				clientMessage = clientMessage + "\n";
 			if (socketConnection == null || !socketConnection.Connected)
