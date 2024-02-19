@@ -237,8 +237,8 @@ class Webserver():
         # get our player id
         try:
             our_id = await self.get_our_steam_id()
-        except InvalidTokenError:
-            return redirect("/login")
+        except (InvalidTokenError, MissingTokenError):
+            return ("ERROR - NOT LOGGED IN!", 500)
         # get us
         try:
             us = self.socket_server.get_player_by_id(str(our_id))
