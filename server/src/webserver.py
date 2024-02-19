@@ -18,6 +18,7 @@ from flask import (
 # Authlib imports
 from authlib.integrations.requests_client import OAuth2Session
 from authlib.integrations.base_client import MissingTokenError
+from authlib.integrations.base_client.errors import InvalidTokenError
 
 # Unity Socket Server imports
 from unity_socket_server import UnitySocketServer, PlayerNotFound
@@ -234,7 +235,10 @@ class Webserver():
     async def spectate(self):
         """ Function to spectate a player """
         # get our player id
-        our_id = await self.get_our_steam_id()
+        try:
+            our_id = await self.get_our_steam_id()
+        except InvalidTokenError:
+            return redirect("/login")
         # get us
         try:
             us = self.socket_server.get_player_by_id(str(our_id))
