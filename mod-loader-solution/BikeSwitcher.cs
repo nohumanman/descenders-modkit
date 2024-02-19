@@ -114,10 +114,11 @@ namespace ModLoaderSolution
                 {
                     PlayerManagement.Instance.OnBikeSwitch(oldBike, bike);
                     oldBike = bike;
+                    // and reset camera to us
+                    Utilities.instance.SetFreeCam();
+                    Utilities.instance.SetBikeCamera();
                 }
             }
-            Utilities.instance.SetFreeCam();
-            Utilities.instance.SetBikeCamera();
         }
         public Animator GetPlayerAnim(GameObject PlayerObject)
         {
