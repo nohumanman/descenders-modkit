@@ -87,11 +87,14 @@ namespace ModLoaderSolution
         }
         public Cam GetBestCamera()
         {
+            if (cameras.Count == 0)
+                return null;
             if (Utilities.instance.hasBailed(subject))
                 return null;
             float closest = Mathf.Infinity;
             Cam closestCam = cameras[0];
             float switchThreshold = 2f;
+            
             foreach (Cam cam in cameras)
             {
                 Vector3 vector3 = cam.loc;
@@ -105,6 +108,7 @@ namespace ModLoaderSolution
                     }
                 }
             }
+            
             if (closestCam.loc == Vector3.zero)
                 return null;
             return closestCam;
@@ -143,7 +147,6 @@ namespace ModLoaderSolution
                 }
                 return;
             }
-
             Cam bestCam = GetBestCamera();
             if (bestCam == null)
                 foreach (Camera cam in FindObjectsOfType<Camera>()){
@@ -187,33 +190,42 @@ namespace ModLoaderSolution
             if (subject == null)
                 return false;
 
+            Vector3 directionToPlayer = subject.transform.position - camPos;
+
+            // Use layer mask to filter colliders
+            int layerMask = LayerMask.GetMask("Cyclist");
+
             // Check distance
             if (Vector3.Distance(subject.transform.position, camPos) > proximity)
                 return false;
 
-            // Check if the subject or any of its children is in the cone of vision
-            Collider[] colliders = Physics.OverlapSphere(camPos, proximity);
+            // Overlap colliders with sphere using layer mask
+            Collider[] colliders = Physics.OverlapSphere(camPos, proximity, layerMask);
+
             foreach (Collider collider in colliders)
             {
-                Vector3 directionToCollider = collider.transform.position - camPos;
-                Vector3 directionToPlayer = subject.transform.position - camPos;
-
-                // Check if the angle between the direction to the collider and the direction to the player is within the cone angle
-                float angle = Vector3.Angle(directionToCollider, directionToPlayer);
-                if (angle < coneAngle)
+                // Check if the collider belongs to the subject or its children
+                if (collider.gameObject.transform.root.gameObject == subject)
                 {
-                    RaycastHit hit;
-                    if (Physics.Raycast(camPos, directionToCollider, out hit, proximity))
+                    // Check if the collider is within the cone of vision
+                    Vector3 directionToCollider = collider.transform.position - camPos;
+                    float angle = Vector3.Angle(directionToCollider, directionToPlayer);
+
+                    if (angle < coneAngle)
                     {
-                        // Check if the collider belongs to the subject or its children and is visible
-                        if (hit.collider == collider && hit.collider.gameObject.transform.root.gameObject == subject)
-                            return true;
+                        RaycastHit hit;
+                        if (Physics.Raycast(camPos, directionToCollider, out hit, proximity, layerMask))
+                        {
+                            if (hit.collider == collider)
+                                return true;
+                        }
                     }
                 }
             }
 
             return false;
         }
+
 
 
         public void LoadFromFile()
