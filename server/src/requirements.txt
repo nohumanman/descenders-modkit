@@ -11,7 +11,7 @@ cffi==1.16.0
 charset-normalizer==3.3.1
 click==8.1.7
 colorama==0.4.6
-cryptography==42.0.2
+cryptography==42.0.4
 discord==2.3.2
 discord.py==2.3.2
 ffmpeg-python==0.2.0
