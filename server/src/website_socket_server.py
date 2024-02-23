@@ -8,37 +8,44 @@ class WebSocketServer:
         self.host = host
         self.port = port
         self.unity_socket_server = unity_socket_server
+        self.websockets = []
+
+    async def send_players_all(self):
+        for websocket in self.websockets:
+            await self.send_players(websocket)
+
+    async def send_players(self, websocket):
+        await websocket.send(json.dumps([{
+            "steam_id": player.info.steam_id,
+            "steam_name": player.info.steam_name,
+            "steam_avatar_src": player.info.avatar_src,
+            "reputation": player.info.reputation,
+            "world_name": player.info.world_name,
+            "last_trick": player.info.last_trick,
+            "version": player.info.version,
+            "bike_type": player.info.bike_type,
+            "trail_info": [
+                {
+                    "trail_name": player.trails[trail_name].trail_name,
+                    "started": player.trails[trail_name].timer_info.started,
+                    "auto_verify": player.trails[trail_name].timer_info.auto_verify,
+                    "times": player.trails[trail_name].timer_info.times,
+                    "starting_speed": player.trails[trail_name].timer_info.starting_speed,
+                    "total_checkpoints": player.trails[trail_name].timer_info.total_checkpoints,
+                    "time_started": player.trails[trail_name].timer_info.time_started
+                }
+                for trail_name in player.trails
+            ]
+        } for player in self.unity_socket_server.players]))
 
     async def handle(self, websocket, path):
-        await websocket.send("Welcome to the server!")
+        self.websockets.append(websocket)
         try:
             async for message in websocket:
                 if message == "GET":
-                    await websocket.send(json.dumps([{
-                        "steam_id": player.info.steam_id,
-                        "steam_name": player.info.steam_name,
-                        "steam_avatar_src": player.info.avatar_src,
-                        "reputation": player.info.reputation,
-                        "world_name": player.info.world_name,
-                        "last_trick": player.info.last_trick,
-                        "version": player.info.version,
-                        "bike_type": player.info.bike_type,
-                        "trail_info": [
-                            {
-                                "trail_name": player.trails[trail_name].trail_name,
-                                "started": player.trails[trail_name].timer_info.started,
-                                "auto_verify": player.trails[trail_name].timer_info.auto_verify,
-                                "times": player.trails[trail_name].timer_info.times,
-                                "starting_speed": player.trails[trail_name].timer_info.starting_speed,
-                                "total_checkpoints": player.trails[trail_name].timer_info.total_checkpoints,
-                                "time_started": player.trails[trail_name].timer_info.time_started
-                            }
-                            for trail_name in player.trails
-                        ]
-                    } for player in self.unity_socket_server.players]))
-                await websocket.send(f"Echo: {message}")
+                    await self.send_players(websocket)
         except websockets.exceptions.ConnectionClosedOK:
-            print("Client disconnected")
+            self.websockets.remove(websocket)
 
     async def start_server(self):
         start_server = websockets.serve(self.handle, self.host, self.port)

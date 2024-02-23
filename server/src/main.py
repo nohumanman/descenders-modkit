@@ -60,6 +60,7 @@ loop.create_task(unity_socket_server.riders_gate())
 # - Website Socket Server -
 server = WebSocketServer(WEBSITE_SOCKET_IP, WEBSITE_SOCKET_PORT, unity_socket_server)
 threading.Thread(target=server.run_server).start()
+unity_socket_server.website_socket_server = server
 
 # - Website Server -
 webserver = Webserver(unity_socket_server, dbms_instance)

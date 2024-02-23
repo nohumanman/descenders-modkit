@@ -304,30 +304,24 @@ var app = new Vue({
 
 let startTime = new Date().getTime();
 
-const socket = new WebSocket('wss://localhost:65430');
+const socket = new WebSocket('ws://localhost:65430');
 
 socket.onopen = function(event) {
     console.log('Connected to WebSocket server');
 };
 
 socket.onmessage = function(event) {
-    console.log('Received message:', event.data);
+    console.log(event.data);
+    if (event.data.startsWith("[")){
+        app.players = JSON.parse(event.data);
+    }
 };
 
 // You can send messages like this:
-socket.send('Hello, server!');
+socket.send('GET');
 
-//app.setSelf('UNKNOWN');
-app.updatePlayers();
-app.CheckStatus();
-setInterval(app.updatePlayers, 1000);
-//setInterval(app.CheckStatus, 1000);
-app.getSteamId();
-//setInterval(app.getSteamId, 500);
-//app.GetConcurrency();
-app.GetTrails();
-//app.GetWorlds();
-app.getLeaderboard();
+
+
 app.tab = app.GetTabByURL();
 
 app.items = [
