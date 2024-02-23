@@ -424,9 +424,10 @@ class Webserver():
 
     async def upload_replay(self):
         """ Function to upload a replay """
-        request.files["replay"].save(
-            f"{os.getcwd()}/static/replays/"
-            f"{request.form['time_id']}.replay"
+        replay_file = request.files["replay"]
+        time_id = request.form['time_id']
+        replay_file.save(
+            os.path.join(os.getcwd(), 'static', 'replays', f"{time_id}.replay")
         )
         return "Success"
 
