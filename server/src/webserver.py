@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 import os
 from datetime import datetime
 import logging
+from werkzeug.utils import secure_filename
 
 # Flask imports
 from flask import (
@@ -421,14 +422,26 @@ class Webserver():
                 )
             return "success"
         return "INVALID_PERMS"
-
+            
     async def upload_replay(self):
         """ Function to upload a replay """
-        replay_file = request.files["replay"]
-        time_id = request.form['time_id']
-        replay_file.save(
-            os.path.join(os.getcwd(), 'static', 'replays', f"{time_id}.replay")
-        )
+        replay_file = request.files.get("replay")  # Using .get() to handle missing keys
+        time_id = request.form.get('time_id')       # Using .get() to handle missing keys
+
+        # Validate time_id
+        if time_id is None or not time_id.isdigit():
+            return "Error: Invalid time_id"
+
+        # Ensure replay_file is not None
+        if replay_file is None:
+            return "Error: No replay file provided"
+
+        # Securely save the file using a secure filename
+        filename = secure_filename(f"{time_id}.replay")
+        replay_path = os.path.join(os.getcwd(), 'static', 'replays', filename)
+
+        # Save the file
+        replay_file.save(replay_path)
         return "Success"
 
     async def get_worlds(self):
