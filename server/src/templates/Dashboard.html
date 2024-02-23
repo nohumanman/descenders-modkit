@@ -31,7 +31,7 @@
                     </v-row>
                 </v-footer>
                 <v-main style="padding:100px" v-if="controlled_player != null">
-                    <h1 style="text-align:center; text-decoration: underline;">[[controlled_player.steam_name]]</h1>
+                    <h1 style="text-align:center; text-decoration: underline;">[[controlled_player.name]]</h1>
                     <br>
                     <v-row>
                         <v-col>
@@ -165,7 +165,7 @@
                             <v-row>
                                 <v-col
                                     class="fill-height"
-                                    :key="player.steam_id"
+                                    :key="player.id"
                                     v-for="player in players"
                                     style="padding:30px;"
                                 >
@@ -174,7 +174,7 @@
                                         <v-card color="black" width="400px">
                                             <v-col>
                                                 <v-row justify="center" style="text-align:center; font-size: 30px;">
-                                                    [[player.steam_name]]
+                                                    [[player.name]]
                                                 </v-row>
                                                 <v-row justify="center">
                                                     on [[player.world_name]]
@@ -192,7 +192,7 @@
                                                     <v-img src="/static/images/hidden.jpg"></v-img>
                                                 </v-row>
                                                 <v-row justify="center">
-                                                    [[player.steam_id]] v[[player.version]]
+                                                    [[player.id]] v[[player.version]]
                                                 </v-row>
                                             </v-col>
                                             <v-fade-transition>
@@ -203,7 +203,7 @@
                                                 >
                                                     <v-row>
                                                         <v-col><v-btn @click="controlled_player = player; GetPlayerOutputLog(controlled_player)">Control</v-btn></v-col>
-                                                        <v-col><v-btn @click="Spectate(player.steam_id)">Spectate</v-btn></v-col>
+                                                        <v-col><v-btn @click="Spectate(player.id)">Spectate</v-btn></v-col>
                                                     </v-row>
                                                 </v-overlay>
                                             </v-fade-transition>
@@ -301,7 +301,7 @@
                                         <table style="padding:20px;">
                                             <tr v-for="player, index in trail.leaderboard" style="text-align:center">
                                                 <td style="padding-right:10px;">[[player.place]].</td>
-                                                <td style="text-align:left;">[[player.steam_name]]</td>
+                                                <td style="text-align:left;">[[player.name]]</td>
                                                <td style="padding-left:20px;"><a style="color: grey;" :href="'/time/' + player.time_id">[[secs_to_str(player.time)]]</a></td>
                                                 <td style="padding-left:20px;">+[[GetTimeDiff(player.time, trail, index)]]</td>
                                             </tr>
