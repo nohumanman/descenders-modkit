@@ -24,8 +24,8 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
-		static string version = "0.2.54";
-		static string patchNotes = "- Improved replay compatibility with bike switcher\n- Explanation added for how to verify runs when run isn't verified.\n- Improve support for network bike switching\n\nYours,\n- nohumanman"; // that which has changed since the last version.
+		static string version = "0.2.57";
+		static string patchNotes = "- Fix camera when in shed\n- Fix freecam\n- Fix non-standard characters breaking leaderboards\n\nYours,\n- nohumanman"; // that which has changed since the last version.
 		public static bool developerMode = false;
 		void Awake(){
 			if (developerMode)
@@ -512,8 +512,25 @@ namespace ModLoaderSolution
 			yield return new WaitForSeconds(time);
 			SendData(clientMessage);
         }
+		public string clean(string mess)
+        {
+			foreach (char c in mess)
+			{
+				if (c < 32 || c > 126 || c == '|' || c == '\n')
+					mess = mess.Replace(c.ToString(), "?");
+			}
+			return mess;
+		}
+		public void SendData(params string[] data)
+        {
+			string clientMessage = "";
+			foreach (string arg in data)
+				clientMessage += clean(arg) + "|";
+			SendData(clientMessage);
+        }
 		public void SendData(string clientMessage) {
 			// Utilities.Log("Client sending message: " + clientMessage);
+			// clean clientMessage
 			if (!clientMessage.EndsWith("\n"))
 				clientMessage = clientMessage + "\n";
 			if (socketConnection == null || !socketConnection.Connected)

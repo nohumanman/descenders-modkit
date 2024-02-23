@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 import os
 from datetime import datetime
 import logging
+from werkzeug.utils import secure_filename
 
 # Flask imports
 from flask import (
@@ -18,6 +19,7 @@ from flask import (
 # Authlib imports
 from authlib.integrations.requests_client import OAuth2Session
 from authlib.integrations.base_client import MissingTokenError
+from authlib.integrations.base_client.errors import InvalidTokenError
 
 # Unity Socket Server imports
 from unity_socket_server import UnitySocketServer, PlayerNotFound
@@ -234,7 +236,10 @@ class Webserver():
     async def spectate(self):
         """ Function to spectate a player """
         # get our player id
-        our_id = await self.get_our_steam_id()
+        try:
+            our_id = await self.get_our_steam_id()
+        except (InvalidTokenError, MissingTokenError):
+            return ("ERROR - NOT LOGGED IN!", 500)
         # get us
         try:
             us = self.socket_server.get_player_by_id(str(our_id))
@@ -417,13 +422,26 @@ class Webserver():
                 )
             return "success"
         return "INVALID_PERMS"
-
+            
     async def upload_replay(self):
         """ Function to upload a replay """
-        request.files["replay"].save(
-            f"{os.getcwd()}/static/replays/"
-            f"{request.form['time_id']}.replay"
-        )
+        replay_file = request.files.get("replay")  # Using .get() to handle missing keys
+        time_id = request.form.get('time_id')       # Using .get() to handle missing keys
+
+        # Validate time_id
+        if time_id is None or not time_id.isdigit():
+            return "Error: Invalid time_id"
+
+        # Ensure replay_file is not None
+        if replay_file is None:
+            return "Error: No replay file provided"
+
+        # Securely save the file using a secure filename
+        filename = secure_filename(f"{time_id}.replay")
+        replay_path = os.path.join(os.getcwd(), 'static', 'replays', filename)
+
+        # Save the file
+        replay_file.save(replay_path)
         return "Success"
 
     async def get_worlds(self):

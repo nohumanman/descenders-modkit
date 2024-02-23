@@ -192,7 +192,8 @@ var app = new Vue({
         Spectate(id){
             $.get("/api/spectate", data={
                 "target_id": id
-            });
+            })
+            .fail(function(xhr, status, error) {alert("Failed to retrieve data. Status code: " + error);});;
         },
         timestamp_to_date(unix_timestamp){
             var s = new Date(unix_timestamp * 1000).toLocaleDateString("en-UK")

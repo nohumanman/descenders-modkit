@@ -105,6 +105,8 @@ namespace ModLoaderSolution
                             BikeObject,
                             PlayerObject
                         );
+                        Utilities.instance.SetFreeCam();
+                        Utilities.instance.SetBikeCamera();
                     }
                     else
                         throw new System.Exception("AssetBundle not loaded! Can't load into specialised demo!!");
@@ -116,8 +118,6 @@ namespace ModLoaderSolution
                 PlayerManagement.Instance.OnBikeSwitch(oldBike, bike);
                 oldBike = bike;
             }
-            Utilities.instance.SetFreeCam();
-            Utilities.instance.SetBikeCamera();
         }
         public Animator GetPlayerAnim(GameObject PlayerObject)
         {
