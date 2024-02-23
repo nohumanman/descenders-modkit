@@ -133,7 +133,7 @@ namespace ModLoaderSolution
 		{
 			SendData("LOG_LINE|" + logString);
 		}
-		public void Log(string logString, string stackTrace)
+		public void Log(string logString)
 		{
 			SendData("LOG_LINE|" + logString);
 		}
