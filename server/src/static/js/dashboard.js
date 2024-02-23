@@ -305,26 +305,17 @@ var app = new Vue({
 
 let startTime = new Date().getTime();
 
-const socket = new WebSocket('ws://localhost:65430');
-
-socket.onopen = function(event) {
-    socket.send("GET");
-};
-
-socket.onclose = function(event) {
-    socket = new WebSocket('ws://localhost:65430'); // reconnect
-};
-
-socket.onmessage = function(event) {
-    if (event.data.startsWith("[")){
-        app.players = JSON.parse(event.data);
-    }
-};
-
+//app.setSelf('UNKNOWN');
+app.updatePlayers();
+app.CheckStatus();
+setInterval(app.updatePlayers, 1000);
+//setInterval(app.CheckStatus, 1000);
+app.getSteamId();
+//setInterval(app.getSteamId, 500);
+//app.GetConcurrency();
 app.GetTrails();
+//app.GetWorlds();
 app.getLeaderboard();
-
-
 app.tab = app.GetTabByURL();
 
 app.items = [
