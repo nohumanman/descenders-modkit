@@ -5,8 +5,10 @@ var app = new Vue({
         theme: { dark: true },
     }),
     data : {
+        players: [],
         currentTime: 0,
         started: false,
+        spectating: null
     },
     methods: {
         secs_to_str(secs){
@@ -26,7 +28,20 @@ var app = new Vue({
                 fraction = "0" + fraction
             return d_mins + ":" + d_secs + "." + fraction
         },
+        getPlayer(id){
+            app.players.forEach(player => {
+                if (player.steam_id == id)
+                    return player;
+            });
+        },
         updateTime(){
+            player = getPlayer(app.spectating);
+            player.trail_info.forEach(trail => {
+                if (trail.started){
+                    app.started = true;
+                    app.start_time = trail.start_time;
+                }
+            });
             if (this.started){
                 if (app.start_time == 0 || app.start_time == undefined)
                     return;
@@ -40,9 +55,8 @@ var app = new Vue({
                 app.currentTime = 0;
         },
         updateTimeFromServer(){
-            $.get("/api/spectating/get-time", data={"my_id": this.getSelf()}, function(data){
-                app.started = data.started;
-                app.start_time = data.time;
+            $.get("/api/get-spectated", data={"my_id": this.getSelf()}, function(data){
+                app.spectating = data;
             });
         },
         getSelf(){
@@ -57,11 +71,17 @@ app.startTime = Date.now();
 const params = new URLSearchParams(window.location.search)
 app.trail_name = params.get('trail_name')
 
-setInterval(() => {
-    app.updateTime();
-}, 1);
 
-setInterval(() => {
-    app.updateTimeFromServer();
-}, 1000);
+const socket = new WebSocket('ws://localhost:65430');
 
+socket.onopen = function(event) {};
+
+socket.onclose = function(event) {
+    socket = new WebSocket('ws://localhost:65430'); // reconnect
+};
+
+socket.onmessage = function(event) {
+    if (event.data.startsWith("[")){
+        app.players = JSON.parse(event.data);
+    }
+};

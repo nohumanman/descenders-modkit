@@ -110,6 +110,7 @@ class UnitySocket():
         """ Log a line of text to the server log """
         if self.info.steam_id == "":
             return
+        await self.parent.website_socket_server.send_players_all()
         # remove existing output_log if too large (over 1MB)
         if os.path.exists(f"{script_path}/output_log/{self.info.steam_id}.txt"):
             if os.path.getsize(f"{script_path}/output_log/{self.info.steam_id}.txt") > 1000000:

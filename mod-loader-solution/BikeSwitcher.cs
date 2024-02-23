@@ -105,19 +105,18 @@ namespace ModLoaderSolution
                             BikeObject,
                             PlayerObject
                         );
+                        Utilities.instance.SetFreeCam();
+                        Utilities.instance.SetBikeCamera();
                     }
                     else
                         throw new System.Exception("AssetBundle not loaded! Can't load into specialised demo!!");
                 }
-                // if the player is us, tell the server
-                if (id == (new PlayerIdentification.SteamIntegration().id).ToString())
-                {
-                    PlayerManagement.Instance.OnBikeSwitch(oldBike, bike);
-                    oldBike = bike;
-                    // and reset camera to us
-                    Utilities.instance.SetFreeCam();
-                    Utilities.instance.SetBikeCamera();
-                }
+            }
+            // if the player is us, tell the server
+            if (id == (new PlayerIdentification.SteamIntegration().id).ToString())
+            {
+                PlayerManagement.Instance.OnBikeSwitch(oldBike, bike);
+                oldBike = bike;
             }
         }
         public Animator GetPlayerAnim(GameObject PlayerObject)
