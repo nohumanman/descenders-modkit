@@ -306,8 +306,10 @@ let startTime = new Date().getTime();
 
 const socket = new WebSocket('ws://localhost:65430');
 
-socket.onopen = function(event) {
-    console.log('Connected to WebSocket server');
+socket.onopen = function(event) {};
+
+socket.onclose = function(event) {
+    socket = new WebSocket('ws://localhost:65430'); // reconnect
 };
 
 socket.onmessage = function(event) {
@@ -317,9 +319,8 @@ socket.onmessage = function(event) {
     }
 };
 
-// You can send messages like this:
-socket.send('GET');
-
+app.GetTrails();
+app.getLeaderboard();
 
 
 app.tab = app.GetTabByURL();
