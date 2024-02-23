@@ -23,7 +23,6 @@ class UnitySocketServer():
         self.dbms = dbms
         self.timeout = 120
         self.discord_bot : DiscordBot | None = None
-        self.website_socket_server = None
         self.players: list[UnitySocket] = []
 
     def get_discord_bot(self) -> 'DiscordBot':
