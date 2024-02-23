@@ -3,7 +3,7 @@ import threading
 import logging
 import asyncio
 import os
-from website_socket_server import WebsiteSocketServer
+from website_socket_server import WebSocketServer
 from unity_socket_server import UnitySocketServer
 from discord_bot import DiscordBot
 from tokens import DISCORD_TOKEN
@@ -29,6 +29,8 @@ WEBSITE_PORT = 8080
 WEBSITE_SOCKET_IP = "0.0.0.0"
 WEBSITE_SOCKET_PORT = 65430
 
+loop = asyncio.get_event_loop() # get the event loop
+
 # Set the working directory to the script path
 script_path = os.path.dirname(os.path.realpath(__file__))
 os.chdir(script_path)
@@ -38,27 +40,13 @@ setup_logging(_log_file)
 # - Database Management System -
 dbms_instance = DBMS()
 
-# - Website Socket Server -
-website_socket_server = WebsiteSocketServer(
-    WEBSITE_SOCKET_IP,
-    WEBSITE_SOCKET_PORT,
-    dbms_instance
-)
-loop = asyncio.get_event_loop() # get the event loop
-server_coroutine = asyncio.start_server(
-    unity_socket_server.create_client,
-    unity_socket_server.host,
-    unity_socket_server.port,
-) # create the server coroutine
-loop.run_until_complete(server_coroutine) # run the server coroutine
-
 # - Unity Socket Server -
 unity_socket_server = UnitySocketServer(
     UNITY_SOCKET_IP,
     UNITY_SOCKET_PORT,
     dbms_instance
 ) # create the server instance
-loop = asyncio.get_event_loop() # get the event loop
+
 server_coroutine = asyncio.start_server(
     unity_socket_server.create_client,
     unity_socket_server.host,
@@ -69,8 +57,12 @@ loop.run_until_complete(server_coroutine) # run the server coroutine
 # Set riders gate to run
 loop.create_task(unity_socket_server.riders_gate())
 
+# - Website Socket Server -
+server = WebSocketServer(WEBSITE_SOCKET_IP, WEBSITE_SOCKET_PORT, unity_socket_server)
+threading.Thread(target=server.run_server).start()
+
 # - Website Server -
-Webserver(unity_socket_server, dbms_instance)
+webserver = Webserver(unity_socket_server, dbms_instance)
 
 # - Discord Bot -
 discord_bot = DiscordBot(DISCORD_TOKEN, "!", unity_socket_server, dbms_instance)
@@ -85,8 +77,8 @@ threading.Thread(target=loop.run_forever).start()
 # run webserver
 if __name__ == "__main__":
     # NOTE: when debug=True, flask initialises twice! Causes issues with the unity socket server
+    print("Server available from https://localhost:8080/")
     webserver.webserver_app.run(
         WEBSITE_IP, port=WEBSITE_PORT,
         debug=False, ssl_context='adhoc'
     )
-    print("Server available from https://localhost:8080/")

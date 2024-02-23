@@ -1,18 +1,53 @@
-""" Used to host the socket server. """
 import asyncio
 import websockets
+import json
+from unity_socket_server import UnitySocketServer
 
-class WebsiteSocketServer():
-    def __init__(self):
-        pass
+class WebSocketServer:
+    def __init__(self, host, port, unity_socket_server : UnitySocketServer):
+        self.host = host
+        self.port = port
+        self.unity_socket_server = unity_socket_server
 
-    async def echo(websocket, path):
-        async for message in websocket:
-            await websocket.send(message)
+    async def handle(self, websocket, path):
+        await websocket.send("Welcome to the server!")
+        try:
+            async for message in websocket:
+                if message == "GET":
+                    await websocket.send(json.dumps([{
+                        "steam_id": player.info.steam_id,
+                        "steam_name": player.info.steam_name,
+                        "steam_avatar_src": player.info.avatar_src,
+                        "reputation": player.info.reputation,
+                        "world_name": player.info.world_name,
+                        "last_trick": player.info.last_trick,
+                        "version": player.info.version,
+                        "bike_type": player.info.bike_type,
+                        "trail_info": [
+                            {
+                                "trail_name": player.trails[trail_name].trail_name,
+                                "started": player.trails[trail_name].timer_info.started,
+                                "auto_verify": player.trails[trail_name].timer_info.auto_verify,
+                                "times": player.trails[trail_name].timer_info.times,
+                                "starting_speed": player.trails[trail_name].timer_info.starting_speed,
+                                "total_checkpoints": player.trails[trail_name].timer_info.total_checkpoints,
+                                "time_started": player.trails[trail_name].timer_info.time_started
+                            }
+                            for trail_name in player.trails
+                        ]
+                    } for player in self.unity_socket_server.players]))
+                await websocket.send(f"Echo: {message}")
+        except websockets.exceptions.ConnectionClosedOK:
+            print("Client disconnected")
+
+    async def start_server(self):
+        start_server = websockets.serve(self.handle, self.host, self.port)
+        async with start_server:
+            await asyncio.Future()  # run forever
+
+    def run_server(self):
+        asyncio.run(self.start_server())
 
 if __name__ == "__main__":
-    website_socket_server = WebsiteSocketServer()
-    start_server = websockets.serve(website_socket_server.echo, "localhost", 65430)
-
-    asyncio.get_event_loop().run_until_complete(start_server)
-    asyncio.get_event_loop().run_forever()
+    server = WebSocketServer("localhost", 65430, None)
+    asyncio.run(server.start_server())
