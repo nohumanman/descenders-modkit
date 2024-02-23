@@ -306,7 +306,9 @@ let startTime = new Date().getTime();
 
 const socket = new WebSocket('ws://localhost:65430');
 
-socket.onopen = function(event) {};
+socket.onopen = function(event) {
+    socket.send("GET");
+};
 
 socket.onclose = function(event) {
     socket = new WebSocket('ws://localhost:65430'); // reconnect

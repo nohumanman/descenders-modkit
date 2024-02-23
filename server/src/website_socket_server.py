@@ -38,7 +38,7 @@ class WebSocketServer:
             ]
         } for player in self.unity_socket_server.players]))
 
-    async def handle(self, websocket, path):
+    async def handle(self, websocket: websockets.WebSocketClientProtocol, path):
         self.websockets.append(websocket)
         try:
             async for message in websocket:
