@@ -313,7 +313,6 @@ socket.onclose = function(event) {
 };
 
 socket.onmessage = function(event) {
-    console.log(event.data);
     if (event.data.startsWith("[")){
         app.players = JSON.parse(event.data);
     }
