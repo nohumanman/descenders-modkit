@@ -109,12 +109,12 @@ namespace ModLoaderSolution
                     else
                         throw new System.Exception("AssetBundle not loaded! Can't load into specialised demo!!");
                 }
-                // if the player is us, tell the server
-                if (id == (new PlayerIdentification.SteamIntegration().id).ToString())
-                {
-                    PlayerManagement.Instance.OnBikeSwitch(oldBike, bike);
-                    oldBike = bike;
-                }
+            }
+            // if the player is us, tell the server
+            if (id == (new PlayerIdentification.SteamIntegration().id).ToString())
+            {
+                PlayerManagement.Instance.OnBikeSwitch(oldBike, bike);
+                oldBike = bike;
             }
             Utilities.instance.SetFreeCam();
             Utilities.instance.SetBikeCamera();
