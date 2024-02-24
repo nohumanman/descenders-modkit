@@ -279,9 +279,10 @@ class TrailTimer():
         # if time being spectated
         if self.network_player.info.steam_id in [network_player.info.spectating_id for network_player in self.network_player.parent.players]:
             connection = twitch_chat_irc.TwitchChatIRC('nohumanman', TWITCH_TOKEN)
-            connection.send("bbb171", f"{secs_str}") # change to send to self.network_player.info.twitch_channel
+            connection.send("bbb171", f"{secs_str} 🚗💨") # change to send to self.network_player.info.twitch_channel
         # reset the timer
         self.timer_info.auto_verify = True
+        self.timer_info.started = False
 
     async def potential_cheat(self, client_time: float):
         """ Called when the client time does not match the server time. """

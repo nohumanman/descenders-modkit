@@ -63,5 +63,4 @@ setInterval(() => {
 
 setInterval(() => {
     app.updateTimeFromServer();
-}, 1000);
-
+}, 400);
