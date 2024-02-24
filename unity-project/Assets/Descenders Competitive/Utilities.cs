@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEditor;
 using ModTool.Interface;
 using System.Linq;
@@ -39,6 +40,23 @@ namespace DescendersCompetitive{
 				}
 			}
 		}
+        public static int GetNumScenes()
+        {
+            // Get all assets paths in the project
+            string[] assetPaths = AssetDatabase.GetAllAssetPaths();
+            int num = 0;
+            foreach (string assetPath in assetPaths)
+            {
+                // Check if the asset is a scene
+                if (assetPath.EndsWith(".unity"))
+                {
+                    // Print the scene path
+                    num += 1;
+                }
+            }
+            return num;
+        }
+
 		[MenuItem("Tools/Descenders Competitive/Verify/Basic verify")]
         public static void PartialVerify(){
             foreach(Camera cam in FindObjectsOfType<Camera>()){
@@ -81,7 +99,16 @@ namespace DescendersCompetitive{
                     warnings += 1;
                 }
             }
+
+            if (GetNumScenes() > 1){
+                Debug.LogError("Multiple scenes detected! This will cause issues when exporting!");
+                errors += 1;
+            }
             foreach(TimerInfo timerInf in FindObjectsOfType<TimerInfo>()){
+                if (PrefabUtility.GetPrefabParent(timerInf.gameObject) == timerInf.gameObject){
+                    Debug.LogError("TimerInfo is part of a prefab! Break it or this will cause issues when exporting!", timerInf.transform);
+                    errors += 1;
+                }
                 if (timerInf.startCheckpoint == null){
                     Debug.LogError("No startCheckpoint on TimerInfo!", timerInf.transform);
                     errors += 1;
@@ -102,9 +129,9 @@ namespace DescendersCompetitive{
                     Debug.LogError("No boundary gameobject on TimerInfo!", timerInf.transform);
                     errors += 1;
                 }
-                if (timerInf.name == "Change Me"){
-                    Debug.LogWarning("TimerInfo name is default! Change it to the name of your trail.", timerInf.transform);
-                    warnings += 1;
+                if (timerInf.name == "Timer - Rename Me"){
+                    Debug.LogError("TimerInfo name is default! Change it to the name of your trail. (BREAK IT AS WELL)", timerInf.transform);
+                    errors += 1;
                 }
                 else{
                     foreach(Transform boundary in timerInf.boundaries.transform){

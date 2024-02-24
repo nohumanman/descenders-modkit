@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 23682855287324170}
   - component: {fileID: 102016583289551864}
   m_Layer: 0
-  m_Name: New Text (3)
+  m_Name: SpeedrunDotCom Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 23123630135306544}
   - component: {fileID: 102485750378671308}
   m_Layer: 0
-  m_Name: New Text
+  m_Name: SplitTimer Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
