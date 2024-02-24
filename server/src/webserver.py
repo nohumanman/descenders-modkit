@@ -429,7 +429,7 @@ class Webserver():
         time_id = request.form.get('time_id')       # Using .get() to handle missing keys
 
         # Validate time_id
-        if time_id is None or not time_id.isdigit():
+        if time_id is None:
             return "Error: Invalid time_id"
 
         # Ensure replay_file is not None
