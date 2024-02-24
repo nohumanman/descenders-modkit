@@ -602,7 +602,8 @@ namespace ModLoaderSolution
         {
             MethodBase caller = new StackFrame(1, false).GetMethod();
             string prefix = caller.ReflectedType.FullName + "." + caller.Name;
-            Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);
+            //Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);
+            NetClient.Instance.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);
         }
         public string GetPlayerCurrentTrick()
         {
