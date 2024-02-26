@@ -238,7 +238,7 @@ class Webserver():
         """ Function to spectate a player """
         # get our player id
         try:
-            our_id = "76561198282799591"#await self.get_our_steam_id()
+            our_id = await self.get_our_steam_id()
         except (InvalidTokenError, MissingTokenError):
             return ("ERROR - NOT LOGGED IN!", 500)
         # get us
