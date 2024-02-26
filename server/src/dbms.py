@@ -38,10 +38,10 @@ class DBMS():
         """ Get the replay name associated with a given time. """
         async with aiosqlite.connect(self.db_file) as db:
             # pylint: disable=no-member
-            return await self.queries.get_replay_name(
+            return (await self.queries.get_replay_name(
                 db,
                 time_id=time_id
-            )
+            ))[0]
 
     async def update_player(self, steam_id, steam_name, avatar_src):
         """ Update the player's name and avatar """
@@ -210,7 +210,7 @@ class DBMS():
         """ Verify a given time. """
         async with aiosqlite.connect(self.db_file) as db:
             # pylint: disable=no-member
-            return await self.queries.verify_time(db, time_id=time_id)
+            return await self.queries.verify_time(db, time_id=int(time_id))
 
     async def submit_time(
         self,

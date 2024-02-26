@@ -26,7 +26,7 @@ namespace ModLoaderSolution
 		public string ip = "18.132.81.187";
 		static string version = "0.2.57";
 		static string patchNotes = "- Fix camera when in shed\n- Fix freecam\n- Fix non-standard characters breaking leaderboards\n\nYours,\n- nohumanman"; // that which has changed since the last version.
-		public static bool developerMode = false;
+		public static bool developerMode = true;
 		void Awake(){
 			if (developerMode)
 				ip = "localhost";
@@ -133,6 +133,10 @@ namespace ModLoaderSolution
 		{
 			SendData("LOG_LINE|" + logString);
 		}
+		public void Log(string logString)
+        {
+			SendData("LOG_LINE|" + logString);
+        }
 		public IEnumerator UploadOutputLog()
 		{
 			string replayLocation = (
@@ -540,8 +544,6 @@ namespace ModLoaderSolution
 			}
 			try
 			{
-				if (clientMessage != "pong\n" && !clientMessage.StartsWith("LOG_LINE"))
-					Utilities.Log("Sending data '" + clientMessage.Replace("\n", "") + "'");
 				NetworkStream stream = socketConnection.GetStream();
 				if (stream.CanWrite)
 				{

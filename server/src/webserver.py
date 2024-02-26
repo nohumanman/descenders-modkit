@@ -1,6 +1,7 @@
 """ Used to host the website using flask """
 from typing import TYPE_CHECKING
 import os
+import time
 from datetime import datetime
 import logging
 from werkzeug.utils import secure_filename
@@ -237,7 +238,7 @@ class Webserver():
         """ Function to spectate a player """
         # get our player id
         try:
-            our_id = await self.get_our_steam_id()
+            our_id = "76561198282799591"#await self.get_our_steam_id()
         except (InvalidTokenError, MissingTokenError):
             return ("ERROR - NOT LOGGED IN!", 500)
         # get us
@@ -273,6 +274,7 @@ class Webserver():
         return "FAILED - NOT VALID PERMISSIONS!", 401
 
     async def get_replay(self, time_id):
+        """ Function to get the replay of a time with id time_id """
         time_id = time_id.split(".")[0]
         try:
             return send_file(
@@ -303,18 +305,20 @@ class Webserver():
         except PlayerNotFound:
             return "Failed to find player you are spectating"
         # get time
-        res = {}
+        trail_time = {}
         time_started = 0
-        for trail_name in spectating.trails:
-            trail = await spectating.get_trail(trail_name)
-            if trail.timer_info.started:
-                return jsonify({"time": trail.timer_info.time_started, "started": True})
-            if trail.timer_info.time_started > time_started:
-                if len(trail.timer_info.times) != 0:
-                    res = jsonify({"time": trail.timer_info.times[-1], "started": False})
-                time_started = trail.timer_info.time_started
-        # otherwise, return most recently finished
-        return res
+        while not trail_time or str(trail_time) == str(session['previous_result']):
+            for trail_name in spectating.trails:
+                trail = await spectating.get_trail(trail_name)
+                if trail.timer_info.started:
+                    trail_time = {"time": trail.timer_info.time_started, "started": True, "times": trail.timer_info.times}
+                    break
+                if trail.timer_info.time_started > time_started:
+                    if len(trail.timer_info.times) != 0:
+                        trail_time = {"time": trail.timer_info.times[-1], "started": False, "times": trail.timer_info.times}
+                    time_started = trail.timer_info.time_started
+        session['previous_result'] = str(trail_time)
+        return jsonify(trail_time)
 
     async def time_details(self, time_id):
         """ Function to get the details of a time with id time_id """
@@ -389,8 +393,8 @@ class Webserver():
         """ Function to get the details of a player with id player_id """
         player_json = [
             {
-                "id": player.info.steam_id,
-                "name": player.info.steam_name,
+                "steam_id": player.info.steam_id,
+                "steam_name": player.info.steam_name,
                 "steam_avatar_src": await player.get_avatar_src(),
                 "reputation": player.info.reputation,
                 "total_time": "",#player.get_total_time(),
@@ -500,6 +504,7 @@ class Webserver():
         session['oauth2_token'] = token
 
     async def get_our_steam_id(self):
+        """ Function to get the steam id of the user """
         discord = self.make_session(token=session.get('oauth2_token'))
         connections = discord.get(
             API_BASE_URL + '/users/@me/connections'
@@ -576,6 +581,7 @@ class Webserver():
 
     async def split_time(self):
         """ Function to get the split time """
+        session['previous_result'] = "{}"
         return render_template("SplitTime.html")
 
     def tag(self):
