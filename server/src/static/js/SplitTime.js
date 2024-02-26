@@ -35,14 +35,7 @@ var app = new Vue({
             });
         },
         updateTime(){
-            player = getPlayer(app.spectating);
-            player.trail_info.forEach(trail => {
-                if (trail.started){
-                    app.started = true;
-                    app.start_time = trail.start_time;
-                }
-            });
-            if (this.started){
+            if (app.started){
                 if (app.start_time == 0 || app.start_time == undefined)
                     return;
                 app.currentTime = Date.now()/1000 - app.start_time;
@@ -55,8 +48,17 @@ var app = new Vue({
                 app.currentTime = 0;
         },
         updateTimeFromServer(){
-            $.get("/api/get-spectated", data={"my_id": this.getSelf()}, function(data){
-                app.spectating = data;
+            $.get("/api/spectating/get-time", data={"my_id": this.getSelf()}, function(data){
+                app.started = data.started;
+                app.start_time = data.time;
+                setTimeout(function() {
+                    app.updateTimeFromServer();
+                }, 1000); 
+            })
+            .fail(function(){
+                setTimeout(function() {
+                    app.updateTimeFromServer();
+                }, 1000); 
             });
         },
         getSelf(){
@@ -66,22 +68,11 @@ var app = new Vue({
     }
 });
 
-app.startTime = Date.now();
-
 const params = new URLSearchParams(window.location.search)
 app.trail_name = params.get('trail_name')
 
+setInterval(() => {
+    app.updateTime();
+}, 1);
 
-const socket = new WebSocket('ws://localhost:65430');
-
-socket.onopen = function(event) {};
-
-socket.onclose = function(event) {
-    socket = new WebSocket('ws://localhost:65430'); // reconnect
-};
-
-socket.onmessage = function(event) {
-    if (event.data.startsWith("[")){
-        app.players = JSON.parse(event.data);
-    }
-};
+app.updateTimeFromServer();

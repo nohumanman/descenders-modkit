@@ -133,6 +133,10 @@ namespace ModLoaderSolution
 		{
 			SendData("LOG_LINE|" + logString);
 		}
+		public void Log(string logString)
+        {
+			SendData("LOG_LINE|" + logString);
+        }
 		public IEnumerator UploadOutputLog()
 		{
 			string replayLocation = (
@@ -540,8 +544,6 @@ namespace ModLoaderSolution
 			}
 			try
 			{
-				if (clientMessage != "pong\n" && !clientMessage.StartsWith("LOG_LINE"))
-					Utilities.Log("Sending data '" + clientMessage.Replace("\n", "") + "'");
 				NetworkStream stream = socketConnection.GetStream();
 				if (stream.CanWrite)
 				{

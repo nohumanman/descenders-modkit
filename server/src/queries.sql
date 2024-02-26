@@ -75,11 +75,12 @@ VALUES (
 -- name: get_replay_name^
 -- Get the replay name associated with a given time.
 SELECT (
-    'replay_' || Time.time_id || '_'
-    || Player.steam_name || '.replay'
+    Time.time_id || '_' || Player.steam_name || '_' || Time.world_name
+    || '_' || MAX(SplitTime.checkpoint_time)
 ) AS value
 FROM Time
 INNER JOIN Player ON Time.steam_id = Player.steam_id
+INNER JOIN SplitTime ON Time.time_id = SplitTime.time_id
 WHERE Time.time_id = :time_id;
 
 -- name: player_id_from_name^
@@ -203,7 +204,7 @@ VALUES (
     :email
 );
 
--- name: verify_time
+-- name: verify_time!
 -- Verify a time
 UPDATE Time
 SET verified = 1

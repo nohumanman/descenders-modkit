@@ -27,6 +27,18 @@ class TestTrailTimer(unittest.TestCase):
         print(avatar_src)
         self.assertEqual(avatar_src[0], 'avatar')
 
+    def test_verify_time(self):
+        """ tests queries.verify_time """
+        # add a time
+        self.test_setup()
+        self.cur.execute("INSERT INTO Player (steam_id, steam_name, avatar_src) VALUES ('76561198282799591', 'Player123', 'avatar')")
+        self.cur.execute("INSERT INTO Time (steam_id, time_id, timestamp, world_name, trail_name, bike_type, starting_speed, version, verified, ignored) VALUES('76561198282799591', 1, 123, 'world', 'trail', 'bike', 1, 'version', 0, 0)")
+        self.queries.verify_time(self.conn, time_id=1)
+        self.conn.commit()  # Commit changes to the database
+        self.cur.execute("SELECT verified FROM Time WHERE time_id = 1")
+        verified = self.cur.fetchone()
+        self.assertEqual(verified[0], 1)
+
     def test_get_player_avatar_with_no_avatar(self):
         """ Tests the started function """
         self.test_setup()

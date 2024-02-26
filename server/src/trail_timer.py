@@ -204,6 +204,8 @@ class TrailTimer():
         """ End the timer. """
         self.timer_info.times.append(float(client_time)) # add the final time
         can_end = await self.can_end()
+        # reset the timer
+        self.timer_info.started = False
         # submit the time to the database
         time_id = await self.network_player.dbms.submit_time(
             self.network_player.info.steam_id,
@@ -226,15 +228,24 @@ class TrailTimer():
         # send the submitted time to the client
         comment = "verified" if self.timer_info.auto_verify else "requires review"
         secs_str = TrailTimer.secs_to_str(client_time)
+        # if time being spectated
+        async def twitch_notif():
+            try:
+                if self.network_player.info.steam_id in [network_player.info.spectating_id for network_player in self.network_player.parent.players]:
+                    connection = twitch_chat_irc.TwitchChatIRC('nohumanman', TWITCH_TOKEN)
+                    connection.send("bbb171", f"{secs_str} 🚗💨") # change to send to self.network_player.info.twitch_channel
+            except Exception as e:
+                logging.error(f"Failed to send message to twitch chat: {e}")
+        asyncio.create_task(twitch_notif())
         async def send_popup():
             if not self.timer_info.auto_verify:
-                time.sleep(2)
+                await asyncio.sleep(2)
                 await self.network_player.send(
                         "POPUP|Time requires verification|Great! You've completed"
                         f" a time of {secs_str}, but for it to show up on leaderboards,"
                         " it needs to be verified by a moderator. You can ask for a"
                         " verification in the #races channel on the Descenders"
-                        " Discord server if you think your run is valid."
+                        " Competitive Discord server if you think your run is valid."
                 )
         asyncio.create_task(send_popup())
         if can_end[0]:
@@ -245,42 +256,41 @@ class TrailTimer():
             await self.network_player.send(
                 f"TIMER_FINISH|{secs_str}\\n{can_end[1]}\\nLive Racers: This time is still logged!\\n"
             )
-        # send the time to the discord server if it is a new fastest time
-        global_fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
-        if client_time < global_fastest[len(global_fastest)-1] and self.timer_info.auto_verify and can_end[0]:
-            await self.__new_fastest_time(secs_str)
-        # send the time to the discord server if it is a new fastest time
-        our_fastest = await self.network_player.dbms.get_personal_fastest_split_times(
-            self.trail_name,
-            self.network_player.info.steam_id
-        )
-        if our_fastest is None or len(our_fastest) == 0:
-            fastest_pb = -1
-        else:
-            fastest_pb = float(our_fastest[len(our_fastest)-1])
 
-        # send the time to the discord server if it is a new personal best
-        time_url = f"https://modkit.nohumanman.com/time/{time_id}"
-        # note: we use <= here because if the time is the same as the fastest pb, we still want to
-        #       send a message to discord
-        if ((client_time <= fastest_pb or fastest_pb == -1) and self.timer_info.auto_verify):
-            await self.network_player.parent.get_discord_bot().new_time(
-                f"Automatically verified [a new pb]({time_url}) on '{self.trail_name}' by "
-                f"'{self.network_player.info.steam_name}' of {secs_str}"
+        async def discord_notif():
+            # send the time to the discord server if it is a new fastest time
+            global_fastest = await self.network_player.dbms.get_fastest_split_times(self.trail_name)
+            if client_time < global_fastest[len(global_fastest)-1] and self.timer_info.auto_verify and can_end[0]:
+                await self.__new_fastest_time(secs_str)
+            # send the time to the discord server if it is a new fastest time
+            our_fastest = await self.network_player.dbms.get_personal_fastest_split_times(
+                self.trail_name,
+                self.network_player.info.steam_id
             )
-        elif client_time <= fastest_pb or fastest_pb == -1:
-            await self.network_player.parent.get_discord_bot().new_time(
-                f"<@&1166081385732259941> Please verify [the new pb time]({time_url}) on "
-                f"'{self.trail_name}' by '{self.network_player.info.steam_name}' of {secs_str}"
-            )
+            if our_fastest is None or len(our_fastest) == 0:
+                fastest_pb = -1
+            else:
+                fastest_pb = float(our_fastest[len(our_fastest)-1])
+            # send the time to the discord server if it is a new personal best
+            time_url = f"https://modkit.nohumanman.com/time/{time_id}"
+            # note: we use <= here because if the time is the same as the fastest pb, we still want to
+            #       send a message to discord
+            if ((client_time <= fastest_pb or fastest_pb == -1) and self.timer_info.auto_verify):
+                await self.network_player.parent.get_discord_bot().new_time(
+                    f"Automatically verified [a new pb]({time_url}) on '{self.trail_name}' by "
+                    f"'{self.network_player.info.steam_name}' of {secs_str}"
+                )
+            elif client_time <= fastest_pb or fastest_pb == -1:
+                await self.network_player.parent.get_discord_bot().new_time(
+                    f"<@&1166081385732259941> Please verify [the new pb time]({time_url}) on "
+                    f"'{self.trail_name}' by '{self.network_player.info.steam_name}' of {secs_str}"
+                )
+        asyncio.create_task(discord_notif())
         # update the leaderboards and medals on connected clients
-        await self.update_leaderboards()
-        await self.update_medals()
-        # if time being spectated
-        if self.network_player.info.steam_id in [network_player.info.spectating_id for network_player in self.network_player.parent.players]:
-            connection = twitch_chat_irc.TwitchChatIRC('nohumanman', TWITCH_TOKEN)
-            connection.send("bbb171", f"{secs_str}") # change to send to self.network_player.info.twitch_channel
-        # reset the timer
+        async def update():
+            await self.update_leaderboards()
+            await self.update_medals()
+        asyncio.create_task(update())
         self.timer_info.auto_verify = True
 
     async def potential_cheat(self, client_time: float):

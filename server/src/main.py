@@ -3,7 +3,6 @@ import threading
 import logging
 import asyncio
 import os
-from website_socket_server import WebSocketServer
 from unity_socket_server import UnitySocketServer
 from discord_bot import DiscordBot
 from tokens import DISCORD_TOKEN
@@ -25,7 +24,7 @@ def setup_logging(log_file):
 UNITY_SOCKET_IP = "0.0.0.0"
 UNITY_SOCKET_PORT = 65432
 WEBSITE_IP = "0.0.0.0"
-WEBSITE_PORT = 8080
+WEBSITE_PORT = 8082
 WEBSITE_SOCKET_IP = "0.0.0.0"
 WEBSITE_SOCKET_PORT = 65430
 
@@ -57,11 +56,6 @@ loop.run_until_complete(server_coroutine) # run the server coroutine
 # Set riders gate to run
 loop.create_task(unity_socket_server.riders_gate())
 
-# - Website Socket Server -
-server = WebSocketServer(WEBSITE_SOCKET_IP, WEBSITE_SOCKET_PORT, unity_socket_server)
-threading.Thread(target=server.run_server).start()
-unity_socket_server.website_socket_server = server
-
 # - Website Server -
 webserver = Webserver(unity_socket_server, dbms_instance)
 
@@ -78,7 +72,7 @@ threading.Thread(target=loop.run_forever).start()
 # run webserver
 if __name__ == "__main__":
     # NOTE: when debug=True, flask initialises twice! Causes issues with the unity socket server
-    print("Server available from https://localhost:8080/")
+    print(f"Server available from https://localhost:{WEBSITE_PORT}/")
     webserver.webserver_app.run(
         WEBSITE_IP, port=WEBSITE_PORT,
         debug=False, ssl_context='adhoc'
