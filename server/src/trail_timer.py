@@ -205,6 +205,7 @@ class TrailTimer():
         self.timer_info.times.append(float(client_time)) # add the final time
         can_end = await self.can_end()
         # reset the timer
+        was_started = self.timer_info.started
         self.timer_info.started = False
         # submit the time to the database
         time_id = await self.network_player.dbms.submit_time(
@@ -223,7 +224,7 @@ class TrailTimer():
         # if the timer has not started, return
         # this is to prevent the timer from ending multiple times, but retain
         # all times in the database. Important for live racing
-        if not self.timer_info.started:
+        if not was_started:
             return
         # send the submitted time to the client
         comment = "verified" if self.timer_info.auto_verify else "requires review"
