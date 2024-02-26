@@ -125,9 +125,9 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4276993048561486}
+  - component: {fileID: 82045122847874498}
   - component: {fileID: 95258571233969240}
   - component: {fileID: 114378970052062512}
-  - component: {fileID: 82045122847874498}
   m_Layer: 0
   m_Name: Gate
   m_TagString: Untagged

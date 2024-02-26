@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEditor;
 using ModTool.Interface;
 using System.Linq;
@@ -12,14 +13,17 @@ namespace DescendersCompetitive{
 			FindAllMissingScriptsInAssets();
 		}
 		[MenuItem("Tools/Descenders Competitive/Locate Missing Scripts/In Scene")]
-		public static void FindAllMissingScriptsInScene(){
+		public static int FindAllMissingScriptsInScene(){
+            int missingScripts = 0;
 			foreach(GameObject gameObject in FindObjectsOfType<GameObject>()){
 				foreach(Component component in gameObject.GetComponentsInChildren<Component>()){
 					if (component == null){
 						Debug.LogWarning("GameObject found with missing script '" + gameObject.name + "'", gameObject);
+                        missingScripts += 1;
 					}
 				}
 			}
+            return missingScripts;
 		}
 		[MenuItem("Tools/Descenders Competitive/Locate Missing Scripts/In Assets")]
 		public static void FindAllMissingScriptsInAssets(){
@@ -36,22 +40,47 @@ namespace DescendersCompetitive{
 				}
 			}
 		}
-		[MenuItem("Tools/Descenders Competitive/Verify/Partial Verify")]
+        public static int GetNumScenes()
+        {
+            // Get all assets paths in the project
+            string[] assetPaths = AssetDatabase.GetAllAssetPaths();
+            int num = 0;
+            foreach (string assetPath in assetPaths)
+            {
+                // Check if the asset is a scene
+                if (assetPath.EndsWith(".unity"))
+                {
+                    // Print the scene path
+                    num += 1;
+                }
+            }
+            return num;
+        }
+
+		[MenuItem("Tools/Descenders Competitive/Verify/Basic verify")]
         public static void PartialVerify(){
             foreach(Camera cam in FindObjectsOfType<Camera>()){
                 Debug.LogWarning("Camera found! Remember cameras do NOT play well with Descenders!", cam);
             }
 			if (FindObjectsOfType<Terrain>().Length > 1)
 				Debug.LogWarning("Multiple terrains detected! This could cause issues without TerrainBoundryRemover");
+            foreach(Terrain x in FindObjectsOfType<Terrain>()){
+                if (x.gameObject.transform.position.y < 0)
+                    Debug.LogWarning("Terrain below y=0! This could cause camera issues!", x);
+            }
 			Debug.Log("Partial Verify Complete");
         }
-        [MenuItem("Tools/Descenders Competitive/Verify/Full Verify")]
+        [MenuItem("Tools/Descenders Competitive/Verify/Proper Verify")]
+        [MenuItem("Tools/ModTool/Proper Verify")]
         public static void VerifyScriptConfig(){
 			Debug.Log("Starting full Verify");
 			PartialVerify();
             int errors = 0;
             int warnings = 0;
-
+            if (FindAllMissingScriptsInScene() > 0){
+                Debug.LogError("Missing scripts on gameobjects in scene found! Please fix these before exporting!");
+                errors += 1;
+            }
             // check if all startlines assigned to SpawnPoint are spawnpoints.
             if (FindObjectOfType<SpawnPoint>() != null){
                 foreach (GameObject spawnPoint in FindObjectOfType<SpawnPoint>().SpawnPoints){
@@ -61,15 +90,7 @@ namespace DescendersCompetitive{
             }
 
             if (FindObjectOfType<APILoaderScript.ModLoader>() == null){
-                Debug.LogError("APILoaderScript.ModLoader is not present!");
-                errors += 1;
-            }
-            if (FindObjectOfType<JsonMapInfo>() == null){
-                Debug.LogError("JsonMapInfo is not present!");
-                errors += 1;
-            }
-            if (FindObjectOfType<TimerText>() == null){
-                Debug.LogError("TimerText is not present!");
+                Debug.LogError("APILoaderScript.ModLoader is not present! This will mean the modkit won't load at all!");
                 errors += 1;
             }
             foreach(TeleportPad tp in FindObjectsOfType<TeleportPad>()){
@@ -78,7 +99,16 @@ namespace DescendersCompetitive{
                     warnings += 1;
                 }
             }
+
+            if (GetNumScenes() > 1){
+                Debug.LogError("Multiple scenes detected! This will cause issues when exporting!");
+                errors += 1;
+            }
             foreach(TimerInfo timerInf in FindObjectsOfType<TimerInfo>()){
+                if (PrefabUtility.GetPrefabParent(timerInf.gameObject) == timerInf.gameObject){
+                    Debug.LogError("TimerInfo is part of a prefab! Break it or this will cause issues when exporting!", timerInf.transform);
+                    errors += 1;
+                }
                 if (timerInf.startCheckpoint == null){
                     Debug.LogError("No startCheckpoint on TimerInfo!", timerInf.transform);
                     errors += 1;
@@ -97,6 +127,10 @@ namespace DescendersCompetitive{
                 }
                 if (timerInf.boundaries == null){
                     Debug.LogError("No boundary gameobject on TimerInfo!", timerInf.transform);
+                    errors += 1;
+                }
+                if (timerInf.name == "Timer - Rename Me"){
+                    Debug.LogError("TimerInfo name is default! Change it to the name of your trail. (BREAK IT AS WELL)", timerInf.transform);
                     errors += 1;
                 }
                 else{
