@@ -205,7 +205,6 @@ class TrailTimer():
         self.timer_info.times.append(float(client_time)) # add the final time
         can_end = await self.can_end()
         # reset the timer
-        self.timer_info.auto_verify = True
         self.timer_info.started = False
         # submit the time to the database
         time_id = await self.network_player.dbms.submit_time(
@@ -292,6 +291,7 @@ class TrailTimer():
             await self.update_leaderboards()
             await self.update_medals()
         asyncio.create_task(update())
+        self.timer_info.auto_verify = True
 
     async def potential_cheat(self, client_time: float):
         """ Called when the client time does not match the server time. """
