@@ -295,8 +295,6 @@ class UnitySocket():
             "%s '%s'\t- banned with type %s",
             self.info.steam_id, self.info.steam_name, _type
         )
-        if _type == "ILLEGAL":
-            await self.send("TOGGLE_GOD")
         await self.send("BANNED|" + _type)
 
     async def has_both_steam_name_and_id(self):
@@ -313,11 +311,11 @@ class UnitySocket():
             ):
                 self.parent.players.remove(player)
         if self.info.steam_id in ["OFFLINE", ""]:
-            await self.ban("ILLEGAL")
+            await self.ban("CRASH")
         banned_names = ["descender", "goldberg", "skidrow", "player"]
         for banned_name in banned_names:
             if self.info.steam_name.lower() == banned_name:
-                await self.ban("ILLEGAL")
+                await self.ban("CRASH")
 
     async def set_steam_id(self, steam_id : str):
         """ Set the steam id of a player and invalidate timers if necessary """
@@ -487,7 +485,7 @@ class UnitySocket():
         await self.update_concurrent_users()
         for trail_name, trail in self.trails.items():
             if trail_name in self.trails:
-                trail.invalidate_timer()
+                trail.invalidate_timer("")
         self.trails = {}
 
     async def update_concurrent_users(self):

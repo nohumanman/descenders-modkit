@@ -112,14 +112,15 @@ class TrailTimer():
             )
 
             index = len(self.timer_info.times) - 1
-            time_diff = (
-                wr[index] - float(client_time) if index < len(wr)
-                else 0
-            )
-            time_diff_local = (
-                pb[index] - float(client_time) if index < len(pb)
-                else 0
-            )
+            if index < len(wr):
+                time_diff = wr[index] - float(client_time)
+            else:
+                time_diff = 0
+
+            if index < len(pb):
+                time_diff_local = pb[index] - float(client_time)
+            else:
+                time_diff_local = 0
 
             mess = self.calculate_split_message(time_diff, time_diff_local, client_time)
             await self.network_player.send(f"SPLIT_TIME|{mess}")
@@ -130,6 +131,8 @@ class TrailTimer():
 
         if time_diff > 0:
             mess += f"<color=lime>-{round(abs(time_diff), 3)}</color>"
+        elif time_diff == 0:
+            mess += f"  <color=orange>+{round(abs(time_diff), 3)}</orange>"
         elif time_diff < 0:
             mess += f"<color=red>+{round(abs(time_diff), 3)}</color>"
 
@@ -138,6 +141,8 @@ class TrailTimer():
 
         if time_diff_local > 0:
             mess += f"  <color=lime>-{round(abs(time_diff_local), 3)}</color>"
+        elif time_diff_local == 0:
+            mess += f"  <color=orange>+{round(abs(time_diff_local), 3)}</orange>"
         elif time_diff_local < 0:
             mess += f"  <color=red>+{round(abs(time_diff_local), 3)}</color>"
 
@@ -205,6 +210,7 @@ class TrailTimer():
         self.timer_info.times.append(float(client_time)) # add the final time
         can_end = await self.can_end()
         # reset the timer
+        was_started = self.timer_info.started
         self.timer_info.started = False
         # submit the time to the database
         time_id = await self.network_player.dbms.submit_time(
@@ -223,7 +229,7 @@ class TrailTimer():
         # if the timer has not started, return
         # this is to prevent the timer from ending multiple times, but retain
         # all times in the database. Important for live racing
-        if not self.timer_info.started:
+        if not was_started:
             return
         # send the submitted time to the client
         comment = "verified" if self.timer_info.auto_verify else "requires review"
@@ -285,12 +291,13 @@ class TrailTimer():
                     f"<@&1166081385732259941> Please verify [the new pb time]({time_url}) on "
                     f"'{self.trail_name}' by '{self.network_player.info.steam_name}' of {secs_str}"
                 )
-        asyncio.create_task(discord_notif())
+        
         # update the leaderboards and medals on connected clients
         async def update():
             await self.update_leaderboards()
             await self.update_medals()
         asyncio.create_task(update())
+        await discord_notif()
         self.timer_info.auto_verify = True
 
     async def potential_cheat(self, client_time: float):

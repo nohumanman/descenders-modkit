@@ -129,7 +129,12 @@ var app = new Vue({
         GetTrails(){
             $.get("/get-trails", function(data){
                 app.trails = data["trails"];
-                app.trails.sort(function(a, b){return a.world_name-b.world_name});
+                // sort alphabetically
+                app.trails.sort(function(a, b){
+                    if (a.name < b.name) { return -1; }
+                    if (a.name > b.name) { return 1; }
+                    return 0;
+                });
             })
         },
         UpdateTimeIgnore(time){
@@ -268,36 +273,18 @@ var app = new Vue({
                 
                 function compare_lname( a, b )
                 {
-                    if (a.name != null && b.name != null){
-                        if ( a.name.toLowerCase() < b.name.toLowerCase()){
+                    if (a.world_name != null && b.world_name != null){
+                        if ( a.world_name.toLowerCase() < b.world_name.toLowerCase()){
                             return -1;
                         }
-                        if ( a.name.toLowerCase() > b.name.toLowerCase()){
+                        if ( a.world_name.toLowerCase() > b.world_name.toLowerCase()){
                             return 1;
                         }
                     }
                     return 0;
                 }
-                //data["players"].sort(compare_lname);
+                data["players"].sort(compare_lname);
                 app.players = data["players"];
-                if (app.players[0] == null || app.players[0].id != "ALL"){
-                    app.players.unshift(
-                        {
-                            "name":"All Players",
-                            "id" : "ALL",
-                            "command" : "",
-                            "address": ["0.0.0.0", 6969],
-                            "steam_avatar_src" : "https://dinahjean.files.wordpress.com/2020/04/all.jpg",
-                            "time_on_world": 0,
-                            "total_time": 0,
-                            "time_loaded": startTime/1000,
-                            "world_name": "this dashboard",
-                            "reputation":  0,
-                            "version": "0.0.0",
-                            "bike_type": ""
-                        }
-                    )
-                }
             })
         }
     }
@@ -305,25 +292,13 @@ var app = new Vue({
 
 let startTime = new Date().getTime();
 
-const socket = new WebSocket('ws://localhost:65430');
-
-socket.onopen = function(event) {
-    socket.send("GET");
-};
-
-socket.onclose = function(event) {
-    socket = new WebSocket('ws://localhost:65430'); // reconnect
-};
-
-socket.onmessage = function(event) {
-    if (event.data.startsWith("[")){
-        app.players = JSON.parse(event.data);
-    }
-};
-
 app.GetTrails();
 app.getLeaderboard();
+app.updatePlayers();
 
+setInterval(function(){
+    app.updatePlayers();
+}, 10000);
 
 app.tab = app.GetTabByURL();
 

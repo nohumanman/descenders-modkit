@@ -296,18 +296,18 @@ class Webserver():
     async def get_spectating_time(self):
         """ Function to get the times of the player we are spectating """
         our_id = request.args.get("my_id")
-        try:
-            us = self.socket_server.get_player_by_id(str(our_id))
-        except PlayerNotFound:
-            return f"Failed to find you! your id : {our_id}"
-        try:
-            spectating = self.socket_server.get_player_by_id(us.info.spectating_id)
-        except PlayerNotFound:
-            return "Failed to find player you are spectating"
         # get time
         trail_time = {}
         time_started = 0
         while not trail_time or str(trail_time) == str(session['previous_result']):
+            try:
+                us = self.socket_server.get_player_by_id(str(our_id))
+            except PlayerNotFound:
+                return f"Failed to find you! your id : {our_id}"
+            try:
+                spectating = self.socket_server.get_player_by_id(us.info.spectating_id)
+            except PlayerNotFound:
+                return "Failed to find player you are spectating"
             for trail_name in spectating.trails:
                 trail = await spectating.get_trail(trail_name)
                 if trail.timer_info.started:
