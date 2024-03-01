@@ -278,28 +278,21 @@
                                 Descenders Modkit
                             </h1>
                             <h2 style="text-align:center; font-size:30px;">
-                                Trail Times
+                                Leaderboards
                             </h2>
-                            <!-- <v-btn @click="GetTrails()">Update Trails</v-btn> !-->
                             <br>
                             <v-row>
-                                <v-col v-for="trail in trails">
-                                    <v-card width="500" :color="colorFromNameUsingHash(trail.world_name)">
-                                        <div style="background:rgba(0, 0, 0, 0.5);">
-                                            <v-col>
-                                                <v-row>
-                                                    <v-card-title style="text-align:center;">[[trail.trail_name]]</v-card-title>
-                                                    <v-card-subtitle style="text-align:center;">[[trail.world_name]]</v-card-subtitle>
-                                                </v-row>
-                                            </v-col>
+                                <v-col v-for="trail in trails" style="padding:20px;">
+                                    <v-card style="color: rgb(255, 255, 255);" width="500" :color="colorFromNameUsingHash(trail.world_name)">
+                                        <div style="background-color: rgb(12, 10, 10);">
+                                            <v-card-title>[[trail.trail_name]]</v-card-title>
+                                            <v-card-subtitle>on [[trail.world_name]]</v-card-subtitle>
                                         </div>
-                                        <v-img :src="trail.src" height="30%">
-                                        </v-img>
-                                        <table style="padding:20px;">
+                                        <table style="padding:20px; color: rgb(255, 255, 255);">
                                             <tr v-for="player, index in trail.leaderboard" style="text-align:center">
                                                 <td style="padding-right:10px;">[[player.place]].</td>
                                                 <td style="text-align:left;">[[player.name]]</td>
-                                               <td style="padding-left:20px;"><a style="color: grey;" :href="'/time/' + player.time_id">[[secs_to_str(player.time)]]</a></td>
+                                               <td style="padding-left:20px;"><a style="color: rgb(138, 202, 186);" :href="'/time/' + player.time_id">[[secs_to_str(player.time)]]</a></td>
                                                 <td style="padding-left:20px;">+[[GetTimeDiff(player.time, trail, index)]]</td>
                                             </tr>
                                             <tr v-for="x in 10-trail.leaderboard.length">
