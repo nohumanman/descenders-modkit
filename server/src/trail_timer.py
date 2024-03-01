@@ -291,12 +291,13 @@ class TrailTimer():
                     f"<@&1166081385732259941> Please verify [the new pb time]({time_url}) on "
                     f"'{self.trail_name}' by '{self.network_player.info.steam_name}' of {secs_str}"
                 )
-        asyncio.create_task(discord_notif())
+        
         # update the leaderboards and medals on connected clients
         async def update():
             await self.update_leaderboards()
             await self.update_medals()
         asyncio.create_task(update())
+        await discord_notif()
         self.timer_info.auto_verify = True
 
     async def potential_cheat(self, client_time: float):
