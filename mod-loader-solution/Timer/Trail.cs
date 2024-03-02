@@ -48,19 +48,19 @@ namespace ModLoaderSolution
                 }
             }
         }
-        int framesSinceBoundaryCheck;
         public void Update()
         {
             if (Utilities.instance.isInReplayMode())
                 return;
-            clientTime += Time.deltaTime;
-            framesSinceBoundaryCheck += 1;
-            if (framesSinceBoundaryCheck > 20){
-                framesSinceBoundaryCheck = 0;
-                //if (InAllBoundaries())
-               //     
-                //);
+            // if select pressed, blow things up
+            if (Input.GetKeyDown("joystick button 6"))
+            {
+                SplitTimerText.Instance.count = false;
+                SplitTimerText.Instance.SetText("Restarted Fully");
+                SplitTimerText.Instance.text.color = Color.red;
+                StartCoroutine(SplitTimerText.Instance.DisableTimerText(5));
             }
+            clientTime += Time.deltaTime;
         }
         bool InAllBoundaries()
         {

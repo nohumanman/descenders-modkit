@@ -130,24 +130,18 @@ class TrailTimer():
         mess = ""
 
         if time_diff > 0:
-            mess += f"<color=lime>-{round(abs(time_diff), 3)}</color>"
+            mess += f"<color=lime>-{round(abs(time_diff), 3)}</color> WR"
         elif time_diff == 0:
-            mess += f"  <color=orange>+{round(abs(time_diff), 3)}</orange>"
+            mess += f"<color=orange>+{round(abs(time_diff), 3)}</color> WR"
         elif time_diff < 0:
-            mess += f"<color=red>+{round(abs(time_diff), 3)}</color>"
-
-        if time_diff != 0:
-            mess += " WR"
+            mess += f"<color=red>+{round(abs(time_diff), 3)}</color> WR"
 
         if time_diff_local > 0:
-            mess += f"  <color=lime>-{round(abs(time_diff_local), 3)}</color>"
+            mess += f"  <color=lime>-{round(abs(time_diff_local), 3)}</color> PB"
         elif time_diff_local == 0:
-            mess += f"  <color=orange>+{round(abs(time_diff_local), 3)}</orange>"
+            mess += f"  <color=orange>+{round(abs(time_diff_local), 3)}</color> PB"
         elif time_diff_local < 0:
-            mess += f"  <color=red>+{round(abs(time_diff_local), 3)}</color>"
-
-        if time_diff_local != 0:
-            mess += " PB"
+            mess += f"  <color=red>+{round(abs(time_diff_local), 3)}</color> PB"
 
         if not mess:
             mess = self.secs_to_str(float(client_time))
