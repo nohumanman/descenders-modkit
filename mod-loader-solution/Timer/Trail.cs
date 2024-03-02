@@ -50,9 +50,6 @@ namespace ModLoaderSolution
         }
         public void Update()
         {
-            foreach (string name in Input.GetJoystickNames())
-                if (name == "Controller (Xbox One For Windows)")
-                    usingXbox = true;
             if (Utilities.instance.isInReplayMode())
                 return;
             // if select pressed, blow things up
