@@ -48,7 +48,6 @@ namespace ModLoaderSolution
                 }
             }
         }
-        bool usingXbox = false;
         public void Update()
         {
             foreach (string name in Input.GetJoystickNames())
