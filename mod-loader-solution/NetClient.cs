@@ -446,6 +446,7 @@ namespace ModLoaderSolution
 				SplitTimerText.Instance.count = false;
 				SplitTimerText.Instance.SetText(reason);
 				SplitTimerText.Instance.text.color = Color.red;
+				StopCoroutine("DisableTimerText");
 				StartCoroutine(SplitTimerText.Instance.DisableTimerText(5));
 			}
 			if (message.StartsWith("CUT_BRAKES"))
