@@ -53,7 +53,11 @@ namespace ModLoaderSolution
             if (Utilities.instance.isInReplayMode())
                 return;
             // if select pressed, blow things up
-            if (Input.GetKeyDown("joystick button 6"))
+            bool usingXbox = false;
+            foreach (string name in Input.GetJoystickNames())
+                if (name == "Controller (Xbox One For Windows)")
+                    usingXbox = true;
+            if (Input.GetKeyDown("joystick button 6") && usingXbox)
             {
                 SplitTimerText.Instance.count = false;
                 SplitTimerText.Instance.SetText("Restarted Fully");
