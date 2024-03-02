@@ -68,6 +68,18 @@ namespace ModLoaderSolution
             result.Apply();
             return result;
         }
+        GameObject Player;
+        string GetObjectsAboutPlayer()
+        {
+            if (Player == null)
+                Player = GameObject.Find("Player_Human");
+            string objects = "";
+            Collider[] hitColliders = Physics.OverlapSphere(Player.transform.position, 2);
+            foreach (Collider hitCollider in hitColliders)
+                if (hitCollider.gameObject.transform.root.gameObject.name != "Player_Human")
+                    objects += hitCollider.gameObject.name + ", ";
+            return objects;
+        }
         void OnGUI()
         {
             InitGUI();
@@ -92,8 +104,10 @@ namespace ModLoaderSolution
                 myButtonStyle2.normal.textColor = Color.white;
                 myButtonStyle2.normal.background = MakeTex(5, 5, new Color(0.2f, 0.06f, 0.12f));
                 myButtonStyle2.fontSize = 60;
-                GUI.Label(new Rect((Screen.width/2)-750, Screen.height- 80, 1500, 80), "scripts made with love by nohumanman :D", myButtonStyle2);
-                GUI.Label(new Rect((Screen.width / 2) - 750, Screen.height - 400, 1500, 80), Camera.main.transform.position.ToString(), myButtonStyle2);
+                GUI.Label(new Rect((Screen.width / 2) - 750, Screen.height - 80, 1500, 80), GetObjectsAboutPlayer(), myButtonStyle2);
+                GUI.Label(new Rect((Screen.width/2)-750, Screen.height- 200, 1500, 80), "scripts made with love by nohumanman :D", myButtonStyle2);
+                GUI.Label(new Rect((Screen.width / 2) - 750, Screen.height - 400, 1500, 80), Player.transform.position.ToString(), myButtonStyle2);
+                GUI.Label(new Rect((Screen.width / 2) - 750, Screen.height - 500, 1500, 80), Player.transform.rotation.eulerAngles.ToString(), myButtonStyle2);
                 hasBeenActive = true;
                 GUIStyle myButtonStyle = new GUIStyle(GUI.skin.button);
                 myButtonStyle.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");
