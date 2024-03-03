@@ -406,6 +406,16 @@ namespace ModLoaderSolution
             GameObject[] checkpoints = GameObject.FindGameObjectsWithTag("Checkpoint");
             return checkpoints;
         }
+        public static void PrintHierarchy(Transform parent, string indent = "")
+        {
+            Debug.Log(indent + parent.name);
+
+            // Loop through all children and recursively print their hierarchy
+            foreach (Transform child in parent)
+            {
+                PrintHierarchy(child, indent + "  "); // Increase the indentation for children
+            }
+        }
 
         //public void LoadMap(Mod mod)
         //{
@@ -607,6 +617,7 @@ namespace ModLoaderSolution
             else
                 Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);
         }
+
         public string GetPlayerCurrentTrick()
         {
             //---UI_RepPopup : label_repCashIn #Untagged

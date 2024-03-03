@@ -479,6 +479,17 @@ class UnitySocket():
             self.info.bike_type = await self.get_default_bike()
         if self.info.steam_id is not None:
             await self.send_all("SET_BIKE|" + self.info.bike_type + "|" + self.info.steam_id)
+        # check static/trails to see if there's a csv file with the same name as world_name
+        for csv_map_name in os.listdir(f"{script_path}/static/trails"):
+            if csv_map_name[0:-4] == map_name:
+                await self.send("NON_MODKIT_TRAIL|" + csv_map_name)
+                await self.send(
+                        "POPUP|Non modkit maps|Heyyy! You've got the Descenders modkit"
+                        " loaded right now, and this map has a non-modkit timer. This means"
+                        " you can make runs down trails with timers and see others splits"
+                        ". It also means there are no boundaries - so your run has to be"
+                        " verified by us. - nohumanman"
+                )
 
     async def on_map_exit(self):
         """ Called when a player exits a map. """

@@ -132,6 +132,12 @@ namespace ModLoaderSolution
                     if (GUI.Button(new Rect(10, 195, 150, 25), "ToggleTrees()", myButtonStyle))
                         foreach (Terrain tr in FindObjectsOfType<Terrain>())
                             tr.drawTreesAndFoliage = !tr.drawTreesAndFoliage;
+                    if (GUI.Button(new Rect(10, 220, 150, 25), "ForceCSVLoad()", myButtonStyle))
+                    {
+                        GameObject trailParent = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        Trail x = trailParent.AddComponent<Trail>();
+                        x.LoadFromCSV("C:\\Users\\point\\Documents\\git\\github\\descenders-modkit\\server\\src\\static\\trails\\awesomesauce 4x-1.0.csv");
+                    }
                 }
                 int yPos = 10;
                 if (GUI.Button(new Rect(160, yPos, 150, 25), "\\/ checkpoints \\/"))

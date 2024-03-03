@@ -24,9 +24,9 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
-		static string version = "0.2.58";
-		static string patchNotes = "- Fix issue where left trigger stopped timer on non-xbox remotes\n\nYours,\n- nohumanman"; // that which has changed since the last version.
-		public static bool developerMode = false;
+		static string version = "0.2.60";
+		static string patchNotes = "- The timer works in some non-modkit maps now! A timer is implemented onto awesomesauce 4x right now. So if you exit this map and go straight to awesomesauce 4x, you can get a run down!\n\nYours,\n- nohumanman"; // that which has changed since the last version.
+		public static bool developerMode = true;
 		void Awake(){
 			if (developerMode)
 				ip = "localhost";
@@ -421,6 +421,20 @@ namespace ModLoaderSolution
             {
 				string modifier = message.Split('|')[1];
 				Utilities.instance.AddGameModifier(modifier);
+			}
+			if (message.StartsWith("NON_MODKIT_TRAIL"))
+            {
+				string url = message.Split('|')[1];
+				bool proceed = true;
+				foreach (Trail trail in FindObjectsOfType<Trail>())
+					if (trail.url == url)
+						proceed = false;
+				if (proceed)
+                {
+					GameObject trailParent = GameObject.CreatePrimitive(PrimitiveType.Cube);
+					Trail tr = trailParent.AddComponent<Trail>();
+					tr.LoadFromUrl("https://modkit.nohumanman.com/static/trails/" + url);
+				}
 			}
 			if (message.StartsWith("SPLIT_TIME"))
             {

@@ -50,8 +50,10 @@ class TrailTimer():
         # if we were out of bounds and are in a run
         if len(self.__boundaries) == 0 and self.timer_info.started:
             # note we cannot verify this user instantly
+            was_verified = self.timer_info.auto_verify
             self.timer_info.auto_verify = False
-            await self.network_player.send("SPLIT_TIME|Time requires review")
+            if was_verified:
+                await self.network_player.send("SPLIT_TIME|Time requires review")
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
 
@@ -64,8 +66,10 @@ class TrailTimer():
         if len(self.__boundaries) == 0:
             if self.timer_info.started:
                 # note we cannot verify this user instantly
+                was_verified = self.timer_info.auto_verify
                 self.timer_info.auto_verify = False
-                await self.network_player.send("SPLIT_TIME|Time requires review")
+                if was_verified:
+                    await self.network_player.send("SPLIT_TIME|Time requires review")
 
     def reset_boundaries(self):
         """
@@ -83,12 +87,12 @@ class TrailTimer():
         self.timer_info.auto_verify = True
         self.timer_info.starting_speed = 0
         if len(self.__boundaries) == 0:
-            await self.invalidate_timer("OUT OF BOUNDS!", always=True)
-        else:
-            self.timer_info.started = True
-            self.timer_info.total_checkpoints = total_checkpoints
-            self.timer_info.time_started = time.time()
-            self.timer_info.times = []
+            await self.network_player.send("SPLIT_TIME|Time requires review")
+            self.timer_info.auto_verify = False
+        self.timer_info.started = True
+        self.timer_info.total_checkpoints = total_checkpoints
+        self.timer_info.time_started = time.time()
+        self.timer_info.times = []
 
     async def checkpoint(self, client_time: float, checkpoint_hash: str):
         """Log a checkpoint."""
@@ -167,8 +171,6 @@ class TrailTimer():
     async def can_end(self) -> bool:
         """ Check if the data is valid to be able to end the timer """
         errors = {
-            "ERR001: Out of Bounds":
-                lambda: len(self.__boundaries) == 0,
             "ERR002: Too many checkpoints":
                 lambda: len(self.timer_info.times) > self.timer_info.total_checkpoints-1,
             "ERR003: Not enough checkpoints":
