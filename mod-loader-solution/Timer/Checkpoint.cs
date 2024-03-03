@@ -22,12 +22,13 @@ namespace ModLoaderSolution
         public void Start()
         {
             hash = GetHash(20, 50);
+            gameObject.GetComponent<MeshRenderer>().enabled = false;
             // Utilities.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
         }
         void Update()
         {
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.U))
-                this.gameObject.GetComponent<MeshRenderer>().enabled = !this.gameObject.GetComponent<MeshRenderer>().enabled;
+                gameObject.GetComponent<MeshRenderer>().enabled = !gameObject.GetComponent<MeshRenderer>().enabled;
         }
         void OnTriggerEnter(Collider other)
         {
@@ -39,7 +40,6 @@ namespace ModLoaderSolution
                     return;
                 if (!doesWork)
                     return;
-                
                 PlayerManagement.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, SplitTimerText.Instance.time.ToString(), hash);
                 if (this.checkpointType == CheckpointType.Start)
                 {
