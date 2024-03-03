@@ -508,7 +508,7 @@ class UnitySocket():
             if discord_bot is not None:
                 asyncio.run(discord_bot.set_presence(
                         str(len(self.parent.players))
-                        + " concurrent users!"
+                        + " racers!"
                 ))
         except RuntimeError:
             logging.info("update_concurrent_users() called, but it's already being attempted")
