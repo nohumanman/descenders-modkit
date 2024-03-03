@@ -26,7 +26,7 @@ namespace ModLoaderSolution
 		public string ip = "18.132.81.187";
 		static string version = "0.2.60";
 		static string patchNotes = "- The timer works in some non-modkit maps now! A timer is implemented onto awesomesauce 4x right now. So if you exit this map and go straight to awesomesauce 4x, you can get a run down!\n\nYours,\n- nohumanman"; // that which has changed since the last version.
-		public static bool developerMode = true;
+		public static bool developerMode = false;
 		void Awake(){
 			if (developerMode)
 				ip = "localhost";
