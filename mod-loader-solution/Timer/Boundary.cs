@@ -25,6 +25,7 @@ namespace ModLoaderSolution
         public void Start()
         {
             boundaryHash = GetHash(20, 50);
+            gameObject.GetComponent<MeshRenderer>().enabled = false;
             // Utilities.Log("Boundary | Boundary added to " + this.gameObject.name);
         }
         public void OnTriggerStay(Collider other)
