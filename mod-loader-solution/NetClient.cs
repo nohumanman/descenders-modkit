@@ -428,7 +428,7 @@ namespace ModLoaderSolution
 				bool proceed = true;
 				foreach (Trail trail in FindObjectsOfType<Trail>())
 					if (trail.url == url)
-						proceed = false;
+						Destroy(trail.gameObject);
 				if (proceed)
                 {
 					GameObject trailParent = GameObject.CreatePrimitive(PrimitiveType.Cube);
