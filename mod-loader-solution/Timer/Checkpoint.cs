@@ -23,6 +23,7 @@ namespace ModLoaderSolution
         {
             hash = GetHash(20, 50);
             gameObject.GetComponent<MeshRenderer>().enabled = false;
+            this.tag = "Checkpoint";
             // Utilities.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
         }
         void Update()
