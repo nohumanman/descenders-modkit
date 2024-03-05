@@ -17,6 +17,7 @@ namespace ModLoaderSolution
         public List<GameObject> boundaryList = new List<GameObject>();
         public List<GameObject> checkpointList = new List<GameObject>();
         public string url;
+        public bool splitsAreCheckpoints = false;
         public float clientTime = 0f;
         public void Start()
         {
@@ -143,6 +144,11 @@ namespace ModLoaderSolution
                     foreach (Trail tr in FindObjectsOfType<Trail>())
                         if (tr.name == this.gameObject.name && tr != this)
                             Destroy(this.gameObject);
+                }
+                else if (line[0] == "splitsAreCheckpoints")
+                {
+                    if (line[1] == "true")
+                        splitsAreCheckpoints = true;
                 }
                 else if (line[0].StartsWith("CP"))
                 {
