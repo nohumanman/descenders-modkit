@@ -119,12 +119,12 @@ class TrailTimer():
             if index < len(wr):
                 time_diff = wr[index] - float(client_time)
             else:
-                time_diff = 0
+                time_diff = None
 
             if index < len(pb):
                 time_diff_local = pb[index] - float(client_time)
             else:
-                time_diff_local = 0
+                time_diff_local = None
 
             mess = self.calculate_split_message(time_diff, time_diff_local, client_time)
             await self.network_player.send(f"SPLIT_TIME|{mess}")
@@ -133,6 +133,8 @@ class TrailTimer():
         """Calculate split time message."""
         mess = ""
 
+        if time_diff is None:
+            pass
         if time_diff > 0:
             mess += f"<color=lime>-{round(abs(time_diff), 3)}</color> WR"
         elif time_diff == 0:
@@ -140,7 +142,9 @@ class TrailTimer():
         elif time_diff < 0:
             mess += f"<color=red>+{round(abs(time_diff), 3)}</color> WR"
 
-        if time_diff_local > 0:
+        if time_diff_local is None:
+            pass
+        elif time_diff_local > 0:
             mess += f"  <color=lime>-{round(abs(time_diff_local), 3)}</color> PB"
         elif time_diff_local == 0:
             mess += f"  <color=orange>+{round(abs(time_diff_local), 3)}</color> PB"
