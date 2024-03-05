@@ -33,10 +33,7 @@ class DiscordBot(commands.Bot):
         self.time_of_last_lux_request = 0
         self.command_outputs = {
             "help": "this message",
-            "inspect <time_id>": "shows details of a particular run",
-            "top <number>" : "shows the top <number> of runs on a trail",
-            "totaltime" : "shows the total time spent on a trail entered",
-            "info <player_name>" : "shows info about a player"
+            "top <number>" : "shows the top <number> of runs on a trail"
         }
         threading.Thread(target=self.loop.run_forever).start()
 
@@ -106,39 +103,6 @@ class DiscordBot(commands.Bot):
                 "https://youtu.be/NZ9qHsONS20"
             )
             self.time_of_last_lux_request = time.time()
-        if message.content.startswith(self.command_prefix + "inspect"):
-            time_id = message.content.split(" ")[1]
-            split_times = await self.dbms.get_split_times(time_id)
-            out = "__Inspection of " + time_id + "__\n\n"
-            for i, split_time in enumerate(split_times):
-                out += f"Checkpoint {i+1}: {str(split_time)}\n"
-            await message.channel.send(out)
-            out = f"{time_id} had a penalty of {self.dbms.get_penalty(time_id)}\n"
-            await message.channel.send(out)
-            out = f"{time_id} was on version {self.dbms.get_version(time_id)}\n"
-            await message.channel.send(out)
-            out = (
-                "Replay should be found at "
-                f"https://modkit.nohumanman.com/static/replays/{time_id}.replay\n"
-                )
-            await message.channel.send(out)
-        if message.content.startswith(self.command_prefix + "totaltime"):
-            total_times = await self.dbms.get_total_times()
-            text = ""
-            i = 1
-            for total_time in total_times:
-                steam_name = total_time[1]
-                act_time = float(round(total_time[2]))
-                text += (
-                    f"{i}. **{steam_name}** has "
-                    f"spent {posh_time(act_time)} racing\n")
-                i += 1
-            try:
-                await message.channel.send(text)
-            except HTTPException:
-                await message.channel.send(
-                    "Sorry - too many players to display!"
-                )
         if message.author.id in [id for id in self.queue]:
             leaderboard = await self.dbms.get_leaderboard(
                 message.content,
@@ -150,11 +114,11 @@ class DiscordBot(commands.Bot):
                 time1 = TrailTimer.secs_to_str(float(player["time"]))
                 num = ""
                 if i == 0:
-                    num = "🥇"
+                    num = "🥇 "
                 elif i == 1:
-                    num = "🥈"
+                    num = "🥈 "
                 elif i == 2:
-                    num = "🥉"
+                    num = "🥉 "
                 else:
                     num = TrailTimer.ord(i + 1)
                 verified = player["verified"] == "1"
@@ -162,9 +126,6 @@ class DiscordBot(commands.Bot):
                     leaderboard_str += "||"
                 leaderboard_str += f"{num} - {time1} - {name}"
                 time_id = player['time_id']
-                if not verified:
-                    replay_url = "https://modkit.nohumanman.com/static/replays/"
-                    leaderboard_str += f"--⚠️ [UNVERIFIED]({replay_url}{time_id}.replay) ⚠️ --||"
                 leaderboard_str += "\n"
             try:
                 await message.channel.send(
