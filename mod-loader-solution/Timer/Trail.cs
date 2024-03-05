@@ -111,6 +111,19 @@ namespace ModLoaderSolution
             LoadFromTxt(w.text);
         }
         /*
+         * Destroys every checkpoint in the scene. When ignoreSplits is true, it will
+         * destroy checkpoints even if they're splits of another trail.
+        */
+        public void DestroyCheckpoints(bool ignoreSplits = false)
+        {
+            foreach(GameObject cp in GameObject.FindGameObjectsWithTag("Checkpoint"))
+            {
+                // if checkpoint is not of a trail, destroy it.
+                if (ignoreSplits || cp.GetComponent<ModLoaderSolution.Checkpoint>() == null)
+                    Destroy(cp);
+            }
+        }
+        /*
          * This method isn't how I'd like to do it (I'd want to use YAML), but
          * given we're compiling into a game without our own dependencies, we
          * can't really afford to be picky. If it works it works.
@@ -134,7 +147,7 @@ namespace ModLoaderSolution
             foreach (string line in lines)
                 csvContents.Add(line.Split(','));
             // bam, loaded, so now read it into ourself
-            foreach(string[] line in csvContents)
+            foreach (string[] line in csvContents)
             {
                 if (line[0] == "trail_name")
                 {
@@ -150,6 +163,12 @@ namespace ModLoaderSolution
                     if (line[1] == "true")
                         splitsAreCheckpoints = true;
                 }
+                else if (line[0] == "murderOtherSplits") {
+                    if (line[1] == "true")
+                    {
+                        DestroyCheckpoints();
+                    }
+                }
                 else if (line[0].StartsWith("CP"))
                 {
                     // instantiate new checkpoint
@@ -162,7 +181,7 @@ namespace ModLoaderSolution
                     );
                     CP.transform.localScale = new Vector3(float.Parse(line[7]), float.Parse(line[8]), float.Parse(line[9]));
                     CP.GetComponent<BoxCollider>().isTrigger = true;
-                    
+
                     CP.transform.SetParent(checkpoints.transform, true);
                     if (line[0].StartsWith("CPS"))
                     {
