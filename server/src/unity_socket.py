@@ -468,6 +468,8 @@ class UnitySocket():
 
     async def on_map_enter(self, map_name: str):
         """ Called when a player enters a map. """
+        if (self.info.world_name == map_name):
+            return
         self.info.world_name = map_name
         self.info.time_started = time.time()
         await self.update_concurrent_users()

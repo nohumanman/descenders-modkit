@@ -50,10 +50,9 @@ class TrailTimer():
         # if we were out of bounds and are in a run
         if len(self.__boundaries) == 0 and self.timer_info.started:
             # note we cannot verify this user instantly
-            was_verified = self.timer_info.auto_verify
-            self.timer_info.auto_verify = False
-            if was_verified:
+            if self.timer_info.auto_verify:
                 await self.network_player.send("SPLIT_TIME|Time requires review")
+            self.timer_info.auto_verify = False
         if boundary_guid not in self.__boundaries:
             self.__boundaries.append(boundary_guid)
 
@@ -66,10 +65,9 @@ class TrailTimer():
         if len(self.__boundaries) == 0:
             if self.timer_info.started:
                 # note we cannot verify this user instantly
-                was_verified = self.timer_info.auto_verify
-                self.timer_info.auto_verify = False
-                if was_verified:
+                if self.timer_info.auto_verify:
                     await self.network_player.send("SPLIT_TIME|Time requires review")
+                self.timer_info.auto_verify = False
 
     def reset_boundaries(self):
         """
@@ -87,8 +85,10 @@ class TrailTimer():
         self.timer_info.auto_verify = True
         self.timer_info.starting_speed = 0
         if len(self.__boundaries) == 0:
-            await self.network_player.send("SPLIT_TIME|Time requires review")
+            if self.timer_info.auto_verify:
+                await self.network_player.send("SPLIT_TIME|Time requires review")
             self.timer_info.auto_verify = False
+                
         self.timer_info.started = True
         self.timer_info.total_checkpoints = total_checkpoints
         self.timer_info.time_started = time.time()
