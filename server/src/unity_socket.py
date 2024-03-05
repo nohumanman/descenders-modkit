@@ -407,8 +407,9 @@ class UnitySocket():
         logging.info("%s '%s'\t- respawned", self.info.steam_id, self.info.steam_name)
         for trail_name, trail in self.trails.items():
             if trail_name in self.trails:
+                if trail.timer_info.auto_verify:
+                    await self.send("SPLIT_TIME|Time requires review")
                 trail.timer_info.auto_verify = False
-                await self.send("SPLIT_TIME|Time requires review")
 
     async def get_trail(self, trail_name) -> TrailTimer:
         """ Get a trail timer for a player. """
