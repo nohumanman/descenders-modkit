@@ -29,6 +29,10 @@ namespace ModLoaderSolution
         bool scriptsAdded = false;
         public void AddScripts()
         {
+            if (scriptsAdded) {
+                Debug.Log("Scripts already added");
+                return;
+            }
             if (boundaries != null && startCheckpoint != null && endCheckpoint != null && !scriptsAdded)
             {
                 scriptsAdded = true;
@@ -149,19 +153,25 @@ namespace ModLoaderSolution
             // bam, loaded, so now read it into ourself
             foreach (string[] line in csvContents)
             {
+                if (line.Length == 2)
+                {
+                    line[1] = line[1].Replace("\n", "");
+                }
                 if (line[0] == "trail_name")
                 {
                     // check if the same trail_name exists
-                    this.gameObject.name = line[1];
-                    this.name = line[1];
+                    string trail_name = line[1].Replace("\n", "");
+                    this.gameObject.name = trail_name;
+                    this.name = trail_name;
                     foreach (Trail tr in FindObjectsOfType<Trail>())
                         if (tr.name == this.gameObject.name && tr != this)
                             Destroy(this.gameObject);
                 }
                 else if (line[0] == "splitsAreCheckpoints")
                 {
-                    if (line[1] == "true")
+                    if (line[1] == "true"){
                         splitsAreCheckpoints = true;
+                    }
                 }
                 else if (line[0] == "murderOtherSplits") {
                     if (line[1] == "true")

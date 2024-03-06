@@ -115,13 +115,14 @@ class TrailTimer():
                 self.trail_name, self.network_player.info.steam_id
             )
 
+            total_checkpoints = self.timer_info.total_checkpoints - 1
             index = len(self.timer_info.times) - 1
-            if index < len(wr):
+            if total_checkpoints == len(wr):
                 time_diff = wr[index] - float(client_time)
             else:
                 time_diff = None
 
-            if index < len(pb):
+            if total_checkpoints == len(pb):
                 time_diff_local = pb[index] - float(client_time)
             else:
                 time_diff_local = None
@@ -135,7 +136,7 @@ class TrailTimer():
 
         if time_diff is None:
             pass
-        if time_diff > 0:
+        elif time_diff > 0:
             mess += f"<color=lime>-{round(abs(time_diff), 3)}</color> WR"
         elif time_diff == 0:
             mess += f"<color=orange>+{round(abs(time_diff), 3)}</color> WR"
