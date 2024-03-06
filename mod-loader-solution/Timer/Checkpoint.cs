@@ -42,8 +42,12 @@ namespace ModLoaderSolution
                 Utilities.Log("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' Entered");
                 if (Utilities.instance.isInReplayMode())
                     return;
-                if (!doesWork)
+                // if doesn't work or stats not default
+                if (!doesWork || !StatsModification.instance.IfStatsAreDefault())
+                {
+                    SplitTimerText.Instance.StopTimer();
                     return;
+                }
                 PlayerManagement.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, (Time.time-SplitTimerText.Instance.timeStart).ToString(), hash);
                 if (this.checkpointType == CheckpointType.Start)
                 {

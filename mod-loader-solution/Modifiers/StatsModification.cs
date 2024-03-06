@@ -87,6 +87,8 @@ namespace ModLoaderSolution
             foreach (Stat stat in stats)
                 if (stat.currentVal != stat.StartingValue)
                     return false;
+            if (Physics.gravity.y != -17.5f)
+                return false;
             return true;
         }
         public void SaveStats()
