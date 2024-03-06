@@ -14,7 +14,7 @@ namespace ModLoaderSolution
         void Update()
         {
             if (SplitTimerText.Instance != null)
-                textMesh.text = SplitTimerText.Instance.FormatTime(SplitTimerText.Instance.time);
+                textMesh.text = SplitTimerText.Instance.FormatTime(Time.time - SplitTimerText.Instance.timeStart);
         }
     }
 }

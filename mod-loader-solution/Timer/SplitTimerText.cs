@@ -9,7 +9,7 @@ namespace ModLoaderSolution
 		Color32 startingColor;
 		public static SplitTimerText Instance { get; private set; }
 		public Text text;
-		public float time;
+		public double timeStart;
 		public string checkpointTime = "";
 		public bool count = false;
 		bool uiEnabled = true;
@@ -58,6 +58,7 @@ namespace ModLoaderSolution
 				TextColToDefault();
 				wasConnected = true;
 			}
+
 		}
 		public void TextColToDefault()
         {
@@ -69,8 +70,8 @@ namespace ModLoaderSolution
 			text.supportRichText = true;
 			startingColor = text.color;
 			SetText("");
-			StartCoroutine(UpdateTime());
 			GameObject.Find("TextShadow").GetComponent<Text>().supportRichText = true;
+			StartCoroutine(TimeUpdater());
 		}
 		public void SetText(string textToSet)
         {
@@ -82,7 +83,7 @@ namespace ModLoaderSolution
 		}
 		public void RestartTimer()
 		{
-			time = 0;
+			timeStart =	Time.time;
 			checkpointTime = "";
 			count = true;
 			text.color = startingColor;
@@ -92,28 +93,23 @@ namespace ModLoaderSolution
 			count = false;
 			StartCoroutine(DisableTimerText(15));
 		}
-		public void FixedUpdate()
-		{
-			if (count)
-				time += Time.deltaTime;				
-		}
-		IEnumerator UpdateTime()
+		IEnumerator TimeUpdater()
         {
 			while (true)
             {
 				if (count)
-					SetText(FormatTime(time).ToString() + "\n" + checkpointTime);
-				yield return new WaitForEndOfFrame();
-			}
-		}
-		public string FormatTime(float time)
+					SetText(FormatTime(Time.time - timeStart).ToString() + "\n" + checkpointTime);
+				yield return new WaitForSecondsRealtime(0.001f);
+            }
+        }
+		public string FormatTime(double time)
 		{
 			int intTime = (int)time;
 			int minutes = intTime / 60;
 			int seconds = intTime % 60;
-			float fraction = time * 100;
-			fraction = (fraction % 100);
-			string timeText = System.String.Format("{0:00}:{1:00}.{2:00}", minutes, seconds, fraction);
+			double fraction = (time - intTime) * 1000;
+			fraction = Mathf.Round((float)fraction);
+			string timeText = System.String.Format("{0:00}:{1:00}.{2:000}", minutes, seconds, fraction);
 			return timeText;
 		}
 	}
