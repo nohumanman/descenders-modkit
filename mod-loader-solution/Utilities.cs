@@ -82,6 +82,7 @@ namespace ModLoaderSolution
         {
             NormaliseModSongs();
         }
+        
         public void Update()
         {
             if (isFlying)
@@ -90,6 +91,26 @@ namespace ModLoaderSolution
             {
                 NormaliseModSongs();
                 normalised = true;
+            }
+
+            GameObject content = GameObject.Find("Content");
+            if (content != null)
+            {
+                List<Transform> idealOrder = new List<Transform>();
+                // find the ideal order
+                foreach (Transform modInfoButtonTransform in content.transform)
+                {
+                    GameObject modInfoButton = modInfoButtonTransform.gameObject;
+                    if (modInfoButton.GetComponentInChildren<TextMeshProUGUI>().text != "OPEN MOD BROWSER")
+                        idealOrder.Add(modInfoButtonTransform);
+                }
+                idealOrder = idealOrder.OrderBy(x => x.gameObject.GetComponentInChildren<TextMeshProUGUI>().text).ToList();
+                int i = 1;
+                foreach (Transform modInfoButton in idealOrder)
+                {
+                    modInfoButton.SetSiblingIndex(i);
+                    i++;
+                }
             }
         }
         public Gesture[] gestures = new Gesture[0] {};
