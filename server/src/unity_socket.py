@@ -485,7 +485,7 @@ class UnitySocket():
         for csv_map_name in os.listdir(f"{script_path}/static/trails"):
             if csv_map_name[0:-4] == map_name:
                 await self.send("NON_MODKIT_TRAIL|" + csv_map_name)
-                if self.sent_non_modkit_notif:
+                if not self.sent_non_modkit_notif:
                     await self.send(
                             "POPUP|Non modkit maps|Heyyy! You've got the Descenders modkit"
                             " loaded right now, and this map has a non-modkit timer. This means"
