@@ -107,13 +107,6 @@ namespace ModLoaderSolution
                 foreach(Type component in firstStartComponents)
                     gameObject.AddComponent(component);
             }
-            if (AssetBundling.Instance != null && AssetBundling.Instance.bundle != null && ModLoaderSolution.Utilities.instance.isMod() && GameObject.Find("Map_Name") == null)
-            {
-                GameObject IntroSeq = AssetBundling.Instance.bundle.LoadAsset<GameObject>("IntroSequence");
-                Instantiate(IntroSeq).AddComponent<DisableOnAny>();
-                GameObject.Find("Map_Name").GetComponent<UnityEngine.UI.Text>().text = "Descenders Modkit ";
-                GameObject.Find("Description").GetComponent<UnityEngine.UI.Text>().text = "- TAB to open bike switcher\n- CTRL-I to open stats modification\n- Quit the game to remove this mod\n\nFor more info go to split-timer.nohumanman.com/info";
-            }
         }
         public void Start()
         {
