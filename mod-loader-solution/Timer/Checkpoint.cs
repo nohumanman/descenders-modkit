@@ -26,7 +26,7 @@ namespace ModLoaderSolution
             if (trail.splitsAreCheckpoints)
                 this.tag = "Checkpoint";
             else
-                this.tag = "";
+                this.tag = "Untagged";
             // Utilities.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
         }
         void Update()

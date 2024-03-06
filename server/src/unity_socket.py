@@ -97,6 +97,7 @@ class UnitySocket():
         self.writer = writer
         self.trails = {}
         self.last_contact = time.time()
+        self.sent_non_modkit_notif = False
         self.info: Player = Player(
             steam_name="", steam_id="",
             avatar_src="",
@@ -468,8 +469,6 @@ class UnitySocket():
 
     async def on_map_enter(self, map_name: str):
         """ Called when a player enters a map. """
-        if (self.info.world_name == map_name):
-            return
         self.info.world_name = map_name
         self.info.time_started = time.time()
         await self.update_concurrent_users()
@@ -485,20 +484,22 @@ class UnitySocket():
         for csv_map_name in os.listdir(f"{script_path}/static/trails"):
             if csv_map_name[0:-4] == map_name:
                 await self.send("NON_MODKIT_TRAIL|" + csv_map_name)
-                await self.send(
-                        "POPUP|Non modkit maps|Heyyy! You've got the Descenders modkit"
-                        " loaded right now, and this map has a non-modkit timer. This means"
-                        " you can make runs down trails with timers and see others splits"
-                        ". It also means there are no boundaries - so your run has to be"
-                        " verified by us. - nohumanman"
-                )
+                if self.sent_non_modkit_notif:
+                    await self.send(
+                            "POPUP|Non modkit maps|Heyyy! You've got the Descenders modkit"
+                            " loaded right now, and this map has a non-modkit timer. This means"
+                            " you can make runs down trails with timers and see others splits"
+                            ". It also means there are no boundaries - so your run has to be"
+                            " verified by us. - nohumanman"
+                    )
+                    self.sent_non_modkit_notif = True
 
     async def on_map_exit(self):
         """ Called when a player exits a map. """
         await self.update_concurrent_users()
         for trail_name, trail in self.trails.items():
             if trail_name in self.trails:
-                trail.invalidate_timer("")
+                await trail.invalidate_timer("")
         self.trails = {}
 
     async def update_concurrent_users(self):
