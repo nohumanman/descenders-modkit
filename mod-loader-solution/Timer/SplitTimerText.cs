@@ -108,7 +108,6 @@ namespace ModLoaderSolution
 			int minutes = intTime / 60;
 			int seconds = intTime % 60;
 			double fraction = (time - intTime) * 1000;
-			Debug.Log(fraction);
 			fraction = Mathf.Round((float)fraction);
 			string timeText = System.String.Format("{0:00}:{1:00}.{2:000}", minutes, seconds, fraction);
 			return timeText;
