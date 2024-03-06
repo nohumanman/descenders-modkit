@@ -44,6 +44,8 @@ namespace ModLoaderSolution
                     return;
                 if (!doesWork)
                     return;
+                if (!StatsModification.instance.IfStatsAreDefault())
+                    return;
                 PlayerManagement.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, (Time.time-SplitTimerText.Instance.timeStart).ToString(), hash);
                 if (this.checkpointType == CheckpointType.Start)
                 {
