@@ -213,6 +213,10 @@ class TrailTimer():
         # reset the timer
         was_started = self.timer_info.started
         self.timer_info.started = False
+        spectated_by = None
+        for player in self.network_player.parent.players
+            if str(player.spectating_id) == str(self.network_player.steam_id):
+                spectated_by = str(player.steam_id)
         # submit the time to the database
         time_id = await self.network_player.dbms.submit_time(
             self.network_player.info.steam_id,
@@ -223,7 +227,8 @@ class TrailTimer():
             self.timer_info.starting_speed,
             self.network_player.info.version,
             self.timer_info.auto_verify and can_end[0],
-            not can_end[0]
+            not can_end[0],
+            spectated_by
         )
         # ask client to upload replay
         await self.network_player.send(f"UPLOAD_REPLAY|{time_id}")

@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS "Time" (
         --"penalty"     REAL,
         "verified"      INT NOT NULL,
         "ignored"       INT NOT NULL,
+        "spectated_by"  TEXT,
         --"verified_tmp"        int,
         PRIMARY KEY("time_id" AUTOINCREMENT),
         CONSTRAINT ignored CHECK(ignored == 0 or ignored == 1),
