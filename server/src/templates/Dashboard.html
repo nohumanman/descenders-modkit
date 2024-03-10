@@ -106,7 +106,7 @@
                 <v-main v-if="controlled_player == null">
                     <!-- Validation Warning -->
                     <v-banner color="black" v-if="validated != 'AUTHORISED'" style="text-align:center;">
-                        You are not permitted to modify any user because your discord account is not whitelisted<span v-if="validated != 'UNAUTHORISED'"> - <v-btn @click="redirect('/login')">login</v-btn></span>
+                        If thing's arent working <v-btn @click="redirect('/login')">login</v-btn>
                     </v-banner>
                     <!-- Steam ID Manual Input Backup -->
                     <v-overlay
