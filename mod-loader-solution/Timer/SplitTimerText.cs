@@ -9,7 +9,7 @@ namespace ModLoaderSolution
 		Color32 startingColor;
 		public static SplitTimerText Instance { get; private set; }
 		public Text text;
-		public double timeStart;
+		public float timeStart;
 		public string checkpointTime = "";
 		public bool count = false;
 		bool uiEnabled = true;
@@ -40,6 +40,7 @@ namespace ModLoaderSolution
 			SetText("");
 		}
 		bool wasConnected = false;
+		public double finalTime = 0;
 		public void Update()
         {
 			if (Input.GetKey(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.U))
@@ -98,7 +99,10 @@ namespace ModLoaderSolution
 			while (true)
             {
 				if (count)
+				{
 					SetText(FormatTime(Time.time - timeStart).ToString() + "\n" + checkpointTime);
+					finalTime = Time.time;
+				}
 				yield return new WaitForSecondsRealtime(0.001f);
             }
         }
