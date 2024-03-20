@@ -104,7 +104,7 @@ ORDER BY Time.trail_name DESC;
 /* TrailInfo(trail_name,world_name,times_ridden,average_start_speed,trail_icon) */;
 
 CREATE TABLE IF NOT EXISTS "PendingItem" (
-        "steam_id"      TEXT UNIQUE,
+        "steam_id"      TEXT,
         "item_id"       TEXT,
         "time_redeemed" INTEGER -- NULL when not redeemed, timestamp otherwise
 );

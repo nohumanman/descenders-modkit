@@ -325,5 +325,5 @@ WHERE (
 SELECT item_id FROM PendingItem
 WHERE (
     steam_id = :steam_id
-    AND time_redeemed == 0
+    AND time_redeemed IS NULL
 );
