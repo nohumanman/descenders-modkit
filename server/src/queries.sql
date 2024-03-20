@@ -302,3 +302,25 @@ WHERE
     trail_name = :trail_name
     AND ignored = 0
     AND verified = 1;
+
+-- name: add_pending_item!
+-- Add a pending item to gift to a user
+
+INSERT INTO PendingItem
+(steam_id, item_id)
+VALUES (:steam_id, :item_id);
+
+-- name: redeem_pending_item!
+-- Sets redeem to true for an item
+
+UPDATE PendingItem
+SET time_redeemed = :current_timestamp
+WHERE (
+    steam_id = :steam_id
+    AND item_id = :item_id
+);
+
+-- name: get_pending_items
+-- Gets pending items for a given steam_id
+SELECT item_id FROM PendingItem
+WHERE steam_id = :steam_id;
