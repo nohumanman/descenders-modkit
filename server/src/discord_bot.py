@@ -58,6 +58,12 @@ class DiscordBot(commands.Bot):
         if isinstance(channel, discord.TextChannel):
             await channel.send(message)
 
+    async def send_message_to_channel(self, message, channel_id):
+        """ Used to send a message to channel """
+        channel = self.get_channel(channel_id)
+        if isinstance(channel, discord.TextChannel):
+            await channel.send(message)
+
     async def set_presence(self, user_name: str):
         """ Used to set the presence of the discord bot """
         if not self.changing_presence:

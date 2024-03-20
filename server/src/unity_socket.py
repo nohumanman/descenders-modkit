@@ -9,6 +9,7 @@ import aiosqlite
 import requests
 import srcomapi
 import srcomapi.datatypes as dt
+import discord
 from trail_timer import TrailTimer
 from tokens import STEAM_API_KEY
 
@@ -338,7 +339,10 @@ class UnitySocket():
                 self.info.steam_id,
                 item[0]
             )
-
+            await self.parent.discord_bot.send_message_to_channel(
+                f"Item redeemed by {self.info.steam_name}: {item[0]}",
+                1197188279158718486
+            )
     async def sanity_check(self):
         """ Perform a sanity check on a player's data. """
         # if no steam name, request it
