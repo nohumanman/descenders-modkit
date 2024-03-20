@@ -330,6 +330,14 @@ class UnitySocket():
         # if id is not the correct length, ban the player
         if len(steam_id) != len("76561198805366422"):
             await self.send("SUCCESS")
+        # get pending items
+        pending_items = await self.dbms.get_pending_items(self.info.steam_id)
+        for item in pending_items:
+            await self.send("UNLOCK_ITEM|" + item[0])
+            await self.dbms.redeem_pending_item(
+                self.info.steam_id,
+                item[0]
+            )
 
     async def sanity_check(self):
         """ Perform a sanity check on a player's data. """

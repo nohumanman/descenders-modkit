@@ -83,6 +83,24 @@ class DBMS():
             # pylint: disable=no-member
             return await self.queries.get_authenticated_discord_ids(db)
 
+    async def get_pending_items(self, steam_id):
+        """ Get the valid Discord IDs. """
+        async with aiosqlite.connect(self.db_file) as db:
+            # pylint: disable=no-member
+            return await self.queries.get_pending_items(db, steam_id=steam_id)
+
+    async def redeem_pending_item(self, steam_id, item_id):
+        """ Get the valid Discord IDs. """
+        async with aiosqlite.connect(self.db_file) as db:
+            # pylint: disable=no-member
+            await self.queries.redeem_pending_item(
+                db,
+                steam_id=steam_id,
+                item_id=item_id,
+                current_timestamp=str(int(time.time()))
+            )
+            await db.commit()
+
     async def get_steam_id(self, discord_id):
         """ Get the Steam ID associated with a given Discord ID. """
         async with aiosqlite.connect(self.db_file) as db:

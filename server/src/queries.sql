@@ -323,4 +323,7 @@ WHERE (
 -- name: get_pending_items
 -- Gets pending items for a given steam_id
 SELECT item_id FROM PendingItem
-WHERE steam_id = :steam_id;
+WHERE (
+    steam_id = :steam_id
+    AND time_redeemed == 0
+);
