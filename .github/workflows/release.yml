@@ -60,4 +60,5 @@ jobs:
           git commit -m "Update ModLoaderSolution from $commit_hash"
           git push origin main
           # notify discord server
-          curl -H "Content-Type: application/json" -d '{"username": "Descenders Modkit", "content": "The modkit client file has updated! https://github.com/nohumanman/descenders-modkit/commit/${commit_hash}"}' ${{ secrets.DISCORD_WEBHOOK }}
+          json='{"username": "Descenders Modkit", "content": "The modkit client file has updated to a new version!\nhttps://github.com/nohumanman/descenders-modkit/commit/'"$commit_hash"'"}'
+          curl -H "Content-Type: application/json" -d "$json" ${{ secrets.DISCORD_WEBHOOK }}
