@@ -222,7 +222,8 @@ INSERT INTO Time (
     starting_speed, -- REAL
     version, -- TEXT
     verified, -- INT NOT NULL
-    ignored -- INT NOT NULL
+    ignored, -- INT NOT NULL
+    spectated_by -- TEXT
 )
 VALUES (
     :steam_id, -- TEXT
@@ -234,7 +235,8 @@ VALUES (
     :starting_speed, -- REAL
     :version, -- TEXT
     :verified, -- INT NOT NULL
-    :ignored -- INT NOT NULL
+    :ignored, -- INT NOT NULL
+    :spectated_by -- TEXT
 );
 
 -- name: submit_split!

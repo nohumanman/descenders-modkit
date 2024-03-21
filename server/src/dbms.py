@@ -240,7 +240,8 @@ class DBMS():
         starting_speed: float,
         version: str,
         verified: bool,
-        ignored: bool
+        ignored: bool,
+        spectated_by: str | None
     ):
         """ Submit a time to the database. """
         time_id = hash(
@@ -278,7 +279,8 @@ class DBMS():
                 starting_speed=float(starting_speed),
                 version=str(version),
                 verified= 1 if verified else 0,
-                ignored= 1 if ignored else 0
+                ignored= 1 if ignored else 0,
+                spectated_by=str(spectated_by)
             )
             for n, split_time in enumerate(split_times):
                 # pylint: disable=no-member
