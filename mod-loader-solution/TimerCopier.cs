@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ModTool.Interface;
 using UnityEngine.UI;
+using System.Text.RegularExpressions; // Regex
 public class TimerCopier : ModBehaviour
 {
     public Text textFrom;
@@ -18,9 +19,15 @@ public class TimerCopier : ModBehaviour
         textFrom = FindObjectOfType<ModLoaderSolution.SplitTimerText>().text;
         textTo = this.gameObject.GetComponent<Text>();
     }
+    public string RemoveHTMLTags(string input)
+    {
+        // remove all <tags></tags>
+        return Regex.Replace(input, "<.*?>", string.Empty);
+    }
     void Update()
     {
+        // textFrom.text can have '<color=red>text</color>', but needs to be 'text'
         if (textTo != null && textFrom != null)
-            textTo.text = textFrom.text;
+            textTo.text = RemoveHTMLTags(textFrom.text); // remove the colour fields so the shadow is black
     }
 }
