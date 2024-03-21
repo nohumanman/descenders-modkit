@@ -368,13 +368,13 @@ namespace ModLoaderSolution
         public static Object GameObjectFindObjectOfType(Type type)
         {
             if (cachedObjectsOfType.ContainsKey(type))
-                return (GameObject)cachedObjectsOfType[type];
+                return (Object)cachedObjectsOfType[type];
             // we don't have the gameobject cached!
             if (recentlySearched.ContainsKey(type))
                 if ((Time.time - (float)recentlySearched[type]) < 1)
                     return null; // we searched for it not long ago, so let's not bother now
             cachedObjects.RemoveAll(x => !x); // remove all null caches (in case any have been deleted)
-            GameObject objectOfType = (GameObject)FindObjectOfType(type);
+            Object objectOfType = (Object)FindObjectOfType(type);
             if (objectOfType != null)
                 cachedObjectsOfType.Add(type, objectOfType);
             else
@@ -388,7 +388,7 @@ namespace ModLoaderSolution
 
             return objectOfType;
         }
-        static List<GameObject> cachedObjects = new List<GameObject>();
+        static List<Object> cachedObjects = new List<Object>();
         static Hashtable recentlySearched = new Hashtable();
         public static GameObject GameObjectFind(string gameobjectName)
         {

@@ -11,7 +11,7 @@ namespace ModLoaderSolution
 	public class PlayerManagement : MonoBehaviour {
 		SteamIntegration steamIntegration = new SteamIntegration();
 		GameObject PlayerHuman;
-		Vector3 PreviousPos;
+		Vector3 PreviousPos = Vector3.zero;
 		public float speed;
 		bool wasBailed = false;
 		public static PlayerManagement Instance { get; private set; }
@@ -56,30 +56,29 @@ namespace ModLoaderSolution
 			}
 		}
 		void Update () {
-			if (Utilities.instance.GetCurrentMap() != prevMap)
+			string currentMap = Utilities.instance.GetCurrentMap();
+			if (currentMap != prevMap)
             {
-				StartCoroutine(ChangeMapPresence(Utilities.instance.GetCurrentMap()));
+				StartCoroutine(ChangeMapPresence(currentMap));
 				Utilities.Log("Map Change Detected");
-				OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
+				OnMapEnter("idhere", currentMap);
 				// if not a bike park or a mod
-				if (!Utilities.instance.isBikePark() && !Utilities.instance.isMod() && !(Utilities.instance.GetCurrentMap() == "0"))
+				if (!Utilities.instance.isBikePark() && !Utilities.instance.isMod() && !(currentMap == "0"))
 				{
 					StatsModification.instance.ResetStats();
 					StatsModification.instance.permitted = false;
 				}
 				else
 					StatsModification.instance.permitted = true;
-				StatsModification.instance.DirtyStats();
-				prevMap = Utilities.instance.GetCurrentMap();
+				//StatsModification.instance.DirtyStats();
+				prevMap = currentMap;
 			}
 			if (PlayerHuman == null)
 				PlayerHuman = Utilities.GetPlayer();
 			if (Utilities.instance.hasBailed() && !wasBailed)
-				OnRespawn();			
+				OnRespawn();
 			wasBailed = Utilities.instance.hasBailed();
 			if (PlayerHuman != null){
-				//if (!hasLoadedPlayer)
-				//	GetComponent<BikeSwitcher>().ToEnduro();
 				if (Vector3.Distance(
 						PlayerHuman.transform.position,
 						PreviousPos
