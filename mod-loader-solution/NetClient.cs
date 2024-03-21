@@ -24,7 +24,8 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
-		static string version = "0.2.63";
+		static string version = "0.2.64";
+		static bool quietUpdate = true;
 		static string patchNotes = "- Increased timer UI accuracy (3dp now)\n- MOD BROWSER IS ALPHABETIC! That's right, when you're using the modkit you'll be able to scroll through your mods in a logical way!\n\nYours,\n- nohumanman"; // that which has changed since the last version.
 		public static bool developerMode = false;
 		void Awake(){
@@ -79,7 +80,7 @@ namespace ModLoaderSolution
 				}
 				catch(Exception){
 				}
-				if (lastVersion != NetClient.version)
+				if (lastVersion != NetClient.version && !quietUpdate)
                 {
 					try
 					{
