@@ -5,10 +5,13 @@ name: Build ModLoaderSolution
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches: [ "dev" ]
+    paths:
+      - 'mod-loader-solution/*'
   pull_request:
     branches: [ "main", "dev" ]
-
+    paths:
+      - 'mod-loader-solution/*'
 
 jobs:
   build:
