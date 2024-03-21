@@ -21,7 +21,7 @@ namespace ModLoaderSolution
                     RaycastHit hit;
                     Vector3 x = new Vector3(0, 4, 0);
                     if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-                        Utilities.instance.GetPlayer().transform.position = hit.point + x;
+                        Utilities.GetPlayer().transform.position = hit.point + x;
                 }
             
         }

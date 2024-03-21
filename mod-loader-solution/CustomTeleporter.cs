@@ -64,7 +64,7 @@ namespace ModLoaderSolution
                         respawning = false;
                     }
                     if (Input.GetKeyDown("joystick button 5") || Input.GetKeyDown(KeyCode.Backslash))
-                        Utilities.instance.GetPlayer().SendMessage("SetVelocity", Vector3.zero);
+                        Utilities.GetPlayer().SendMessage("SetVelocity", Vector3.zero);
                 }
                 if (hasPressedB && bailedPreviously && !respawning)
                 {
@@ -92,14 +92,14 @@ namespace ModLoaderSolution
                 && !respawning
             );
             if (PlayerHuman == null)
-                PlayerHuman = GameObject.Find("Player_Human");
+                PlayerHuman = Utilities.GetPlayer();
             else
             {
                 if (shouldSetRespawn && Time.time-lastTimeRespawnSet>periodOfCheckpointSet)
                 {
                     RespawnPos = PlayerHuman.transform.position;
                     RespawnRot = PlayerHuman.transform.rotation;
-                    RespawnSpeed = Utilities.instance.GetPlayer().GetComponent<Rigidbody>().velocity;
+                    RespawnSpeed = Utilities.GetPlayer().GetComponent<Rigidbody>().velocity;
                     lastTimeRespawnSet = Time.time;
                 }
             }
@@ -111,7 +111,7 @@ namespace ModLoaderSolution
             yield return new WaitForSeconds(0.01f);
             PlayerHuman.transform.position = RespawnPos;
             PlayerHuman.transform.rotation = RespawnRot;
-            Utilities.instance.GetPlayer().SendMessage("SetVelocity", RespawnSpeed);
+            Utilities.GetPlayer().SendMessage("SetVelocity", RespawnSpeed);
             yield return new WaitForEndOfFrame();
             FindObjectOfType<BikeCamera>().SetTarget(Utilities.instance.GetPlayerInfoImpact(), true);
             TimeModifier.Instance.speed = 0.05f;

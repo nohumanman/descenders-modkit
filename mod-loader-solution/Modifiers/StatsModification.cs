@@ -174,38 +174,38 @@ namespace ModLoaderSolution
         }
         public bool ModifyVehicle(string field, object value)
         {
-            Utilities.instance.GetPlayer()
+            Utilities.GetPlayer()
                 .GetComponent<Vehicle>()
                 .GetType().GetField(field)
                 .SetValue(
-                    Utilities.instance.GetPlayer().GetComponent<Vehicle>(), value
+                    Utilities.GetPlayer().GetComponent<Vehicle>(), value
                 );
             return true;
         }
         public bool ModifyWheel(string field, object value, int wheelNum)
         {
-            Utilities.instance.GetPlayer()
+            Utilities.GetPlayer()
                 .GetComponentsInChildren<Wheel>()[wheelNum]
                 .GetType().GetField(field)
                 .SetValue(
-                    Utilities.instance.GetPlayer().GetComponentsInChildren<Wheel>()[wheelNum], value
+                    Utilities.GetPlayer().GetComponentsInChildren<Wheel>()[wheelNum], value
                 );
             return true;
         }
         public object GetWheelMod(string field, int wheelNum)
         {
-            return Utilities.instance.GetPlayer()
+            return Utilities.GetPlayer()
                 .GetComponentsInChildren<Wheel>()[wheelNum]
                 .GetType().GetField(field).GetValue(
-                Utilities.instance.GetPlayer().GetComponentsInChildren<Wheel>()[wheelNum]
+                Utilities.GetPlayer().GetComponentsInChildren<Wheel>()[wheelNum]
             );
         }
         public object GetVehicleMod(string field)
         {
-            return Utilities.instance.GetPlayer()
+            return Utilities.GetPlayer()
                 .GetComponent<Vehicle>()
                 .GetType().GetField(field).GetValue(
-                Utilities.instance.GetPlayer().GetComponent<Vehicle>()
+                Utilities.GetPlayer().GetComponent<Vehicle>()
             );
         }
         public void ApplyStupidModifiers()

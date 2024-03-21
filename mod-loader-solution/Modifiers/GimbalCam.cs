@@ -23,7 +23,7 @@ namespace ModLoaderSolution
             if (ExistingCamera != null)
             {
                 if (_player == null)
-                    _player = GameObject.Find("Player_Human");
+                    _player = Utilities.GetPlayer();
                 if (_player != null)
                     transform.eulerAngles = _player.transform.eulerAngles;
             }

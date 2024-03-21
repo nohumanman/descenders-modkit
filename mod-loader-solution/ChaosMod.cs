@@ -50,9 +50,9 @@ namespace ModLoaderSolution
             while (true)
             {;
                 GameObject bannerInstance = Instantiate(Capsule_W_Rbody);
-                bannerInstance.transform.position = Utilities.instance.GetPlayer().transform.position;
-                bannerInstance.transform.rotation = Utilities.instance.GetPlayer().transform.rotation;
-                bannerInstance.transform.position += Utilities.instance.GetPlayer().transform.forward.normalized * 10;
+                bannerInstance.transform.position = Utilities.GetPlayer().transform.position;
+                bannerInstance.transform.rotation = Utilities.GetPlayer().transform.rotation;
+                bannerInstance.transform.position += Utilities.GetPlayer().transform.forward.normalized * 10;
                 yield return new WaitForSeconds(2f);
             }
         }
@@ -68,8 +68,8 @@ namespace ModLoaderSolution
                 else
                     banner = AssetBundling.Instance.bundle.LoadAsset<GameObject>("desc_comp_banner");
                 GameObject bannerInstance = Instantiate(banner);
-                bannerInstance.transform.position = Utilities.instance.GetPlayer().transform.position;
-                bannerInstance.transform.rotation = Utilities.instance.GetPlayer().transform.rotation;
+                bannerInstance.transform.position = Utilities.GetPlayer().transform.position;
+                bannerInstance.transform.rotation = Utilities.GetPlayer().transform.rotation;
                 was1 = !was1;
                 amountSpawned++;
                 yield return new WaitForSeconds(2f);
