@@ -73,7 +73,7 @@ namespace ModLoaderSolution
 				prevMap = Utilities.instance.GetCurrentMap();
 			}
 			if (PlayerHuman == null)
-				PlayerHuman = GameObject.Find("Player_Human");
+				PlayerHuman = Utilities.GameObjectFind("Player_Human");
 			if (Utilities.instance.hasBailed() && !wasBailed)
 				OnRespawn();			
 			wasBailed = Utilities.instance.hasBailed();
@@ -113,7 +113,7 @@ namespace ModLoaderSolution
 			NetClient.Instance.SendData("MAP_ENTER|" + map_id + "|" + map_name);
 			// if map_name is 0 we are in lobby
 			if (map_name == "0")
-				Destroy(GameObject.Find("sign_modoftheyear"));
+				Destroy(Utilities.GameObjectFind("sign_modoftheyear"));
 			if (Utilities.instance.isMod()) // only do this to mods to not mess things up
 				Utilities.instance.NormaliseModSongs();
 		}

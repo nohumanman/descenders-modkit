@@ -72,7 +72,7 @@ namespace ModLoaderSolution
         string GetObjectsAboutPlayer()
         {
             if (Player == null)
-                Player = GameObject.Find("Player_Human");
+                Player = Utilities.GameObjectFind("Player_Human");
             string objects = "";
             Collider[] hitColliders = Physics.OverlapSphere(Player.transform.position, 2);
             foreach (Collider hitCollider in hitColliders)
@@ -163,8 +163,8 @@ namespace ModLoaderSolution
                         if (GUI.Button(new Rect(310, yPos, 150, 25), (string)typeof(PlayerInfoImpact).GetField("a^sXfY").GetValue(x), myButtonStyle))
                         {
                             Transform bikeTransform = ((GameObject)typeof(PlayerInfoImpact).GetField("W\u0082oQHKm").GetValue(x)).transform;
-                            GameObject.Find("Player_Human").transform.position = bikeTransform.position;
-                            GameObject.Find("Player_Human").transform.rotation = bikeTransform.rotation;
+                            Utilities.GameObjectFind("Player_Human").transform.position = bikeTransform.position;
+                            Utilities.GameObjectFind("Player_Human").transform.rotation = bikeTransform.rotation;
                         }
                         yPos += 25;
                     }

@@ -15,6 +15,7 @@ namespace ModLoaderSolution
         public static AssetBundling Instance;
         IEnumerator UpdateBundle(string bundlePath)
         {
+            Utilities.LogMethodCallStart();
             string url = "https://nohumanman.com/static/desccomptoolkit";
             using (UnityWebRequest www = UnityWebRequest.Get(url))
             {
@@ -35,14 +36,18 @@ namespace ModLoaderSolution
                     LoadBundle(bundlePath);
                 }
             }
+            Utilities.LogMethodCallEnd();
         }
         public void LoadBundle(string bundlePath)
         {
+            Utilities.LogMethodCallStart();
             bundle = AssetBundle.LoadFromFile(bundlePath);
             OnBundleLoad();
+            Utilities.LogMethodCallEnd();
         }
         public void OnBundleLoad()
         {
+            Utilities.LogMethodCallStart();
             GameObject asst = bundle.LoadAsset<GameObject>("BikeSwitcherRadial");
             GameObject bikeSwitcherRadial = Instantiate(asst);
             DontDestroyOnLoad(bikeSwitcherRadial.transform.root);
@@ -76,8 +81,9 @@ namespace ModLoaderSolution
 
             GameObject IntroSeq = bundle.LoadAsset<GameObject>("IntroSequence");
             Instantiate(IntroSeq).AddComponent<DisableOnAny>();
-            GameObject.Find("Map_Name").GetComponent<Text>().text = " You are using the Descenders Modkit ";
-            GameObject.Find("Description").GetComponent<Text>().text = "- TAB to open bike switcher\n- CTRL-I to open stats modification\n- Quit the game to remove this mod\n\nFor more info go to split-timer.nohumanman.com/info";
+            Utilities.GameObjectFind("Map_Name").GetComponent<Text>().text = " You are using the Descenders Modkit ";
+            Utilities.GameObjectFind("Description").GetComponent<Text>().text = "- TAB to open bike switcher\n- CTRL-I to open stats modification\n- Quit the game to remove this mod\n\nFor more info go to split-timer.nohumanman.com/info";
+            Utilities.LogMethodCallEnd();
         }
         void Start()
         {

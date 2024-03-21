@@ -71,7 +71,7 @@ namespace ModLoaderSolution
 			text.supportRichText = true;
 			startingColor = text.color;
 			SetText("");
-			GameObject.Find("TextShadow").GetComponent<Text>().supportRichText = true;
+			Utilities.GameObjectFind("TextShadow").GetComponent<Text>().supportRichText = true;
 			StartCoroutine(TimeUpdater());
 		}
 		public void SetText(string textToSet)

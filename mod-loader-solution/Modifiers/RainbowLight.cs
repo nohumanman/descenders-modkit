@@ -35,7 +35,7 @@ namespace ModLoaderSolution
 			if (Input.GetKey(KeyCode.R) && Input.GetKeyDown(KeyCode.L))
 			{
 				UserInterface.Instance.SpecialNotif("Rainbow light toggled: " + (!Spotlight.enabled).ToString());
-				Spotlight = GameObject.Find("Spotlight").GetComponent<Light>();
+				Spotlight = Utilities.GameObjectFind("Spotlight").GetComponent<Light>();
 				Spotlight.enabled = !Spotlight.enabled;
 				foreach(Light light in lights)
 					if (light != Spotlight)

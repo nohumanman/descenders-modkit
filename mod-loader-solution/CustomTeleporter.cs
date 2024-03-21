@@ -92,7 +92,7 @@ namespace ModLoaderSolution
                 && !respawning
             );
             if (PlayerHuman == null)
-                PlayerHuman = GameObject.Find("Player_Human");
+                PlayerHuman = Utilities.GameObjectFind("Player_Human");
             else
             {
                 if (shouldSetRespawn && Time.time-lastTimeRespawnSet>periodOfCheckpointSet)

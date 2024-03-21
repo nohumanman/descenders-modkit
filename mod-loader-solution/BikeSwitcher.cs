@@ -29,6 +29,7 @@ namespace ModLoaderSolution
         }
         IEnumerator _ToBike(string bike, string id)
         {
+            Utilities.LogMethodCallStart();
             GameObject PlayerObject = Utilities.GetPlayerFromId(id);
             if (PlayerObject != null)
             {
@@ -118,6 +119,7 @@ namespace ModLoaderSolution
                 PlayerManagement.Instance.OnBikeSwitch(oldBike, bike);
                 oldBike = bike;
             }
+            Utilities.LogMethodCallEnd();
         }
         public Animator GetPlayerAnim(GameObject PlayerObject)
         {

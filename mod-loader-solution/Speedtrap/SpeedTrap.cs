@@ -32,7 +32,7 @@ namespace ModLoaderSolution
 			if (coro != null)
 				StopCoroutine(coro);
 			if (text == null)
-				text = GameObject.Find("SpeedTrap").GetComponent<TextMesh>();
+				text = Utilities.GameObjectFind("SpeedTrap").GetComponent<TextMesh>();
 			updateText = true;
 		}
 		IEnumerator UpdateText()

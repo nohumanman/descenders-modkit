@@ -21,14 +21,17 @@ namespace ModLoaderSolution
         public float clientTime = 0f;
         public void Start()
         {
+            Utilities.LogMethodCallStart();
             Utilities.Log("Found Trail '" + name + "'");
             AddScripts();
             if (autoLeaderboardText != null)
                 autoLeaderboardText.GetComponent<TextMesh>().text = "";
+            Utilities.LogMethodCallEnd();
         }
         bool scriptsAdded = false;
         public void AddScripts()
         {
+            Utilities.LogMethodCallStart();
             if (scriptsAdded) {
                 Debug.Log("Scripts already added");
                 return;
@@ -67,9 +70,11 @@ namespace ModLoaderSolution
             {
                 Debug.LogError("AddScripts not possible!");
             }
+            Utilities.LogMethodCallEnd();
         }
         public void Update()
         {
+            Utilities.LogMethodCallStart();
             if (Utilities.instance.isInReplayMode())
                 return;
             // if select pressed, blow things up
@@ -85,6 +90,7 @@ namespace ModLoaderSolution
                 StartCoroutine(SplitTimerText.Instance.DisableTimerText(5));
             }
             clientTime += Time.deltaTime;
+            Utilities.LogMethodCallEnd();
         }
         bool InAnyBoundaries()
         {

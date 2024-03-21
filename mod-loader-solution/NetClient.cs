@@ -28,6 +28,7 @@ namespace ModLoaderSolution
 		static string patchNotes = "- Increased timer UI accuracy (3dp now)\n- MOD BROWSER IS ALPHABETIC! That's right, when you're using the modkit you'll be able to scroll through your mods in a logical way!\n\nYours,\n- nohumanman"; // that which has changed since the last version.
 		public static bool developerMode = false;
 		void Awake(){
+			Utilities.LogMethodCallStart();
 			if (developerMode)
 				ip = "localhost";
 			DontDestroyOnLoad(this.gameObject.transform.root);
@@ -38,6 +39,7 @@ namespace ModLoaderSolution
 			this.gameObject.AddComponent<Utilities>();
 			Utilities.Log("Version number " + version);
 			Application.logMessageReceived += Log;
+			Utilities.LogMethodCallEnd();
 		}
 		public static string GetVersion()
         {
@@ -47,6 +49,7 @@ namespace ModLoaderSolution
 				return version;
         }
 		void Start () {
+			Utilities.LogMethodCallStart();
 			Utilities.Log("Connecting to tcp server port " + port.ToString() + " with ip '" + ip + "'");
 			ConnectToTcpServer();
 			ridersGates = FindObjectsOfType<RidersGate>();
@@ -54,6 +57,7 @@ namespace ModLoaderSolution
             {
 				Utilities.instance.ToggleGod();
             }
+			Utilities.LogMethodCallEnd();
 		}
 		public bool IsConnected()
         {
@@ -63,9 +67,10 @@ namespace ModLoaderSolution
 		bool introSequenceWasHere = false;
 		void Update()
         {
-			if (!introSequenceWasHere && GameObject.Find("Map_Name") != null)
+			Utilities.LogMethodCallStart();
+			if (!introSequenceWasHere && Utilities.GameObjectFind("Map_Name") != null)
 				introSequenceWasHere = true;
-			if (!poppedUp && GameObject.Find("Map_Name") == null && introSequenceWasHere)
+			if (!poppedUp && Utilities.GameObjectFind("Map_Name") == null && introSequenceWasHere)
             {
 				string lastVersion = "";
 				try
@@ -115,8 +120,10 @@ namespace ModLoaderSolution
 				messages.Clear();
 			}
 			catch (InvalidOperationException){}
+			Utilities.LogMethodCallEnd();
 		}
 		private void ConnectToTcpServer () {
+			Utilities.LogMethodCallStart();
 			Utilities.Log("Connecting to TCP Server");
 			hasStarted = Time.time;
 			try {
@@ -128,6 +135,7 @@ namespace ModLoaderSolution
 			catch (Exception e) {
 				Utilities.Log("On client connect exception " + e); 		
 			}
+			Utilities.LogMethodCallEnd();
 		}
 		public void Log(string logString, string stackTrace, LogType type)
 		{
@@ -139,6 +147,7 @@ namespace ModLoaderSolution
         }
 		public IEnumerator UploadOutputLog()
 		{
+			Utilities.LogMethodCallStart();
 			string replayLocation = (
 				Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
 				+ "Low\\RageSquid\\Descenders\\output_log.txt"
@@ -165,9 +174,11 @@ namespace ModLoaderSolution
 					Utilities.Log("Upload complete!");
 				}
 			}
+			Utilities.LogMethodCallEnd();
 		}
 		public IEnumerator UploadReplay(string replay, string time_id)
         {
+			Utilities.LogMethodCallStart();
 			Byte[] bytes = System.IO.File.ReadAllBytes(replay);
 			System.IO.File.Delete(replay);
 
@@ -191,8 +202,10 @@ namespace ModLoaderSolution
 					Utilities.Log("Upload complete!");
 				}
 			}
-        }
+			Utilities.LogMethodCallEnd();
+		}
 		private void ListenForData() {
+			Utilities.LogMethodCallStart();
 			try {
 				Utilities.Log("Creating TcpClient()");
 				socketConnection = new TcpClient(ip, port);
@@ -215,17 +228,21 @@ namespace ModLoaderSolution
 			catch {             
 				Utilities.Log("Socket exception in ListenForData()");         
 			}
+			Utilities.LogMethodCallEnd();
 		}
 		public void NetStart()
         {
+			Utilities.LogMethodCallStart();
 			PlayerManagement.Instance.NetStart();
 			foreach (MedalSystem medalSystem in FindObjectsOfType<MedalSystem>())
 				medalSystem.NetStart();
 			this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
 			foreach (Boundary b in FindObjectsOfType<Boundary>())
 				b.ForceUpdate(); // force tell the server what boundaries we are in.
+			Utilities.LogMethodCallEnd();
 		}
 		private void MessageRecieved(string message) {
+			Utilities.LogMethodCallStart();
 			if (message == "")
 				return;
 			Utilities.Log("Message Recieved: " + message);
@@ -236,7 +253,7 @@ namespace ModLoaderSolution
             {
 				string rotate = message.Split('|')[1];
 				int rotateInt = int.Parse(rotate);
-				GameObject.Find("Player_Human").transform.Rotate(new Vector3(0, rotateInt, 0));
+				Utilities.GameObjectFind("Player_Human").transform.Rotate(new Vector3(0, rotateInt, 0));
 			}
 			if (message.StartsWith("UPLOAD_REPLAY"))
             {
@@ -525,6 +542,7 @@ namespace ModLoaderSolution
 				DevCommandsGameplay.LockItem(int.Parse(code));
 			}
 			SendData("pong");
+			Utilities.LogMethodCallEnd();
 		}
 		IEnumerator SendDataDelayed(string clientMessage, float time)
         {
@@ -548,6 +566,7 @@ namespace ModLoaderSolution
 			SendData(clientMessage);
         }
 		public void SendData(string clientMessage) {
+			Utilities.LogMethodCallStart();
 			// Utilities.Log("Client sending message: " + clientMessage);
 			// clean clientMessage
 			if (!clientMessage.EndsWith("\n"))
@@ -556,23 +575,24 @@ namespace ModLoaderSolution
 			{
 				StartCoroutine(SendDataDelayed(clientMessage, 1)); // wait a second
 				return;
-			}
-			try
-			{
-				NetworkStream stream = socketConnection.GetStream();
-				if (stream.CanWrite)
-				{
-					byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(clientMessage);
-					stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
-					stream.Flush(); // Ensure data is flushed immediately (prevent truncation)
-				}
-			}
-			catch (SocketException socketException)
-			{
-				Utilities.Log("Socket exception: " + socketException);
-			}
+            }
+            try
+            {
+                NetworkStream stream = socketConnection.GetStream();
+                if (stream.CanWrite)
+                {
+                    byte[] clientMessageAsByteArray = Encoding.ASCII.GetBytes(clientMessage);
+                    stream.Write(clientMessageAsByteArray, 0, clientMessageAsByteArray.Length);
+                    stream.Flush(); // Ensure data is flushed immediately (prevent truncation)
+                }
+            }
+            catch (SocketException socketException)
+            {
+                Utilities.Log("Socket exception: " + socketException);
+            }
+			Utilities.LogMethodCallEnd();
 		}
-		public void OnDestroy()
+        public void OnDestroy()
 		{
 			SendData("MAP_EXIT");
 			if (socketConnection != null)
