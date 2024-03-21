@@ -24,9 +24,9 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
-		static string version = "0.2.65";
+		static string version = "0.2.66";
 		static bool quietUpdate = false;
-		static string patchNotes = "- Massive optimisation improvementss\n\nYours,\n- nohumanman"; // that which has changed since the last version.
+		static string patchNotes = "- Massive optimisation improvements\n- Remove custom load screen ('you are using descenders modkit')\n\nYours,\n- nohumanman"; // that which has changed since the last version.
 		public static bool developerMode = false;
 		void Awake(){
 			Utilities.LogMethodCallStart();
@@ -65,13 +65,10 @@ namespace ModLoaderSolution
 			return socketConnection != null && socketConnection.Connected;
 		}
 		bool poppedUp = false;
-		bool introSequenceWasHere = false;
 		void Update()
         {
 			Utilities.LogMethodCallStart();
-			if (!introSequenceWasHere && Utilities.GameObjectFind("Map_Name") != null)
-				introSequenceWasHere = true;
-			if (!poppedUp && Utilities.GameObjectFind("Map_Name") == null && introSequenceWasHere)
+			if (!poppedUp && Utilities.GetPlayer() != null)
             {
 				string lastVersion = "";
 				try
