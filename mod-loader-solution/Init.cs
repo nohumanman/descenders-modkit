@@ -91,8 +91,8 @@ namespace ModLoaderSolution
                         g.AddComponent<SloMoZone>();
                 }                
             }
-            if (GameObject.Find("SpeedTrapTrigger") != null)
-                GameObject.Find("SpeedTrapTrigger").AddComponent<SpeedTrap>();
+            if (Utilities.GameObjectFind("SpeedTrapTrigger") != null)
+                Utilities.GameObjectFind("SpeedTrapTrigger").AddComponent<SpeedTrap>();
             if (firstStart)
             {
                 DontDestroyOnLoad(gameObject.transform.root);

@@ -28,7 +28,7 @@ namespace PlayerIdentification{
 				playerId.steamID = "1234567890";
 				return playerId;
 			}
-            GameObject playerInfoHuman = GameObject.Find("PlayerInfo_Human");
+            GameObject playerInfoHuman = ModLoaderSolution.Utilities.GameObjectFind("PlayerInfo_Human");
             if (playerInfoHuman == null)
             {
                 return new Identification();

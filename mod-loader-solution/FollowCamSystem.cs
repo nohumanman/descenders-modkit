@@ -27,6 +27,7 @@ namespace ModLoaderSolution
         bool edit = false;
         public void OnGUI()
         {
+            Utilities.LogMethodCallStart();
             UserInterface.Instance.InitGUI();
             if (!edit)
                 return;
@@ -69,7 +70,7 @@ namespace ModLoaderSolution
                 bother = !bother;
             yPos += 22;
             if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Look at me once", UserInterface.Instance.customButton))
-                Camera.main.transform.LookAt(Utilities.instance.GetPlayer().transform);
+                Camera.main.transform.LookAt(Utilities.GetPlayer().transform);
             yPos += 22;
             if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Add Camera", UserInterface.Instance.customButton))
                 cameras.Add(new Cam());
@@ -84,9 +85,11 @@ namespace ModLoaderSolution
             myButtonStyle2.normal.background = UserInterface.MakeTex(5, 5, new Color(0.2f, 0.06f, 0.12f));
             myButtonStyle2.fontSize = 30;
             GUI.Label(new Rect(Screen.width - 300, Screen.height - 80, 300, 80), Camera.main.transform.position.ToString(), myButtonStyle2);
+            Utilities.LogMethodCallEnd();
         }
         public Cam GetBestCamera()
         {
+            Utilities.LogMethodCallStart();
             if (cameras.Count == 0)
                 return null;
             if (Utilities.instance.hasBailed(subject))
@@ -108,13 +111,15 @@ namespace ModLoaderSolution
                     }
                 }
             }
-            
+
+            Utilities.LogMethodCallEnd();
             if (closestCam.loc == Vector3.zero)
                 return null;
             return closestCam;
         }
         public void Update()
         {
+            Utilities.LogMethodCallStart();
             if (Input.GetKeyDown(KeyCode.M) && Input.GetKey(KeyCode.C))
                 edit = !edit;
 
@@ -184,9 +189,11 @@ namespace ModLoaderSolution
                 }
                 shouldSnap = false;
             }
+            Utilities.LogMethodCallEnd();
         }
         public bool IsValid(Vector3 camPos, int proximity = 100, float coneAngle = 45f)
         {
+            Utilities.LogMethodCallStart();
             if (subject == null)
                 return false;
 
@@ -222,7 +229,7 @@ namespace ModLoaderSolution
                     }
                 }
             }
-
+            Utilities.LogMethodCallEnd();
             return false;
         }
 
