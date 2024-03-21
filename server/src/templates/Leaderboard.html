@@ -35,11 +35,11 @@
                                         <td style="padding:10px;">
                                             [[i+1]]
                                         </td>
-                                        <td v-for="(x, i) in item" style="padding:10px;" v-if="i == 1">
-                                            [[x]]
+                                        <td style="padding:10px;">
+                                            [[item.name]]
                                         </td>
-                                        <td v-for="(x, i) in item" style="padding:10px;" v-if="i == 3">
-                                            [[secs_to_str(x)]]
+                                        <td style="padding:10px;">
+                                            [[secs_to_str(item.time)]]
                                         </td>
                                     </tr>
                                 </table>
@@ -57,5 +57,5 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-    <script src="/static/js/leaderboard.js"></script>
+    <script src="static/js/leaderboard.js"></script>
 </html>

@@ -179,7 +179,12 @@ WHERE
     AND
     SplitTime.checkpoint_num = max_checkpoint_table.max_checkpoint
     AND
-    Time.ignored = 0 AND Time.verified = 1
+    ((Time.ignored = 0 AND Time.verified = 1) OR :require_spectated)
+    AND (
+        Time.spectated_by = :spectated_by
+        OR NOT :require_spectated
+    )
+    AND Time.timestamp >= :timestamp
 GROUP BY
     Time.trail_name,
     Player.steam_id

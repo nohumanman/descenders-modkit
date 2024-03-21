@@ -21,10 +21,11 @@ var app = new Vue({
         time: 0,
     },
     methods: {
-        GetLeaderboard(trail_name, timestamp){
+        GetLeaderboard(trail_name, timestamp, spectated_by){
             $.get("/get-leaderboard", {
                 "trail_name" : trail_name,
-                "timestamp" : timestamp
+                "timestamp" : timestamp,
+                "spectated_by": spectated_by
             }, function(data){
                 app.leaderboard = data;
             });
@@ -55,11 +56,6 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const trail = urlParams.get('trail_name')
 const timestamp = urlParams.get('timestamp')
+const spectated_by = urlParams.get('spectated_by')
 
-
-app.GetLeaderboard(trail, timestamp);
-
-setInterval(() => {
-    app.GetLeaderboard(trail, timestamp);
-}, 100);
-
+app.GetLeaderboard(trail, timestamp, spectated_by);
