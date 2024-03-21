@@ -5,7 +5,7 @@ name: Build ModLoaderSolution
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches: [ "dev" ]
   pull_request:
     branches: [ "main", "dev" ]
 
