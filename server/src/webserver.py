@@ -615,11 +615,20 @@ class Webserver():
         """ Function to get the leaderboard of the website"""
 
         trail_name = request.args.get("trail_name")
+        try:
+            spectated_by = request.args.get("spectated_by")
+            timestamp = request.args.get("timestamp")
+        except KeyError:
+            spectated_by = None
+            timestamp = 0
         if trail_name is None:
             return jsonify({})
         return jsonify(
             await self.dbms.get_leaderboard(
-                trail_name
+                trail_name,
+                num=10,
+                spectated_by=spectated_by,
+                timestamp=timestamp
             )
         )
 

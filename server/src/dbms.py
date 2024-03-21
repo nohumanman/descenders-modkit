@@ -182,7 +182,7 @@ class DBMS():
             # pylint: disable=no-member
             return [world[0] for world in await self.queries.get_all_worlds(db)]
 
-    async def get_leaderboard(self, trail_name, num=10) -> list:
+    async def get_leaderboard(self, trail_name, num=10, spectated_by=None, timestamp=0) -> list:
         """ Get the leaderboard for a given trail. """
         async with aiosqlite.connect(self.db_file) as db:
             # pylint: disable=no-member
@@ -198,7 +198,12 @@ class DBMS():
                     "time": time[6]
                 } for i, time in enumerate(
                     await self.queries.get_leaderboard(
-                        db, trail_name=trail_name, lim=num
+                        db,
+                        trail_name=trail_name,
+                        lim=num,
+                        spectated_by=spectated_by,
+                        require_spectated = 0 if spectated_by is None else 1,
+                        timestamp=timestamp
                     )
                 )
             ]
