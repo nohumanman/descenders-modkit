@@ -70,7 +70,7 @@ namespace ModLoaderSolution
                 bother = !bother;
             yPos += 22;
             if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Look at me once", UserInterface.Instance.customButton))
-                Camera.main.transform.LookAt(Utilities.instance.GetPlayer().transform);
+                Camera.main.transform.LookAt(Utilities.GetPlayer().transform);
             yPos += 22;
             if (GUI.Button(new Rect(xPos, 20 + yPos, 240, 20), "Add Camera", UserInterface.Instance.customButton))
                 cameras.Add(new Cam());

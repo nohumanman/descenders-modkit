@@ -253,7 +253,7 @@ namespace ModLoaderSolution
             {
 				string rotate = message.Split('|')[1];
 				int rotateInt = int.Parse(rotate);
-				Utilities.GameObjectFind("Player_Human").transform.Rotate(new Vector3(0, rotateInt, 0));
+				Utilities.GetPlayer().transform.Rotate(new Vector3(0, rotateInt, 0));
 			}
 			if (message.StartsWith("UPLOAD_REPLAY"))
             {
@@ -267,7 +267,7 @@ namespace ModLoaderSolution
 			}
 			if (message.StartsWith("GET_POS"))
             {
-				Vector3 pos = Utilities.instance.GetPlayer().transform.position;
+				Vector3 pos = Utilities.GetPlayer().transform.position;
 				Utilities.Log("Current Position: " + pos.ToString());
 				SendData("POS|" + pos.x + "|" + pos.y + "|" + pos.z);
             }

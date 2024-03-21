@@ -73,7 +73,7 @@ namespace ModLoaderSolution
 				prevMap = Utilities.instance.GetCurrentMap();
 			}
 			if (PlayerHuman == null)
-				PlayerHuman = Utilities.GameObjectFind("Player_Human");
+				PlayerHuman = Utilities.GetPlayer();
 			if (Utilities.instance.hasBailed() && !wasBailed)
 				OnRespawn();			
 			wasBailed = Utilities.instance.hasBailed();

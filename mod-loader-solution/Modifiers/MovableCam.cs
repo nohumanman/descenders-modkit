@@ -82,8 +82,8 @@ namespace ModLoaderSolution
         }
         public void FindPlayer()
         {
-            if (PlayerHuman == null && Utilities.GameObjectFind("Player_Human") != null)
-                PlayerHuman = Utilities.GameObjectFind("Player_Human");
+            if (PlayerHuman == null && Utilities.GetPlayer() != null)
+                PlayerHuman = Utilities.GetPlayer();
         }
     }
 }

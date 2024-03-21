@@ -53,7 +53,7 @@ namespace ModLoaderSolution
                 {"1031" , "Llangynog Freeride"},
                 {"1032" , "Rival Falls"}
             };
-        public GameObject playerObject;
+        public static GameObject playerObject;
         string playerName = null;
         string playerTotalRep = null;
         public bool playerFirstSpawned = false;
@@ -195,7 +195,7 @@ namespace ModLoaderSolution
             Utilities.Log("Vehicle Replay - " + Utilities.GameObjectFind("Player_Human").GetComponent<VehicleReplay>());
             object replayClassObject = typeof(VehicleReplay)
                 .GetField(replayObfuscatedName)
-                .GetValue(Utilities.GameObjectFind("Player_Human").GetComponent<VehicleReplay>());
+                .GetValue(Utilities.GetPlayer().GetComponent<VehicleReplay>());
             Utilities.Log("replayClassObject found -" + replayClassObject);
             magicMethod.Invoke(replayClassObject, new object[] { path });
         }
@@ -360,6 +360,7 @@ namespace ModLoaderSolution
             return finishLine;
         }
         static List<GameObject> cachedObjects = new List<GameObject>();
+        static Hashtable recentlySearched = new Hashtable();
         public static GameObject GameObjectFind(string gameobjectName)
         {
             foreach (GameObject go in cachedObjects)
@@ -372,11 +373,28 @@ namespace ModLoaderSolution
                     }
                 }
             }
+            // we don't have the gameobject cached!
 
+            if (recentlySearched.ContainsKey(gameobjectName))
+            {
+                if ((Time.time - (float)recentlySearched[gameobjectName]) < 1)
+                {
+                    return null; // we searched for it not long ago, so let's not bother now
+                }
+            }
             cachedObjects.RemoveAll(x => !x);
             GameObject foundObject = GameObject.Find(gameobjectName);
             if (foundObject != null)
                 cachedObjects.Add(foundObject);
+            else
+            {
+                // if nul
+                if (recentlySearched.ContainsKey(gameobjectName))
+                    recentlySearched[gameobjectName] = Time.time; // we'll update our failed search
+                else
+                    recentlySearched.Add(gameobjectName, Time.time); // we'll add our failed search
+            }
+                
             return foundObject;
         }
         public GameObject GetStartLineObject()
@@ -463,7 +481,7 @@ namespace ModLoaderSolution
             return null;
         }
 
-        public GameObject GetPlayer()
+        public static GameObject GetPlayer()
         {
             playerObject = Singleton<PlayerManager>.SP.GetPlayerObject();
             return playerObject;
@@ -564,10 +582,10 @@ namespace ModLoaderSolution
         {
             MethodBase caller = new StackFrame(1, false).GetMethod();
             string prefix = caller.ReflectedType.FullName + "." + caller.Name;
-            if (NetClient.Instance != null)
+            /*if (NetClient.Instance != null)
                 NetClient.Instance.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);
             else
-                Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);
+                Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);*/
         }
         public bool ModIsLoading()
         {

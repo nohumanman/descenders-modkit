@@ -88,7 +88,7 @@ namespace ModLoaderSolution
                             // replace gestures
                             Gesture[] gestures = new Gesture[0] { };
                             string gesturesField = "EL\u0080\u007f\u0084\u0080o";
-                            gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(Utilities.instance.GetPlayer().GetComponent<Cyclist>());
+                            gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(Utilities.GetPlayer().GetComponent<Cyclist>());
                             foreach (Gesture gesture in gestures)
                             {
                                 // change gesture animations here!
@@ -96,7 +96,7 @@ namespace ModLoaderSolution
                             }
                             // replace gestures
                             typeof(Cyclist).GetField(gesturesField).SetValue(
-                                Utilities.instance.GetPlayer().GetComponent<Cyclist>(),
+                                Utilities.GetPlayer().GetComponent<Cyclist>(),
                                 gestures
                             );
                         }
@@ -155,7 +155,7 @@ namespace ModLoaderSolution
         }
         IEnumerator DelicatePlayerRespawn(string id, GameObject Player, PlayerInfoImpact playerInfoImpact)
         {
-            // Player = Utilities.instance.GetPlayer()
+            // Player = Utilities.GetPlayer()
             Vector3 pos = Player.transform.position;
             Vector3 rot = Player.transform.eulerAngles;
             Destroy(Player);
