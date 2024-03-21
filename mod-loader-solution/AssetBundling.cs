@@ -15,7 +15,6 @@ namespace ModLoaderSolution
         public static AssetBundling Instance;
         IEnumerator UpdateBundle(string bundlePath)
         {
-            Utilities.LogMethodCallStart();
             string url = "https://nohumanman.com/static/desccomptoolkit";
             using (UnityWebRequest www = UnityWebRequest.Get(url))
             {
@@ -36,7 +35,6 @@ namespace ModLoaderSolution
                     LoadBundle(bundlePath);
                 }
             }
-            Utilities.LogMethodCallEnd();
         }
         public void LoadBundle(string bundlePath)
         {
@@ -47,7 +45,6 @@ namespace ModLoaderSolution
         }
         public void OnBundleLoad()
         {
-            Utilities.LogMethodCallStart();
             GameObject asst = bundle.LoadAsset<GameObject>("BikeSwitcherRadial");
             GameObject bikeSwitcherRadial = Instantiate(asst);
             DontDestroyOnLoad(bikeSwitcherRadial.transform.root);
@@ -78,12 +75,6 @@ namespace ModLoaderSolution
                         childs_child.gameObject.AddComponent<TimerCopier>();
                 }
             }
-
-            GameObject IntroSeq = bundle.LoadAsset<GameObject>("IntroSequence");
-            Instantiate(IntroSeq).AddComponent<DisableOnAny>();
-            Utilities.GameObjectFind("Map_Name").GetComponent<Text>().text = " You are using the Descenders Modkit ";
-            Utilities.GameObjectFind("Description").GetComponent<Text>().text = "- TAB to open bike switcher\n- CTRL-I to open stats modification\n- Quit the game to remove this mod\n\nFor more info go to split-timer.nohumanman.com/info";
-            Utilities.LogMethodCallEnd();
         }
         void Start()
         {

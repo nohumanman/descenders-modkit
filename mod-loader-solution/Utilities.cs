@@ -75,7 +75,7 @@ namespace ModLoaderSolution
         {
             if (isFlying)
                 SetVel(20f);
-            if (!normalised && FindObjectOfType<GameData>() != null)
+            if (!normalised && Utilities.GameObjectFindObjectOfType<GameData>() != null)
             {
                 NormaliseModSongs();
                 normalised = true;
@@ -127,7 +127,7 @@ namespace ModLoaderSolution
             // Function to put proper playlist instead of 'Descenders' song on mod maps
             // dirty the current session (to force a playlist re-load)
             FieldInfo currentSessionField = typeof(SessionManager).GetField("\u0083ESVMoz"); // currentSession field
-            object session = currentSessionField.GetValue(FindObjectOfType<SessionManager>()); // currentSession value
+            object session = currentSessionField.GetValue(Utilities.GameObjectFindObjectOfType<SessionManager>()); // currentSession value
             FieldInfo worldMapField = session.GetType().GetField("WnRr]U`"); // worldMap
             WorldMap worldMap = new WorldMap(); // worldMap will be null, so we need to make one up
             worldMap.world = World.Glaciers; // set the world to glaciers (not World.None), this will play glaciers playlist
@@ -258,7 +258,7 @@ namespace ModLoaderSolution
         }
         public List<Mod> GetAllMods()
         {
-            GameData gameData = FindObjectOfType<GameData>();
+            GameData gameData = Utilities.GameObjectFindObjectOfType<GameData>();
             //UcS\u0082\u0081DM mods
             List<Mod> mods = (List<Mod>)gameData.GetType().GetField("UcS\u0082\u0081DM").GetValue(gameData);
             return mods;
@@ -277,7 +277,7 @@ namespace ModLoaderSolution
                 string currentMap = GetCurrentMap();
                 //ZIq^s|j bikeParks
                 //FqVmLOT bonusLevels
-                GameData gameData = FindObjectOfType<GameData>();
+                GameData gameData = Utilities.GameObjectFindObjectOfType<GameData>();
                 BonusLevelInfo[] bikeParks = (BonusLevelInfo[])gameData.GetType().GetField("ZIq^s|j").GetValue(gameData);
                 BonusLevelInfo[] bonusLevels = (BonusLevelInfo[])gameData.GetType().GetField("FqVmLOT").GetValue(gameData);
                 foreach (BonusLevelInfo level in bikeParks)
@@ -309,7 +309,7 @@ namespace ModLoaderSolution
 
         public BonusLevelInfo[] GetAllBikeParks()
         {
-            GameData gameData = FindObjectOfType<GameData>();
+            GameData gameData = Utilities.GameObjectFindObjectOfType<GameData>();
             BonusLevelInfo[] bikeParks = (BonusLevelInfo[])gameData.GetType().GetField("ZIq^s|j").GetValue(gameData);
             return bikeParks;
         }
@@ -326,7 +326,7 @@ namespace ModLoaderSolution
             else if (seed == "1017")
                 return "New Lexico (1017)";
 
-            GameData gameData = FindObjectOfType<GameData>();
+            GameData gameData = Utilities.GameObjectFindObjectOfType<GameData>();
             BonusLevelInfo[] bikeParks = (BonusLevelInfo[])gameData.GetType().GetField("ZIq^s|j").GetValue(gameData);
             BonusLevelInfo[] bonusLevels = (BonusLevelInfo[])gameData.GetType().GetField("FqVmLOT").GetValue(gameData);
             foreach (BonusLevelInfo level in bikeParks)
@@ -356,10 +356,39 @@ namespace ModLoaderSolution
 
         public FinishLine GetFinishLine()
         {
-            FinishLine finishLine = GameObject.FindObjectOfType<FinishLine>();
+            FinishLine finishLine = Utilities.GameObjectFindObjectOfType<FinishLine>();
             return finishLine;
         }
-        static List<GameObject> cachedObjects = new List<GameObject>();
+        static Hashtable cachedObjectsOfType = new Hashtable();
+        static Hashtable recentlySearchedTypes = new Hashtable();
+        public static T GameObjectFindObjectOfType<T>() where T : Object
+        {
+            return (T)GameObjectFindObjectOfType(typeof(T));
+        }
+        public static Object GameObjectFindObjectOfType(Type type)
+        {
+            if (cachedObjectsOfType.ContainsKey(type))
+                return (Object)cachedObjectsOfType[type];
+            // we don't have the gameobject cached!
+            if (recentlySearched.ContainsKey(type))
+                if ((Time.time - (float)recentlySearched[type]) < 1)
+                    return null; // we searched for it not long ago, so let's not bother now
+            cachedObjects.RemoveAll(x => !x); // remove all null caches (in case any have been deleted)
+            Object objectOfType = (Object)FindObjectOfType(type);
+            if (objectOfType != null)
+                cachedObjectsOfType.Add(type, objectOfType);
+            else
+            {
+                // if null
+                if (recentlySearchedTypes.ContainsKey(type))
+                    recentlySearched[type] = Time.time; // we'll update our failed search
+                else
+                    recentlySearchedTypes.Add(type, Time.time); // we'll add our failed search
+            }
+
+            return objectOfType;
+        }
+        static List<Object> cachedObjects = new List<Object>();
         static Hashtable recentlySearched = new Hashtable();
         public static GameObject GameObjectFind(string gameobjectName)
         {
@@ -772,8 +801,8 @@ namespace ModLoaderSolution
             GameObject player = GetPlayerFromId(id);
             if (player == null)
                 return;
-            FindObjectOfType<FollowCamSystem>().subject = player;
-            FindObjectOfType<FollowCamSystem>().bother = true;
+            Utilities.GameObjectFindObjectOfType<FollowCamSystem>().subject = player;
+            Utilities.GameObjectFindObjectOfType<FollowCamSystem>().bother = true;
         }
         public void SpectatePlayer(int id)
         {
@@ -799,7 +828,7 @@ namespace ModLoaderSolution
         }
         public int GetBike()
         {
-            string oldBike = FindObjectOfType<BikeSwitcher>().oldBike;
+            string oldBike = Utilities.GameObjectFindObjectOfType<BikeSwitcher>().oldBike;
             if (oldBike == "downhill")
                 return 1;
             else if (oldBike == "hardtail")
@@ -810,7 +839,7 @@ namespace ModLoaderSolution
         {
             PlayerInfoImpact[] array = FindObjectsOfType<PlayerInfoImpact>();
             PlayerCustomization[] array2 = FindObjectsOfType<PlayerCustomization>();
-            GameData gameData = FindObjectOfType<GameData>();
+            GameData gameData = Utilities.GameObjectFindObjectOfType<GameData>();
             BikeType[] array3 = (BikeType[])gameData.GetType().GetField("bx}n\u0080PQ").GetValue(gameData);
             foreach (PlayerInfoImpact playerInfoImpact in array)
             {
@@ -837,8 +866,8 @@ namespace ModLoaderSolution
             // bikeType = GameData.SP.bikeTypes[num];
             //dzQf\u0082nw = GameData.[~qsVD|.bx}n\u0080PQ[cVpqe^E];
 
-            // playerInfoImpact.bikeType = FindObjectOfType<GameData>().bikeTypes[bike];
-            BikeType[] bikeTypes = (BikeType[])typeof(GameData).GetField("bx}n\u0080PQ").GetValue(FindObjectOfType<GameData>());
+            // playerInfoImpact.bikeType = Utilities.GameObjectFindObjectOfType<GameData>().bikeTypes[bike];
+            BikeType[] bikeTypes = (BikeType[])typeof(GameData).GetField("bx}n\u0080PQ").GetValue(Utilities.GameObjectFindObjectOfType<GameData>());
             typeof(PlayerInfoImpact).GetField("dzQf\u0082nw").SetValue(playerInfoImpact, bikeTypes[bike]);
 
             // playerCustomization = hUP\u007fi\u0084d
@@ -863,7 +892,7 @@ namespace ModLoaderSolution
                     lines++;
             if (lines > lineLimit)
                 return;
-            UI_PopUp_TextBoxSmall uI_PopUp_TextBoxSmall = FindObjectOfType<PermaGUI>().SpawnPopUp<UI_PopUp_TextBoxSmall>();
+            UI_PopUp_TextBoxSmall uI_PopUp_TextBoxSmall = Utilities.GameObjectFindObjectOfType<PermaGUI>().SpawnPopUp<UI_PopUp_TextBoxSmall>();
             // label_titleText = f`r}tXQ
             TMPro.TextMeshProUGUI label_titleText = (TMPro.TextMeshProUGUI)uI_PopUp_TextBoxSmall.GetType().GetField("f`r}tXQ").GetValue(uI_PopUp_TextBoxSmall);
             label_titleText.text = titleText;
@@ -1071,13 +1100,13 @@ namespace ModLoaderSolution
         }
         public void SwitchSpectate()
         {
-            MultiManager mm = MonoBehaviour.FindObjectOfType<MultiManager>();
+            MultiManager mm = FindObjectOfType<MultiManager>();
             mm.SwitchToSpectate();
             Utilities.Log("utilities.SwitchSpectate");
         }
         public void ToggleSpectator()
         {
-            MultiManager mm = MonoBehaviour.FindObjectOfType<MultiManager>();
+            MultiManager mm = Utilities.GameObjectFindObjectOfType<MultiManager>();
             mm.ToggleSpectator();
             Utilities.Log("utilities.SwitchSpectate");
         }
