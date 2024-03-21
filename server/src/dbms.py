@@ -241,7 +241,7 @@ class DBMS():
         version: str,
         verified: bool,
         ignored: bool,
-        spectated_by: str | None
+        spectated_by: str
     ):
         """ Submit a time to the database. """
         time_id = hash(
