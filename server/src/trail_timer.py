@@ -258,11 +258,11 @@ class TrailTimer():
             if not self.timer_info.auto_verify:
                 await asyncio.sleep(2)
                 await self.network_player.send(
-                        "POPUP|Time requires verification|Great! You've completed"
-                        f" a time of {secs_str}, but for it to show up on leaderboards,"
-                        " it needs to be verified by a moderator. You can ask for a"
-                        " verification in the #races channel on the Descenders"
-                        " Competitive Discord server if you think your run is valid."
+                        f"POPUP|Verification Required|Your time of {secs_str}"
+                        " can be verified if it is a legal run with no cuts."
+                        " You can ask for verification in the #request-verification"
+                        " channel on the Descenders Competitive Discord server."
+                        " Please only do this if you know your run is valid."
                 )
         asyncio.create_task(send_popup())
         if can_end[0]:
