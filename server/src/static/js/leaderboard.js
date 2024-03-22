@@ -48,6 +48,13 @@ var app = new Vue({
             while (fraction.length < 3)
                 fraction = "0" + fraction
             return d_mins + ":" + d_secs + "." + fraction
+        },
+        GetTimeDiff(time, leaderboard, index){
+            try{
+                if (index == 0)
+                    return 0;
+                return (time - leaderboard[0].time).toFixed(2);
+            } catch(Exception){}
         }
     }
 });
