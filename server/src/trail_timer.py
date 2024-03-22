@@ -262,7 +262,7 @@ class TrailTimer():
                         " can be verified if it is a legal run with no cuts."
                         " You can ask for verification in the #request-verification"
                         " channel on the Descenders Competitive Discord server."
-                        " Please only do this if you know your run is valid."
+                        f" Please only do this if you know your run is valid. ID{time_id}"
                 )
         asyncio.create_task(send_popup())
         if can_end[0]:
