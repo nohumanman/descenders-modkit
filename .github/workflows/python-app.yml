@@ -40,6 +40,8 @@ jobs:
         python -m pip install sqlfluff
         # run tests using .sqlfluff as config
         sqlfluff lint server/src/queries.sql --config .sqlfluff --exclude-rules CP02,AM04 --dialect sqlite
+        # now schema.sql
+        sqlfluff lint server/src/schema.sql --config .sqlfluff --exclude-rules CP02,AM04 --dialect sqlite
    # - name: Test with unittest
    #   run: |
    #     pytest
