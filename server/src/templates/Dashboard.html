@@ -21,7 +21,7 @@
                             <v-btn icon @click="redirect('https://github.com/nohumanman/descenders-modkit')"><v-icon size="60">mdi-github-circle</v-icon></v-btn>
                         </v-col>
                         <v-col align="center" justify="center">
-                            Created by nohumanman<br>Using Vuetify & Vue.JS
+                            Created by nohumanman<br><a href="https://nohumanman.com">nohumanman.com</a>
                         </v-col>
                         <v-col align="center" justify="center">
                             <v-col align="center" justify="center">
@@ -105,39 +105,16 @@
                 </v-main>
                 <v-main v-if="controlled_player == null">
                     <!-- Validation Warning -->
-                    <v-banner color="black" v-if="validated != 'AUTHORISED'" style="text-align:center;">
-                        If thing's arent working <v-btn @click="redirect('/login')">login</v-btn>
+                    <v-banner color="black" v-if="validated == 'UNKNOWN'" style="text-align:center;">
+                        <v-btn @click="redirect('/login')">login</v-btn>
                     </v-banner>
-                    <!-- Steam ID Manual Input Backup -->
-                    <v-overlay
-                        v-if="self == null" opacity="1"
-                        height="50%" width="50%"
-                    >
-                        <div
-                            style="padding:200px;"
-                            v-if="validated == 'AUTHORISED'"
-                        >
-                            <v-text-field
-                                placeholder="Please enter your steam ID."
-                                v-model="valee"
-                            ></v-text-field>
-                            <br><br>
-                            If you're seeing this, you haven't linked your steam account to your discord account, so we can't take your steam id automatically.
-                            <br><br>
-                            <v-btn @click="setSelf(valee)">
-                                SUBMIT STEAM ID
-                            </v-btn>
-                        </div>
-                        <div v-if="validated == 'UNKNOWN'" style="text-align:center;">
-                            <v-btn @click="redirect('/login')">
-                                LOGIN WITH DISCORD
-                            </v-btn>
-                            <br><br>or<br><br>
-                            <v-btn @click="setSelf('UNKNOWN')">
-                                LOGIN AS GUEST
-                            </v-btn>
-                        </div>
-                    </v-overlay>
+                    <v-banner color="green" v-if="validated == 'AUTHORISED'" style="text-align:center;">
+                        You are logged in and authorised.<v-btn @click="redirect('/login')">login</v-btn>
+                    </v-banner>
+                    <v-banner color="grey" v-if="validated == 'UNAUTHORISED'" style="text-align:center;">
+                        You are logged in and not authorised.<v-btn @click="redirect('/login')">login</v-btn>
+                    </v-banner>
+                    <!-- Tabs -->
                     <v-tabs v-model="tab">
                         <v-tab @click="SilentUrlSwitch('dashboard')">Dashboard</v-tab>
                         <v-tab @click="SilentUrlSwitch('times')">Times</v-tab>
@@ -151,7 +128,6 @@
                             <h2 style="text-align:center; font-size:30px;">
                                 Dashboard
                             </h2>
-                            <h2 style="text-align:center;">Your Steam ID [[self]]</h2>
                             <h2 style="text-align:center;">[[players.length]] Users online</h2>
                             <v-col align="center" justify="center">
                                 <v-row align="center" justify="center">
@@ -161,7 +137,6 @@
                                     <v-btn @click="updatePlayers()">Refresh Players</v-btn>
                                 </v-row>
                             </v-col>
-                            
                             <v-row>
                                 <v-col
                                     class="fill-height"
