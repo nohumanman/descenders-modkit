@@ -348,18 +348,22 @@ class Webserver():
     async def verify_time(self, time_id):
         """ Function to verify a time with id time_id """
         if await self.permission() == "AUTHORISED":
+            our_discord_id = self.get_discord_id()
             await self.dbms.verify_time(time_id)
             try:
                 details = await self.dbms.get_time_details(time_id)
                 steam_name = details[1]
-                time_id=details[6]
-                total_time=details[8]
-                trail_name=details[9]
-                if self.discord_bot is not None:
+                time_id=details[4]
+                total_time=details[6]
+                trail_name=details[7]
+                verified=details[14]
+                if self.discord_bot is not None and verified == 1:
                     self.discord_bot.loop.run_until_complete(
-                        self.discord_bot.new_time(
-                            f"[Time](https://modkit.nohumanman.com/time/{time_id})"
-                            f" by {steam_name} of {total_time} on {trail_name} is verified."
+                        self.discord_bot.send_message_to_channel(
+                                f"[Time](https://modkit.nohumanman.com/time/{time_id})"
+                                f" by {steam_name} of {total_time} on {trail_name} has been verified by <@{our_discord_id}>."
+                                " This time will now display in leaderboards where appropriate. 🎉",
+                                1213907351896334426
                         )
                     )
             except RuntimeError as e:
@@ -517,6 +521,12 @@ class Webserver():
             if connection["type"] == "steam":
                 return connection["id"]
         return "None"
+
+    def get_discord_id(self):
+        """ Function to get the discord name """
+        discord = self.make_session(token=session.get('oauth2_token'))
+        user = discord.get(API_BASE_URL + '/users/@me').json()
+        return user["id"]
 
     # routes
     async def callback(self):
