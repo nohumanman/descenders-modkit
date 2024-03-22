@@ -105,8 +105,14 @@
                 </v-main>
                 <v-main v-if="controlled_player == null">
                     <!-- Validation Warning -->
-                    <v-banner color="black" v-if="validated != 'AUTHORISED'" style="text-align:center;">
-                        If thing's arent working <v-btn @click="redirect('/login')">login</v-btn>
+                    <v-banner color="black" v-if="validated == 'UNKNOWN'" style="text-align:center;">
+                        <v-btn @click="redirect('/login')">login</v-btn>
+                    </v-banner>
+                    <v-banner color="green" v-if="validated == 'AUTHORISED'" style="text-align:center;">
+                        You are logged in and authorised.<v-btn @click="redirect('/login')">login</v-btn>
+                    </v-banner>
+                    <v-banner color="grey" v-if="validated == 'UNAUTHORISED'" style="text-align:center;">
+                        You are logged in and not authorised.<v-btn @click="redirect('/login')">login</v-btn
                     </v-banner>
                     <!-- Steam ID Manual Input Backup -->
                     <v-overlay

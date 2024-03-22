@@ -168,9 +168,6 @@ var app = new Vue({
         },
         CheckStatus(){
             $.get("/permission", function(data){
-                if (data != app.validated && data == "AUTHORISED"){
-                    app.tab = 0;
-                }
                 app.validated = data;
             })
         },
@@ -298,6 +295,11 @@ app.updatePlayers();
 
 setInterval(function(){
     app.updatePlayers();
+}, 10000);
+
+app.CheckStatus();
+setInterval(function(){
+    app.CheckStatus();
 }, 10000);
 
 app.tab = app.GetTabByURL();
