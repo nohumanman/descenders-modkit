@@ -6,6 +6,7 @@ import logging
 import os
 import asyncio
 import aiosqlite
+import sqlite3
 import requests
 import srcomapi
 import srcomapi.datatypes as dt
@@ -301,11 +302,18 @@ class UnitySocket():
 
     async def has_both_steam_name_and_id(self):
         """ Called when a player has both a steam name and id. """
-        await self.dbms.update_player(
-            self.info.steam_id,
-            self.info.steam_name,
-            await self.get_avatar_src()
-        )
+        try:
+            await self.dbms.update_player(
+                self.info.steam_id,
+                self.info.steam_name,
+                await self.get_avatar_src()
+            )
+        except sqlite3.IntegrityError:
+            # integrity error - so we probably have some bad input data
+            await self.send("SUCCESS") # ask for all our data again
+            self.info.steam_id = ""
+            self.info.steam_name = ""
+            return
         for player in self.parent.players:
             if (
                 player.info.steam_id == self.info.steam_id

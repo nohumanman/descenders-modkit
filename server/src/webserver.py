@@ -364,8 +364,10 @@ class Webserver():
                     )
             except RuntimeError as e:
                 logging.warning("Failed to submit time to discord server %s", e)
-            return "verified"
-        return "unverified"
+                return "ERROR: Failed to submit time to discord server"
+            return "Toggled verification on time"
+        else:
+            return "ERROR: NO PERMISSION"
 
     async def get_output_log(self, player_id):
         """ Function to get the output log of a player with id player_id """
