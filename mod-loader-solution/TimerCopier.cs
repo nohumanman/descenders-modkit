@@ -24,7 +24,7 @@ public class TimerCopier : ModBehaviour
         // remove all <tags></tags>
         return Regex.Replace(input, "<.*?>", string.Empty);
     }
-    void Update()
+    public void LateUpdate()
     {
         // textFrom.text can have '<color=red>text</color>', but needs to be 'text'
         if (textTo != null && textFrom != null)

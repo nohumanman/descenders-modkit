@@ -59,7 +59,11 @@ namespace ModLoaderSolution
 				TextColToDefault();
 				wasConnected = true;
 			}
-
+			if (count)
+			{
+				SetText(FormatTime(Time.time - timeStart).ToString() + "\n" + checkpointTime);
+				finalTime = Time.time;
+			}
 		}
 		public void TextColToDefault()
         {
@@ -72,13 +76,12 @@ namespace ModLoaderSolution
 			startingColor = text.color;
 			SetText("");
 			Utilities.GameObjectFind("TextShadow").GetComponent<Text>().supportRichText = true;
-			StartCoroutine(TimeUpdater());
 		}
 		public void SetText(string textToSet)
         {
 			textToSet = textToSet.Replace("\\n", "\n");
 			if (uiEnabled)
-				text.text = textToSet + "\n";
+				text.text = textToSet + "\n"; // we give it this extra \n because it's too large otherwise
 			else
 				text.text = "";
 		}
@@ -93,18 +96,6 @@ namespace ModLoaderSolution
 		{
 			count = false;
 			StartCoroutine(DisableTimerText(15));
-		}
-		IEnumerator TimeUpdater()
-        {
-			while (true)
-            {
-				if (count)
-				{
-					SetText(FormatTime(Time.time - timeStart).ToString() + "\n" + checkpointTime);
-					finalTime = Time.time;
-				}
-				yield return new WaitForSecondsRealtime(0.001f);
-            }
         }
 		public string FormatTime(double time)
 		{
