@@ -102,7 +102,7 @@ SELECT discord_id
 FROM
     User
 WHERE
-    valid = 'TRUE';
+    valid = 1;
 
 -- name: get_discord_steam_connetion^
 -- get steam ID associated with given discord id
@@ -200,10 +200,10 @@ WHERE steam_id = :steam_id;
 
 -- name: submit_discord_details!
 -- Submit the discord details
-REPLACE INTO User
+INSERT OR REPLACE INTO User (discord_id, valid, steam_id, discord_name, email)
 VALUES (
     :discord_id,
-    FALSE,
+    COALESCE((SELECT valid FROM User WHERE discord_id = :discord_id), FALSE),
     :steam_id,
     :discord_name,
     :email
@@ -212,7 +212,7 @@ VALUES (
 -- name: verify_time!
 -- Verify a time
 UPDATE Time
-SET verified = 1
+SET verified = NOT verified
 WHERE time_id = :time_id;
 
 -- name: submit_time!

@@ -21,10 +21,6 @@ class DBMS():
         self.wait = False
         self.queries = aiosql.from_path(queries_file, "aiosqlite")
 
-    async def execute_sql(self, statement: str, write=False):
-        """ Execute an SQL statement on a database """
-        return
-
     async def get_id_from_name(self, steam_name):
         """ Get the Steam ID associated with a given Steam username. """
         async with aiosqlite.connect(self.db_file) as db:
@@ -47,12 +43,13 @@ class DBMS():
         """ Update the player's name and avatar """
         async with aiosqlite.connect(self.db_file) as db:
             # pylint: disable=no-member
-            return await self.queries.update_player(
+            await self.queries.update_player(
                 db,
                 steam_id=steam_id,
                 steam_name=steam_name,
                 avatar_src=avatar_src
             )
+            await db.commit()
 
     async def get_personal_fastest_split_times(self, trail_name: str, steam_id: int):
         """ Get the fastest split times for a given player on a given trail. """
@@ -228,12 +225,14 @@ class DBMS():
                 email=email,
                 steam_id=steam_id
             )
+            await db.commit()
 
     async def verify_time(self, time_id: str):
         """ Verify a given time. """
         async with aiosqlite.connect(self.db_file) as db:
             # pylint: disable=no-member
-            return await self.queries.verify_time(db, time_id=int(time_id))
+            await self.queries.verify_time(db, time_id=int(time_id))
+            await db.commit()
 
     async def submit_time(
         self,
