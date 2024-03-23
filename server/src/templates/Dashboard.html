@@ -268,7 +268,7 @@
                                                 <td style="padding-right:10px;">[[player.place]].</td>
                                                 <td style="text-align:left;">[[player.name]]</td>
                                                <td style="padding-left:20px;"><a style="color: rgb(138, 202, 186);" :href="'/time/' + player.time_id">[[secs_to_str(player.time)]]</a></td>
-                                                <td style="padding-left:20px;">+[[GetTimeDiff(player.time, trail, index)]]</td>
+                                                <td v-if="GetTimeDiff(player.time, trail, index) != 0" style="padding-left:20px;">+[[GetTimeDiff(player.time, trail, index)]]</td>
                                             </tr>
                                             <tr v-for="x in 10-trail.leaderboard.length">
                                                 <th>[[trail.leaderboard.length+x]].</th>
