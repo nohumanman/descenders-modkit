@@ -222,7 +222,6 @@ namespace ModLoaderSolution
             PlayerInfoImpact pi = Utilities.instance.GetPlayerInfoImpact();
             foreach (GameModifier gameModifier in gameModifiers)
             {
-                Debug.Log(gameModifier.name + " ? " + field);
                 if (gameModifier.name == field)
                 {
                     gameModifier.modifiers[0].percentageValue = float.Parse((string)value);
