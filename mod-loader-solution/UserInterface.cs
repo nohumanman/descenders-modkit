@@ -201,9 +201,9 @@ namespace ModLoaderSolution
                     Physics.gravity = new Vector3(0, float.Parse(gravity), 0);
                     yPos += 25;
                     // modifier for FOV
-                    GUI.Label(new Rect(460, yPos, 180, 25), "FOV Offset:", myButtonStyle);
-                    string fovModfier = (GUI.TextArea(new Rect(640, yPos, 40, 25), FovModifier.Instance.fovOffset.ToString()) + "\n").Split('\n')[0];
-                    FovModifier.Instance.fovOffset = float.Parse(fovModfier);
+                    GUI.Label(new Rect(460, yPos, 180, 25), "FOV:", myButtonStyle);
+                    string fovModfier = (GUI.TextArea(new Rect(640, yPos, 40, 25), FovModifier.Instance.GetCurrentFov().ToString()) + "\n").Split('\n')[0];
+                    FovModifier.Instance.SetBikeFov(float.Parse(fovModfier));
                     yPos += 25;
                     GUIStyle clone = myButtonStyle;
                     clone.fontSize = 15;

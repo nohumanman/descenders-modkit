@@ -10,8 +10,11 @@ namespace ModLoaderSolution
 	public class FovModifier : MonoBehaviour
 	{
 		public static FovModifier Instance { get; private set; }
-		public float targetFov = -1;
-		public float fovOffset = 0;
+		public float GetCurrentFov(){
+			BikeCamera bikeCamera = FindObjectOfType<BikeCamera>();
+			CameraAngle cameraAngle = (CameraAngle)typeof(BikeCamera).GetField("\u0084P\u0082lio[").GetValue(bikeCamera);
+			return cameraAngle.targetFOV;
+		}
 		void Awake()
 		{
 			if (Instance != null && Instance != this)
@@ -19,11 +22,18 @@ namespace ModLoaderSolution
 			else
 				Instance = this;
 		}
-		public void Update()
-		{
-			foreach (Camera x in FindObjectsOfType<Camera>())
+		public void SetBikeFov(float targetFov)
+        {
+			if (targetFov > 0)
 			{
-				x.fieldOfView += fovOffset;
+				// FindObjectOfType<BikeCamera>().cameraAngle.targetFOV = targetFov; won't work because of obfuscation
+				// cameraAngle = \u0084P\u0082lio[;
+				// targetFov = targetFOV and CameraAngle class is a ScriptableObject
+				BikeCamera bikeCamera = FindObjectOfType<BikeCamera>();
+				CameraAngle cameraAngle = (CameraAngle)typeof(BikeCamera).GetField("\u0084P\u0082lio[").GetValue(bikeCamera);
+				cameraAngle.targetFOV = targetFov; // set FOV on ScriptableObject
+				// set cameraAngle to our modified one
+				typeof(BikeCamera).GetField("\u0084P\u0082lio[").SetValue(bikeCamera, cameraAngle);
 			}
 		}
 	}
