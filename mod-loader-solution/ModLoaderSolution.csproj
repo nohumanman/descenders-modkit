@@ -64,6 +64,7 @@
     <Compile Include="Init.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Modifiers\CameraModifier.cs" />
+    <Compile Include="Modifiers\FovModifier.cs" />
     <Compile Include="Modifiers\GimbalCam.cs" />
     <Compile Include="Modifiers\MovableCam.cs" />
     <Compile Include="Modifiers\RainbowLight.cs" />
