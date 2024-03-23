@@ -31,7 +31,7 @@ namespace ModLoaderSolution
 				// targetFov = targetFOV and CameraAngle class is a ScriptableObject
 				BikeCamera bikeCamera = FindObjectOfType<BikeCamera>();
 				CameraAngle cameraAngle = (CameraAngle)typeof(BikeCamera).GetField("\u0084P\u0082lio[").GetValue(bikeCamera);
-				cameraAngle.targetFOV = targetFov; // set FOV on ScriptableObject
+				cameraAngle.targetFOV = Mathf.Clamp(targetFov, 10, 150); // set FOV on ScriptableObject
 				// set cameraAngle to our modified one
 				typeof(BikeCamera).GetField("\u0084P\u0082lio[").SetValue(bikeCamera, cameraAngle);
 			}
