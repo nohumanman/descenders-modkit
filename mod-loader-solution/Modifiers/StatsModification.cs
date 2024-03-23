@@ -10,7 +10,7 @@ namespace ModLoaderSolution
 {
     public enum StatType
     {
-        Vehicle, Wheel
+        Vehicle, Wheel, Modifier
     }
     [Serializable]
     public class Stat
@@ -43,6 +43,7 @@ namespace ModLoaderSolution
         public static StatsModification instance;
         string savePath = Environment.CurrentDirectory;
         public List<Stat> stats = new List<Stat>();
+        string[] modifiers = new string[] { "BUNNYHOP", "FAKIEBALANCE", "HEAVYBAILTHRESHOLD", "LANDINGIMPACT", "AIRCORRECTION", "OFFROADFRICTION", "PUMPSTRENGTH", "SPEEDWOBBLES", "SPINSPEED", "TWEAKSPEED", "WHEELIEBALANCE" };
         void Start()
         {
             instance = this;
@@ -63,6 +64,10 @@ namespace ModLoaderSolution
             stats.Add(new Stat("slipSmoothing", typeof(float), "yg^Qx|w", StatType.Vehicle));
             stats.Add(new Stat("scaledFrictionFactor", typeof(float), "rKH}Gur", StatType.Vehicle));
             stats.Add(new Stat("tweakingGripLoss", typeof(float), "z\u0082q|kdz", StatType.Vehicle));
+
+            foreach(string modifier in modifiers)
+                stats.Add(new Stat(modifier, typeof(float), modifier, StatType.Modifier));
+            
             // wheels
             //stats.Add(new Stat("xL{gJGT", typeof(float), "xL{gJGT", StatType.Wheel, 0)); // default 0.5
             //stats.Add(new Stat("p~mkyX{", typeof(float), "p~mkyX{", StatType.Wheel, 0)); // default 50
@@ -150,13 +155,18 @@ namespace ModLoaderSolution
                         if (stat.statType == StatType.Vehicle)
                         {
                             stat.currentVal = GetVehicleMod(stat.ObfuscatedName).ToString();
-                            stat.StartingValue = stat.currentVal;
-                            stat.prevVal = stat.currentVal;
+                        }
+                        else if (stat.statType == StatType.Modifier)
+                        {
+                            stat.currentVal = GetModMod(stat.ObfuscatedName).ToString();
                         }
                         else
+                        {
                             stat.currentVal = GetWheelMod(stat.ObfuscatedName, stat.wheelNo).ToString();
-                            stat.StartingValue = stat.currentVal;
-                            stat.prevVal = stat.currentVal;
+                        }
+                        
+                        stat.StartingValue = stat.currentVal;
+                        stat.prevVal = stat.currentVal;
                     } catch { }
                 }
                 if (stat.currentVal != stat.prevVal)
@@ -165,10 +175,23 @@ namespace ModLoaderSolution
                         return;
                     try
                     {
-                        if (ModifyVehicle(stat.ObfuscatedName, float.Parse(stat.currentVal)))
-                            stat.prevVal = stat.currentVal;
+                        if (stat.statType == StatType.Vehicle) {
+                            if (ModifyVehicle(stat.ObfuscatedName, float.Parse(stat.currentVal)))
+                            {
+                                stat.prevVal = stat.currentVal;
+                            }
+                        }
+                        else if (stat.statType == StatType.Modifier) {
+                            if (ModifyMod(stat.ObfuscatedName, stat.currentVal))
+                            {
+                                stat.prevVal = stat.currentVal;
+                            }
+                        }
+
                     }
-                    catch{}
+                    catch (Exception e){
+                        Debug.Log(e);
+                    }
                 }
             }
         }
@@ -192,6 +215,22 @@ namespace ModLoaderSolution
                 );
             return true;
         }
+
+        public bool ModifyMod(string field, object value)
+        {
+            GameModifier[] gameModifiers = (GameModifier[])typeof(GameData).GetField("\u0081jU\u0080h\u0084c").GetValue(FindObjectOfType<GameData>());
+            PlayerInfoImpact pi = Utilities.instance.GetPlayerInfoImpact();
+            foreach (GameModifier gameModifier in gameModifiers)
+            {
+                if (gameModifier.name == field)
+                {
+                    gameModifier.modifiers[0].percentageValue = float.Parse((string)value);
+                    pi.AddGameModifier(gameModifier);
+                    return true;
+                }
+            }
+            return false;
+        }
         public object GetWheelMod(string field, int wheelNum)
         {
             return Utilities.GetPlayer()
@@ -208,13 +247,21 @@ namespace ModLoaderSolution
                 Utilities.GetPlayer().GetComponent<Vehicle>()
             );
         }
+        public object GetModMod(string field)
+        {
+            GameModifier[] gameModifiers = (GameModifier[])typeof(GameData).GetField("\u0081jU\u0080h\u0084c").GetValue(FindObjectOfType<GameData>());
+            foreach (GameModifier gameModifier in gameModifiers)
+                if (gameModifier.name == field)
+                    return gameModifier.modifiers[0].percentageValue;
+            return 0;
+        }
         public void ApplyStupidModifiers()
         {
             GameModifier[] gameModifiers = (GameModifier[])typeof(GameData).GetField("\u0081jU\u0080h\u0084c").GetValue(FindObjectOfType<GameData>());
             foreach (GameModifier mod in gameModifiers)
             {
-                Utilities.Log(mod.name);
-                Utilities.Log(mod.modifiers[0].percentageValue);
+                Debug.Log(mod.name);
+                Debug.Log(mod.modifiers[0].percentageValue);
                 if (mod.name == "LANDINGIMPACT" || mod.name == "BUNNYHOP" || mod.name == "PUMPSTRENGTH")
                     mod.modifiers[0].percentageValue = 50000000;
                 //if (mod.name == "FAKIEBALANCE")
