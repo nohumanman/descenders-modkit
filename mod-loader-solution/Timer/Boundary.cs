@@ -69,7 +69,7 @@ namespace ModLoaderSolution
                     this.gameObject.name
                 );
                 // if we're in no boundaries, set lastBoundryExit to time
-                if (!InAnyBoundaries()){
+                if (!trail.InAnyBoundaries()){
                     trail.lastBoundryExit = Time.time;
                 }
                 else{
