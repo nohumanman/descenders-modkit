@@ -13,6 +13,7 @@ namespace ModLoaderSolution
 		public string checkpointTime = "";
 		public bool count = false;
 		bool uiEnabled = true;
+		bool hidden = false; // same as uiEnabled but gets set to false when the timer is started
 		void Awake()
 		{
 			DontDestroyOnLoad(gameObject.transform.root);
@@ -80,13 +81,14 @@ namespace ModLoaderSolution
 		public void SetText(string textToSet)
         {
 			textToSet = textToSet.Replace("\\n", "\n");
-			if (uiEnabled)
+			if (uiEnabled && hidden)
 				text.text = textToSet + "\n"; // we give it this extra \n because it's too large otherwise
 			else
 				text.text = "";
 		}
 		public void RestartTimer()
 		{
+			hidden = false;
 			timeStart =	Time.time;
 			checkpointTime = "";
 			count = true;

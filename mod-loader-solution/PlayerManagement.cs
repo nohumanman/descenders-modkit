@@ -94,6 +94,7 @@ namespace ModLoaderSolution
 			//Utilities.Log(PhotonNetwork.JoinRoom("6969"));
 		}
 		public void OnRespawn(){
+			SplitTimerText.Instance.hidden = true;
 			NetClient.Instance.SendData("RESPAWN");
 		}
 		public void OnBikeSwitch(string old_bike, string new_bike){
