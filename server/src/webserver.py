@@ -317,6 +317,7 @@ class Webserver():
                     if len(trail.timer_info.times) != 0:
                         trail_time = {"time": trail.timer_info.times[-1], "started": False, "times": trail.timer_info.times}
                     time_started = trail.timer_info.time_started
+            time.sleep(0.1)
         session['previous_result'] = str(trail_time)
         return jsonify(trail_time)
 
