@@ -19,7 +19,7 @@ namespace ModLoaderSolution
         public string url;
         public bool splitsAreCheckpoints = false;
         public float clientTime = 0f;
-        public float lastBoundryExit = -1f;
+        public float lastBoundaryExit = -1f;
         public void Start()
         {
             Utilities.LogMethodCallStart();
@@ -78,8 +78,8 @@ namespace ModLoaderSolution
             Utilities.LogMethodCallStart();
             if (Utilities.instance.isInReplayMode())
                 return;
-            // if Time.time - lastBoundryExit is greater than 15
-            if ((Time.time - lastBoundryExit) > 15 && lastBoundryExit != -1)
+            // if Time.time - lastBoundaryExit is greater than 15
+            if ((Time.time - lastBoundaryExit) > 15 && lastBoundaryExit != -1)
             {
                 SplitTimerText.Instance.hidden = true;
             }
