@@ -81,7 +81,10 @@ namespace ModLoaderSolution
             // if Time.time - lastBoundaryExit is greater than 15
             if ((Time.time - lastBoundaryExit) > 15 && lastBoundaryExit != -1)
             {
-                SplitTimerText.Instance.hidden = true;
+                if (SplitTimerText.Instance.currentTrail == this)
+                {
+                    SplitTimerText.Instance.hidden = true;
+                }
             }
 
             // if select pressed, blow things up

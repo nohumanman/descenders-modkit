@@ -86,9 +86,11 @@ namespace ModLoaderSolution
 			else
 				text.text = "";
 		}
-		public void RestartTimer()
+        public Trail currentTrail;
+		public void RestartTimer(Trail trailFocus)
 		{
-			hidden = false;
+            currentTrail = trailFocus;
+            hidden = false;
 			timeStart =	Time.time;
 			checkpointTime = "";
 			count = true;
