@@ -13,7 +13,7 @@ namespace ModLoaderSolution
 		public string checkpointTime = "";
 		public bool count = false;
 		bool uiEnabled = true;
-		bool hidden = false; // same as uiEnabled but gets set to false when the timer is started
+		public bool hidden = false; // same as uiEnabled but gets set to false when the timer is started
 		void Awake()
 		{
 			DontDestroyOnLoad(gameObject.transform.root);
@@ -24,7 +24,7 @@ namespace ModLoaderSolution
 		}
 		public void CheckpointTime(string message)
         {
-			StopCoroutine(DisableCheckpoint());
+            StopCoroutine(DisableCheckpoint());
 			checkpointTime = message;
 			StartCoroutine(DisableCheckpoint());
 		}

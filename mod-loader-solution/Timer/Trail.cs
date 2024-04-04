@@ -19,7 +19,7 @@ namespace ModLoaderSolution
         public string url;
         public bool splitsAreCheckpoints = false;
         public float clientTime = 0f;
-        public float lastBoundryExit = 0f;
+        public float lastBoundryExit = -1f;
         public void Start()
         {
             Utilities.LogMethodCallStart();
@@ -79,7 +79,7 @@ namespace ModLoaderSolution
             if (Utilities.instance.isInReplayMode())
                 return;
             // if Time.time - lastBoundryExit is greater than 15
-            if (Time.time - lastBoundryExit > 15)
+            if ((Time.time - lastBoundryExit) > 15 && lastBoundryExit != -1)
             {
                 SplitTimerText.Instance.hidden = true;
             }
@@ -99,12 +99,12 @@ namespace ModLoaderSolution
             clientTime += Time.deltaTime;
             Utilities.LogMethodCallEnd();
         }
-        bool InAnyBoundaries()
+        public bool InAnyBoundaries()
         {
             foreach(GameObject bound in boundaryList)
                 if (bound.GetComponent<Boundary>().inBoundary)
-                    return false;
-            return true;
+                    return true;
+            return false;
         }
         public void LoadFromUrl(string csvUrl)
         {

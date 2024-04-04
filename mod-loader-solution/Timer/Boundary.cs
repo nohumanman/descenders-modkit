@@ -73,9 +73,8 @@ namespace ModLoaderSolution
                     trail.lastBoundryExit = Time.time;
                 }
                 else{
-                    trail.lastBoundryExit = null;
+                    trail.lastBoundryExit = -1; // we're in a boundary
                 }
-			    // }else, set lastBoundryExit to nul
                 notifiedServerOfExit = true;
                 notifiedServerOfEnter = false;
             }
