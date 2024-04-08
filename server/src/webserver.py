@@ -417,7 +417,10 @@ class Webserver():
             ]
             return jsonify({"players": player_json})
         else:
-            return jsonify({"players": {}})
+            # return json of every map and amount of players in it
+            return jsonify({"state": {
+                "players": len(self.socket_server.players)
+            }})
 
     async def get_trails(self):
         """ Function to get the trails """ 
