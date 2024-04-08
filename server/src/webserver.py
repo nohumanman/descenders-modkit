@@ -398,23 +398,26 @@ class Webserver():
 
     async def get(self):
         """ Function to get the details of a player with id player_id """
-        player_json = [
-            {
-                "steam_id": player.info.steam_id,
-                "steam_name": player.info.steam_name,
-                "steam_avatar_src": await player.get_avatar_src(),
-                "reputation": player.info.reputation,
-                "total_time": "",#player.get_total_time(),
-                "time_on_world": "",#player.get_total_time(onWorld=True),
-                "world_name": player.info.world_name,
-                "last_trick": player.info.last_trick,
-                "version": player.info.version,
-                "bike_type": player.info.bike_type,
-                "trail_info": str(player.trails),
-                "address": ""#(lambda: player.addr if self.permission() == "AUTHORISED" else "")()
-            } for player in self.socket_server.players
-        ]
-        return jsonify({"players": player_json})
+        if await self.permission() == "AUTHORISED":
+            player_json = [
+                {
+                    "steam_id": player.info.steam_id,
+                    "steam_name": player.info.steam_name,
+                    "steam_avatar_src": await player.get_avatar_src(),
+                    "reputation": player.info.reputation,
+                    "total_time": "",#player.get_total_time(),
+                    "time_on_world": "",#player.get_total_time(onWorld=True),
+                    "world_name": player.info.world_name,
+                    "last_trick": player.info.last_trick,
+                    "version": player.info.version,
+                    "bike_type": player.info.bike_type,
+                    "trail_info": str(player.trails),
+                    "address": ""#(lambda: player.addr if self.permission() == "AUTHORISED" else "")()
+                } for player in self.socket_server.players
+            ]
+            return jsonify({"players": player_json})
+        else:
+            return jsonify({"players": {}})
 
     async def get_trails(self):
         """ Function to get the trails """ 
