@@ -68,13 +68,6 @@ namespace ModLoaderSolution
                     boundaryHash,
                     this.gameObject.name
                 );
-                // if we're in no boundaries, set lastBoundaryExit to time
-                if (!trail.InAnyBoundaries()){
-                    trail.lastBoundaryExit = Time.time;
-                }
-                else{
-                    trail.lastBoundaryExit = -1; // we're in a boundary
-                }
                 notifiedServerOfExit = true;
                 notifiedServerOfEnter = false;
             }
