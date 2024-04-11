@@ -26,10 +26,10 @@ operations = {
         lambda netPlayer, data: netPlayer.set_steam_name(data[1]),
     "WORLD_NAME":
         lambda netPlayer, data: netPlayer.set_world_name(data[1]),
-    "BOUNDRY_ENTER":
-        lambda netPlayer, data: netPlayer.on_boundry_enter(data[1], data[2]),
-    "BOUNDRY_EXIT":
-        lambda netPlayer, data: netPlayer.on_boundry_exit(data[1], data[2]),
+    "BOUNDARY_ENTER":
+        lambda netPlayer, data: netPlayer.on_boundary_enter(data[1], data[2]),
+    "BOUNDARY_EXIT":
+        lambda netPlayer, data: netPlayer.on_boundary_exit(data[1], data[2]),
     "CHECKPOINT_ENTER":
         lambda netPlayer, data: netPlayer.on_checkpoint_enter(
             data[1],
@@ -444,16 +444,16 @@ class UnitySocket():
         #self.send_all(f"SET_BIKE|{self.bike_type}|{self.info.steam_id}")
         await self.invalidate_all_trails("You switched bikes!")
 
-    async def on_boundry_enter(self, trail_name: str, boundry_guid: str):
-        """ Called when a player enters a boundry. """
+    async def on_boundary_enter(self, trail_name: str, boundary_guid: str):
+        """ Called when a player enters a boundary. """
         trail = await self.get_trail(trail_name)
         
-        await trail.add_boundary(boundry_guid)
+        await trail.add_boundary(boundary_guid)
 
-    async def on_boundry_exit(self, trail_name: str, boundry_guid: str):
-        """ Called when a player exits a boundry. """
+    async def on_boundary_exit(self, trail_name: str, boundary_guid: str):
+        """ Called when a player exits a boundary. """
         trail = await self.get_trail(trail_name)
-        await trail.remove_boundary(boundry_guid)
+        await trail.remove_boundary(boundary_guid)
 
     async def on_checkpoint_enter(
         self,

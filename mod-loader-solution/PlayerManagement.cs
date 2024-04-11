@@ -94,17 +94,16 @@ namespace ModLoaderSolution
 			//Utilities.Log(PhotonNetwork.JoinRoom("6969"));
 		}
 		public void OnRespawn(){
-			SplitTimerText.Instance.hidden = true;
 			NetClient.Instance.SendData("RESPAWN");
 		}
 		public void OnBikeSwitch(string old_bike, string new_bike){
 			NetClient.Instance.SendData("BIKE_SWITCH|" + old_bike + "|" + new_bike);
 		}
-		public void OnBoundryEnter(string trail_name, string boundry_guid){
-			NetClient.Instance.SendData("BOUNDRY_ENTER|" + trail_name + "|" + boundry_guid);
+		public void OnBoundaryEnter(string trail_name, string boundary_guid){
+			NetClient.Instance.SendData("BOUNDARY_ENTER|" + trail_name + "|" + boundary_guid);
 		}
-		public void OnBoundryExit(string trail_name, string boundry_guid, string boundry_obj_name){
-			NetClient.Instance.SendData("BOUNDRY_EXIT|" + trail_name + "|" + boundry_guid + "|" + boundry_obj_name);
+		public void OnBoundaryExit(string trail_name, string boundary_guid, string boundary_obj_name){
+			NetClient.Instance.SendData("BOUNDARY_EXIT|" + trail_name + "|" + boundary_guid + "|" + boundary_obj_name);
 		}
 		public void OnCheckpointEnter(string trail_name, string type, int total_checkpoints, string client_time, string hash){
 			NetClient.Instance.SendData("CHECKPOINT_ENTER|" + trail_name + "|" + type + "|" + total_checkpoints.ToString() + "|" + client_time + "|" + hash);
