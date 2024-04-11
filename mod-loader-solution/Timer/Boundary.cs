@@ -39,6 +39,7 @@ namespace ModLoaderSolution
             {
                 if (!inBoundary && !notifiedServerOfEnter)
                 {
+                    trail.lastBoundryExit = -1f;
                     other.gameObject.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
                     PlayerManagement.Instance.OnBoundryEnter(
                         trail.name,

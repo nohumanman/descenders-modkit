@@ -54,7 +54,7 @@ namespace ModLoaderSolution
                 {
                     Utilities.instance.RestartReplay();
                     NetClient.Instance.SendData("START_SPEED|" + PlayerManagement.Instance.speed);
-                    SplitTimerText.Instance.RestartTimer();
+                    SplitTimerText.Instance.RestartTimer(this.trail);
                     //NetClient.Instance.gameObject.GetComponent<Utilities>().SetVel(5);
                 }
                 else if (this.checkpointType == CheckpointType.Finish)
