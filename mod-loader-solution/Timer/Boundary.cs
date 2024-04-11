@@ -40,7 +40,7 @@ namespace ModLoaderSolution
                 if (!inBoundary && !notifiedServerOfEnter)
                 {
                     other.gameObject.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
-                    PlayerManagement.Instance.OnBoundryEnter(
+                    PlayerManagement.Instance.OnBoundaryEnter(
                         trail.name,
                         boundaryHash
                     );
@@ -54,7 +54,7 @@ namespace ModLoaderSolution
         {
             if (inBoundary)
             {
-                PlayerManagement.Instance.OnBoundryEnter(
+                PlayerManagement.Instance.OnBoundaryEnter(
                      trail.name,
                      boundaryHash
                  );
@@ -63,7 +63,7 @@ namespace ModLoaderSolution
         void FixedUpdate()
         {
             if (!inBoundary && !notifiedServerOfExit) {
-                PlayerManagement.Instance.OnBoundryExit(
+                PlayerManagement.Instance.OnBoundaryExit(
                     trail.name,
                     boundaryHash,
                     this.gameObject.name

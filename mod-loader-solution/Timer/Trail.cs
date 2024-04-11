@@ -61,7 +61,10 @@ namespace ModLoaderSolution
                         else if (checkpointObj == endCheckpoint)
                             check.checkpointType = CheckpointType.Finish;
                         else
-                            check.checkpointType = CheckpointType.Intermediate;
+                  
+                  
+                  
+                  check.checkpointType = CheckpointType.Intermediate;
                         checkpointList.Add(checkpointObj);
                     }
                 }

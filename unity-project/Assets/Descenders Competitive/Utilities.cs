@@ -63,7 +63,7 @@ namespace DescendersCompetitive{
                 Debug.LogWarning("Camera found! Remember cameras do NOT play well with Descenders!", cam);
             }
 			if (FindObjectsOfType<Terrain>().Length > 1)
-				Debug.LogWarning("Multiple terrains detected! This could cause issues without TerrainBoundryRemover");
+				Debug.LogWarning("Multiple terrains detected! This could cause issues without TerrainBoundaryRemover");
             foreach(Terrain x in FindObjectsOfType<Terrain>()){
                 if (x.gameObject.transform.position.y < 0)
                     Debug.LogWarning("Terrain below y=0! This could cause camera issues!", x);
