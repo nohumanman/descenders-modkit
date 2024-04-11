@@ -410,7 +410,15 @@ class UnitySocket():
         for operator, function in operations.items():
             self.last_contact = time.time()
             if data.startswith(operator):
-                await function(self, data_list)
+                try:
+                    await function(self, data_list)
+                except IndexError:
+                    # our client sent wrong data!
+                    logging.warning(
+                        "Client sent wrong data! Version %s steam_id %s",
+                        self.info.version,
+                        self.info.steam_id
+                    )
 
     async def invalidate_all_trails(self, reason: str, exception = ""):
         """ Invalidate all trails for a player. """
