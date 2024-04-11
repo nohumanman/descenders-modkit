@@ -19,6 +19,8 @@ namespace ModLoaderSolution
         public string url;
         public bool splitsAreCheckpoints = false;
         public float clientTime = 0f;
+        public float lastBoundaryExit = -1f;
+        public bool hidden = false;
         public void Start()
         {
             Utilities.LogMethodCallStart();
@@ -80,6 +82,14 @@ namespace ModLoaderSolution
             Utilities.LogMethodCallStart();
             if (Utilities.instance.isInReplayMode())
                 return;
+            // if Time.time - lastBoundryExit is greater than 15
+            if ((Time.time - lastBoundaryExit) > 15 && lastBoundaryExit != -1)
+            {
+                if (SplitTimerText.Instance.currentTrail == this)
+                {
+                    SplitTimerText.Instance.hidden = true;
+                }
+            }
             // if select pressed, blow things up
             bool usingXbox = false;
             foreach (string name in Input.GetJoystickNames())
@@ -95,12 +105,12 @@ namespace ModLoaderSolution
             clientTime += Time.deltaTime;
             Utilities.LogMethodCallEnd();
         }
-        bool InAnyBoundaries()
+        public bool InAnyBoundaries()
         {
             foreach(GameObject bound in boundaryList)
                 if (bound.GetComponent<Boundary>().inBoundary)
-                    return false;
-            return true;
+                    return true;
+            return false;
         }
         public void LoadFromUrl(string csvUrl)
         {

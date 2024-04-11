@@ -49,11 +49,12 @@ namespace ModLoaderSolution
                     return;
                 }
                 PlayerManagement.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, (SplitTimerText.Instance.finalTime - SplitTimerText.Instance.timeStart).ToString(), hash);
+                SplitTimerText.Instance.hidden = false;
                 if (this.checkpointType == CheckpointType.Start)
                 {
                     Utilities.instance.RestartReplay();
                     NetClient.Instance.SendData("START_SPEED|" + PlayerManagement.Instance.speed);
-                    SplitTimerText.Instance.RestartTimer();
+                    SplitTimerText.Instance.RestartTimer(this.trail);
                     //NetClient.Instance.gameObject.GetComponent<Utilities>().SetVel(5);
                 }
                 else if (this.checkpointType == CheckpointType.Finish)

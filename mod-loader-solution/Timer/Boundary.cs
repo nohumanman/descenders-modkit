@@ -39,6 +39,7 @@ namespace ModLoaderSolution
             {
                 if (!inBoundary && !notifiedServerOfEnter)
                 {
+                    trail.lastBoundaryExit = -1f;
                     other.gameObject.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
                     PlayerManagement.Instance.OnBoundaryEnter(
                         trail.name,
@@ -68,6 +69,14 @@ namespace ModLoaderSolution
                     boundaryHash,
                     this.gameObject.name
                 );
+                if (!trail.InAnyBoundaries())
+                {
+                    trail.lastBoundaryExit = Time.time;
+                }
+                else
+                {
+                    trail.lastBoundaryExit = -1;
+                }
                 notifiedServerOfExit = true;
                 notifiedServerOfEnter = false;
             }

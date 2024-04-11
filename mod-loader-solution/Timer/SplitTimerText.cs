@@ -13,6 +13,7 @@ namespace ModLoaderSolution
 		public string checkpointTime = "";
 		public bool count = false;
 		bool uiEnabled = true;
+        public bool hidden = true;
 		void Awake()
 		{
 			DontDestroyOnLoad(gameObject.transform.root);
@@ -80,14 +81,17 @@ namespace ModLoaderSolution
 		public void SetText(string textToSet)
         {
 			textToSet = textToSet.Replace("\\n", "\n");
-			if (uiEnabled)
+			if (uiEnabled && !hidden)
 				text.text = textToSet + "\n"; // we give it this extra \n because it's too large otherwise
 			else
 				text.text = "";
 		}
-		public void RestartTimer()
+        public Trail currentTrail;
+		public void RestartTimer(Trail trailFocus)
 		{
-			timeStart =	Time.time;
+			hidden = false;
+            currentTrail = trailFocus;
+            timeStart =	Time.time;
 			checkpointTime = "";
 			count = true;
 			text.color = startingColor;
