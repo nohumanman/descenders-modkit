@@ -81,7 +81,7 @@ namespace ModLoaderSolution
 		public void SetText(string textToSet)
         {
 			textToSet = textToSet.Replace("\\n", "\n");
-			if (uiEnabled)
+			if (uiEnabled && !hidden)
 				text.text = textToSet + "\n"; // we give it this extra \n because it's too large otherwise
 			else
 				text.text = "";

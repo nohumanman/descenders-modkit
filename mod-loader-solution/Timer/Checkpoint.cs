@@ -49,6 +49,7 @@ namespace ModLoaderSolution
                     return;
                 }
                 PlayerManagement.Instance.OnCheckpointEnter(trail.gameObject.name, checkpointType.ToString(), trail.checkpointList.Count, (SplitTimerText.Instance.finalTime - SplitTimerText.Instance.timeStart).ToString(), hash);
+                SplitTimerText.Instance.hidden = false;
                 if (this.checkpointType == CheckpointType.Start)
                 {
                     Utilities.instance.RestartReplay();

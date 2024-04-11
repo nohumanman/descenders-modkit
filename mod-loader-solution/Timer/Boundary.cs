@@ -69,6 +69,14 @@ namespace ModLoaderSolution
                     boundaryHash,
                     this.gameObject.name
                 );
+                if (!trail.InAnyBoundaries())
+                {
+                    trail.lastBoundaryExit = Time.time;
+                }
+                else
+                {
+                    trail.lastBoundaryExit = -1;
+                }
                 notifiedServerOfExit = true;
                 notifiedServerOfEnter = false;
             }

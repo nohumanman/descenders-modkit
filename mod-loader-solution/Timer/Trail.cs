@@ -105,12 +105,12 @@ namespace ModLoaderSolution
             clientTime += Time.deltaTime;
             Utilities.LogMethodCallEnd();
         }
-        bool InAnyBoundaries()
+        public bool InAnyBoundaries()
         {
             foreach(GameObject bound in boundaryList)
                 if (bound.GetComponent<Boundary>().inBoundary)
-                    return false;
-            return true;
+                    return true;
+            return false;
         }
         public void LoadFromUrl(string csvUrl)
         {
