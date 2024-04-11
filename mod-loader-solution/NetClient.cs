@@ -24,8 +24,8 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
-		static string version = "0.2.68";
-		static bool quietUpdate = false;
+		static string version = "0.2.69";
+		static bool quietUpdate = true;
 		static string patchNotes = "- Add modifiers to stats modifiers (pumpspeed, etc)\n- Add FOV option in stats modifiers (CTRL-i)\n- Massive optimisation improvements\n- Remove custom load screen ('you are using descenders modkit')\n\nYours,\n- nohumanman"; // that which has changed since the last version.
 		public static bool developerMode = false;
 		void Awake(){
