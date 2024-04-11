@@ -13,6 +13,7 @@ namespace ModLoaderSolution
 		public string checkpointTime = "";
 		public bool count = false;
 		bool uiEnabled = true;
+        public bool hidden = true;
 		void Awake()
 		{
 			DontDestroyOnLoad(gameObject.transform.root);
@@ -89,8 +90,8 @@ namespace ModLoaderSolution
 		public void RestartTimer(Trail trailFocus)
 		{
 			hidden = false;
-      currentTrail = trailFocus;
-      timeStart =	Time.time;
+            currentTrail = trailFocus;
+            timeStart =	Time.time;
 			checkpointTime = "";
 			count = true;
 			text.color = startingColor;
