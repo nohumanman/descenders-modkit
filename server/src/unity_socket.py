@@ -511,7 +511,8 @@ class UnitySocket():
             await self.send_all("SET_BIKE|" + self.info.bike_type + "|" + self.info.steam_id)
         # check static/trails to see if there's a csv file with the same name as world_name
         for csv_map_name in os.listdir(f"{script_path}/static/trails"):
-            if csv_map_name[0:-4] == map_name:
+            i = csv_map_name.find(".csv") # get the name of the map without the .csv (or .csv.2)
+            if csv_map_name[0:i] == map_name:
                 await self.send("NON_MODKIT_TRAIL|" + csv_map_name)
                 if not self.sent_non_modkit_notif:
                     await self.send(
