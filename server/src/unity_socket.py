@@ -190,7 +190,8 @@ class UnitySocket():
             "%s '%s'\t- start speed is %s",
             self.info.steam_id, self.info.steam_name, starting_speed
         )
-        for trail_name, trail in self.trails.items():
+        trail_dict = list(self.trails.items()) # copy so it can't be modified (#344)
+        for trail_name, trail in trail_dict:
             trail.timer_info.starting_speed = starting_speed
             if starting_speed > await self.dbms.get_average_start_time(trail_name)+2:
                 await trail.invalidate_timer(
@@ -426,7 +427,8 @@ class UnitySocket():
             "%s '%s'\t- all trails invalidated due to '%s'",
             self.info.steam_id, self.info.steam_name, reason
         )
-        for trail_name, trail in self.trails.items():
+        trail_dict = list(self.trails.items()) # copy so it can't be modified (#344)
+        for trail_name, trail in trail_dict:
             if trail_name in self.trails:
                 if (trail_name != exception):
                     await trail.invalidate_timer(reason)
@@ -434,7 +436,8 @@ class UnitySocket():
     async def on_respawn(self):
         """ Called when a player respawns """
         logging.info("%s '%s'\t- respawned", self.info.steam_id, self.info.steam_name)
-        for trail_name, trail in self.trails.items():
+        trail_dict = list(self.trails.items()) # copy so it can't be modified (#344)
+        for trail_name, trail in trail_dict:
             if trail_name in self.trails:
                 if trail.timer_info.auto_verify:
                     await self.send("SPLIT_TIME|Time requires review")
@@ -527,7 +530,8 @@ class UnitySocket():
     async def on_map_exit(self):
         """ Called when a player exits a map. """
         await self.update_concurrent_users()
-        for trail_name, trail in self.trails.items():
+        trail_dict = list(self.trails.items()) # copy so it can't be modified (#344)
+        for trail_name, trail in trail_dict:
             if trail_name in self.trails:
                 await trail.invalidate_timer("")
         self.trails = {}
