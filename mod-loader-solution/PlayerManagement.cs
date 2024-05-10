@@ -121,7 +121,19 @@ namespace ModLoaderSolution
 				{
                     Utilities.GameObjectFind(str).tag = "Checkpoint";
                 }
-				
+				// Pos -449.2, 1698.8, 488.9
+                // rot 7, 86, 359
+                // instantiate new checkpoint
+                GameObject CP = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                CP.transform.position = new Vector3(-449, 1698, 488);
+                CP.transform.SetPositionAndRotation(
+                    new Vector3(-449, 1698, 488),
+                    Quaternion.Euler(7, 86, 359)
+                );
+                CP.transform.localScale = new Vector3(15, 15, 1);
+                CP.GetComponent<BoxCollider>().isTrigger = true;
+                CP.GetComponent<MeshRenderer>().enabled = false;
+                CP.tag = "Checkpoint";
             }
 			if (Utilities.instance.isMod()) // only do this to mods to not mess things up
 				Utilities.instance.NormaliseModSongs();
