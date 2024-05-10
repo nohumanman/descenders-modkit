@@ -107,7 +107,6 @@ namespace ModLoaderSolution
                 GUI.Label(new Rect((Screen.width/2)-750, Screen.height- 200, 1500, 80), "scripts made with love by nohumanman :D", myButtonStyle2);
                 GUI.Label(new Rect((Screen.width / 2) - 750, Screen.height - 400, 1500, 80), Player.transform.position.ToString(), myButtonStyle2);
                 GUI.Label(new Rect((Screen.width / 2) - 750, Screen.height - 500, 1500, 80), Player.transform.rotation.eulerAngles.ToString(), myButtonStyle2);
-                hasBeenActive = true;
                 GUIStyle myButtonStyle = new GUIStyle(GUI.skin.button);
                 myButtonStyle.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");
                 GUI.skin.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");
