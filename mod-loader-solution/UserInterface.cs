@@ -15,7 +15,6 @@ namespace ModLoaderSolution
     public class UserInterface : MonoBehaviour {
         public GUIStyle customButton;
         bool isActive;
-        bool hasBeenActive = false;
         public PlayerInfoImpact[] players;
         public static UserInterface Instance { get; private set; }
 
@@ -272,7 +271,6 @@ namespace ModLoaderSolution
                 playersList.Add(playerBehaviour);
             players = playersList.ToArray();
         }
-        Checkpoint[] allCheckpoints;
         public void Update()
         {
             if ((Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.I)))
