@@ -60,7 +60,7 @@ namespace ModLoaderSolution
                      boundaryHash
                  );
             }
-        }
+        } 
         void FixedUpdate()
         {
             if (!inBoundary && !notifiedServerOfExit) {
