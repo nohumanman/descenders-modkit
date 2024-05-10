@@ -10,6 +10,7 @@ namespace ModLoaderSolution
 	{
         public string oldBike;
         public void Start(){
+            Debug.Log("lol");
             oldBike = GetBike();
         }
         public void ToBike(string bike, string id)
