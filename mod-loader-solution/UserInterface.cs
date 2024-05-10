@@ -282,14 +282,6 @@ namespace ModLoaderSolution
                 isActive = !isActive;
                 Cursor.visible = isActive;
             }
-            if (hasBeenActive)
-            {
-                if (allCheckpoints == null)
-                    allCheckpoints = FindObjectsOfType<Checkpoint>();
-                else
-                    foreach (Checkpoint x in allCheckpoints)
-                        x.doesWork = false;
-            }
         }
     }
 }

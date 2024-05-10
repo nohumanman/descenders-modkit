@@ -64,6 +64,8 @@ operations = {
         lambda netPlayer, data: netPlayer.get_medals(str(data[1])),
     "LOG_LINE":
         lambda netPlayer, data: netPlayer.log_line(str(data[0:])),
+    "CHECKPOINT_LOG":
+        lambda netPlayer, data: netPlayer.log_line(str(data[1:])),
 }
 
 

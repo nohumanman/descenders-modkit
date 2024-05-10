@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using ModLoaderSolution;
+using System.IO;
 
 namespace ModLoaderSolution
 {
@@ -39,11 +40,17 @@ namespace ModLoaderSolution
             // check if our other.transform.name is Bike so we're actually looking at the bike not arm or something
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-                Utilities.Log("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' Entered");
+                // log to LocalLow > RageSuid > Descenders > checkpoint-logs.txt
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Low\\RageSquid\\Descenders\\checkpoint-logs.txt";
+                StreamWriter writer = new StreamWriter(path, true);
+                writer.WriteLine("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' entered, elapsed time: " + (SplitTimerText.Instance.finalTime - SplitTimerText.Instance.timeStart).ToString());
+                writer.Close();
+                NetClient.Instance.SendData("CHECKPOINT_LOG|" + "SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' entered, elapsed time: " + (SplitTimerText.Instance.finalTime - SplitTimerText.Instance.timeStart).ToString());
+                Debug.Log("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' Entered");
                 if (Utilities.instance.isInReplayMode())
                     return;
                 // if doesn't work or stats not default
-                if (!doesWork || !StatsModification.instance.IfStatsAreDefault())
+                if (!StatsModification.instance.IfStatsAreDefault())
                 {
                     SplitTimerText.Instance.StopTimer();
                     return;
