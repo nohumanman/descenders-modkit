@@ -53,6 +53,7 @@ namespace ModLoaderSolution
         }
         public void ForceUpdate()
         {
+            Debug.Log("lol");
             if (inBoundary)
             {
                 PlayerManagement.Instance.OnBoundaryEnter(
