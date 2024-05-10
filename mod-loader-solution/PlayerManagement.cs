@@ -114,6 +114,15 @@ namespace ModLoaderSolution
 			// if map_name is 0 we are in lobby
 			if (map_name == "0")
 				Destroy(Utilities.GameObjectFind("sign_modoftheyear"));
+			if (map_name == "Ced's Downhill Park-1.0")
+			{
+				string[] strs = new string[] { "C1", "C2", "C3", "C4", "C1.5" };
+				foreach(string str in strs)
+				{
+                    Utilities.GameObjectFind(str).tag = "Checkpoint";
+                }
+				
+            }
 			if (Utilities.instance.isMod()) // only do this to mods to not mess things up
 				Utilities.instance.NormaliseModSongs();
 		}
