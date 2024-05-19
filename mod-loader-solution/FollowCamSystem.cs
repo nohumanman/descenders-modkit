@@ -25,6 +25,10 @@ namespace ModLoaderSolution
         private bool shouldSnap = false;
         public bool bother = false;
         bool edit = false;
+        public List<Cam> GetCameras()
+        {
+            return cameras;
+        }
         public void OnGUI()
         {
             Utilities.LogMethodCallStart();
