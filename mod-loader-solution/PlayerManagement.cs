@@ -25,7 +25,9 @@ namespace ModLoaderSolution
 		}
 		public void NetStart(){
 			OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
-			NetClient.Instance.SendData("BIKE_TYPE", GetComponent<BikeSwitcher>().GetBike());
+            OnBikeSwitch(GetComponent<BikeSwitcher>().GetBike());
+
+            //NetClient.Instance.SendData("BIKE_SWITCH", "", );
 			NetClient.Instance.SendData("VERSION", NetClient.GetVersion());
 			NetClient.Instance.SendData("STEAM_ID", steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME", steamIntegration.getName());
@@ -97,8 +99,9 @@ namespace ModLoaderSolution
             SplitTimerText.Instance.hidden = true;
 			NetClient.Instance.SendData("RESPAWN");
 		}
-		public void OnBikeSwitch(string old_bike, string new_bike){
-			NetClient.Instance.SendData("BIKE_SWITCH|" + old_bike + "|" + new_bike);
+		public void OnBikeSwitch(string new_bike){
+            Debug.Log("Switching to " + new_bike); 
+			NetClient.Instance.SendData("BIKE_SWITCH", "NULL", new_bike);
 		}
 		public void OnBoundaryEnter(string trail_name, string boundary_guid){
 			NetClient.Instance.SendData("BOUNDARY_ENTER|" + trail_name + "|" + boundary_guid);

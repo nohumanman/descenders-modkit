@@ -392,13 +392,15 @@ class UnitySocket():
                 "%s '%s'\t- exception '%s'", self.info.steam_id, self.info.steam_name, e
             )
 
-    async def send_all(self, data: str):
+    async def send_all(self, data: str, excluding = []):
         """ Send data to all players in the same session """
         logging.info(
             "%s '%s'\t- sending to all the data '%s''", self.info.steam_id,
             self.info.steam_name, data
         )
         for player in self.parent.players:
+            if player in excluding:
+                continue
             await player.send(data)
 
     async def handle_data(self, data: str):
@@ -449,7 +451,7 @@ class UnitySocket():
     async def on_bike_switch(self, new_bike: str):
         """ Called when a player switches bikes."""
         self.info.bike_type = new_bike
-        #self.send_all(f"SET_BIKE|{self.bike_type}|{self.info.steam_id}")
+        await self.send_all(f"SET_BIKE|{new_bike}|{self.info.steam_id}", excluding=[self])
         await self.invalidate_all_trails("You switched bikes!")
 
     async def on_boundary_enter(self, trail_name: str, boundary_guid: str):

@@ -263,11 +263,6 @@ class Webserver():
                 if args is None:
                     return "Failed - no args"
                 await self.socket_server.get_player_by_id(player_id).send(args)
-                if args.startswith("SET_BIKE"):
-                    specified = args[9:10]
-                    player = self.socket_server.get_player_by_id(player_id)
-                    bike_corresponding = {"1": "downhill", "0": "enduro", "2": "hardtail"}
-                    player.info.bike_type = bike_corresponding[specified]
             except PlayerNotFound:
                 return "Player not found"
             return ""

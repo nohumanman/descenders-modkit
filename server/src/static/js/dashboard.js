@@ -67,14 +67,14 @@ var app = new Vue({
                 this.players.forEach(id => {
                     if (id.id != "ALL")
                         command.evals.forEach(function(command_eval){
-                            this.RunCommand(player.id, command_eval);
+                            this.RunCommand(player.steam_id, command_eval);
                         });
                 });
             }
             else{
                 command.evals.forEach(function(command_eval){
                     $.ajax({
-                        url: "/eval/" + player.id + "?order=" + command_eval,
+                        url: "/eval/" + player.steam_id + "?order=" + command_eval,
                         type: "GET",
                         success: function(data){},
                         error: function(data){
@@ -115,7 +115,7 @@ var app = new Vue({
             return 2;
         },
         GetPlayerOutputLog(player){
-            $.get("/get-output-log/" + player.id, function(data){
+            $.get("/get-output-log/" + player.steam_id, function(data){
                 app.cached_output_log = data;
             });
         },

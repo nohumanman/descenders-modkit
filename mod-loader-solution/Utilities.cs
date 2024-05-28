@@ -613,8 +613,8 @@ namespace ModLoaderSolution
             string prefix = caller.ReflectedType.FullName + "." + caller.Name;
             /*if (NetClient.Instance != null)
                 NetClient.Instance.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);
-            else
-                Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);*/
+            else*/
+                Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log); 
         }
         public bool ModIsLoading()
         {
@@ -882,6 +882,14 @@ namespace ModLoaderSolution
             if (bike == 2)
                 name = "Hardtail";
             return name;
+        }
+        public int GetBikeInt(string bike)
+        {
+            if (bike.ToLower() == "downhill")
+                return 1;
+            if (bike.ToLower() == "hardtail")
+                return 2;
+            return 0;
         }
         public void PopUp(string titleText, string bodyText)
         {
