@@ -322,7 +322,7 @@ class UnitySocket():
                 self.parent.players.remove(player)
         if self.info.steam_id in ["OFFLINE", ""]:
             await self.ban("CRASH")
-        banned_names = ["descender", "goldberg", "skidrow", "player", "codex", "cdx"]
+        banned_names = ["descender", "goldberg", "skidrow", "player", "codex", "cdx", "steamrip", "steam", "rip", "cracked", "crack"]
         for banned_name in banned_names:
             if self.info.steam_name.lower() == banned_name:
                 await self.ban("CRASH")
