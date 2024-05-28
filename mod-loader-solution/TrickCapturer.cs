@@ -32,7 +32,7 @@ namespace ModLoaderSolution
             string trick = utilities.GetPlayerTrick();
             if (trick != oldTrick && trick != "")
             {
-                NetClient.Instance.SendData("TRICK|" + trick);
+                NetClient.Instance.SendData("TRICK", trick);
                 oldTrick = trick;
             }
             Utilities.LogMethodCallEnd();

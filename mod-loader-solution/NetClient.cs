@@ -7,6 +7,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace ModLoaderSolution
 {
@@ -27,7 +28,7 @@ namespace ModLoaderSolution
 		static string version = "0.2.72";
 		static bool quietUpdate = false;
 		static string patchNotes = "- Other player's bikes should be the correct type\n- Your bike will be logged correctly when submitting a time\n- Non-descenders bikes temporarily disabled (BMX, etc)\n\nYours,\n- nohumanman"; // that which has changed since the last version.
-		public static bool developerMode = false;
+		public static bool developerMode = true;
 		void Awake(){
 			Utilities.LogMethodCallStart();
 			if (developerMode)
@@ -137,11 +138,11 @@ namespace ModLoaderSolution
 		}
 		public void Log(string logString, string stackTrace, LogType type)
 		{
-			SendData("LOG_LINE|" + logString);
+			//SendData("LOG_LINE", logString);
 		}
 		public void Log(string logString)
         {
-			SendData("LOG_LINE|" + logString);
+			//SendData("LOG_LINE", logString);
         }
 		public IEnumerator UploadOutputLog()
 		{
@@ -234,7 +235,7 @@ namespace ModLoaderSolution
 			PlayerManagement.Instance.NetStart();
 			foreach (MedalSystem medalSystem in FindObjectsOfType<MedalSystem>())
 				medalSystem.NetStart();
-			this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
+			this.SendData("REP", Utilities.instance.GetPlayerTotalRep());
 			foreach (Boundary b in FindObjectsOfType<Boundary>())
 				b.ForceUpdate(); // force tell the server what boundaries we are in.
 			Utilities.LogMethodCallEnd();
@@ -247,6 +248,11 @@ namespace ModLoaderSolution
 			if (message == "SUCCESS") {
 				NetStart();
 			}
+            if (message.StartsWith("RECEIVED"))
+            {
+                // not waiting for a response anymore
+                hashesAwaiting.Remove(message.Split('|')[1]);
+            }
 			if (message.StartsWith("ROTATE|"))
             {
 				string rotate = message.Split('|')[1];
@@ -267,7 +273,7 @@ namespace ModLoaderSolution
             {
 				Vector3 pos = Utilities.GetPlayer().transform.position;
 				Utilities.Log("Current Position: " + pos.ToString());
-				SendData("POS|" + pos.x + "|" + pos.y + "|" + pos.z);
+				SendData("POS", pos.x, pos.y, pos.z);
             }
 			
 			if (message.StartsWith("CHAT_MESSAGE"))
@@ -507,7 +513,7 @@ namespace ModLoaderSolution
             }
 			if (message.StartsWith("GET_REP"))
             {
-				this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
+				this.SendData("REP", Utilities.instance.GetPlayerTotalRep());
 			}
 			if (message.StartsWith("SEND_OUTPUTLOG"))
             {
@@ -556,14 +562,42 @@ namespace ModLoaderSolution
 			}
 			return mess;
 		}
-		public void SendData(params string[] data)
+        static string ComputeSha256Hash(string rawData)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+        public List<string> hashesAwaiting = new List<string>();
+        IEnumerator WaitForHash(string hashToWaitFor, string message)
+        {
+            yield return new WaitForSeconds(5f);
+            if (hashesAwaiting.Contains(hashToWaitFor))
+            {
+                Debug.Log("Message confirmation not recieved. Trying to send message again - " + message);
+                _SendData(message); // we failed, so we will try again.
+            }
+        }
+        public void SendData(params object[] data)
         {
 			string clientMessage = "";
-			foreach (string arg in data)
-				clientMessage += clean(arg) + "|";
-			SendData(clientMessage);
+			foreach (object arg in data)
+				clientMessage += clean(arg.ToString()) + "|";
+            clientMessage += Time.time + "|"; // so no hashes are the same
+            string hash = ComputeSha256Hash(clientMessage);
+            clientMessage += hash;
+            hashesAwaiting.Add(hash);
+            StartCoroutine(WaitForHash(hash, clientMessage));
+            _SendData(clientMessage);
         }
-		public void SendData(string clientMessage) {
+		void _SendData(string clientMessage) {
 			Utilities.LogMethodCallStart();
 			// Utilities.Log("Client sending message: " + clientMessage);
 			// clean clientMessage
