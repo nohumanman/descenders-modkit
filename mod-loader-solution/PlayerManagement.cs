@@ -25,7 +25,7 @@ namespace ModLoaderSolution
 		}
 		public void NetStart(){
 			OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
-      OnBikeSwitch(GetComponent<BikeSwitcher>().GetBike());
+            OnBikeSwitch(BikeSwitcher.GetBike());
 			NetClient.Instance.SendData("VERSION", NetClient.GetVersion());
 			NetClient.Instance.SendData("STEAM_ID", steamIntegration.getSteamId());
 			NetClient.Instance.SendData("STEAM_NAME", steamIntegration.getName());
