@@ -801,16 +801,45 @@ namespace ModLoaderSolution
             GameObject player = GetPlayerFromId(id);
             if (player == null)
                 return;
-            Utilities.GameObjectFindObjectOfType<FollowCamSystem>().subject = player;
-            Utilities.GameObjectFindObjectOfType<FollowCamSystem>().bother = true;
+            if (Utilities.GameObjectFindObjectOfType<FollowCamSystem>().GetCameras().Count == 0)
+            {
+                // if there are no cameras, do a custom spectate
+                Utilities.GameObjectFindObjectOfType<FollowCamSystem>().subject = null;
+                Utilities.GameObjectFindObjectOfType<FollowCamSystem>().bother = false;
+                SpectatePlayerFromId(id);
+            }
+            else
+            {
+                Utilities.GameObjectFindObjectOfType<FollowCamSystem>().subject = player;
+                Utilities.GameObjectFindObjectOfType<FollowCamSystem>().bother = true;
+            }
         }
-        public void SpectatePlayer(int id)
+        public void SpectatePlayer(int index)
         {
-            DevCommandsCamera.Spectate(id);
+            Utilities.Log("SpectatePlayer(int " + index.ToString() + ")");
+            DevCommandsCamera.Spectate(index);
         }
-
+        public void SpectatePlayerFromId(string id)
+        {
+            Utilities.Log("SpectatePlayerFromId(string " + id.ToString() + ")");
+            PlayerInfo[] allPlayers = GetAllPlayers();
+            PlayerInfo player = null;
+            foreach (PlayerInfo pi in allPlayers)
+            {
+                if (GetIdFromPlayerInfo(pi).ToLower() == id.ToLower())
+                {
+                    player = pi;
+                    break;
+                }
+            }
+            if (player != null)
+                SpectatePlayer(Array.IndexOf(allPlayers, player));
+            else
+                Utilities.Log("Player not found: " + name);
+        }
         public void SpectatePlayer(string name)
         {
+            Utilities.Log("SpectatePlayer(string " + name.ToString() + ")");
             PlayerInfo[] allPlayers = GetAllPlayers();
             PlayerInfo player = null;
             foreach (PlayerInfo pi in allPlayers)

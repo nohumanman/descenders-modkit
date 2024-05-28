@@ -15,7 +15,6 @@ namespace ModLoaderSolution
     public class UserInterface : MonoBehaviour {
         public GUIStyle customButton;
         bool isActive;
-        bool hasBeenActive = false;
         public PlayerInfoImpact[] players;
         public static UserInterface Instance { get; private set; }
 
@@ -108,7 +107,6 @@ namespace ModLoaderSolution
                 GUI.Label(new Rect((Screen.width/2)-750, Screen.height- 200, 1500, 80), "scripts made with love by nohumanman :D", myButtonStyle2);
                 GUI.Label(new Rect((Screen.width / 2) - 750, Screen.height - 400, 1500, 80), Player.transform.position.ToString(), myButtonStyle2);
                 GUI.Label(new Rect((Screen.width / 2) - 750, Screen.height - 500, 1500, 80), Player.transform.rotation.eulerAngles.ToString(), myButtonStyle2);
-                hasBeenActive = true;
                 GUIStyle myButtonStyle = new GUIStyle(GUI.skin.button);
                 myButtonStyle.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");
                 GUI.skin.font = AssetBundling.Instance.bundle.LoadAsset<Font>("share-tech-mono.regular.ttf");
@@ -272,7 +270,6 @@ namespace ModLoaderSolution
                 playersList.Add(playerBehaviour);
             players = playersList.ToArray();
         }
-        Checkpoint[] allCheckpoints;
         public void Update()
         {
             if ((Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.I)))
@@ -281,14 +278,6 @@ namespace ModLoaderSolution
                 Utilities.instance.GetGestures();
                 isActive = !isActive;
                 Cursor.visible = isActive;
-            }
-            if (hasBeenActive)
-            {
-                if (allCheckpoints == null)
-                    allCheckpoints = FindObjectsOfType<Checkpoint>();
-                else
-                    foreach (Checkpoint x in allCheckpoints)
-                        x.doesWork = false;
             }
         }
     }

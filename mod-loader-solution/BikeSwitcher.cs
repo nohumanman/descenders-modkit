@@ -24,7 +24,7 @@ namespace ModLoaderSolution
             }                
             StartCoroutine(_ToBike(bike, id));
         }
-        public string GetBike(){
+        public static string GetBike(){
             int pref = FindObjectOfType<PrefsManager>().GetInt("PREFERREDBIKE");
             if (pref == 1)
                 return "downhill";

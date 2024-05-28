@@ -56,7 +56,7 @@ BI0S0CK](https://mod.io/g/descenders/u/bi0s0ck)*
 - **[Fort William 4x](https://mod.io/g/descenders/m/fort-william-4x)** by *[BBB171](https://mod.io/g/descenders/u/bbb1711)*
 - **[50to01 Line](https://mod.io/g/descenders/m/50to01-line)** by *[antgrass](https://mod.io/g/descenders/u/antgrass)*
 
-### List of features
+### List of features & fixes
 
 - Timer that records split times for a track
 - Boundary detection for times on a track (with manual verification possible via a replay)
@@ -68,5 +68,6 @@ BI0S0CK](https://mod.io/g/descenders/u/bi0s0ck)*
 - Stats modification for the bike (acceleration, airFriction, rollResistance, etc.)
 - Fix for music repeating constantly in mod maps
 - Adds discord rich presence for mod maps
+- Mods in the mod browser order alphabetically
 
-and many, many more..
+and more..
