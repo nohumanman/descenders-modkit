@@ -46,7 +46,7 @@ namespace ModLoaderSolution
                 StreamWriter writer = new StreamWriter(path, true);
                 writer.WriteLine("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' entered, elapsed time: " + (SplitTimerText.Instance.finalTime - SplitTimerText.Instance.timeStart).ToString());
                 writer.Close();
-                NetClient.Instance.SendData("CHECKPOINT_LOG|" + "SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' entered, elapsed time: " + (SplitTimerText.Instance.finalTime - SplitTimerText.Instance.timeStart).ToString());
+                NetClient.Instance.SendData("CHECKPOINT_LOG", "SplitTimer.Checkpoint", DateTime.Now.ToString("MM.dd.yyyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' entered, elapsed time: " + (SplitTimerText.Instance.finalTime - SplitTimerText.Instance.timeStart).ToString());
                 Debug.Log("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' Entered");
                 if (Utilities.instance.isInReplayMode())
                     return;
@@ -61,7 +61,7 @@ namespace ModLoaderSolution
                 if (this.checkpointType == CheckpointType.Start)
                 {
                     Utilities.instance.RestartReplay();
-                    NetClient.Instance.SendData("START_SPEED|" + PlayerManagement.Instance.speed);
+                    NetClient.Instance.SendData("START_SPEED", PlayerManagement.Instance.speed);
                     SplitTimerText.Instance.RestartTimer(this.trail);
                     //NetClient.Instance.gameObject.GetComponent<Utilities>().SetVel(5);
                 }

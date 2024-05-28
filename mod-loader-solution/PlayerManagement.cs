@@ -36,12 +36,12 @@ namespace ModLoaderSolution
 				if (trail.leaderboardText != null)
                 {
 					Utilities.Log("Found Speedrun.com Leaderboard for '" + trail.name + "'");
-					NetClient.Instance.SendData("SPEEDRUN_DOT_COM_LEADERBOARD|" + trail.name);
+					NetClient.Instance.SendData("SPEEDRUN_DOT_COM_LEADERBOARD", trail.name);
 				}
 				if (trail.autoLeaderboardText != null)
                 {
 					Utilities.Log("Found auto Leaderboard for '" + trail.name + "'");
-					NetClient.Instance.SendData("LEADERBOARD|" + trail.name);
+					NetClient.Instance.SendData("LEADERBOARD", trail.name);
 				}
             }
 		}
@@ -102,16 +102,16 @@ namespace ModLoaderSolution
 			NetClient.Instance.SendData("BIKE_SWITCH", "NULL", new_bike);
 		}
 		public void OnBoundaryEnter(string trail_name, string boundary_guid){
-			NetClient.Instance.SendData("BOUNDARY_ENTER|" + trail_name + "|" + boundary_guid);
+			NetClient.Instance.SendData("BOUNDARY_ENTER", trail_name, boundary_guid);
 		}
 		public void OnBoundaryExit(string trail_name, string boundary_guid, string boundary_obj_name){
-			NetClient.Instance.SendData("BOUNDARY_EXIT|" + trail_name + "|" + boundary_guid + "|" + boundary_obj_name);
+			NetClient.Instance.SendData("BOUNDARY_EXIT", trail_name, boundary_guid, boundary_obj_name);
 		}
 		public void OnCheckpointEnter(string trail_name, string type, int total_checkpoints, string client_time, string hash){
-			NetClient.Instance.SendData("CHECKPOINT_ENTER|" + trail_name + "|" + type + "|" + total_checkpoints.ToString() + "|" + client_time + "|" + hash);
+			NetClient.Instance.SendData("CHECKPOINT_ENTER", trail_name, type, total_checkpoints, client_time, hash);
 		}
 		public void OnMapEnter(string map_id, string map_name){
-			NetClient.Instance.SendData("MAP_ENTER|" + map_id + "|" + map_name);
+			NetClient.Instance.SendData("MAP_ENTER", map_id, map_name);
 			// if map_name is 0 we are in lobby
 			if (map_name == "0")
 				Destroy(Utilities.GameObjectFind("sign_modoftheyear"));

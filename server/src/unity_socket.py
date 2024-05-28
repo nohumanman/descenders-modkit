@@ -9,6 +9,7 @@ import aiosqlite
 import sqlite3
 import requests
 import srcomapi
+import hashlib
 import srcomapi.datatypes as dt
 import discord
 from trail_timer import TrailTimer
@@ -404,11 +405,20 @@ class UnitySocket():
             await player.send(data)
 
     async def handle_data(self, data: str):
+        print(data)
         """ Handle data sent from the descenders unity client """
         self.last_contact = time.time()
         if data == "":
             return
         data_list = data.split("|")
+        # check message hash
+        message = "|".join(data_list[:-1]) + "|"
+        message_hash = data_list[-1]
+        our_message_hash = hashlib.sha256(message.encode('utf-8')).digest().hex()
+        if message_hash == our_message_hash:
+            await self.send("RECEIVED|" + message_hash)
+            print("Sent received message")
+
         for operator, function in operations.items():
             self.last_contact = time.time()
             if data.startswith(operator):
