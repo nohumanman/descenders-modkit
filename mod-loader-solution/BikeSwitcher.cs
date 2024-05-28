@@ -17,6 +17,11 @@ namespace ModLoaderSolution
             Utilities.Log("id " + id + " switching to bike '" + bike + "'");
             if (Utilities.instance.isInReplayMode())
                 return;
+            if (id == (new PlayerIdentification.SteamIntegration()).getSteamId())
+            {
+                // if it's us, let the server know
+                PlayerManagement.Instance.OnBikeSwitch(bike);
+            }                
             StartCoroutine(_ToBike(bike, id));
         }
         public static string GetBike(){
@@ -34,33 +39,16 @@ namespace ModLoaderSolution
             if (PlayerObject != null)
             {
                 GameObject BikeObject = GetBikeObject(PlayerObject);
-                while (BikeObject == null)
-                {
-                    if (id == (new PlayerIdentification.SteamIntegration()).id.steamID)
-                    {
-                        BikeObject = GetBikeObject(PlayerObject);
-                    }
-                    yield return new WaitForEndOfFrame();
-                }
+                // if it wasn't a descenders bike and is now a descenders bike
                 if (!IsDescBike(oldBike) && IsDescBike(bike))
                     yield return DelicatePlayerRespawn(id, PlayerObject, Utilities.GetPlayerInfoImpactFromId(id));
-                
-                if (bike == "enduro")
-                {
-                    FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", 0);
-                    //gameObject.GetComponent<Utilities>().SetBike(0);
-                    Utilities.instance.SetBike(Utilities.GetPlayerInfoImpactFromId(id), 0);
-                }
-                else if (bike == "downhill")
-                {
-                    FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", 1);
-                    Utilities.instance.SetBike(Utilities.GetPlayerInfoImpactFromId(id), 1);
-                }
-                else if (bike == "hardtail")
-                {
-                    FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", 2);
-                    Utilities.instance.SetBike(Utilities.GetPlayerInfoImpactFromId(id), 2);
-                }
+                int bikeType = Utilities.instance.GetBikeInt(bike);
+                // if it's us, set our preferred bike
+                if (id == (new PlayerIdentification.SteamIntegration()).getSteamId())
+                    FindObjectOfType<PrefsManager>().SetInt("PREFERREDBIKE", bikeType);
+                Utilities.instance.SetBike(Utilities.GetPlayerInfoImpactFromId(id), bikeType);
+                // TEMPORARILY REMOVED NON-DESCENDERS BIKES 28.05.2024
+                /*
                 else
                 {
                     if (AssetBundling.Instance.bundle != null)
@@ -112,12 +100,7 @@ namespace ModLoaderSolution
                     else
                         throw new System.Exception("AssetBundle not loaded! Can't load into specialised demo!!");
                 }
-            }
-            // if the player is us, tell the server
-            if (id == (new PlayerIdentification.SteamIntegration().id).ToString())
-            {
-                PlayerManagement.Instance.OnBikeSwitch(oldBike, bike);
-                oldBike = bike;
+                */
             }
             Utilities.LogMethodCallEnd();
         }

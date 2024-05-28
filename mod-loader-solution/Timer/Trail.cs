@@ -107,6 +107,8 @@ namespace ModLoaderSolution
         }
         public bool InAnyBoundaries()
         {
+            if (boundaryList.Count == 0)
+                return true;
             foreach(GameObject bound in boundaryList)
                 if (bound.GetComponent<Boundary>().inBoundary)
                     return true;

@@ -24,9 +24,9 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
-		static string version = "0.2.71";
-		static bool quietUpdate = true;
-		static string patchNotes = "- Timer hides when out of boundaries for more than 15 seconds\n- Timer hides when respawn\n- Timer does not stop but is invisible and will continue on next checkpoint enter\n\nYours,\n- nohumanman"; // that which has changed since the last version.
+		static string version = "0.2.72";
+		static bool quietUpdate = false;
+		static string patchNotes = "- Other player's bikes should be the correct type\n- Your bike will be logged correctly when submitting a time\n- Non-descenders bikes temporarily disabled (BMX, etc)\n\nYours,\n- nohumanman"; // that which has changed since the last version.
 		public static bool developerMode = false;
 		void Awake(){
 			Utilities.LogMethodCallStart();

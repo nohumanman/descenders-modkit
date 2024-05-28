@@ -912,6 +912,14 @@ namespace ModLoaderSolution
                 name = "Hardtail";
             return name;
         }
+        public int GetBikeInt(string bike)
+        {
+            if (bike.ToLower() == "downhill")
+                return 1;
+            if (bike.ToLower() == "hardtail")
+                return 2;
+            return 0;
+        }
         public void PopUp(string titleText, string bodyText)
         {
             int lineLimit = 12;
