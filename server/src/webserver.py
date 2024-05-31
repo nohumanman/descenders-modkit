@@ -393,7 +393,7 @@ class Webserver():
 
     async def get(self):
         """ Function to get the details of a player with id player_id """
-        if await self.permission() == "AUTHORISED":
+        if True:
             player_json = [
                 {
                     "steam_id": player.info.steam_id,

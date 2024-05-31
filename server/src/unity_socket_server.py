@@ -113,6 +113,9 @@ class UnitySocketServer():
                     if (mess != "" and not(mess.startswith("LOG_LINE") and not(mess.startswith("pong")))):
                         logging.info("%s '%s' - %s", player.info.steam_id, player.info.steam_name, mess)
                     try:
+                        if mess == "pong":
+                            self.last_contact = time.time()
+                            continue
                         asyncio.create_task(player.handle_data(mess)) # asyncronously handle the data
                     except Exception as e:
                         logging.error(e)

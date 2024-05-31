@@ -545,7 +545,7 @@ namespace ModLoaderSolution
 				string code = message.Split('|')[1];
 				DevCommandsGameplay.LockItem(int.Parse(code));
 			}
-			SendData("pong");
+			_SendData("pong", "");
 			Utilities.LogMethodCallEnd();
 		}
 		IEnumerator SendDataDelayed(string clientMessage, float time)
@@ -557,7 +557,7 @@ namespace ModLoaderSolution
         {
 			foreach (char c in mess)
 			{
-				if (c < 32 || c > 126 || c == '|' || c == '\n')
+				if (c < 32 || c > 126)
 					mess = mess.Replace(c.ToString(), "?");
 			}
 			return mess;
@@ -578,26 +578,26 @@ namespace ModLoaderSolution
         public List<string> hashesAwaiting = new List<string>();
         IEnumerator WaitForHash(string hashToWaitFor, string message)
         {
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(10f);
             if (hashesAwaiting.Contains(hashToWaitFor))
             {
-                Debug.Log("Message confirmation not recieved. Trying to send message again - " + message);
-                _SendData(message); // we failed, so we will try again.
+                _SendData(message, hashToWaitFor); // we failed, so we will try again.
+                hashesAwaiting.Remove(hashToWaitFor); // and forget about it
             }
         }
         public void SendData(params object[] data)
         {
 			string clientMessage = "";
-			foreach (object arg in data)
+			foreach (object arg in data) 
 				clientMessage += clean(arg.ToString()) + "|";
             clientMessage += Time.time + "|"; // so no hashes are the same
             string hash = ComputeSha256Hash(clientMessage);
             clientMessage += hash;
             hashesAwaiting.Add(hash);
             StartCoroutine(WaitForHash(hash, clientMessage));
-            _SendData(clientMessage);
+            _SendData(clientMessage, hash);
         }
-		void _SendData(string clientMessage) {
+		void _SendData(string clientMessage, string hash) {
 			Utilities.LogMethodCallStart();
 			// Utilities.Log("Client sending message: " + clientMessage);
 			// clean clientMessage
@@ -606,6 +606,8 @@ namespace ModLoaderSolution
 			if (socketConnection == null || !socketConnection.Connected)
 			{
 				StartCoroutine(SendDataDelayed(clientMessage, 1)); // wait a second
+                if (hash != "")
+                    hashesAwaiting.Remove(hash); // not going to get a response from this one
 				return;
             }
             try

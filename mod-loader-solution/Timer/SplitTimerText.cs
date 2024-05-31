@@ -22,11 +22,13 @@ namespace ModLoaderSolution
 			else
 				Instance = this;
 		}
+        Coroutine disableCP = null;
 		public void CheckpointTime(string message)
         {
-			StopCoroutine(DisableCheckpoint());
+            if (disableCP != null)
+			    StopCoroutine(disableCP);
 			checkpointTime = message;
-			StartCoroutine(DisableCheckpoint());
+            disableCP = StartCoroutine(DisableCheckpoint());
 		}
 		IEnumerator DisableCheckpoint()
         {

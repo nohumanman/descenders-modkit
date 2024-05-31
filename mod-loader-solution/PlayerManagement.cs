@@ -24,7 +24,7 @@ namespace ModLoaderSolution
 				Instance = this; 
 		}
 		public void NetStart(){
-			OnMapEnter("idhere", Utilities.instance.GetCurrentMap());
+			OnMapEnter(Utilities.instance.GetCurrentMap());
             OnBikeSwitch(BikeSwitcher.GetBike());
 			NetClient.Instance.SendData("VERSION", NetClient.GetVersion());
 			NetClient.Instance.SendData("STEAM_ID", steamIntegration.getSteamId());
@@ -61,7 +61,7 @@ namespace ModLoaderSolution
             {
 				StartCoroutine(ChangeMapPresence(currentMap));
 				Utilities.Log("Map Change Detected");
-				OnMapEnter("idhere", currentMap);
+				OnMapEnter(currentMap);
 				// if not a bike park or a mod
 				if (!Utilities.instance.isBikePark() && !Utilities.instance.isMod() && !(currentMap == "0"))
 				{
@@ -98,8 +98,7 @@ namespace ModLoaderSolution
 			NetClient.Instance.SendData("RESPAWN");
 		}
 		public void OnBikeSwitch(string new_bike){
-            Debug.Log("Switching to " + new_bike); 
-			NetClient.Instance.SendData("BIKE_SWITCH", "NULL", new_bike);
+			NetClient.Instance.SendData("BIKE_SWITCH", new_bike);
 		}
 		public void OnBoundaryEnter(string trail_name, string boundary_guid){
 			NetClient.Instance.SendData("BOUNDARY_ENTER", trail_name, boundary_guid);
@@ -110,8 +109,8 @@ namespace ModLoaderSolution
 		public void OnCheckpointEnter(string trail_name, string type, int total_checkpoints, string client_time, string hash){
 			NetClient.Instance.SendData("CHECKPOINT_ENTER", trail_name, type, total_checkpoints, client_time, hash);
 		}
-		public void OnMapEnter(string map_id, string map_name){
-			NetClient.Instance.SendData("MAP_ENTER", map_id, map_name);
+		public void OnMapEnter(string map_name){
+			NetClient.Instance.SendData("MAP_ENTER", map_name);
 			// if map_name is 0 we are in lobby
 			if (map_name == "0")
 				Destroy(Utilities.GameObjectFind("sign_modoftheyear"));
