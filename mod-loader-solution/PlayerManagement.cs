@@ -5,6 +5,7 @@ using PlayerIdentification;
 using ModLoaderSolution;
 using UnityEngine.SceneManagement;
 using System;
+using ConsoleUtils;
 
 namespace ModLoaderSolution
 {
@@ -23,7 +24,24 @@ namespace ModLoaderSolution
 			else
 				Instance = this; 
 		}
-		public void NetStart(){
+        void Update()
+        {
+            string currentMap = Utilities.instance.GetCurrentMap();
+            // if we've switched maps
+            if (currentMap != prevMap)
+                OnMapEnter(currentMap);
+            // if human doesn't exist
+            if (PlayerHuman == null)
+                PlayerHuman = Utilities.GetPlayer();
+            // if we've just bailed
+            if (Utilities.instance.hasBailed() && !wasBailed)
+                OnRespawn();
+            wasBailed = Utilities.instance.hasBailed();
+            // if human exists
+            if (PlayerHuman != null)
+                CheckForRespawn(); // check if we've respawned
+        }
+        public void NetStart(){
 			OnMapEnter(Utilities.instance.GetCurrentMap());
             OnBikeSwitch(BikeSwitcher.GetBike());
 			NetClient.Instance.SendData("VERSION", NetClient.GetVersion());
@@ -46,54 +64,48 @@ namespace ModLoaderSolution
             }
 		}
 		string prevMap = "";
-		IEnumerator ChangeMapPresence(string map_name)
+		public void CheckForRespawn()
+		{
+            // if player doesn't exist they can't respawn
+            if (Utilities.GetPlayer() == null) return;
+			// if human has moved very quickly then they have respawned
+            if (Vector3.Distance(PlayerHuman.transform.position, PreviousPos) > 6)
+            {
+                OnRespawn();
+                PreviousPos = PlayerHuman.transform.position;
+            }
+            speed = Vector3.Distance(PlayerHuman.transform.position, PreviousPos) / Time.deltaTime;
+            PreviousPos = PlayerHuman.transform.position;
+        }
+        public void SortEnvironment(string map_name)
         {
-			long startTimestamp = Utilities.ToUnixTime(DateTime.UtcNow);
-			while (Utilities.instance.GetCurrentMap() == map_name)
+            // if map_name is 0 we are in lobby
+            if (map_name == "0")
+                Destroy(Utilities.GameObjectFind("sign_modoftheyear"));
+            if (map_name == "Ced's Downhill Park-1.0")
             {
-				Utilities.instance.UpdateDiscordPresence(startTimestamp);
-				yield return new WaitForSeconds(3f);
-			}
-		}
-		void Update () {
-			string currentMap = Utilities.instance.GetCurrentMap();
-			if (currentMap != prevMap)
-            {
-				StartCoroutine(ChangeMapPresence(currentMap));
-				Utilities.Log("Map Change Detected");
-				OnMapEnter(currentMap);
-				// if not a bike park or a mod
-				if (!Utilities.instance.isBikePark() && !Utilities.instance.isMod() && !(currentMap == "0"))
-				{
-					StatsModification.instance.ResetStats();
-					StatsModification.instance.permitted = false;
-				}
-				else
-					StatsModification.instance.permitted = true;
-				//StatsModification.instance.DirtyStats();
-				prevMap = currentMap;
-			}
-			if (PlayerHuman == null)
-				PlayerHuman = Utilities.GetPlayer();
-			if (Utilities.instance.hasBailed() && !wasBailed)
-				OnRespawn();
-			wasBailed = Utilities.instance.hasBailed();
-			if (PlayerHuman != null){
-				if (Vector3.Distance(
-						PlayerHuman.transform.position,
-						PreviousPos
-					) > 6){
-					OnRespawn();
-					PreviousPos = PlayerHuman.transform.position;
-				}
-				speed = Vector3.Distance(PlayerHuman.transform.position, PreviousPos) / Time.deltaTime;
-				PreviousPos = PlayerHuman.transform.position;
-			}
-			//Utilities.Log(PhotonNetwork.CloudRegion);
-			//Utilities.Log(PhotonNetwork.CreateRoom("6969"));
-			//Utilities.Log(PhotonNetwork.JoinRoom("6969"));
-		}
-		public void OnRespawn(){
+                string[] strs = new string[] { "C1", "C2", "C3", "C4", "C1.5" };
+                foreach (string str in strs)
+                {
+                    Utilities.GameObjectFind(str).tag = "Checkpoint";
+                }
+                // Pos -449.2, 1698.8, 488.9
+                // rot 7, 86, 359
+                // instantiate new checkpoint
+                GameObject CP = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                CP.transform.position = new Vector3(-449, 1698, 488);
+                CP.transform.SetPositionAndRotation(
+                    new Vector3(-449, 1698, 488),
+                    Quaternion.Euler(7, 86, 359)
+                );
+                CP.transform.localScale = new Vector3(15, 15, 1);
+                CP.GetComponent<BoxCollider>().isTrigger = true;
+                CP.GetComponent<MeshRenderer>().enabled = false;
+                CP.tag = "Checkpoint";
+            }
+        }
+        #region 'on' methods
+        public void OnRespawn(){
             SplitTimerText.Instance.hidden = true;
 			NetClient.Instance.SendData("RESPAWN");
 		}
@@ -110,36 +122,32 @@ namespace ModLoaderSolution
 			NetClient.Instance.SendData("CHECKPOINT_ENTER", trail_name, type, total_checkpoints, client_time, hash);
 		}
 		public void OnMapEnter(string map_name){
-			NetClient.Instance.SendData("MAP_ENTER", map_name);
-			// if map_name is 0 we are in lobby
-			if (map_name == "0")
-				Destroy(Utilities.GameObjectFind("sign_modoftheyear"));
-			if (map_name == "Ced's Downhill Park-1.0")
-			{
-				string[] strs = new string[] { "C1", "C2", "C3", "C4", "C1.5" };
-				foreach(string str in strs)
-				{
-                    Utilities.GameObjectFind(str).tag = "Checkpoint";
-                }
-				// Pos -449.2, 1698.8, 488.9
-                // rot 7, 86, 359
-                // instantiate new checkpoint
-                GameObject CP = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                CP.transform.position = new Vector3(-449, 1698, 488);
-                CP.transform.SetPositionAndRotation(
-                    new Vector3(-449, 1698, 488),
-                    Quaternion.Euler(7, 86, 359)
-                );
-                CP.transform.localScale = new Vector3(15, 15, 1);
-                CP.GetComponent<BoxCollider>().isTrigger = true;
-                CP.GetComponent<MeshRenderer>().enabled = false;
-                CP.tag = "Checkpoint";
+            Utilities.Log("Map Change Detected");
+            if (NetClient.Instance != null)
+                NetClient.Instance.SendData("MAP_ENTER", map_name);
+            if (CustomDiscordManager.instance != null)
+                StartCoroutine(CustomDiscordManager.instance.ChangeMapPresence(map_name));
+            else
+                Debug.LogWarning("CustomDiscordManager does not exist yet..");
+            // if not a bike park or a mod
+            if (!Utilities.instance.isBikePark() && !Utilities.instance.isMod() && !(map_name == "0"))
+            {
+                StatsModification.instance.ResetStats();
+                StatsModification.instance.permitted = false;
             }
-			if (Utilities.instance.isMod()) // only do this to mods to not mess things up
-				Utilities.instance.NormaliseModSongs();
-		}
+            else
+                StatsModification.instance.permitted = true;
+            // if we're in a mod, fix the playlist
+            if (Utilities.instance.isMod())
+                Utilities.instance.NormaliseModSongs();
+            // get rid of any environment items we hate
+            try { SortEnvironment(map_name);}
+            catch { }
+            prevMap = map_name;
+        }
 		public void OnMapExit(){
 			NetClient.Instance.SendData("MAP_EXIT");
 		}
-	}
+        #endregion
+    }
 }

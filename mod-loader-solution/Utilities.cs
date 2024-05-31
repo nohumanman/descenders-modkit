@@ -81,7 +81,7 @@ namespace ModLoaderSolution
                 normalised = true;
             }
             if (Input.GetKey(KeyCode.D) && Input.GetKeyDown(KeyCode.Alpha9)){
-                Debug.Log("Call Stats:\n" + GetCallStats());
+                Utilities.Log("Call Stats:\n" + GetCallStats());
             }
             GameObject content = Utilities.GameObjectFind("Content");
             if (content != null)
@@ -149,6 +149,9 @@ namespace ModLoaderSolution
         GameObject cyclist;
         public bool hasBailed()
         {
+            // if player doesn't exist they can't bail.
+            if (GetPlayer() == null) return false;
+            // see if cyclist is connected to player
             if (cyclist == null)
                 cyclist = Utilities.GameObjectFind("Cyclist");
             if (cyclist != null)
@@ -218,44 +221,17 @@ namespace ModLoaderSolution
         public string GetCurrentMap()
         {
             SessionManager sessionManager = Singleton<SessionManager>.SP;
-            return sessionManager.GetCurrentLevelFullSeed();
+            string map = sessionManager.GetCurrentLevelFullSeed();
+            if (map == null)
+                throw new NullReferenceException("Map is none!");
+            return map;
         }
         public static long ToUnixTime(DateTime date)
         {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return Convert.ToInt64((date - epoch).TotalSeconds);
         }
-        public void UpdateDiscordPresence(long startTimestamp = 0)
-        {
-            // don't do custom presence in freeplay
-            if (!isBikePark() && !isMod() && !(GetCurrentMap() == "0"))
-                return;
-            DiscordManager dm = DiscordManager.SP;
-            // dm.presence.details = dm.\u0084mfo\u007fzP.details
-            DiscordRpc.RichPresence richpresence = (DiscordRpc.RichPresence)typeof(DiscordManager).GetField("\u0084mfo\u007fzP").GetValue(dm);
-            DiscordRpc.RichPresence richpresenceCopy = richpresence;
-            string current_map = GetCurrentMap().Split('-')[0];
-            
-            if (seeds.TryGetValue(current_map, out var seed))
-                richpresence.details = "In " + seed;
-            else
-                richpresence.details = "In " + current_map;
-            richpresence.largeImageText = "nohumanman's Descenders Modkit";
-            richpresence.largeImageKey = "overworld";
-            // teams to small image
-            //richpresence.smallImageKey = "arboreal";
-            //richpresence.smallImageText = "Team Arboreal";
-            if (startTimestamp != 0)
-                richpresence.startTimestamp = startTimestamp;
 
-            typeof(DiscordManager).GetField("\u0084mfo\u007fzP").SetValue(dm, richpresence);
-            // if different, update presence
-            // NOTE: This will always update, because our assignment of rich presence
-            // is overwritten immediately by descenders
-            if (!richpresenceCopy.Equals(richpresence))
-                DiscordRpc.UpdatePresence(ref richpresence);
-            
-        }
         public List<Mod> GetAllMods()
         {
             GameData gameData = Utilities.GameObjectFindObjectOfType<GameData>();
@@ -263,7 +239,12 @@ namespace ModLoaderSolution
             List<Mod> mods = (List<Mod>)gameData.GetType().GetField("UcS\u0082\u0081DM").GetValue(gameData);
             return mods;
         }
-
+        public bool isInFreeplay()
+        {
+            if (!isBikePark() && !isMod() && !(GetCurrentMap() == "0"))
+                return true;
+            return false;
+        }
         public bool isMod()
         {
             string currentMap = GetCurrentMap();
@@ -510,6 +491,9 @@ namespace ModLoaderSolution
             return null;
         }
 
+        /// <summary>
+        /// Expect this method to return null often
+        /// </summary>
         public static GameObject GetPlayer()
         {
             playerObject = Singleton<PlayerManager>.SP.GetPlayerObject();
@@ -609,12 +593,12 @@ namespace ModLoaderSolution
         }
         public static void Log(string log)
         {
-            MethodBase caller = new StackFrame(1, false).GetMethod();
-            string prefix = caller.ReflectedType.FullName + "." + caller.Name;
-            /*if (NetClient.Instance != null)
-                NetClient.Instance.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);
-            else
-                Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);*/
+            if (NetClient.debugState == DebugType.DEBUG || NetClient.debugState == DebugType.DEVELOPER)
+            {
+                MethodBase caller = new StackFrame(1, false).GetMethod();
+                string prefix = caller.ReflectedType.FullName + "." + caller.Name;
+                Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - " + prefix + " - " + log);
+            }
         }
         public bool ModIsLoading()
         {
@@ -639,7 +623,7 @@ namespace ModLoaderSolution
             MethodBase caller = new StackFrame(1, false).GetMethod();
             string prefix = caller.ReflectedType.FullName + "." + caller.Name;
             int i = methods.IndexOf(caller);
-            Debug.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + "\t" + prefix + " took " + (Time.time-methodsTimeCalled[i]) + "s");
+            Utilities.Log(DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + "\t" + prefix + " took " + (Time.time-methodsTimeCalled[i]) + "s");
             try
             {
                 float totalTimeSpent = (float)methodInfos[prefix];
@@ -872,7 +856,6 @@ namespace ModLoaderSolution
             BikeType[] array3 = (BikeType[])gameData.GetType().GetField("bx}n\u0080PQ").GetValue(gameData);
             foreach (PlayerInfoImpact playerInfoImpact in array)
             {
-                Debug.Log(steam_id);
                 playerInfoImpact.GetType().GetField("dzQf\u0082nw").SetValue(playerInfoImpact, array3[bike]);
             }
             foreach (PlayerCustomization playerCustomization in array2)

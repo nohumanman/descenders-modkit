@@ -28,7 +28,7 @@ namespace ModLoaderSolution
                 this.tag = "Checkpoint";
             else
                 this.tag = "Untagged";
-            // Utilities.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
+            Utilities.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
         }
         void Update()
         {

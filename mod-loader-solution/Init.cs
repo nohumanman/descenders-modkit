@@ -98,10 +98,10 @@ namespace ModLoaderSolution
                 DontDestroyOnLoad(gameObject.transform.root);
                 List<Type> firstStartComponents = new List<Type>()
                 {
-                    typeof(PlayerManagement), typeof(NetClient), typeof(BikeSwitcher), typeof(TimeModifier),
+                    typeof(ErrorLogger), typeof(NetClient), typeof(BikeSwitcher), typeof(TimeModifier),
                     typeof(TrickCapturer), typeof(GimbalCam), typeof(MovableCam), typeof(TeleportAtCursor),
                     typeof(StatsModification), typeof(UserInterface), typeof(ChaosMod), typeof(Chat), typeof(FollowCamSystem),
-                    typeof(CustomDebug), typeof(FovModifier)
+                    typeof(CustomDebug), typeof(FovModifier), typeof(CustomDiscordManager), typeof(PlayerManagement)
                 };
                 // add all components to be added on first load
                 foreach(Type component in firstStartComponents)

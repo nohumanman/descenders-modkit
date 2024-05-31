@@ -13,7 +13,7 @@ namespace ModLoaderSolution
 {
 	public enum DebugType
     {
-		DEBUG, RELEASE
+		DEVELOPER, DEBUG, RELEASE
     }
 	public class NetClient : MonoBehaviour {
 		public static NetClient Instance { get; private set; }
@@ -28,10 +28,10 @@ namespace ModLoaderSolution
 		static string version = "0.2.72";
 		static bool quietUpdate = false;
 		static string patchNotes = "- Other player's bikes should be the correct type\n- Your bike will be logged correctly when submitting a time\n- Non-descenders bikes temporarily disabled (BMX, etc)\n\nYours,\n- nohumanman"; // that which has changed since the last version.
-		public static bool developerMode = true;
-		void Awake(){
+		public static DebugType debugState = DebugType.RELEASE;
+        void Awake(){
 			Utilities.LogMethodCallStart();
-			if (developerMode)
+			if (debugState == DebugType.DEVELOPER)
 				ip = "localhost";
 			DontDestroyOnLoad(this.gameObject.transform.root);
 			if (Instance != null && Instance != this) 
@@ -45,8 +45,10 @@ namespace ModLoaderSolution
 		}
 		public static string GetVersion()
         {
-			if (developerMode)
+			if (debugState == DebugType.DEVELOPER)
 				return version + "-dev";
+			else if (debugState == DebugType.DEBUG)
+				return version + "-debug";
 			else
 				return version;
         }
