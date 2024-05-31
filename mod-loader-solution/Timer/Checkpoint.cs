@@ -28,26 +28,27 @@ namespace ModLoaderSolution
                 this.tag = "Checkpoint";
             else
                 this.tag = "Untagged";
-            // Utilities.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
+            Utilities.Log("Checkpoint | Checkpoint script added to " + this.gameObject.name);
         }
         void Update()
         {
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.U))
                 gameObject.GetComponent<MeshRenderer>().enabled = !gameObject.GetComponent<MeshRenderer>().enabled;
         }
+        public void LogCheckpointToFile()
+        {
+            // log to LocalLow > RageSuid > Descenders > checkpoint-logs.txt
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Low\\RageSquid\\Descenders\\checkpoint-logs.txt";
+            StreamWriter writer = new StreamWriter(path, true);
+            writer.WriteLine("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' entered, elapsed time: " + (SplitTimerText.Instance.finalTime - SplitTimerText.Instance.timeStart).ToString());
+            writer.Close();
+        }
         void OnTriggerEnter(Collider other)
         {
             // check if our other.transform.name is Bike so we're actually looking at the bike not arm or something
             if (other.transform.name == "Bike" && other.transform.root.name == "Player_Human")
             {
-                Debug.Log("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' Entered");
-                // log to LocalLow > RageSuid > Descenders > checkpoint-logs.txt
-                string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Low\\RageSquid\\Descenders\\checkpoint-logs.txt";
-                StreamWriter writer = new StreamWriter(path, true);
-                writer.WriteLine("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' entered, elapsed time: " + (SplitTimerText.Instance.finalTime - SplitTimerText.Instance.timeStart).ToString());
-                writer.Close();
-                NetClient.Instance.SendData("CHECKPOINT_LOG|" + "SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' entered, elapsed time: " + (SplitTimerText.Instance.finalTime - SplitTimerText.Instance.timeStart).ToString());
-                Debug.Log("SplitTimer.Checkpoint | " + DateTime.Now.ToString("MM.dd.yyyy HH:mm:ss.fff") + " - checkpoint '" + this.name + "' Entered");
+                LogCheckpointToFile();
                 if (Utilities.instance.isInReplayMode())
                     return;
                 // if doesn't work or stats not default
@@ -61,7 +62,7 @@ namespace ModLoaderSolution
                 if (this.checkpointType == CheckpointType.Start)
                 {
                     Utilities.instance.RestartReplay();
-                    NetClient.Instance.SendData("START_SPEED|" + PlayerManagement.Instance.speed);
+                    NetClient.Instance.SendData("START_SPEED", PlayerManagement.Instance.speed);
                     SplitTimerText.Instance.RestartTimer(this.trail);
                     //NetClient.Instance.gameObject.GetComponent<Utilities>().SetVel(5);
                 }

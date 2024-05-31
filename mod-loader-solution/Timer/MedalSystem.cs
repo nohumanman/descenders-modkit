@@ -35,7 +35,7 @@ namespace ModLoaderSolution
         public void NetStart()
         {
             Utilities.Log("MedalSystem | NetStart() called for '" + trailName + "' sending GET_MEDALS");
-            NetClient.Instance.SendData("GET_MEDALS|" + trailName);
+            NetClient.Instance.SendData("GET_MEDALS", trailName);
         }
     }
 }

@@ -7,12 +7,13 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace ModLoaderSolution
 {
 	public enum DebugType
     {
-		DEBUG, RELEASE
+		DEVELOPER, DEBUG, RELEASE
     }
 	public class NetClient : MonoBehaviour {
 		public static NetClient Instance { get; private set; }
@@ -24,13 +25,13 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
-		static string version = "0.2.72";
+		static string version = "0.2.73";
 		static bool quietUpdate = false;
-		static string patchNotes = "- Other player's bikes should be the correct type\n- Your bike will be logged correctly when submitting a time\n- Non-descenders bikes temporarily disabled (BMX, etc)\n\nYours,\n- nohumanman"; // that which has changed since the last version.
-		public static bool developerMode = false;
-		void Awake(){
+		static string patchNotes = "- Checksums implemented for server communicationb\n- Fixed networked bike switching\n- Non-descenders bikes temporarily disabled (BMX, etc)\n\nYours,\n- nohumanman"; // that which has changed since the last version.
+		public static DebugType debugState = DebugType.DEVELOPER;
+        void Awake(){
 			Utilities.LogMethodCallStart();
-			if (developerMode)
+			if (debugState == DebugType.DEVELOPER)
 				ip = "localhost";
 			DontDestroyOnLoad(this.gameObject.transform.root);
 			if (Instance != null && Instance != this) 
@@ -44,8 +45,10 @@ namespace ModLoaderSolution
 		}
 		public static string GetVersion()
         {
-			if (developerMode)
+			if (debugState == DebugType.DEVELOPER)
 				return version + "-dev";
+			else if (debugState == DebugType.DEBUG)
+				return version + "-debug";
 			else
 				return version;
         }
@@ -137,11 +140,11 @@ namespace ModLoaderSolution
 		}
 		public void Log(string logString, string stackTrace, LogType type)
 		{
-			SendData("LOG_LINE|" + logString);
+			//SendData("LOG_LINE", logString);
 		}
 		public void Log(string logString)
         {
-			SendData("LOG_LINE|" + logString);
+			//SendData("LOG_LINE", logString);
         }
 		public IEnumerator UploadOutputLog()
 		{
@@ -234,7 +237,7 @@ namespace ModLoaderSolution
 			PlayerManagement.Instance.NetStart();
 			foreach (MedalSystem medalSystem in FindObjectsOfType<MedalSystem>())
 				medalSystem.NetStart();
-			this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
+			this.SendData("REP", Utilities.instance.GetPlayerTotalRep());
 			foreach (Boundary b in FindObjectsOfType<Boundary>())
 				b.ForceUpdate(); // force tell the server what boundaries we are in.
 			Utilities.LogMethodCallEnd();
@@ -247,6 +250,11 @@ namespace ModLoaderSolution
 			if (message == "SUCCESS") {
 				NetStart();
 			}
+            if (message.StartsWith("RECEIVED"))
+            {
+                // not waiting for a response anymore
+                hashesAwaiting.Remove(message.Split('|')[1]);
+            }
 			if (message.StartsWith("ROTATE|"))
             {
 				string rotate = message.Split('|')[1];
@@ -267,7 +275,7 @@ namespace ModLoaderSolution
             {
 				Vector3 pos = Utilities.GetPlayer().transform.position;
 				Utilities.Log("Current Position: " + pos.ToString());
-				SendData("POS|" + pos.x + "|" + pos.y + "|" + pos.z);
+				SendData("POS", pos.x, pos.y, pos.z);
             }
 			
 			if (message.StartsWith("CHAT_MESSAGE"))
@@ -507,7 +515,7 @@ namespace ModLoaderSolution
             }
 			if (message.StartsWith("GET_REP"))
             {
-				this.SendData("REP|" + Utilities.instance.GetPlayerTotalRep());
+				this.SendData("REP", Utilities.instance.GetPlayerTotalRep());
 			}
 			if (message.StartsWith("SEND_OUTPUTLOG"))
             {
@@ -539,7 +547,7 @@ namespace ModLoaderSolution
 				string code = message.Split('|')[1];
 				DevCommandsGameplay.LockItem(int.Parse(code));
 			}
-			SendData("pong");
+			_SendData("pong", "");
 			Utilities.LogMethodCallEnd();
 		}
 		IEnumerator SendDataDelayed(string clientMessage, float time)
@@ -551,19 +559,47 @@ namespace ModLoaderSolution
         {
 			foreach (char c in mess)
 			{
-				if (c < 32 || c > 126 || c == '|' || c == '\n')
+				if (c < 32 || c > 126)
 					mess = mess.Replace(c.ToString(), "?");
 			}
 			return mess;
 		}
-		public void SendData(params string[] data)
+        static string ComputeSha256Hash(string rawData)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            }
+        }
+        public List<string> hashesAwaiting = new List<string>();
+        IEnumerator WaitForHash(string hashToWaitFor, string message)
+        {
+            yield return new WaitForSeconds(10f);
+            if (hashesAwaiting.Contains(hashToWaitFor))
+            {
+                _SendData(message, hashToWaitFor); // we failed, so we will try again.
+                hashesAwaiting.Remove(hashToWaitFor); // and forget about it
+            }
+        }
+        public void SendData(params object[] data)
         {
 			string clientMessage = "";
-			foreach (string arg in data)
-				clientMessage += clean(arg) + "|";
-			SendData(clientMessage);
+			foreach (object arg in data) 
+				clientMessage += clean(arg.ToString()) + "|";
+            clientMessage += Time.time + "|"; // so no hashes are the same
+            string hash = ComputeSha256Hash(clientMessage);
+            clientMessage += hash;
+            hashesAwaiting.Add(hash);
+            StartCoroutine(WaitForHash(hash, clientMessage));
+            _SendData(clientMessage, hash);
         }
-		public void SendData(string clientMessage) {
+		void _SendData(string clientMessage, string hash) {
 			Utilities.LogMethodCallStart();
 			// Utilities.Log("Client sending message: " + clientMessage);
 			// clean clientMessage
@@ -572,6 +608,8 @@ namespace ModLoaderSolution
 			if (socketConnection == null || !socketConnection.Connected)
 			{
 				StartCoroutine(SendDataDelayed(clientMessage, 1)); // wait a second
+                if (hash != "")
+                    hashesAwaiting.Remove(hash); // not going to get a response from this one
 				return;
             }
             try

@@ -57,9 +57,11 @@
     <Compile Include="ButtonHack.cs" />
     <Compile Include="ChaosMod.cs" />
     <Compile Include="Chat.cs" />
+    <Compile Include="CustomDiscordManager.cs" />
     <Compile Include="CustomTeleporter.cs" />
     <Compile Include="CustomDebug.cs" />
     <Compile Include="DisableOnAny.cs" />
+    <Compile Include="ErrorLogger.cs" />
     <Compile Include="FollowCamSystem.cs" />
     <Compile Include="Init.cs" />
     <Compile Include="Loader.cs" />

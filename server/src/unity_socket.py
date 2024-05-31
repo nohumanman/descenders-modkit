@@ -9,6 +9,7 @@ import aiosqlite
 import sqlite3
 import requests
 import srcomapi
+import hashlib
 import srcomapi.datatypes as dt
 import discord
 from trail_timer import TrailTimer
@@ -41,11 +42,11 @@ operations = {
     "RESPAWN":
         lambda netPlayer, data: netPlayer.on_respawn(),
     "MAP_ENTER":
-        lambda netPlayer, data: netPlayer.on_map_enter(data[2]), # WARNING: data[2] FOR A REASON
+        lambda netPlayer, data: netPlayer.on_map_enter(data[1]),
     "MAP_EXIT":
         lambda netPlayer, data: netPlayer.on_map_exit(),
     "BIKE_SWITCH":
-        lambda netPlayer, data: netPlayer.on_bike_switch(data[2]), # WARNING: data[2] FOR A REASON
+        lambda netPlayer, data: netPlayer.on_bike_switch(data[1]),
     "REP":
         lambda netPlayer, data: netPlayer.set_reputation(data[1]),
     "SPEEDRUN_DOT_COM_LEADERBOARD":
@@ -379,6 +380,7 @@ class UnitySocket():
         logging.info(
             "%s '%s'\t- sending data '%s'", self.info.steam_id, self.info.steam_name, data
         )
+        await self.log_line("SENDING FROM SERVER: " + data)
         try:
             self.writer.write((data + "\n").encode("utf-8"))
             await self.writer.drain()
@@ -408,7 +410,19 @@ class UnitySocket():
         self.last_contact = time.time()
         if data == "":
             return
+        await self.log_line("FROM_SERVER: " + data)
         data_list = data.split("|")
+        # check the hash
+        message = "|".join(data_list[:-1]) + "|" # the message is everything except the hash
+        message_hash = data_list[-1] # the hash is the second-to-last item in the list
+        # hash the message
+        our_message_hash = hashlib.sha256(message.encode('utf-8')).digest().hex()
+        # compare the hashes
+        if message_hash == our_message_hash:
+            await self.send("RECEIVED|" + message_hash)
+        else:
+            await self.log_line("FROM_SERVER: HASH FOR ", message, " DOES NOT MATCH!")
+
         for operator, function in operations.items():
             self.last_contact = time.time()
             if data.startswith(operator):

@@ -21,6 +21,14 @@ jobs:
         uses: actions/checkout@v1
       - name: Build DotNET35
         run: |
-           cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
-           $warnings = .\MSBuild.exe $Env:GITHUB_WORKSPACE\mod-loader-solution\ModLoaderSolution.sln /p:WarningsAsErrors=true /p:WarningLevel=4  /nologo /v:q
-           if ($warnings -gt 0) { exit 1 }
+          cd "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\"
+          $output = & .\MSBuild.exe $Env:GITHUB_WORKSPACE\mod-loader-solution\ModLoaderSolution.sln /p:WarningsAsErrors=true /p:WarningLevel=4  /nologo /v:q
+
+          # Print the output
+          Write-Output $output
+
+          # Check for warnings/errors and exit accordingly
+          if ($LASTEXITCODE -ne 0) {
+              exit $LASTEXITCODE
+          }
+

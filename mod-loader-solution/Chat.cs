@@ -27,7 +27,7 @@ namespace ModLoaderSolution
         }
         public void SendMessage()
         {
-            NetClient.Instance.SendData("CHAT_MESSAGE|" + currentMessage);
+            NetClient.Instance.SendData("CHAT_MESSAGE", currentMessage);
             currentMessage = "";
         }
         public string GetMessages()
