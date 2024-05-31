@@ -28,7 +28,7 @@ namespace ModLoaderSolution
 		static string version = "0.2.73";
 		static bool quietUpdate = false;
 		static string patchNotes = "- Checksums implemented for server communicationb\n- Fixed networked bike switching\n- Non-descenders bikes temporarily disabled (BMX, etc)\n\nYours,\n- nohumanman"; // that which has changed since the last version.
-		public static DebugType debugState = DebugType.DEVELOPER;
+		public static DebugType debugState = DebugType.RELEASE;
         void Awake(){
 			Utilities.LogMethodCallStart();
 			if (debugState == DebugType.DEVELOPER)
