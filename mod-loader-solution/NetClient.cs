@@ -25,10 +25,10 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "18.132.81.187";
-		static string version = "0.2.72";
+		static string version = "0.2.73";
 		static bool quietUpdate = false;
-		static string patchNotes = "- Other player's bikes should be the correct type\n- Your bike will be logged correctly when submitting a time\n- Non-descenders bikes temporarily disabled (BMX, etc)\n\nYours,\n- nohumanman"; // that which has changed since the last version.
-		public static DebugType debugState = DebugType.RELEASE;
+		static string patchNotes = "- Checksums implemented for server communicationb\n- Fixed networked bike switching\n- Non-descenders bikes temporarily disabled (BMX, etc)\n\nYours,\n- nohumanman"; // that which has changed since the last version.
+		public static DebugType debugState = DebugType.DEVELOPER;
         void Awake(){
 			Utilities.LogMethodCallStart();
 			if (debugState == DebugType.DEVELOPER)
