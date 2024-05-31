@@ -249,7 +249,10 @@ cython_debug/
 *.db
 *.vscode
 mod-loader-solution/bin/Debug/ModLoaderSolution.dll
+mod-loader-solution/bin/Debug/ModLoaderSolution.bin
 mod-loader-solution/bin/Debug/ModLoaderSolution.pdb
 mod-loader-solution/obj/Debug/ModLoaderSolution.csproj.AssemblyReference.cache
+mod-loader-solution/obj/Debug/ModLoaderSolution.csproj.CoreCompileInputs.cache
+mod-loader-solution/obj/Debug/ModLoaderSolution.csproj.FileListAbsolute.txt
 mod-loader-solution/obj/Debug/ModLoaderSolution.dll
 mod-loader-solution/obj/Debug/ModLoaderSolution.pdb
