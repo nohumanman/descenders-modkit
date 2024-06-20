@@ -31,7 +31,7 @@ pycparser==2.21
 requests==2.32.0
 setuptools==68.2.2
 srcomapi==0.3.3
-urllib3==2.0.7
+urllib3==2.2.2
 Werkzeug==3.0.3
 yarl==1.9.2
 aiosql==9.0
