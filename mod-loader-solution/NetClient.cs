@@ -24,7 +24,7 @@ namespace ModLoaderSolution
 		bool PlayerCollision = false;
 		List<string> messages = new List<string>();
 		public int port = 65432;
-		public string ip = "18.132.81.187";
+		public string ip = "86.26.185.112";
 		static string version = "0.2.73";
 		static bool quietUpdate = false;
 		static string patchNotes = "- Checksums implemented for server communicationb\n- Fixed networked bike switching\n- Non-descenders bikes temporarily disabled (BMX, etc)\n\nYours,\n- nohumanman"; // that which has changed since the last version.
