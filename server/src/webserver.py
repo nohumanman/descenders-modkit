@@ -320,6 +320,14 @@ class Webserver():
         """ Function to get the details of a time with id time_id """
         try:
             details = await self.dbms.get_time_details(time_id)
+            # see if the time is faster than the player's current fastest verified time
+            faster_than_current_fastest = False
+            try:
+                current_fastest = (await self.dbms.get_personal_fastest_split_times(details[7], details[0]))[-1]
+                if current_fastest is not None and details[6] < current_fastest:
+                    faster_than_current_fastest = True
+            except IndexError:
+                pass
             return render_template(
                 "Time.html",
                 steam_id=details[0],
@@ -336,7 +344,8 @@ class Webserver():
                 starting_speed=details[11],
                 version=details[12],
                 verified=details[14],
-                timestamp_to_time=datetime.fromtimestamp(details[3])
+                timestamp_to_time=datetime.fromtimestamp(details[3]),
+                warning="WARNING - SLOWER THAN PLAYER'S FASTEST VERIFIED TIME" if not faster_than_current_fastest else ""
             )
         except IndexError:
             return "No time found!"
