@@ -29,7 +29,7 @@ numpy==1.26.2
 pycord==0.1.1
 pycparser==2.21
 requests==2.32.0
-setuptools==68.2.2
+setuptools==70.0.0
 srcomapi==0.3.3
 urllib3==2.2.2
 Werkzeug==3.0.3
