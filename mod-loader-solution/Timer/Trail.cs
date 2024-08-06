@@ -79,6 +79,7 @@ namespace ModLoaderSolution
         }
         public void Update()
         {
+            return;
             Utilities.LogMethodCallStart();
             if (Utilities.instance.isInReplayMode())
                 return;

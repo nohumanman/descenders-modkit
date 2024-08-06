@@ -26,6 +26,7 @@ namespace ModLoaderSolution
 		}
         void Update()
         {
+            return;
             string currentMap = Utilities.instance.GetCurrentMap();
             // if we've switched maps
             if (currentMap != prevMap)
