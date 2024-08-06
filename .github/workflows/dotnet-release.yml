@@ -4,6 +4,7 @@
 name: Release ModLoaderSolution
 
 on:
+  workflow_dispatch:
   push:
     # release only if main 
     branches: 
