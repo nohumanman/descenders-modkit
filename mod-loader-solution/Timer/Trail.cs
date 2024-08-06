@@ -79,7 +79,8 @@ namespace ModLoaderSolution
         }
         public void Update()
         {
-            Utilities.LogMethodCallStart();
+            return;
+            /*Utilities.LogMethodCallStart();
             if (Utilities.instance.isInReplayMode())
                 return;
             // if Time.time - lastBoundryExit is greater than 15
@@ -103,7 +104,7 @@ namespace ModLoaderSolution
                 StartCoroutine(SplitTimerText.Instance.DisableTimerText(5));
             }
             clientTime += Time.deltaTime;
-            Utilities.LogMethodCallEnd();
+            Utilities.LogMethodCallEnd();*/
         }
         public bool InAnyBoundaries()
         {

@@ -25,7 +25,7 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "86.26.185.112";
-		static string version = "0.2.73";
+		static string version = "0.3.00";
 		static bool quietUpdate = false;
 		static string patchNotes = "- Checksums implemented for server communicationb\n- Fixed networked bike switching\n- Non-descenders bikes temporarily disabled (BMX, etc)\n\nYours,\n- nohumanman"; // that which has changed since the last version.
 		public static DebugType debugState = DebugType.RELEASE;
@@ -53,7 +53,11 @@ namespace ModLoaderSolution
 				return version;
         }
 		void Start () {
-			Utilities.LogMethodCallStart();
+            Utilities.instance.PopUp(
+				"Modkit Borked",
+				"The latest descenders update has broken essential components of the Descenders Modkit, causing the game to lag heavily to be basically unplayable when the Modkit is loaded.\n\nI'm looking into it but it will take time to fix so bear with me :)"
+			);
+            Utilities.LogMethodCallStart();
 			Utilities.Log("Connecting to tcp server port " + port.ToString() + " with ip '" + ip + "'");
 			ConnectToTcpServer();
 			ridersGates = FindObjectsOfType<RidersGate>();
