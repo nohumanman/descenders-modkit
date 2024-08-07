@@ -75,6 +75,7 @@
     <Compile Include="Modifiers\StatsModification.cs" />
     <Compile Include="Modifiers\TimeModifier.cs" />
     <Compile Include="NetClient.cs" />
+    <Compile Include="ObfuscationHandler.cs" />
     <Compile Include="ObjEnabler.cs" />
     <Compile Include="PlayerManagement.cs" />
     <Compile Include="RidersGate.cs" />
