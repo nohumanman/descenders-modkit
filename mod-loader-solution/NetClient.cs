@@ -74,7 +74,7 @@ namespace ModLoaderSolution
 		bool poppedUp = false;
 		void Update()
         {
-			Utilities.LogMethodCallStart();
+            Utilities.LogMethodCallStart();
 			if (!poppedUp && Utilities.GetPlayer() != null)
             {
 				string lastVersion = "";
