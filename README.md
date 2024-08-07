@@ -69,5 +69,6 @@ BI0S0CK](https://mod.io/g/descenders/u/bi0s0ck)*
 - Fix for music repeating constantly in mod maps
 - Adds discord rich presence for mod maps
 - Mods in the mod browser order alphabetically
+- Remove mod of the year leaderboard from 2020 from the lobby
 
 and more..
