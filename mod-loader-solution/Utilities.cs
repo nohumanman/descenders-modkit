@@ -106,13 +106,15 @@ namespace ModLoaderSolution
         public Gesture[] gestures = new Gesture[0] {};
         public void GetGestures()
         {
-            string gesturesField = "EL\u0080\u007f\u0084\u0080o";
-            gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(GetPlayer().GetComponent<Cyclist>());
+            gestures = (Gesture[])typeof(Cyclist).GetField(
+                ObfuscationHandler.GetObfuscated("gestures")
+            ).GetValue(GetPlayer().GetComponent<Cyclist>());
         }
         public void ReleaseAllLimbsOnTrick()
         {
-            string gesturesField = "EL\u0080\u007f\u0084\u0080o";
-            gestures = (Gesture[])typeof(Cyclist).GetField(gesturesField).GetValue(GetPlayer().GetComponent<Cyclist>());
+            gestures = (Gesture[])typeof(Cyclist).GetField(
+                ObfuscationHandler.GetObfuscated("gestures")
+            ).GetValue(GetPlayer().GetComponent<Cyclist>());
             foreach (Gesture x in gestures)
             {
                 x.oneShotTrick = false;
@@ -126,9 +128,9 @@ namespace ModLoaderSolution
         {
             // Function to put proper playlist instead of 'Descenders' song on mod maps
             // dirty the current session (to force a playlist re-load)
-            FieldInfo currentSessionField = typeof(SessionManager).GetField("\u0083ESVMoz"); // currentSession field
+            FieldInfo currentSessionField = typeof(SessionManager).GetField(ObfuscationHandler.GetObfuscated("currentSession")); // currentSession field
             object session = currentSessionField.GetValue(Utilities.GameObjectFindObjectOfType<SessionManager>()); // currentSession value
-            FieldInfo worldMapField = session.GetType().GetField("WnRr]U`"); // worldMap
+            FieldInfo worldMapField = session.GetType().GetField(ObfuscationHandler.GetObfuscated("worldMap")); // worldMap
             WorldMap worldMap = new WorldMap(); // worldMap will be null, so we need to make one up
             worldMap.world = World.Glaciers; // set the world to glaciers (not World.None), this will play glaciers playlist
             worldMapField.SetValue(session, worldMap);
@@ -189,15 +191,14 @@ namespace ModLoaderSolution
         }
         public void SaveReplayToFile(string path)
         {
-            string replayObfuscatedName = "Ym}\u0084upr";
             Utilities.Log("SaveReplayToFile('" + path + "')");
             Assembly a = Assembly.Load("Assembly-CSharp");
-            Type replayType = a.GetType("l\u0080KRMtV");
-            MethodInfo magicMethod = replayType.GetMethod("I\u0083tz]jk");
+            Type replayType = a.GetType(ObfuscationHandler.GetObfuscated("Replay"));
+            MethodInfo magicMethod = replayType.GetMethod(ObfuscationHandler.GetObfuscated("I\u0083tz]jk"));
             Utilities.Log("magicMethod found -" + magicMethod);
             Utilities.Log("Vehicle Replay - " + Utilities.GameObjectFind("Player_Human").GetComponent<VehicleReplay>());
             object replayClassObject = typeof(VehicleReplay)
-                .GetField(replayObfuscatedName)
+                .GetField(ObfuscationHandler.GetObfuscated("replay"))
                 .GetValue(Utilities.GetPlayer().GetComponent<VehicleReplay>());
             Utilities.Log("replayClassObject found -" + replayClassObject);
             magicMethod.Invoke(replayClassObject, new object[] { path });
@@ -751,21 +752,20 @@ namespace ModLoaderSolution
 
         public string GetPlayerName()
         {
-            // playerName a^sXf\u0083Y;
             PlayerInfo player = Singleton<PlayerManager>.SP.GetPlayer();
-            return (string)player.GetType().GetField("a^sXf\u0083Y").GetValue(player);
+            return (string)player.GetType().GetField(ObfuscationHandler.GetObfuscated("playerName")).GetValue(player);
             //return player.playerName;
         }
 
         public string GetNameFromPlayerInfo(PlayerInfo pi)
         {
-            return (string)pi.GetType().GetField("a^sXf\u0083Y").GetValue(pi);
+            return (string)pi.GetType().GetField(ObfuscationHandler.GetObfuscated("playerName")).GetValue(pi);
             //return pi.playerName;
         }
         public string GetIdFromPlayerInfo(PlayerInfo pi)
         {
-            return (string)pi.GetType().GetField("r~x\u007fs{n").GetValue(pi);
-            //return pi.playerName;
+            return (string)pi.GetType().GetField("userID").GetValue(pi);
+            //return pi.userID;
         }
 
         public List<string> GetSpectateTargets()
@@ -879,11 +879,11 @@ namespace ModLoaderSolution
             //dzQf\u0082nw = GameData.[~qsVD|.bx}n\u0080PQ[cVpqe^E];
 
             // playerInfoImpact.bikeType = Utilities.GameObjectFindObjectOfType<GameData>().bikeTypes[bike];
-            BikeType[] bikeTypes = (BikeType[])typeof(GameData).GetField("bx}n\u0080PQ").GetValue(Utilities.GameObjectFindObjectOfType<GameData>());
-            typeof(PlayerInfoImpact).GetField("dzQf\u0082nw").SetValue(playerInfoImpact, bikeTypes[bike]);
+            BikeType[] bikeTypes = (BikeType[])typeof(GameData).GetField(ObfuscationHandler.GetObfuscated("bikeTypes")).GetValue(Utilities.GameObjectFindObjectOfType<GameData>());
+            typeof(PlayerInfoImpact).GetField(ObfuscationHandler.GetObfuscated("bikeType")).SetValue(playerInfoImpact, bikeTypes[bike]);
 
             // playerCustomization = hUP\u007fi\u0084d
-            PlayerCustomization playerCustomization = (PlayerCustomization)typeof(PlayerInfoImpact).GetField("hUP\u007fi\u0084d").GetValue(playerInfoImpact);
+            PlayerCustomization playerCustomization = (PlayerCustomization)typeof(PlayerInfoImpact).GetField(ObfuscationHandler.GetObfuscated("playerCustomization")).GetValue(playerInfoImpact);
             playerCustomization.RefreshBikeMesh();
         }
         public string GetBikeName(int bike)
@@ -914,10 +914,10 @@ namespace ModLoaderSolution
                 return;
             UI_PopUp_TextBoxSmall uI_PopUp_TextBoxSmall = Utilities.GameObjectFindObjectOfType<PermaGUI>().SpawnPopUp<UI_PopUp_TextBoxSmall>();
             // label_titleText = f`r}tXQ
-            TMPro.TextMeshProUGUI label_titleText = (TMPro.TextMeshProUGUI)uI_PopUp_TextBoxSmall.GetType().GetField("label_titleText").GetValue(uI_PopUp_TextBoxSmall);
+            TMPro.TextMeshProUGUI label_titleText = (TMPro.TextMeshProUGUI)uI_PopUp_TextBoxSmall.GetType().GetField(ObfuscationHandler.GetObfuscated("label_titleText")).GetValue(uI_PopUp_TextBoxSmall);
             label_titleText.text = titleText;
             // label_bodyText = oZtLHbT
-            TMPro.TextMeshProUGUI label_bodyText = (TMPro.TextMeshProUGUI)uI_PopUp_TextBoxSmall.GetType().GetField("label_bodyText").GetValue(uI_PopUp_TextBoxSmall);
+            TMPro.TextMeshProUGUI label_bodyText = (TMPro.TextMeshProUGUI)uI_PopUp_TextBoxSmall.GetType().GetField(ObfuscationHandler.GetObfuscated("label_bodyText")).GetValue(uI_PopUp_TextBoxSmall);
             label_bodyText.text = bodyText;
         }
         public void SetCameraTarget(PlayerInfoImpact player, bool something=true)

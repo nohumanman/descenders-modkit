@@ -32,7 +32,7 @@ namespace ModLoaderSolution
             DiscordManager discordManager = DiscordManager.SP;
             // dm.presence.details = dm.\u0084mfo\u007fzP.details
             DiscordRpc.RichPresence richpresence = (DiscordRpc.RichPresence)typeof(DiscordManager)
-                .GetField("\u0084mfo\u007fzP")
+                .GetField(ObfuscationHandler.GetObfuscated("presence"))
                 .GetValue(discordManager);
             DiscordRpc.RichPresence richpresenceCopy = richpresence;
             string current_map = Utilities.instance.GetCurrentMap().Split('-')[0];
@@ -51,7 +51,7 @@ namespace ModLoaderSolution
             if (startTimestamp != 0)
                 richpresence.startTimestamp = startTimestamp;
 
-            typeof(DiscordManager).GetField("\u0084mfo\u007fzP").SetValue(discordManager, richpresence);
+            typeof(DiscordManager).GetField(ObfuscationHandler.GetObfuscated("presence")).SetValue(discordManager, richpresence);
             // if different, update presence
             // NOTE: This will always update, because our assignment of rich presence
             // is overwritten immediately by descenders

@@ -26,8 +26,7 @@ namespace ModLoaderSolution
 		}
         void Update()
         {
-            return;
-            /*string currentMap = Utilities.instance.GetCurrentMap();
+            string currentMap = Utilities.instance.GetCurrentMap();
             // if we've switched maps
             if (currentMap != prevMap)
                 OnMapEnter(currentMap);
@@ -40,7 +39,7 @@ namespace ModLoaderSolution
             wasBailed = Utilities.instance.hasBailed();
             // if human exists
             if (PlayerHuman != null)
-                CheckForRespawn(); // check if we've respawned*/
+                CheckForRespawn(); // check if we've respawned
         }
         public void NetStart(){
 			OnMapEnter(Utilities.instance.GetCurrentMap());
