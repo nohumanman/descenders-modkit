@@ -25,9 +25,9 @@ namespace ModLoaderSolution
 		List<string> messages = new List<string>();
 		public int port = 65432;
 		public string ip = "86.26.185.112";
-		static string version = "0.3.00";
+		static string version = "0.3.01";
 		static bool quietUpdate = false;
-		static string patchNotes = "- Checksums implemented for server communicationb\n- Fixed networked bike switching\n- Non-descenders bikes temporarily disabled (BMX, etc)\n\nYours,\n- nohumanman"; // that which has changed since the last version.
+		static string patchNotes = "- Errors caused by descenders update should be resolved\n- Framerate should be improved\n- Ragesquid should push new fix sometime 09-08\n\n\nYours,\n- nohumanman"; // that which has changed since the last version.
 		public static DebugType debugState = DebugType.RELEASE;
         void Awake(){
 			Utilities.LogMethodCallStart();

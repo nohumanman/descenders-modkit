@@ -16,7 +16,7 @@ public class ErrorLogger : MonoBehaviour
     {
         if (type == LogType.Error || type == LogType.Exception)
         {
-            Debug.LogError($"loll Error/Exception: {logMessage}\nStackTrace: {stackTrace}");
+            Debug.LogError($"Error/Exception: {logMessage}\nStackTrace: {stackTrace}");
         }
     }
 }
