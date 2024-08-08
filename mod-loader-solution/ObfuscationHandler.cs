@@ -18,7 +18,7 @@ namespace ModLoaderSolution
             { "bikeType", "dzQf\u0082nw" },
             { "bikeTypes", "bx}n\u0080PQ" },
             { "playerCustomization", "hUP\u007fi\u0084d" },
-            { "playerName", "a^sXf\\u0083Y" },
+            { "playerName", "a^sXf\u0083Y" },
             { "userID", "r~x\u007fs{n" },
             { "currentSession", "\u0083ESVMoz" },
             { "worldMap", "WnRr]U`" },
