@@ -53,10 +53,6 @@ namespace ModLoaderSolution
 				return version;
         }
 		void Start () {
-            Utilities.instance.PopUp(
-				"Modkit Borked",
-				"The latest descenders update has broken essential components of the Descenders Modkit, causing the game to lag heavily to be basically unplayable when the Modkit is loaded.\n\nI'm looking into it but it will take time to fix so bear with me :)"
-			);
             Utilities.LogMethodCallStart();
 			Utilities.Log("Connecting to tcp server port " + port.ToString() + " with ip '" + ip + "'");
 			ConnectToTcpServer();

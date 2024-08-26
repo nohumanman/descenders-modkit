@@ -194,7 +194,7 @@ namespace ModLoaderSolution
             Utilities.Log("SaveReplayToFile('" + path + "')");
             Assembly a = Assembly.Load("Assembly-CSharp");
             Type replayType = a.GetType(ObfuscationHandler.GetObfuscated("Replay"));
-            MethodInfo magicMethod = replayType.GetMethod(ObfuscationHandler.GetObfuscated("I\u0083tz]jk"));
+            MethodInfo magicMethod = replayType.GetMethod(ObfuscationHandler.GetObfuscated("SaveReplay"));
             Utilities.Log("magicMethod found -" + magicMethod);
             Utilities.Log("Vehicle Replay - " + Utilities.GameObjectFind("Player_Human").GetComponent<VehicleReplay>());
             object replayClassObject = typeof(VehicleReplay)
