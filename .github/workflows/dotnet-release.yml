@@ -48,7 +48,7 @@ jobs:
         run: rm -r ${{ github.workspace }}/static/ModLoaderSolution.bin
 
       - name: Download artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: ModLoaderSolution
           path: ${{ github.workspace }}/static/ModLoaderSolutionFiles
