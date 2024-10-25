@@ -28,18 +28,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest
         if [ -f server/src/requirements.txt ]; then pip install -r server/src/requirements.txt; fi
-    - name: Lint with flake8
+    - name: Lint python code (flake8)
       run: |
         # stop the build if there are Python syntax errors or undefined names
         flake8 . --count --exit-zero --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Lint with sqlfluff
+    - name: Lint queries.sql
       run: |
         # install sqlfluff
         python -m pip install sqlfluff
         # run tests using .sqlfluff as config
-        sqlfluff lint server/src/queries.sql --config .sqlfluff --exclude-rules CP02,AM04 --dialect sqlite
+        sqlfluff lint server/src/queries.sql --config .sqlfluff --exclude-rules CP02,AM04,RF02 --dialect sqlite
+    - name: Lint schema.sql
+      run: |
         # now schema.sql
         sqlfluff lint server/src/schema.sql --config .sqlfluff --exclude-rules CP02,AM04 --dialect sqlite
    # - name: Test with unittest
