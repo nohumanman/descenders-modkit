@@ -324,10 +324,10 @@ class Webserver():
             faster_than_current_fastest = False
             try:
                 current_fastest = (await self.dbms.get_personal_fastest_split_times(details[7], details[0]))[-1]
-                if current_fastest is not None and details[6] < current_fastest:
+                if current_fastest is not None and details[6] <= current_fastest:
                     faster_than_current_fastest = True
             except IndexError:
-                pass
+                faster_than_current_fastest = True
             return render_template(
                 "Time.html",
                 steam_id=details[0],

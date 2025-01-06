@@ -37,7 +37,7 @@ jobs:
     - name: Lint queries.sql
       run: |
         # install sqlfluff
-        python -m pip install sqlfluff
+        python -m pip install sqlfluff==2.3.5
         # run tests using .sqlfluff as config
         sqlfluff lint server/src/queries.sql --config .sqlfluff --exclude-rules CP02,AM04,RF02 --dialect sqlite
     - name: Lint schema.sql
